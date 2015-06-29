@@ -4,17 +4,11 @@
  */
 package fr.symetric.server;
 
-import com.sun.jersey.api.client.Client;
-import com.sun.jersey.api.client.WebResource;
-import com.sun.jersey.api.client.config.ClientConfig;
-import com.sun.jersey.api.client.config.DefaultClientConfig;
-import com.sun.jersey.core.util.MultivaluedMapImpl;
 import com.sun.jersey.spi.container.servlet.ServletContainer;
 import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import javax.ws.rs.core.MultivaluedMap;
 import org.apache.commons.cli.BasicParser;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -28,7 +22,6 @@ import org.apache.commons.vfs.FileObject;
 import org.apache.commons.vfs.FileSystemException;
 import org.apache.commons.vfs.VFS;
 import org.apache.commons.io.FileUtils;
-import org.apache.log4j.Logger;
 import org.mortbay.jetty.Handler;
 import org.mortbay.jetty.Server;
 import org.mortbay.jetty.handler.ContextHandler;
@@ -36,7 +29,8 @@ import org.mortbay.jetty.handler.HandlerList;
 import org.mortbay.jetty.handler.ResourceHandler;
 import org.mortbay.jetty.servlet.Context;
 import org.mortbay.jetty.servlet.ServletHolder;
-import org.mortbay.jetty.webapp.WebAppContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Embedded HTTP server for Corese. Using Jetty implementation.
@@ -45,27 +39,30 @@ import org.mortbay.jetty.webapp.WebAppContext;
  */
 public class EmbeddedJettyServer {
 
-    private static Logger logger = Logger.getLogger(EmbeddedJettyServer.class);
+    private static Logger logger = LoggerFactory.getLogger(EmbeddedJettyServer.class);
     private static int port = 8080;
-    private static boolean entailments = false;
-    private static boolean owlrl = false;
     private static String dataPath = null;
 
     public static void main(String args[]) throws Exception {
 
-//        PropertyConfigurator.configure(EmbeddedJettyServer.class.getClassLoader().getResource("log4j.properties"));
-//        logger.debug("Started.");
+        // Concurent tasks to be executed periodically
+//        ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(5);
+//        ScheduledFuture scheduledFuture = scheduledExecutorService.schedule(new Callable() {
+//                    public Object call() throws Exception {
+//                        logger.info("Running periodic session cleaning");
+//                        Util.tagExpiredSessions();
+//                        Util.deleteExpiredSessions();
+//                        return "Periodic session cleaning done.";
+//                    }
+//                },
+//                60,
+//                TimeUnit.SECONDS);
+
         Options options = new Options();
         Option portOpt = new Option("p", "port", true, "specify the server port");
         Option helpOpt = new Option("h", "help", false, "print this message");
-//        Option entailOpt = new Option("e", "entailments", false, "enable RDFS entailments");
-//        Option owlrlOpt = new Option("o", "owlrl", false, "enable OWL RL entailments");
-//        Option dataOpt = new Option("l", "load", true, "data file or directory to be loaded");
         Option versionOpt = new Option("v", "version", false, "print the version information and exit");
         options.addOption(portOpt);
-//        options.addOption(entailOpt);
-//        options.addOption(owlrlOpt);
-//        options.addOption(dataOpt);
         options.addOption(helpOpt);
         options.addOption(versionOpt);
 
@@ -77,22 +74,17 @@ public class EmbeddedJettyServer {
             CommandLine cmd = parser.parse(options, args);
             if (cmd.hasOption("h")) {
                 HelpFormatter formatter = new HelpFormatter();
-                formatter.printHelp("kgserver", header, options, footer, true);
+                formatter.printHelp("datahup-api server", header, options, footer, true);
                 System.exit(0);
             }
             if (cmd.hasOption("p")) {
                 port = Integer.parseInt(cmd.getOptionValue("p"));
             }
             if (cmd.hasOption("v")) {
-                logger.info("version 1.0.7");
+                logger.info("version 0.0.1");
                 System.exit(0);
             }
-            if (cmd.hasOption("e")) {
-                entailments = true;
-            }
-            if (cmd.hasOption("o")) {
-                owlrl = true;
-            }
+            
             if (cmd.hasOption("l")) {
                 dataPath = cmd.getOptionValue("l");
                 System.out.println("Server: " + dataPath);
@@ -106,9 +98,11 @@ public class EmbeddedJettyServer {
             jerseyServletHolder.setInitParameter("com.sun.jersey.config.property.packages", "fr.symetric.api");
             jerseyServletHolder.setInitParameter("requestBufferSize", "8192");
             jerseyServletHolder.setInitParameter("headerBufferSize", "8192");
-            jerseyServletHolder.setInitParameter("com.sun.jersey.api.json.POJOMappingFeature","true");
+            jerseyServletHolder.setInitParameter("com.sun.jersey.api.json.POJOMappingFeature", "true");
+            jerseyServletHolder.setInitParameter("com.sun.jersey.spi.container.ResourceFilters", "fr.symetric.server.ResourceFilterFactory");
             Context servletCtx = new Context(server, "/", Context.SESSIONS);
             servletCtx.addServlet(jerseyServletHolder, "/*");
+
             logger.info("----------------------------------------------");
             logger.info("SyMeTRIC sandbox API started on http://localhost:" + port + "/sandbox");
             logger.info("----------------------------------------------");
@@ -124,31 +118,11 @@ public class EmbeddedJettyServer {
             logger.info("SyMeTRIC sandbox webapp UI started on http://localhost:" + port);
             logger.info("----------------------------------------------");
 
-//            String pubbyDir = "/Users/gaignard/Documents/Dev/svn-kgram/Dev/trunk/kgserver/src/main/resources/pubby";
-////            URI pubbyUri = EmbeddedJettyServer.extractResourceDir("pubby", true);
-//            WebAppContext webAppContext = new WebAppContext();
-//            webAppContext.setDescriptor(pubbyDir + "/WEB-INF/web.xml");
-//            webAppContext.setResourceBase(pubbyDir);
-//            webAppContext.setContextPath("/data");
-//            webAppContext.setParentLoaderPriority(true);
-
             HandlerList handlers = new HandlerList();
-//            handlers.setHandlers(new Handler[]{staticContextHandler, webAppContext, servletCtx});
             handlers.setHandlers(new Handler[]{staticContextHandler, servletCtx});
             server.setHandler(handlers);
 
             server.start();
-
-            //server initialization
-//            ClientConfig config = new DefaultClientConfig();
-//            Client client = Client.create(config);
-//            WebResource service = client.resource(new URI("http://localhost:" + port));
-//
-//            MultivaluedMap formData = new MultivaluedMapImpl();
-//            formData.add("entailments", Boolean.toString(entailments));
-//            formData.add("owlrl", Boolean.toString(owlrl));
-//            service.path("sparql").path("reset").post(formData);
-
             server.join();
         } catch (ParseException exp) {
             System.err.println("Parsing failed.  Reason: " + exp.getMessage());
