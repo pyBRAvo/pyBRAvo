@@ -11,7 +11,11 @@ import com.sun.jersey.api.client.config.DefaultClientConfig;
 import com.sun.jersey.api.json.JSONConfiguration;
 import com.sun.jersey.spi.container.servlet.ServletContainer;
 import fr.symetric.data.MyJsonData;
+import fr.symetric.data.UserCredential;
 import fr.symetric.server.EmbeddedJettyServer;
+import fr.symetric.server.Util;
+import fr.symetric.server.models.DAOFactory;
+import fr.symetric.server.models.User;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -23,7 +27,6 @@ import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.mortbay.jetty.Handler;
 import org.mortbay.jetty.Server;
@@ -58,6 +61,7 @@ public class RestEndpointTest {
         jerseyServletHolder.setInitParameter("requestBufferSize", "8192");
         jerseyServletHolder.setInitParameter("headerBufferSize", "8192");
         jerseyServletHolder.setInitParameter("com.sun.jersey.api.json.POJOMappingFeature", "true");
+        jerseyServletHolder.setInitParameter("com.sun.jersey.spi.container.ResourceFilters", "fr.symetric.server.ResourceFilterFactory");
         Context servletCtx = new Context(server, "/", Context.SESSIONS);
         servletCtx.addServlet(jerseyServletHolder, "/*");
         logger.info("----------------------------------------------");
@@ -93,6 +97,10 @@ public class RestEndpointTest {
             server.destroy();
             server = null;
         }
+        
+        //clean old sessions
+        Util.tagExpiredSessions();
+        Util.deleteExpiredSessions();
     }
 
     @Before
@@ -118,12 +126,11 @@ public class RestEndpointTest {
 
     @Test
     public void sendJson() throws URISyntaxException, MalformedURLException, IOException {
-
         ClientConfig config = new DefaultClientConfig();
         config.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING, Boolean.TRUE);
         Client client = Client.create(config);
         WebResource service = client.resource(new URI("http://localhost:" + RestEndpointTest.port + "/sandbox/sendJson"));
-        
+
         // sending a JSON string
         String jsonData = "{\"id\":\"1234\",\"label\":\"MyLabel\"}";
 
@@ -135,21 +142,190 @@ public class RestEndpointTest {
         }
         String output = response.getEntity(String.class);
         Assert.assertEquals("MyJsonData{id=1234, label=MyLabel}", output);
-        
 
         // sending a java object
         MyJsonData d = new MyJsonData();
         d.setId("zzz");
         d.setLabel("zebulon");
-        
+
         response = service.accept("application/json").type("application/json").post(ClientResponse.class, d);
         if (response.getStatus() != 200) {
             throw new RuntimeException("Failed : HTTP error code : "
                     + response.getStatus());
         }
-        
+
         logger.info(output);
         output = response.getEntity(String.class);
         Assert.assertEquals("MyJsonData{id=zzz, label=zebulon}", output);
+    }
+
+    @Test
+    public void auditedSayHello() throws URISyntaxException, MalformedURLException, IOException {
+        ClientConfig config = new DefaultClientConfig();
+        Client client = Client.create(config);
+        WebResource service = client.resource(new URI("http://localhost:" + RestEndpointTest.port + "/sandbox"));
+
+        String response = service.path("hellopublic").header("X-Forwarded-For", "127.0.0.1").get(String.class).toString();
+        logger.info(response);
+    }
+
+    @Test
+    public void signIn() throws URISyntaxException, MalformedURLException, IOException {
+        ClientConfig config = new DefaultClientConfig();
+        config.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING, Boolean.TRUE);
+        Client client = Client.create(config);
+        WebResource service = client.resource(new URI("http://localhost:" + RestEndpointTest.port + "/sandbox"));
+
+        UserCredential uCred = new UserCredential();
+        uCred.setEmail("zebulon@univ-nantes.fr");
+        uCred.setPassword("SonSecret");
+
+        ClientResponse response = service.path("/signin").accept("application/json").type("application/json").post(ClientResponse.class, uCred);
+        if (response.getStatus() != 200) {
+            throw new RuntimeException("Failed : HTTP error code : "
+                    + response.getStatus());
+        }
+
+        String sessionId = response.getEntity(String.class);
+
+        //assert that non admin user cannot access the resource
+        String errorMessage = "";
+        try {
+            service.path("admin").header("X-Forwarded-For", "127.0.0.1").header("session-id", sessionId).get(String.class).toString();
+        } catch (Exception e) {
+            errorMessage = e.getMessage();
+            logger.error(errorMessage);
+        }
+        Assert.assertTrue(errorMessage.toLowerCase().contains("forbidden"));
+
+        //grant admin role to user zebulon
+        User u = DAOFactory.getUserDAO().get("zebulon@univ-nantes.fr");
+        u.getRoles().add(User.Role.admin);
+        DAOFactory.getUserDAO().save(u);
+
+        //assert that zebulon can access the protected resource
+        String response3 = service.path("admin").header("X-Forwarded-For", "127.0.0.1").header("session-id", sessionId).get(String.class).toString();
+        logger.info(response3);
+
+        DAOFactory.getUserDAO().delete(u);
+    }
+
+    @Test
+    public void loginTest() throws URISyntaxException, MalformedURLException, IOException {
+        ClientConfig config = new DefaultClientConfig();
+        config.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING, Boolean.TRUE);
+        Client client = Client.create(config);
+        WebResource service = client.resource(new URI("http://localhost:" + RestEndpointTest.port + "/sandbox"));
+
+        UserCredential uCred = new UserCredential();
+        uCred.setEmail("zebulon@univ-nantes.fr");
+        uCred.setPassword("SonSecret");
+
+        // registering test user
+        ClientResponse responseSI = service.path("/signin").accept("application/json").type("application/json").post(ClientResponse.class, uCred);
+        if (responseSI.getStatus() != 200) {
+            throw new RuntimeException("Failed : HTTP error code : " + responseSI.getStatus());
+        }
+
+        // testing login with wrong password
+        uCred.setPassword("sonsecret");
+        String errorMessage = "";
+        try {
+            ClientResponse response = service.path("/login").accept("application/json").type("application/json").post(ClientResponse.class, uCred);
+            if (response.getStatus() != 200) {
+                throw new RuntimeException("Failed : HTTP error code : " + response.getStatus());
+            }
+        } catch (Exception e) {
+            errorMessage = e.getMessage();
+        }
+        Assert.assertTrue(errorMessage.contains("403"));
+
+        uCred.setPassword("SonSecret");
+        String sessionId = null;
+        try {
+            ClientResponse response4 = service.path("/login").accept("application/json").type("application/json").post(ClientResponse.class, uCred);
+            if (response4.getStatus() != 200) {
+                throw new RuntimeException("Failed : HTTP error code : " + response4.getStatus());
+            }
+            sessionId = response4.getEntity(String.class);
+            logger.info(sessionId);
+        } catch (Exception e) {
+            errorMessage = e.getMessage();
+        }
+        Assert.assertNotNull(sessionId);
+    }
+
+    @Test
+    public void testAuthVsPublic() throws URISyntaxException {
+        ClientConfig config = new DefaultClientConfig();
+        config.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING, Boolean.TRUE);
+        Client client = Client.create(config);
+        WebResource service = client.resource(new URI("http://localhost:" + RestEndpointTest.port + "/sandbox"));
+
+        //check public access
+        String response = service.path("hellopublic").get(String.class).toString();
+        logger.info(response);
+
+        //check login required
+        try {
+            String response2 = service.path("helloauth").get(String.class).toString();
+            logger.info(response);
+        } catch (Exception e) {
+            Assert.assertTrue(e.getMessage().contains("403"));
+        }
+
+        // and after a sign-in
+        String session = signin("zebulon@univ-nantes.fr", "SonSecret");
+        String response3 = service.path("helloauth").header("session-id", session).get(String.class).toString();
+        logger.info(response3);
+        DAOFactory.getUserDAO().deleteById("zebulon@univ-nantes.fr");
+    }
+
+    public String login(String email, String password) throws URISyntaxException {
+        ClientConfig config = new DefaultClientConfig();
+        config.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING, Boolean.TRUE);
+        Client client = Client.create(config);
+        WebResource service = client.resource(new URI("http://localhost:" + RestEndpointTest.port + "/sandbox"));
+
+        UserCredential uCred = new UserCredential();
+        uCred.setEmail(email);
+        uCred.setPassword(password);
+
+        String sessionId = null;
+        try {
+            ClientResponse response4 = service.path("/login").accept("application/json").type("application/json").post(ClientResponse.class, uCred);
+            if (response4.getStatus() != 200) {
+                throw new RuntimeException("Failed : HTTP error code : " + response4.getStatus());
+            }
+            sessionId = response4.getEntity(String.class);
+            logger.info(sessionId);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return sessionId;
+    }
+
+    public String signin(String email, String password) throws URISyntaxException {
+        ClientConfig config = new DefaultClientConfig();
+        config.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING, Boolean.TRUE);
+        Client client = Client.create(config);
+        WebResource service = client.resource(new URI("http://localhost:" + RestEndpointTest.port + "/sandbox"));
+
+        UserCredential uCred = new UserCredential();
+        uCred.setEmail(email);
+        uCred.setPassword(password);
+
+        String sessionId = null;
+        try {
+            ClientResponse response4 = service.path("/signin").accept("application/json").type("application/json").post(ClientResponse.class, uCred);
+            if (response4.getStatus() != 200) {
+                throw new RuntimeException("Failed : HTTP error code : " + response4.getStatus());
+            }
+            sessionId = response4.getEntity(String.class);
+            logger.info(sessionId);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return sessionId;
     }
 }
