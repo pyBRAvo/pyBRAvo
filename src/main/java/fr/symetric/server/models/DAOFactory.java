@@ -20,6 +20,7 @@ public class DAOFactory {
     
     private static SessionRepositoryDAO sessionDao = null;
     private static UserRepositoryDAO userDao = null;
+    private static ActivityRepositoryDAO activityDao = null;
     
     public static synchronized SessionRepositoryDAO getSessionDAO() {
         if (sessionDao == null) {
@@ -36,6 +37,15 @@ public class DAOFactory {
             return userDao;
         } else {
             return userDao;
+        }
+    }
+    
+    public static synchronized ActivityRepositoryDAO getActivityDAO() {
+        if (activityDao == null) {
+            activityDao = new ActivityRepositoryDAO(Activity.class, mongo, morphia, dbname);
+            return activityDao;
+        } else {
+            return activityDao;
         }
     }
 }
