@@ -15,7 +15,10 @@ import com.sun.jersey.spi.container.ContainerRequest;
 import com.sun.jersey.spi.container.ContainerRequestFilter;
 import com.sun.jersey.spi.container.ContainerResponseFilter;
 import com.sun.jersey.spi.container.ResourceFilter;
+import fr.symetric.server.models.Activity;
+import fr.symetric.server.models.ActivityRepositoryDAO;
 import fr.symetric.server.models.DAOFactory;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -39,32 +42,35 @@ import org.slf4j.LoggerFactory;
 public class AuditingFilter implements ResourceFilter, ContainerRequestFilter {
 
     private static Logger logger = LoggerFactory.getLogger(AuditingFilter.class);
-    private boolean requireRemoteIPAddressInformation = true;
     private final static Set<String> REDACTED_HEADERS = ImmutableSet.of(HttpHeaders.AUTHORIZATION);
 
-    private SessionRepositoryDAO sessionRepository = DAOFactory.getSessionDAO();  // DAO to access Session
+    private SessionRepositoryDAO sessionRepository = DAOFactory.getSessionDAO();  // DAO to access Sessions
+    private UserRepositoryDAO userRepository = DAOFactory.getUserDAO();  // DAO to access Users
+    private ActivityRepositoryDAO activityRepositoryDAO = DAOFactory.getActivityDAO();
 
-    private UserRepositoryDAO userRepository = DAOFactory.getUserDAO();  // DAO to access User
+    private String kind;
+
+    public AuditingFilter() {
+    }
+
+    AuditingFilter(String kind) {
+        this.kind = kind;
+    }
 
     @Override
     public ContainerRequest filter(ContainerRequest request) {
         // Get session id from request header
         final String sessionId = request.getHeaderValue("session-id");
 
-        
-        
         final StringBuilder builder = new StringBuilder();
         builder.append("\nAUDITED RESOURCE ACCESS\n");
-        
-        
-        builder.append("");
+
+        builder.append(kind + "\n");
 //        builder.append("  Resource : " + resource.getClass() + "\n");
-        
 
 //        if (requireRemoteIPAddressInformation && !request.getRequestHeaders().keySet().contains(HttpHeaders.X_FORWARDED_FOR)) {
 //            throw new RuntimeException("Header " + HttpHeaders.X_FORWARDED_FOR + " is required but was not found in the request");
 //        }
-
         for (Map.Entry<String, List<String>> entry : request.getRequestHeaders().entrySet()) {
             if (!REDACTED_HEADERS.contains(entry.getKey())) {
                 builder.append("  Header   : " + entry.getKey() + " = " + entry.getValue() + "\n");
@@ -79,7 +85,6 @@ public class AuditingFilter implements ResourceFilter, ContainerRequestFilter {
         }
         logger.info(builder.toString());
 
-        
         /////
         User user = null;
         Session session = null;
@@ -89,10 +94,20 @@ public class AuditingFilter implements ResourceFilter, ContainerRequestFilter {
             session = sessionRepository.get(sessionId);
 
             // Load associated user from session
-            if (null != session) {
+            if (session != null) {
                 Query q = userRepository.createQuery().field("email").equal(session.getUserId());
                 user = userRepository.findOne(q);
+                Date d = new Date();
+                session.setLastAccessedTime(d);
+                sessionRepository.save(session);
+
+                Activity a = new Activity(kind, session.getUserId(), d);
+                activityRepositoryDAO.save(a);
+            } else {
+                logger.warn("null session");
             }
+        } else {
+            logger.warn("null session id");
         }
 
         // Set security context
