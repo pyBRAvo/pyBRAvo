@@ -6,9 +6,15 @@ package fr.symetric.server;
 
 import com.sun.jersey.spi.container.servlet.ServletContainer;
 import java.io.File;
+import static java.lang.ProcessBuilder.Redirect.to;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.concurrent.Callable;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 import org.apache.commons.cli.BasicParser;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -40,23 +46,21 @@ import org.slf4j.LoggerFactory;
 public class EmbeddedJettyServer {
 
     private static Logger logger = LoggerFactory.getLogger(EmbeddedJettyServer.class);
-    private static int port = 8080;
     private static String dataPath = null;
+//    private static ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(5);
 
     public static void main(String args[]) throws Exception {
 
-        // Concurent tasks to be executed periodically
-//        ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(5);
+        //Concurent tasks to be executed periodically
+        
 //        ScheduledFuture scheduledFuture = scheduledExecutorService.schedule(new Callable() {
-//                    public Object call() throws Exception {
-//                        logger.info("Running periodic session cleaning");
-//                        Util.tagExpiredSessions();
-//                        Util.deleteExpiredSessions();
-//                        return "Periodic session cleaning done.";
-//                    }
-//                },
-//                60,
-//                TimeUnit.SECONDS);
+//            public Object call() throws Exception {
+//                logger.info("Running periodic session cleaning");
+//                DatahubUtils.tagExpiredSessions();
+//                DatahubUtils.deleteExpiredSessions();
+//                return "Periodic session cleaning done.";
+//            }
+//        }, 60, TimeUnit.SECONDS);
 
         Options options = new Options();
         Option portOpt = new Option("p", "port", true, "specify the server port");
@@ -78,20 +82,20 @@ public class EmbeddedJettyServer {
                 System.exit(0);
             }
             if (cmd.hasOption("p")) {
-                port = Integer.parseInt(cmd.getOptionValue("p"));
+                DatahubUtils.setServerPort(Integer.parseInt(cmd.getOptionValue("p")));
             }
             if (cmd.hasOption("v")) {
                 logger.info("version 0.0.1");
                 System.exit(0);
             }
-            
+
             if (cmd.hasOption("l")) {
                 dataPath = cmd.getOptionValue("l");
                 System.out.println("Server: " + dataPath);
             }
 
             URI webappUri = EmbeddedJettyServer.extractResourceDir("webapp", true);
-            Server server = new Server(port);
+            Server server = new Server(DatahubUtils.getServerPort());
 
             ServletHolder jerseyServletHolder = new ServletHolder(ServletContainer.class);
             jerseyServletHolder.setInitParameter("com.sun.jersey.config.property.resourceConfigClass", "com.sun.jersey.api.core.PackagesResourceConfig");
@@ -104,18 +108,19 @@ public class EmbeddedJettyServer {
             servletCtx.addServlet(jerseyServletHolder, "/*");
 
             logger.info("----------------------------------------------");
-            logger.info("SyMeTRIC sandbox API started on http://localhost:" + port + "/sandbox");
+            logger.info("SyMeTRIC sandbox API started on http://localhost:" + DatahubUtils.getServerPort() + "/sandbox");
+            logger.info("SyMeTRIC queryAPI started on http://localhost:" + DatahubUtils.getServerPort() + "/query");
             logger.info("----------------------------------------------");
 
             ResourceHandler resource_handler = new ResourceHandler();
-            resource_handler.setWelcomeFiles(new String[]{"index.html"});
-//            resource_handler.setResourceBase("/Users/gaignard/Documents/Dev/svn-kgram/Dev/trunk/kgserver/src/main/resources/webapp");
+//            resource_handler.setWelcomeFiles(new String[]{"index.html"});
             resource_handler.setResourceBase(webappUri.getRawPath());
+//            resource_handler.setResourceBase("/Users/gaignard/Documents/Dev/symetric-api-server/src/main/resources/webapp");
             ContextHandler staticContextHandler = new ContextHandler();
             staticContextHandler.setContextPath("/");
             staticContextHandler.setHandler(resource_handler);
             logger.info("----------------------------------------------");
-            logger.info("SyMeTRIC sandbox webapp UI started on http://localhost:" + port);
+            logger.info("SyMeTRIC sandbox webapp UI started on http://localhost:" + DatahubUtils.getServerPort());
             logger.info("----------------------------------------------");
 
             HandlerList handlers = new HandlerList();
