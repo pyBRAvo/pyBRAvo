@@ -43,7 +43,9 @@ public class SecurityContextFilter implements ResourceFilter, ContainerRequestFi
     public ContainerRequest filter(ContainerRequest request) {
         // Get session id from request header
         final String sessionId = request.getHeaderValue("session-id");
-        logger.info("Web service call for session : "+sessionId);
+        if (sessionId != null && !sessionId.contentEquals("null")) {
+            logger.info("Web service call for session : "+sessionId);
+        }
  
         User user = null;
         Session session = null;

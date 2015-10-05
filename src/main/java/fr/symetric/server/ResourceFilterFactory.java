@@ -9,8 +9,10 @@ import com.sun.jersey.api.container.filter.RolesAllowedResourceFilterFactory;
 import com.sun.jersey.api.model.AbstractMethod;
 import com.sun.jersey.spi.container.ResourceFilter;
 import fr.symetric.server.annotations.Audit;
+import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.List;
+import javax.ws.rs.Path;
 import javax.ws.rs.ext.Provider;
 
 /**
@@ -24,14 +26,6 @@ import javax.ws.rs.ext.Provider;
 public class ResourceFilterFactory extends RolesAllowedResourceFilterFactory {
 
     private SecurityContextFilter securityContextFilter = new SecurityContextFilter();
-
-    // Similar to SecurityContextFilter to check incoming requests for API Version information and
-    // act accordingly
-//    @Autowired
-//    private VersionFilter versionFilter;
-
-    // Similar to SecurityContextFilter to audit incoming requests
-    private AuditingFilter auditingFilter = new AuditingFilter();
 
     @Override
     public List<ResourceFilter> create(AbstractMethod am) {
@@ -50,11 +44,10 @@ public class ResourceFilterFactory extends RolesAllowedResourceFilterFactory {
 
 //        // Version Control?
 //        filters.add(versionFilter);
-
         // If this abstract method is annotated with @Audit, we will apply AuditFilter to audit
         // this request.
-        if (am.isAnnotationPresent(Audit.class)) {
-            filters.add(auditingFilter);
+        if ((am.isAnnotationPresent(Audit.class)) && (am.isAnnotationPresent(Path.class))) {
+            filters.add(new AuditingFilter(am.getAnnotation(Path.class).value()));
         }
 
         return filters;
