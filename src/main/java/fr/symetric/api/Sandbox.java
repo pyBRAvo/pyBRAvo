@@ -3,6 +3,7 @@ package fr.symetric.api;
 import com.google.code.morphia.query.Query;
 import fr.symetric.data.MyJsonData;
 import fr.symetric.data.UserCredential;
+import fr.symetric.server.DatahubUtils;
 import fr.symetric.server.annotations.Audit;
 import fr.symetric.server.models.DAOFactory;
 import fr.symetric.server.models.Session;
@@ -67,10 +68,17 @@ public class Sandbox {
 
     @POST
     @Path("/signin")
+    @Audit
     @Consumes(MediaType.APPLICATION_JSON)
     public Response signin(UserCredential cred) {
-
+        UserRepositoryDAO userRep = DAOFactory.getUserDAO();
+        
         logger.info("Registering user + " + cred.getEmail());
+        if (userRep.get(cred.getEmail()) != null) {
+            logger.info("User + " + cred.getEmail()+ " already exists");
+            return Response.status(403).entity("User already exists").build();
+        }
+        
         User u = new User();
         u.setEmail(cred.getEmail());
 
@@ -79,7 +87,6 @@ public class Sandbox {
         u.setPassword(digest);
         u.getRoles().add(User.Role.user);
 
-        UserRepositoryDAO userRep = DAOFactory.getUserDAO();
         userRep.save(u);
 
         // storing and returning an authentication token
@@ -101,19 +108,19 @@ public class Sandbox {
     @Path("/login")
     @Consumes(MediaType.APPLICATION_JSON)
     @SuppressWarnings("unchecked")
+    @Audit
     public Response login(UserCredential cred) {
 
         logger.info("Authenticating user + " + cred.getEmail());
         UserRepositoryDAO userRep = DAOFactory.getUserDAO();
         User u = userRep.get(cred.getEmail());
         if (u == null) {
-            logger.debug("Unkown user");
-            return Response.status(403).entity("Unkown user").build();
+            logger.debug("Unregistered user");
+            return Response.status(403).entity("unregistered user").build();
         } else {
-            logger.debug("user cred " + cred.getPassword() + " =? " + u.getPassword());
             if (!digester.matches(cred.getPassword(), u.getPassword())) {
                 logger.debug("Wrong password");
-                return Response.status(403).entity("Wrong password").build();
+                return Response.status(403).entity("wrong password").build();
             }
         }
 
@@ -124,6 +131,9 @@ public class Sandbox {
         Query q = sessionRep.createQuery().field("userId").equal(cred.getEmail());
         Session session = DAOFactory.getSessionDAO().findOne(q);
         if (session != null) {
+            session.setActive(true);
+            session.setLastAccessedTime(new Date());
+            sessionRep.save(session);
             return Response.status(200).entity(session.getSessionId()).build();
         } else {
             // No session found, creating a new one
@@ -141,10 +151,62 @@ public class Sandbox {
     }
 
     @GET
+    @Path("/logout")
+    @Audit
+    public Response logout() {
+
+        String sid = httpRequest.getHeader("session-id");
+        logger.info("Disconnecting user with session id " + sid);
+
+        if (sid != null) {
+            SessionRepositoryDAO sessionRep = DAOFactory.getSessionDAO();
+            Query q = sessionRep.createQuery().field("sessionId").equal(sid);
+            Session session = DAOFactory.getSessionDAO().findOne(q);
+            if (session == null) {
+                return Response.status(500).build();
+            } else {
+                session.setLastAccessedTime(new Date());
+                session.setActive(false);
+                sessionRep.save(session);
+                return Response.status(200).build();
+            }
+        } else {
+            logger.error("Can't find any session ID attached to the HTTP request.");
+            return Response.status(500).build();
+        }
+    }
+
+    @GET
+    @Path("/isactive")
+    public Response isActive() {
+        DatahubUtils.tagExpiredSessions();
+        DatahubUtils.deleteExpiredSessions();
+
+        String sid = httpRequest.getHeader("session-id");
+        logger.info("Checking validity of session id " + sid);
+
+        if (sid != null) {
+            SessionRepositoryDAO sessionRep = DAOFactory.getSessionDAO();
+            Query q = sessionRep.createQuery().field("sessionId").equal(sid);
+            Session session = DAOFactory.getSessionDAO().findOne(q);
+            if (session != null) {
+                logger.debug("Building isactive response for session id "+sid+" ; active = "+session.isActive());
+                return Response.status(200).entity(session.isActive()).build();
+            } else {
+                logger.error("Can't find any session for id "+sid);
+                return Response.status(200).entity(false).build();
+            }
+        } else {
+            logger.error("Can't find any session ID attached to the HTTP request.");
+            return Response.status(500).build();
+        }
+    }
+
+    @GET
     @Path("/admin")
     @Produces(MediaType.APPLICATION_JSON)
     @RolesAllowed({"admin"})
-    @Audit("adminsitration action")
+    @Audit
     public MyJsonData produceAdminJSON() {
         String id = UUID.randomUUID().toString();
         MyJsonData d = new MyJsonData();
@@ -157,7 +219,7 @@ public class Sandbox {
     @Path("/helloauth")
     @Produces(MediaType.TEXT_PLAIN)
     @RolesAllowed({"user"})
-    @Audit("helloAuth")
+    @Audit
     public String helloAuth() {
         Date now = new Date();
         String sessionId = httpRequest.getHeader("session-id");
@@ -165,7 +227,7 @@ public class Sandbox {
             Session s = DAOFactory.getSessionDAO().get(sessionId);
             s.setLastAccessedTime(now);
             DAOFactory.getSessionDAO().save(s);
-            logger.debug("Session "+sessionId+" last accessed : " + now);
+            logger.debug("Session " + sessionId + " last accessed : " + now);
         }
         return "hello";
     }
@@ -173,7 +235,7 @@ public class Sandbox {
     @GET
     @Path("/hellopublic")
     @Produces(MediaType.TEXT_PLAIN)
-    @Audit("hello")
+    @Audit
     public String hello() {
         return "hello";
     }
