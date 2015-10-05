@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <!--Import materialize.css-->
+
+        <title>SyMeTRIC Data Hub</title>
+        <meta charset="UTF-8">
+        <!--Let browser know website is optimized for mobile-->
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+        <style>
+
+            /*.node {
+              stroke: #fff;
+              stroke-width: 1.5px;
+            }*/
+
+            .node text {
+                /*pointer-events: none;*/
+                font: 10px sans-serif;
+            }
+
+            .link {
+                stroke: #999;
+                stroke-opacity: .6;
+                fill: none;
+            }
+
+        </style>
+
+        <!-- For Leaflet web cartography -->
+        <style media="screen" type="text/css">
+            #map { height: 300px; }
+
+            .info {
+                padding: 6px 8px;
+                /*font: 14px/16px Arial, Helvetica, sans-serif;*/
+                font: 12px Arial, Helvetica, sans-serif;
+                background: white;
+                background: rgba(255,255,255,0.8);
+                box-shadow: 0 0 15px rgba(0,0,0,0.2);
+                border-radius: 5px;
+            }
+
+            .info h5 {
+                margin: 0 0 5px;
+                color: #777;
+            }
+
+            .legend {
+                line-height: 18px;
+                color: #555;
+            }
+
+            .legend i {
+                width: 18px;
+                height: 18px;
+                float: left;
+                margin-right: 8px;
+                opacity: 0.5;
+            }
+
+        </style>
+
+        <style>
+            header, main, footer {
+                padding-left: 240px;
+            }
+
+            /*            modal {
+                            width: 20%;
+                        }*/
+
+            @media only screen and (max-width : 992px) {
+                header, main, footer {
+                    padding-left: 0;
+                }
+            }
+        </style>
+
+        <link type="text/css" rel="stylesheet" href="css/materialize.min.css"  media="screen,projection"/>
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/leaflet.css" />
+    </head>
+
+    <body>
+
+
+        <header id="pageHeader">
+            <!--<nav class="teal lighten-2">-->
+            <!--            <ul id="dropdownUserMenu" class="dropdown-content"> 
+                            <li><a href="#!">Profile</a></li> 
+                            <li class="divider"></li> 
+                            <li><a href="#!">Logout</a></li> 
+                        </ul>
+                        <nav>
+                            <div class="nav-wrapper">
+                                <ul id="navbar" class="right hide-on-med-and-down">
+                                    <li><a class="waves-effect waves-light modal-trigger" href="#loginModal">Login</a></li> 
+                                    <li><a class="dropdown-button" href="#!" data-activates="dropdownUserMenu"><i class="material-icons right">perm_identity</i></a></li>
+                                </ul>
+                            </div>
+                            <ul id="slide-out" class="side-nav fixed">
+                                <li ><a href="#!">About</a></li>
+                                <li><a href="#!">Dashboard</a></li>
+                                <li><a href="#!">Demonstrations</a></li>
+                                <li><a href="#!">Second Sidebar Link</a></li>
+                            </ul>
+                            <a href="#" data-activates="slide-out" class="button-collapse"><i class="mdi-navigation-menu"></i></a>
+                        </nav>-->
+        </header>
+
+        <main>
+            <!-- Login modal -->
+            <div id="loginModal" class="modal">
+                <div class="modal-content">
+
+                    <!--<div class="col s12">-->
+                    <form class="col s12">
+                        <div class="row">
+                            <div class="col s6">
+                                <div class="row">
+                                    <div class="input-field col s12">
+                                        <input id="emailField" type="email" class="validate">
+                                        <label for="email">Email</label>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="input-field col s12">
+                                        <input id="passwordField" type="password" class="validate">
+                                        <label for="password">Password</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col s6">
+                                <p class="valign">Don't have an account yet ? <a class="waves-effect waves-light" id="registerBtn">register</a></p>
+                                <span id="loginInfo" class="red-text text-darken-2"></span>
+                            </div>
+                        </div>
+
+<!--                        <div class="row">
+                            <span id="loginInfo" class="red-text text-darken-2"></span>
+                        </div>-->
+                        <div class="row">
+                            <a id="loginBtn" class="right modal-action waves-effect waves-green btn-flat center">Login</a>
+                        </div>
+                    </form>
+                </div>
+<!--                <div class="modal-footer">
+                                        <a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat">Login</a>
+                    <a id="loginBtn" class=" modal-action waves-effect waves-green btn-flat center">Login</a>
+                </div>-->
+            </div>
+
+            <div class="row"></div>
+            <div class="row">
+                <div class="col s12">
+                    <ul class="tabs">
+                        <li class="tab col s3"><a class="active" href="#tabEpid">Linked epidemiology</a></li>
+                        <li class="tab col s3 "><a class="active" href="#tabSysBio">Systems biology</a></li>
+                        <li class="tab col s3 disabled"><a href="#tabOmic">Linked *omics data</a></li>
+                    </ul>
+                </div>
+
+                <!--////////////////////////////////////////////////////-->
+                <div id="tabEpid" class="col s12">
+                    <div class="container">
+
+                        <div class="row">
+                            <div class="section">
+                                <h5>Demonstration objectives</h5>
+                                <p>This demonstration aims at querying CepiDC data dumps through Semantic Web ontologies and datasets, to complement it with fresh linked open genetic data.</p>
+                                <!--<div class="divider"></div>-->
+                            </div>
+                            <!--<div class="section">-->
+                            <div class="col s4 center"> <h5><i class="material-icons">view_list</i> CépiDc</h5> 
+                                <p>CépiDc is an epidemiology center providing 
+                                    statistical data on medical death causes 
+                                    in France, since 1968. </p>
+                            </div>
+                            <div class="col s4 center"> <h5><i class="material-icons">view_list</i> DOID</h5> 
+                                <p>Human disease ontology</p>
+                            </div>
+                            <div class="col s4 center"> <h5><i class="material-icons">view_list</i> OMIM</h5> 
+                                <p>...</p>
+                            </div>
+                            <!--</div>-->
+                        </div>
+
+                        <br>
+                        <div class="row">
+                            <form class="form col s12">
+                                <div class="row">
+                                    <div class="input-field col s6">
+                                        <select id="selectYear">
+                                            <option value="2007" selected="selected">2007</option>
+                                            <option value="2008">2008</option>
+                                            <option value="2009">2009</option>
+                                            <option value="2010">2010</option>
+                                            <option value="2011">2011</option>
+                                        </select>
+                                        <label>Select year</label>
+                                    </div>
+                                    <div class="input-field col s6">
+                                        <input placeholder="Try with aortic, stenosis, mitral" id="searchLabel" type="text" value="stenosis">
+                                        <!--<input placeholder="Try with aortic, stenosis, mitral" id="searchLabel" type="text" class="validate" value="stenosis">-->
+                                        <label for="first_name">Search for phenotype</label>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <p>
+                                        <input class="with-gap" name="radioQueryType" type="radio" id="radioTableRes" value="select" checked />
+                                        <label for="radioTableRes">Results as table & map</label>
+                                    </p>
+                                    <p>
+                                        <input class="with-gap" name="radioQueryType" type="radio" id="radioGraphRes" value="construct"/>
+                                        <label for="radioGraphRes">Results as graph</label>
+                                    </p>
+                                </div>
+                                <div class="row">
+                                    <a class="waves-effect waves-light btn right" id="btnQuery">Query</a>
+                                </div>
+                                <div class="row">
+                                    <ul class="collapsible" data-collapsible="accordion">
+                                        <li>
+                                            <div class="collapsible-header"><i class="material-icons">visibility</i>SPARQL query</div>
+                                            <div class="collapsible-body">
+                                                <!--<div class="input-field col s12">-->
+                                                <textarea id="epidQueryTextArea" class="materialize-textarea"></textarea>
+                                                <!--<label for="epidQueryTextArea">Editable query</label>-->
+                                                <!--</div>-->
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </form>
+                            <br>
+                        </div>
+
+                        <div class="row" id="mapRow">
+                        </div>
+
+                        <div class="row">
+                            <!--                            <ul class="collapsible" data-collapsible="accordion">
+                                                            <li>
+                                                                <div class="collapsible-header"><i class="material-icons">visibility</i>Query results</div>
+                                                                <div class="collapsible-body">-->
+
+                            <table id="tbRes" class="responsive-table highlight" style="table-layout:fixed; word-wrap:break-word">  
+                                <thead>  
+                                </thead>  
+                                <tbody>  
+                                </tbody>  
+                            </table>  
+
+                            <!--                                    </div>
+                                                            </li>
+                                                        </ul>-->
+                        </div>
+
+                        <div class="row">
+                            <p id="parRDFGraph"></p>
+                        </div>
+
+                    </div>
+                </div>
+                <div id="tabSysBio" class="col s12">
+                    <div class="container">
+
+                    </div>
+                </div>
+                <div id="tabOmic" class="col s12">
+                    <div class="container">
+
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- ///////////////////////////////////////////////////////////////-->
+        <footer class="page-footer">
+            <div class="container">
+                <div class="row">
+                    <div class="col l6 s12">
+                        <h5 class="white-text">SyMeTRIC</h5>
+                        <p class="grey-text text-lighten-4">is a Systems Medicine project funded by the Pays de la Loire french region...<p>
+                    </div>
+                    <div class="col l4 offset-l2 s12">
+                        <h5 class="white-text">Main partners</h5>
+                        <ul>
+                            <li><a class="grey-text text-lighten-3" href="#!">Nantes academic hospital</a></li>
+                            <li><a class="grey-text text-lighten-3" href="#!">Nantes University</a></li>
+                            <li><a class="grey-text text-lighten-3" href="#!">Angers academic hospital</a></li>
+                            <li><a class="grey-text text-lighten-3" href="#!">Angers University</a></li>
+                            <li><a class="grey-text text-lighten-3" href="#!">Institut de Cancérologie de l'Ouest</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-copyright">
+                <div class="container">
+                    © 2015 Copyright Text
+                    <!--<a class="grey-text text-lighten-4 right" href="#!">More Links</a>-->
+                </div>
+            </div>
+        </footer>
+
+        <script type="text/javascript" src="js/lib/underscore-min.js"></script>
+        <script type="text/javascript" src="js/lib/backbone-min.js"></script>
+
+        <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+        <script type="text/javascript" src="js/materialize.min.js"></script>
+        <script src="js/lib/d3.v3.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/2.0.0/handlebars.js"></script>
+        <script src="http://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/leaflet.js"></script>
+
+        <script src="js/config.js"></script>
+        <script src="js/departements.js"></script>
+        <script src="js/mapFranceRendering.js"></script>
+        <script src="js/main2.js"></script>
+
+    </body>
+</html>

@@ -4,6 +4,97 @@
  * author : alban.gaignard@cnrs.fr
  */
 
+function materializeJSinit() {
+    //$(".button-collapse").sideNav({
+//      menuWidth: 240, // Default is 240
+//      edge: 'left', // Choose the horizontal origin
+//      closeOnClick: false // Closes side-nav on <a> clicks, useful for Angular/Meteor
+//    });
+
+// Initialize collapsible (uncomment the line below if you use the dropdown variation)
+//$('.collapsible').collapsible();
+    $('select').material_select();
+    $('.button-collapse').sideNav();
+    $('.collapsible').collapsible({
+        accordion: false // A setting that changes the collapsible behavior to expandable instead of the default accordion style
+    });
+    $('.modal-trigger').leanModal({
+        dismissible: true, // Modal can be dismissed by clicking outside of the modal
+        opacity: .5, // Opacity of modal background
+        in_duration: 200, // Transition in duration
+        out_duration: 100, // Transition out duration
+        ready: function () {
+        }, // Callback for Modal open
+        complete: function () {
+        } // Callback for Modal close
+    });
+    $('.dropdown-button').dropdown();
+}
+
+var EventBus = _.extend({}, Backbone.Events);
+
+var EVT_INIT = 'init';
+var EVT_LOGIN = 'login';
+var EVT_LOGOUT = 'logout';
+
+$(document).ready(function () {
+// Initialize collapse button
+    
+    materializeJSinit();
+    
+    EventBus.trigger(EVT_INIT);
+
+    (function checkSessionValidity() {
+        var sid = readCookie("sid");
+        console.log("Checking session "+sid+" validity for auto logout.");
+        
+        $.ajax({
+            url: "/sandbox/isactive",
+            type: "GET",
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'session-id': sid
+            },
+            dataType: "text",
+            complete: setTimeout(function () {
+                checkSessionValidity()
+            }, 60000),
+            timeout: 2000,
+            success: function (data) {
+                if (data.indexOf("true") > -1) {
+                    EventBus.trigger(EVT_LOGIN, sid);
+                } else {
+//                    infoWarning("You have been disconnedted due to inactive session.")
+                    EventBus.trigger(EVT_LOGOUT);
+                }
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.log(textStatus);
+            }
+        })
+    })();
+    
+    $('#loginBtn').click(function () {
+        e = $('#emailField').val();
+        p = $('#passwordField').val();
+        if ((e.length === 0) || (p.length === 0)) {
+            loginInfo("Please fill the login and password fields.");
+        } else {
+            login(e, p);
+        }
+    });
+
+    $('#registerBtn').click(function () {
+        e = $('#emailField').val();
+        p = $('#passwordField').val();
+        if ((e.length === 0) || (p.length === 0)) {
+            loginInfo("Please fill the login and password fields.");
+        } else {
+            register(e, p);
+        }
+    });
+});
 
 
 ////////////////////////////////////////////
@@ -11,11 +102,128 @@
 ////////////////////////////////////////////
 
 // TODO to be part of a Util.js file
+// 
+
+// Testing Events handling : 
+//Foo = Backbone.Model.extend({
+//  sayHello: function(){
+//    var data = "Hello Wordl!"
+//    EventBus.trigger('event', data);
+//  }
+//});
+//
+//Bar = Backbone.Model.extend({
+//  initialize: function(){
+//    EventBus.on('event', this.callbackMethod);
+//  },
+//  
+//  callbackMethod: function(data) {
+//    console.log(data);
+//  }
+//});
+//
+//var foo = new Foo();
+//var bar = new Bar();
+//foo.sayHello();
+
+EventBus.on(EVT_INIT, function () {
+    console.log("EVT_INIT");
+    var menus = '<ul id="dropdownUserMenu" class="dropdown-content"> \n\
+                <li><a href="#!">Profile</a></li> \n\
+                <li class="divider"></li> \n\
+                <li><a href="#!">Logout</a></li> \n\
+            </ul>\n\
+            <nav> \n\
+                <div class="nav-wrapper"> \n\
+                    <ul id="navbar" class="right hide-on-med-and-down"> \n\
+                        <li><a class="waves-effect waves-light modal-trigger" href="#loginModal">Login</a></li>  \n\
+                        <!--<li><a class="dropdown-button" id="dropDownUserMenu" href="#!" data-activates="dropdownUserMenu"><i class="material-icons right">perm_identity</i></a></li>--> \n\
+                    </ul> \n\
+                </div> \n\
+                <ul id="slide-out" class="side-nav fixed"> \n\
+                    <li ><a href="#!">About</a></li> \n\
+                    <li><a href="#!">Dashboard</a></li> \n\
+                    <li><a href="#!">Demonstrations</a></li> \n\
+                    <!--<li><a href="#!">Second Sidebar Link</a></li>--> \n\
+                </ul> \n\
+                <a href="#" data-activates="slide-out" class="button-collapse"><i class="mdi-navigation-menu"></i></a> \n\
+            </nav>';
+
+    $('#pageHeader').html(menus);
+    
+    $('.dropdown-button').dropdown();
+    
+    $('.modal-trigger').leanModal({
+        dismissible: true, // Modal can be dismissed by clicking outside of the modal
+        opacity: .5, // Opacity of modal background
+        in_duration: 200, // Transition in duration
+        out_duration: 100, // Transition out duration
+        ready: function () {
+        }, // Callback for Modal open
+        complete: function () {
+        } // Callback for Modal close
+    });
+    
+    $('#loginInfo').html('');
+    $('#emailField').val('');
+    $('#passwordField').val('');
+});
+
+EventBus.on(EVT_LOGIN, function (sessionId) {
+    console.log("EVT_LOGIN");
+    if (! sessionId) {
+        console.log("DELETING COOKIE !!");
+    }
+    createCookie("sid", sessionId, 7);
+
+    var menus = '<ul id="dropdownUserMenu" class="dropdown-content"> \n\
+                <li><a href="#!">Profile</a></li> \n\
+                <li class="divider"></li> \n\
+                <li><a id="logoutBtn">Logout</a></li> \n\
+            </ul>\n\
+            <nav> \n\
+                <div class="nav-wrapper"> \n\
+                    <ul id="navbar" class="right hide-on-med-and-down"> \n\
+                        <!-- <li><a class="waves-effect waves-light modal-trigger" href="#loginModal">Login</a></li>-->  \n\
+                        <li><a class="dropdown-button" href="#!" data-activates="dropdownUserMenu"><i class="material-icons right">perm_identity</i></a></li> \n\
+                    </ul> \n\
+                </div> \n\
+                <ul id="slide-out" class="side-nav fixed"> \n\
+                    <li ><a href="#!">About</a></li> \n\
+                    <li><a href="#!">Dashboard</a></li> \n\
+                    <li><a href="#!">Demonstrations</a></li> \n\
+                    <!--<li><a href="#!">Second Sidebar Link</a></li>--> \n\
+                </ul> \n\
+                <a href="#" data-activates="slide-out" class="button-collapse"><i class="mdi-navigation-menu"></i></a> \n\
+            </nav>';
+
+    $('#pageHeader').html(menus);
+    
+    $('.dropdown-button').dropdown();
+    
+    $('#logoutBtn').click(function () {
+        logout();
+    });
+    
+    $('#loginInfo').html('');
+    $('#emailField').val('');
+    $('#passwordField').val('');
+    //close modal
+    $('#loginModal').closeModal();
+});
+
+EventBus.on(EVT_LOGOUT, function () {
+    console.log("EVT_LOGOUT");
+    eraseCookie("sid");
+
+    EventBus.trigger(EVT_INIT);
+});
+
 // Useful functions for array handling
-Array.prototype.contains = function(a) {
+Array.prototype.contains = function (a) {
     return this.indexOf(a) != -1
 };
-Array.prototype.remove = function(a) {
+Array.prototype.remove = function (a) {
     if (this.contains(a)) {
         return this.splice(this.indexOf(a), 1)
     }
@@ -24,25 +232,21 @@ Array.prototype.remove = function(a) {
 $.support.cors = true;
 
 function alertTimeout(wait) {
-    setTimeout(function() {
+    setTimeout(function () {
         $('#footer').children('.alert:last-child').remove();
     }, wait);
 }
 
-function infoWarning(message) {
-    var html = "<div class=\"alert alert alert-dismissable\"><button type=\"button\" class=\"close\" data-dismiss=\"alert\">&times;</button><strong>Warning!</strong> " + message + "</div>";
-    $('#footer').prepend(html);
-    alertTimeout(5000);
-}
 function infoSuccess(message) {
-    var html = "<div class=\"alert alert-success alert-dismissable\"><button type=\"button\" class=\"close\" data-dismiss=\"alert\">&times;</button><strong>Success!</strong> " + message + "</div>";
-    $('#footer').prepend(html);
-    alertTimeout(5000);
+    Materialize.toast(message, 2000);
 }
+
+function infoWarning(message) {
+    Materialize.toast("<i class=\"material-icons\">warning</i> " + message, 2000);
+}
+
 function infoError(message) {
-    var html = "<div class=\"alert alert-danger alert-dismissable\"><button type=\"button\" class=\"close\" data-dismiss=\"alert\">&times;</button><strong>Error!</strong> " + message + "</div>";
-    $('#footer').prepend(html);
-    alertTimeout(5000);
+    Materialize.toast("<i class=\"material-icons\">error_outline</i> " + message, 2000);
 }
 
 // Utility functions
@@ -56,117 +260,77 @@ function htmlDecode(value) {
     return $('<div/>').html(value).text();
 }
 
+function createCookie(name, value, days) {
+    if (days) {
+        var date = new Date();
+        date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+        var expires = "; expires=" + date.toGMTString();
+    }
+    else
+        var expires = "";
+    document.cookie = name + "=" + value + expires + "; path=/";
+}
 
+function readCookie(name) {
+    var nameEQ = name + "=";
+    var ca = document.cookie.split(';');
+    for (var i = 0; i < ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0) == ' ')
+            c = c.substring(1, c.length);
+        if (c.indexOf(nameEQ) == 0)
+            return c.substring(nameEQ.length, c.length);
+    }
+    return null;
+}
 
+function eraseCookie(name) {
+    createCookie(name, "", -1);
+}
 
 ////////////////////////////////////////////
 // Events handling
 ////////////////////////////////////////////
 
 $('#myTabs a').click(function (e) {
-  e.preventDefault()
-  $(this).tab('show')
+    e.preventDefault()
+    $(this).tab('show')
 })
 
-
-$('#btnStartUploads').click(function() {
-    $('#btnStartUploads').button('loading');
-});
-
-$('#btnReset').click(function() {
-    reset();
-});
-
-$('#btnLoad').click(function() {
-    load($('#txtLoad').val());
-});
-
-$('#btnQuery').click(function() {
+$('#btnQuery').click(function () {
+    console.log("clck");
     var jsonResults = sparql($('#epidQueryTextArea').val());
 });
 
-$('input[name="inlineRadioOptions"]').on('change', function(e) {
+$('input[name="radioQueryType"]').on('change', function (e) {
     // var path = $('#Data_Select option:selected').html();
     var r = $(this).val();
-    var contextData = { year : $('#selectYear').val(), label : $('#searchLabel').val()};
-    var tpl = ( $('#radioTableRes').prop("checked") ? epidemioQueries[0] : epidemioQueries[1] );
-    var q = processHbTemplate(tpl,contextData);
+    console.log(r);
+    var contextData = {year: $('#selectYear').val(), label: $('#searchLabel').val()};
+    var tpl = ($('#radioTableRes').prop("checked") ? epidemioQueries[0] : epidemioQueries[1]);
+    var q = processHbTemplate(tpl, contextData);
     $('#epidQueryTextArea').val(q);
+    $('#epidQueryTextArea').trigger('autoresize');
 });
 
-$('#selectYear').on('change', function(e) {
+$('#selectYear').on('change', function (e) {
     var y = $(this).val();
-    var contextData = { year : y, label : $('#searchLabel').val()};
-    var tpl = ( $('#radioTableRes').prop("checked") ? epidemioQueries[0] : epidemioQueries[1] );
-    var q = processHbTemplate(tpl,contextData);
+    console.log(y);
+    var contextData = {year: y, label: $('#searchLabel').val()};
+    var tpl = ($('#radioTableRes').prop("checked") ? epidemioQueries[0] : epidemioQueries[1]);
+    var q = processHbTemplate(tpl, contextData);
     $('#epidQueryTextArea').val(q);
+    $('#epidQueryTextArea').trigger('autoresize');
 });
 
-$('#searchLabel').on('change', function(e) {
+$('#searchLabel').on('change', function (e) {
     var l = $(this).val();
-    var contextData = { year : $('#selectYear').val(), label : l};
-    var tpl = ( $('#radioTableRes').prop("checked") ? epidemioQueries[0] : epidemioQueries[1] );
-    var q = processHbTemplate(tpl,contextData);
+    console.log(l);
+    var contextData = {year: $('#selectYear').val(), label: l};
+    var tpl = ($('#radioTableRes').prop("checked") ? epidemioQueries[0] : epidemioQueries[1]);
+    var q = processHbTemplate(tpl, contextData);
     $('#epidQueryTextArea').val(q);
-});
-
-
-$('#btnQueryFed').click(function() {
-    sparqlFed($('#sparqlFedTextArea').val());
-});
-
-$('#btnDataSource').click(function() {
-    addDataSource($('#txtDataSource').val());
-});
-
-$('#VOIDSparql_Select').on('change', function(e) {
-    var query = statVOID[$(this).val()];
-    //console.log(query);
-    $('#sparqlTextArea').val(query);
-});
-
-$('#checkTPGrouping').on('change', function(e) {
-    resetDQP();
-    if ($('#checkTPGrouping').prop('checked')) {
-        $('#txtSlice').attr("disabled", false);
-    } else {
-        $('#txtSlice').attr("disabled", true);
-    }
-});
-
-$('#txtSlice').on('change', function(e) {
-    resetDQP();
-});
-
-$('#FedSparql_Select').on('change', function(e) {
-    var query = fedQueries[$(this).val()];
-    //console.log(query);
-    $('#sparqlFedTextArea').val(query);
-});
-
-$('#DataSource_Select').on('change', function(e) {
-    var endpoint = $('#DataSource_Select option:selected').html();
-    $('#txtDataSource').val(endpoint);
-});
-
-$('#Data_Select').on('change', function(e) {
-    // var path = $('#Data_Select option:selected').html();
-    var path = remoteFilePaths[$(this).val()];
-    $('#txtLoad').val(path);
-});
-
-$('#tbDataSources').on("click", "#testBtn", function(e) {
-    var row = $(this).closest("tr");
-    var endpoint = row.children(":first").html(); // table row ID 
-    testEndpoint(endpoint, row.index());
-});
-
-$('#tbDataSources').on("click", "#delBtn", function(e) {
-    var endpointUrl = $(this).closest("tr").children(":first").html(); // table row ID 
-    validDataSources.remove(endpointUrl);
-    console.log(validDataSources);
-    $(this).parent().parent().remove();
-    resetDQP();
+    $('#epidQueryTextArea').trigger('autoresize');
 });
 
 ////////////////////////////////////////////
@@ -180,6 +344,8 @@ console.log("Connecting to the SyMeTRIC Data API " + rootURL);
 
 // init GUI components
 $('#selectYear').val(2007).change();
+$('#epidQueryTextArea').trigger('autoresize');
+
 initQueryAPI();
 
 //$('#sparqlFedTextArea').val(fedQueries[0]);
@@ -193,26 +359,110 @@ initQueryAPI();
 // Communication with the API
 ////////////////////////////////
 
+function login(email, password) {
+    $.ajax({
+        type: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        url: rootURL + '/sandbox/login',
+        data: JSON.stringify({'email': email, 'password': password}),
+        dataType: "text",
+        success: function (data, textStatus, jqXHR) {
+
+            EventBus.trigger(EVT_LOGIN, data);
+
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            response = jqXHR.responseText;
+//            infoError(jqXHR.responseText);
+            if (response.indexOf("unregistered") > -1) {
+                loginInfo("Unknown user email, please register first.");
+            } else if (response.indexOf("wrong") > -1) {
+                loginInfo(("Please check your password."));
+            } else {
+                infoError(jqXHR.responseText);
+            }
+        }
+    });
+}
+
+function register(email, password) {
+    $.ajax({
+        type: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        url: rootURL + '/sandbox/signin',
+        data: JSON.stringify({'email': email, 'password': password}),
+        dataType: "text",
+        success: function (data, textStatus, jqXHR) {
+            EventBus.trigger(EVT_LOGIN, data);
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            response = jqXHR.responseText;
+//            infoError(jqXHR.responseText);
+            if (response.indexOf("exists") > -1) {
+                loginInfo("User already exists, please enter another email adress, or ask for password reset.");
+            } else {
+                infoError(jqXHR.responseText);
+            }
+        }
+    });
+}
+
+function logout() {
+    var sid = readCookie("sid");
+    $.ajax({
+        type: 'GET',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'session-id': sid
+        },
+        url: rootURL + '/sandbox/logout',
+        dataType: "text",
+        success: function (data, textStatus, jqXHR) {
+            EventBus.trigger(EVT_LOGOUT);
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            response = jqXHR.responseText;
+            infoError(jqXHR.responseText);
+            if (response.indexOf("unregistered") > -1) {
+                loginInfo("Unknown user email, please register first.");
+            } else if (response.indexOf("wrong") > -1) {
+                loginInfo(("Please check your password."));
+            } else {
+                infoError(jqXHR.responseText);
+            }
+        }
+    });
+}
+
 // http call to reset the remote knowledge graph
 function initQueryAPI() {
     console.log('Initializing the Query API');
-    
-    $('#btnQuery').attr("disabled", true);
+
+//    $('#btnQuery').attr("disabled", true);
+    $('#btnQuery').addClass("disabled");
     $("#btnQuery").html("Loading...");
-    
+
     $.ajax({
         type: 'GET',
         url: rootURL + '/query/init',
         dataType: "text",
-        success: function(data, textStatus, jqXHR) {
+        success: function (data, textStatus, jqXHR) {
             //infoSuccess('Query API init done');
-            $('#btnQuery').attr("disabled", false);
+//            $('#btnQuery').attr("disabled", false);
+            $('#btnQuery').removeClass("disabled");
             $("#btnQuery").html("Query");
         },
-        error: function(jqXHR, textStatus, errorThrown) {
+        error: function (jqXHR, textStatus, errorThrown) {
             infoError('Query API init error: ' + textStatus);
             console.log(errorThrown);
-            $('#btnQuery').attr("disabled", false);
+            $('#btnQuery').removeClass("disabled");
             $("#btnQuery").html("Query");
         }
     });
@@ -225,13 +475,13 @@ function resetDQP() {
         type: 'POST',
         url: rootURL + '/dqp/reset',
         dataType: "text",
-        success: function(data, textStatus, jqXHR) {
+        success: function (data, textStatus, jqXHR) {
             //infoSuccess('KGRAM-DQP data sources reset.');
             console.log('KGRAM-DQP data sources reset. ' + data);
 
             configureDQP();
         },
-        error: function(jqXHR, textStatus, errorThrown) {
+        error: function (jqXHR, textStatus, errorThrown) {
             //infoError('Can\'t reset KGRAM-DQP: ' + textStatus);
             console.log(errorThrown);
         }
@@ -240,7 +490,7 @@ function resetDQP() {
 
 function configureDQP() {
     console.log("Configuring DQP with " + validDataSources);
-    $.each(validDataSources, function(index, item) {
+    $.each(validDataSources, function (index, item) {
         //jsonDataSources+='{\"endpointUrl\" : \"'+item+'\"},';
         $.ajax({
             type: 'POST',
@@ -252,10 +502,10 @@ function configureDQP() {
             data: {'endpointUrl': item},
             //data: jsonDataSources,
             dataType: "text",
-            success: function(data, textStatus, jqXHR) {
+            success: function (data, textStatus, jqXHR) {
                 console.log(data);
             },
-            error: function(jqXHR, textStatus, errorThrown) {
+            error: function (jqXHR, textStatus, errorThrown) {
                 infoError('Corese/KGRAM error: ' + textStatus);
                 console.log(errorThrown);
             }
@@ -273,13 +523,13 @@ function load() {
         url: rootURL + '/sparql/load',
         data: {'remote_path': $('#txtLoad').val(), 'source': $('#graphLoad').val()},
         dataType: "text",
-        success: function(data, textStatus, jqXHR) {
+        success: function (data, textStatus, jqXHR) {
             console.log(data);
             infoSuccess("Loading done.");
             $('#btnLoad').attr("disabled", false);
             $("#btnLoad").html("Load");
         },
-        error: function(jqXHR, textStatus, errorThrown) {
+        error: function (jqXHR, textStatus, errorThrown) {
             infoError('Corese/KGRAM error: ' + textStatus);
             console.log(errorThrown);
             console.log(jqXHR);
@@ -290,6 +540,7 @@ function load() {
 }
 
 function sparql(sparqlQuery) {
+    console.log("sending query");
     $('#btnQuery').attr("disabled", true);
     $("#btnQuery").html("Querying ...");
 
@@ -303,7 +554,7 @@ function sparql(sparqlQuery) {
     //var isConstruct = (sparqlQuery.toLowerCase().indexOf("construct") >= 0);
     var isUpdate = (sparqlQuery.toLowerCase().indexOf("insert") >= 0) || (sparqlQuery.toLowerCase().indexOf("delete") >= 0);
 
-    
+
     if (isConstruct) {
         endpointURL = rootURL + '/query/d3';
     } else {
@@ -349,7 +600,7 @@ function sparql(sparqlQuery) {
             $('#tbRes thead tr').remove();
             $('#tbRes tbody tr').remove();
             $('#map').remove();
-            
+
             infoError("SPARQL querying failure: " + errorThrown);
 //            console.log(errorThrown);
             console.log(jqXHR.responseText);
@@ -401,7 +652,7 @@ function sparqlFed(sparqlQuery) {
         //dataType: "application/sparql-results+json",
         dataType: "json",
         crossDomain: true,
-        success: function(data, textStatus, jqXHR) {
+        success: function (data, textStatus, jqXHR) {
 //                        console.log(data)
             if ($('#checkProv').prop('checked')) {
                 renderListFed(data.mappings);
@@ -413,7 +664,7 @@ function sparqlFed(sparqlQuery) {
             $('#btnQueryFed').attr("disabled", false);
             $("#btnQueryFed").html("Query");
         },
-        error: function(jqXHR, textStatus, errorThrown) {
+        error: function (jqXHR, textStatus, errorThrown) {
             infoError("SPARQL querying failure: " + textStatus);
             $('#tbResFed thead tr').remove();
             $('#tbResFed tbody tr').remove();
@@ -432,7 +683,7 @@ function pollCost() {
         url: rootURL + '/dqp/getCost',
         type: 'GET',
         dataType: 'json',
-        success: function(data) {
+        success: function (data) {
             // depending on the data, either call setTimeout or simply don't
 //            renderCostOneTab(data);
             renderCostMultiTab(data);
@@ -440,7 +691,7 @@ function pollCost() {
                 setTimeout(pollCost, 500);
             }
         },
-        error: function(jqXHR, textStatus, errorThrown) {
+        error: function (jqXHR, textStatus, errorThrown) {
             console.log(textStatus);
             console.log(jqXHR.responseText);
             console.log(errorThrown);
@@ -469,7 +720,7 @@ function testEndpoint(endpointURL, rowIndex) {
         url: rootURL + '/dqp/testDatasources',
         data: {'endpointUrl': endpointURL},
         dataType: 'json',
-        success: function(data, textStatus, jqXHR) {
+        success: function (data, textStatus, jqXHR) {
             console.log(data);
             if (data.test === true) {
                 console.log(endpointURL + " responds to SPARQL queries");
@@ -487,7 +738,7 @@ function testEndpoint(endpointURL, rowIndex) {
                 console.log(endpointURL + " does NOT respond to SPARQL queries");
             }
         },
-        error: function(jqXHR, textStatus, errorThrown) {
+        error: function (jqXHR, textStatus, errorThrown) {
             console.log(jqXHR);
             console.log(errorThrown);
             infoError(endpointURL + " does not responds to SPARQL queries");
@@ -512,6 +763,13 @@ function testEndpoint(endpointURL, rowIndex) {
 // HTML rendering
 ////////////////////////////////
 
+function loginInfo(message) {
+    $('#loginInfo').text(message);
+}
+function loginInfoReset() {
+    $('#loginInfo').text();
+}
+
 function renderList(data) {
 
     // JAX-RS serializes an empty list as null, and a 'collection of one' as an object (not an 'array of one')
@@ -524,14 +782,14 @@ function renderList(data) {
     if (data.results.bindings.length > 0) {
         //Rendering the headers
         var tableHeader = '<tr>';
-        $.each(listVar, function(index, item) {
+        $.each(listVar, function (index, item) {
             tableHeader = tableHeader + '<th>?' + item + '</th>';
         });
         tableHeader = tableHeader + '</tr>';
         $('#tbRes thead').html(tableHeader);
 
         //Rendering the values
-        $.each(listVal, function(index, item) {
+        $.each(listVal, function (index, item) {
             var row = "<tr>";
 
             for (var i = 0; i < listVar.length; i++) {
@@ -565,7 +823,7 @@ function renderCostMultiTab(data) {
 
 
     table = table + "<caption><strong>Requests per subquery</strong></caption> \n";
-    $.each(listQCost, function(index, item) {
+    $.each(listQCost, function (index, item) {
         console.log(listQCost[index].query);
         console.log(listQCost[index].nbReq);
         console.log(listQCost[index].nbRes);
@@ -591,7 +849,7 @@ function renderCostMultiTab(data) {
     table = "<table id=\"tbAdvanced\" class=\"table table-striped\"> \n <tbody>  ";
     // number of results per subqueries
     table = table + "<caption><strong>Results per subquery</strong></caption> \n";
-    $.each(listQCost, function(index, item) {
+    $.each(listQCost, function (index, item) {
         //console.log(listQCost[index].query);
         //console.log(listQCost[index].nbReq);
         //console.log(listQCost[index].nbRes);
@@ -621,7 +879,7 @@ function renderCostMultiTab(data) {
     table = "<table id=\"tbAdvanced\" class=\"table table-striped\"> \n <tbody>  ";
     // number of requests per source
     table = table + "<caption><strong>Requests per source</strong></caption> \n";
-    $.each(listSrcCost, function(index, item) {
+    $.each(listSrcCost, function (index, item) {
         //console.log(listQCost[index].query);
         //console.log(listQCost[index].nbReq);
         //console.log(listQCost[index].nbRes);
@@ -647,7 +905,7 @@ function renderCostMultiTab(data) {
     // number of results per source
     table = "<table id=\"tbAdvanced\" class=\"table table-striped\"> \n <tbody>  ";
     table = table + "<caption><strong>Results per source</strong></caption> \n";
-    $.each(listSrcCost, function(index, item) {
+    $.each(listSrcCost, function (index, item) {
         //console.log(listQCost[index].query);
         //console.log(listQCost[index].nbReq);
         //console.log(listQCost[index].nbRes);
@@ -705,21 +963,21 @@ function renderD3(data, htmlCompId) {
             .attr("d", "M0,-5L10,0L0,5")
             // .enter().append("line")
             .attr("class", "link")
-            .style("stroke-width", function(d) {
+            .style("stroke-width", function (d) {
                 if (d.label.indexOf("prov#") !== -1) {
                     return 4;
                 }
                 return 4;
             })
-            .on("mouseout", function(d, i) {
+            .on("mouseout", function (d, i) {
                 d3.select(this).style("stroke", " #a0a0a0");
             })
-            .on("mouseover", function(d, i) {
+            .on("mouseover", function (d, i) {
                 d3.select(this).style("stroke", " #000000");
             });
 
     link.append("title")
-            .text(function(d) {
+            .text(function (d) {
                 return d.label;
             });
 
@@ -755,27 +1013,27 @@ function renderD3(data, htmlCompId) {
             .call(node_drag);
 
     node.append("title")
-            .text(function(d) {
+            .text(function (d) {
                 return d.name;
             });
 
     node.append("circle")
             .attr("class", "node")
-            .attr("r", function(d) {
+            .attr("r", function (d) {
                 if (d.group === 0) {
                     return 6;
                 }
                 return 12;
             })
-            .on("dblclick", function(d) {
+            .on("dblclick", function (d) {
                 d.fixed = false;
             })
             .on("mouseover", fade(.1)).on("mouseout", fade(1))
-            .style("stroke", function(d) {
+            .style("stroke", function (d) {
                 return color(d.group);
             })
             .style("stroke-width", 5)
-            .style("stroke-width", function(d) {
+            .style("stroke-width", function (d) {
                 if (sMaps.indexOf(d.name) !== -1) {
                     return 8;
                 }
@@ -788,7 +1046,7 @@ function renderD3(data, htmlCompId) {
             // 		return "none";
             // 	})
             // .style("fill", "white")
-            .style("fill", function(d) {
+            .style("fill", function (d) {
                 return color(d.group);
             });
     // .on("mouseout", function(d, i) {
@@ -804,7 +1062,7 @@ function renderD3(data, htmlCompId) {
             .style("pointer-events", "none")
             .attr("font-size", "18px")
             .attr("font-weight", "200")
-            .text(function(d) {
+            .text(function (d) {
                 var vName = "\"" + d.name.substring(2, d.name.length);
 //                console.log(vName);
                 if (((sMaps.indexOf(vName) !== -1) || (sMaps.indexOf(d.name) !== -1)) && (d.group !== 0)) {
@@ -814,7 +1072,7 @@ function renderD3(data, htmlCompId) {
 
 
     var linkedByIndex = {};
-    d3Data.edges.forEach(function(d) {
+    d3Data.edges.forEach(function (d) {
         linkedByIndex[d.source.index + "," + d.target.index] = 1;
     });
 
@@ -825,24 +1083,24 @@ function renderD3(data, htmlCompId) {
     force.on("tick", tick);
 
     function tick() {
-        link.attr("x1", function(d) {
+        link.attr("x1", function (d) {
             return d.source.x;
         })
-                .attr("y1", function(d) {
+                .attr("y1", function (d) {
                     return d.source.y;
                 })
-                .attr("x2", function(d) {
+                .attr("x2", function (d) {
                     return d.target.x;
                 })
-                .attr("y2", function(d) {
+                .attr("y2", function (d) {
                     return d.target.y;
                 });
 
-        node.attr("transform", function(d) {
+        node.attr("transform", function (d) {
             return "translate(" + d.x + "," + d.y + ")";
         });
 
-        link.attr("d", function(d) {
+        link.attr("d", function (d) {
             var dx = d.target.x - d.source.x,
                     dy = d.target.y - d.source.y,
                     dr = Math.sqrt(dx * dx + dy * dy);
@@ -853,14 +1111,14 @@ function renderD3(data, htmlCompId) {
     ;
 
     function fade(opacity) {
-        return function(d) {
-            node.style("stroke-opacity", function(o) {
+        return function (d) {
+            node.style("stroke-opacity", function (o) {
                 thisOpacity = isConnected(d, o) ? 1 : opacity;
                 this.setAttribute('fill-opacity', thisOpacity);
                 return thisOpacity;
             });
 
-            link.style("stroke-opacity", function(o) {
+            link.style("stroke-opacity", function (o) {
                 return o.source === d || o.target === d ? 1 : opacity;
             });
         };
@@ -877,14 +1135,14 @@ function renderListFed(data) {
 
     //Rendering the headers
     var tableHeader = '<tr>';
-    $.each(listVar, function(index, item) {
+    $.each(listVar, function (index, item) {
         tableHeader = tableHeader + '<th>?' + item + '</th>';
     });
     tableHeader = tableHeader + '</tr>';
     $('#tbResFed thead').html(tableHeader);
 
     //Rendering the values
-    $.each(listVal, function(index, item) {
+    $.each(listVal, function (index, item) {
         var row = "<tr>";
 
         for (var i = 0; i < listVar.length; i++) {
@@ -908,4 +1166,5 @@ function processHbTemplate(hbTemplate, contextData) {
     var theCompiledHtml = theTemplate(contextData);
     return theCompiledHtml;
 }
+
 

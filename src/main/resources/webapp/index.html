@@ -23,35 +23,47 @@
                 stroke-opacity: .6;
                 fill: none;
             }
-            
-            	.btn-file {
-		    position: relative;
-		    overflow: hidden;
-		}
-		.btn-file input[type=file] {
-		    position: absolute;
-		    top: 0;
-		    right: 0;
-		    min-width: 100%;
-		    min-height: 100%;
-		    font-size: 999px;
-		    text-align: right;
-		    filter: alpha(opacity=0);
-		    opacity: 0;
-		    background: red;
-		    cursor: inherit;
-		    display: block;
-		}
-		input[readonly] {
-			background-color: white !important;
-			cursor: text !important;
-		}
+
         </style>
 
-        <title>Corese/KGRAM webapp</title>
+        <!-- For Leaflet web cartography -->
+        <style media="screen" type="text/css">
+            #map { height: 300px; }
+
+            .info {
+                padding: 6px 8px;
+                font: 14px/16px Arial, Helvetica, sans-serif;
+                background: white;
+                background: rgba(255,255,255,0.8);
+                box-shadow: 0 0 15px rgba(0,0,0,0.2);
+                border-radius: 5px;
+            }
+
+            .info h4 {
+                margin: 0 0 5px;
+                color: #777;
+            }
+
+            .legend {
+                line-height: 18px;
+                color: #555;
+            }
+
+            .legend i {
+                width: 18px;
+                height: 18px;
+                float: left;
+                margin-right: 8px;
+                opacity: 0.5;
+            }
+
+        </style>
+
+        <title>SyMeTRIC Data Hub</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <!-- Bootstrap -->
-        <link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
+        <link rel="stylesheet" href="css/bootstrap-flatly.css" media="screen">
+        <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/leaflet.css" />
     </head>
 
     <body>
@@ -65,24 +77,17 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="#">Corese/KGRAM</a>
+                <a class="navbar-brand" href="#">SyMeTRIC Data Hub</a>
             </div>
             <div class="collapse navbar-collapse" id="myNavBar">
                 <ul id="tab" class="nav navbar-nav">
-                    <li class="active"><a href="#Tab1" data-toggle="tab">Data querying</a></li>
-                    <li ><a href="#Tab2" data-toggle="tab">Data loading</a></li>
-                    <li><a href="#Tab3" data-toggle="tab">Federated querying</a></li>
+                    <li class="active"><a href="#TabDashboard" data-toggle="tab">Dashboard</a></li>
+                    <li><a id="epidDemoMenu" href="#TabEpidemio"  data-toggle="tab">Epidemiology demo</a></li>
+                    <li><a href="#TabSysBio" data-toggle="tab">Systems biology demo</a></li>
+                    <li><a href="#TabTransplant" data-toggle="tab">Lung transplantation demo</a></li>
                 </ul>
             </div>
         </nav>
-
-        <!--            <div class="row">
-                        <ul id="tab" class="nav nav-pills">
-                            <li class="active"><a href="#Tab1" data-toggle="tab">Data querying</a></li>
-                            <li ><a href="#Tab2" data-toggle="tab">Data loading</a></li>
-                            <li><a href="#Tab3" data-toggle="tab">Federated querying</a></li>
-                        </ul>
-                    </div>-->
 
         <div class="container">
 
@@ -94,49 +99,69 @@
                     <!-- ---------------------- -->
                     <!-- Data querying tab pane -->
                     <!-- ---------------------- -->
-                    <div class="tab-pane active" id="Tab1">
+                    <div class="tab-pane active" id="TabEpidemio">
 
-                        <!--                        <div class="row">
-                                                    <div class="page-header">
-                                                        
-                                                    </div>
-                                                </div>-->
+
                         <div class="row">
-                            <form class="form" role="form">
-                                <div class="form-group">
-                                    <h2>SPARQL 1.1 querying interface</h2>
-                                    Predefined SPARQL queries for basic RDF statistics. More informations are available at <a href="http://code.google.com/p/void-impl/wiki/SPARQLQueriesForStatistics">http://code.google.com/p/void-impl/wiki/SPARQLQueriesForStatistics</a>.
-                                </div>
-                                <div class="form-group">
-                                    <select id = "VOIDSparql_Select" class="form-control">
-                                        <option value ="0" selected="selected">Total number of triples</option>
-                                        <option value ="1">Total number of entities</option>
-                                        <option value ="2">Total number of distinct resource URIs</option>
-                                        <option value ="3">Total number of distinct classes</option>
-                                        <option value ="4">Total number of distinct predicates</option>
-                                        <option value ="5">Total number of distinct subject nodes</option>
-                                        <option value ="6">Total number of distinct object nodes</option>
-                                        <option value ="7">Exhaustive list of classes used in the dataset</option>
-                                        <option value ="8">Exhaustive list of properties used in the dataset</option>
-                                        <option value ="9">Class vs. total number of instances of the class</option>
-                                        <option value ="10">Property vs. total number of triples using the property</option>
-                                        <option value ="11">Property vs. total number of distinct subjects in triples using the property</option>
-                                        <option value ="12">Property vs. total number of distinct objects in triples using the property</option>
-                                    </select>
-                                </div>
-                                <!--<legend>SPARQL 1.1 querying interface</legend>-->
-                                <div class="form-group">
-                                    <textarea id="sparqlTextArea" class="form-control" rows="3">
+                            <div class="page-header"><h1>Linked Epidemiology demonstration</h1></div>
+                            <p>This demonstration aims at querying CepiDC data dumps through Semantic Web ontologies and datasets, to complement it with fresh linked open genetic data.</p>
 
-                                    </textarea>
+                            <div class="row">
+                                <div class="col-xs-4 text-center"> <h2>CépiDc</h2> 
+                                    <p>CépiDc is an epidemiology center 
+                                        providing statistical data on death medical causes in France, since 1968.</p>
+                                    <p>
+                                        Extracted sub-graph: 
+                                    </p>
                                 </div>
-                                <div class="form-group">
-                                    <button id="btnQuery" type="button" class="btn btn-success">Query</button>
-                                    <!--<button id="btnQuery" class="btn">Query</button>-->
-                                </div>
-                            </form>
+                                <div class="col-xs-4 text-center"> <h2>DOID</h2> <p>Human disease ontology</p></div>
+                                <div class="col-xs-4 text-center"> <h2>OMIM</h2> <p>...</p></div>
+                            </div>
                         </div>
 
+
+                        <div class="row">
+                            <form class="form" role="form">
+                                <fieldset>
+                                    <div class="form-group">
+                                        <div class="input-group">
+                                            <div class="input-group-addon">Year :</div>
+                                            <select id="selectYear" class="form-control">
+                                                <option value="2007" selected="selected">2007</option>
+                                                <option value="2008">2008</option>
+                                                <option value="2009">2009</option>
+                                                <option value="2010">2010</option>
+                                                <option value="2011">2011</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="input-group">
+                                            <div class="input-group-addon">Search for disease phenotype :</div>
+                                            <input type="text" class="form-control" id="searchLabel" placeholder="aortic">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="radio-inline">
+                                            <input id="radioTableRes" name="inlineRadioOptions" type="radio" value="select" checked>Results as table & map 
+                                        </label>
+                                        <label class="radio-inline">
+                                            <input id="radioGraphRes" name="inlineRadioOptions" type="radio" value="construct">Results as graph 
+                                        </label>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="epidQueryTextArea">Corresponding SPARQL query :</label>
+                                        <TextArea id="epidQueryTextArea" class="form-control" rows="10" >   
+                                            </TextArea>
+                                        </div>
+                                        <button type="button" id="btnQuery" class="btn btn-success pull-right small">Query</button>
+                                    </fieldset>
+                                </form>
+                            <br>
+                            </div>
+                        
+                        
                         <div class="row">
                             <p id="parRDFGraph"></p>
                         </div>
@@ -151,11 +176,15 @@
                             </table>  
                             </div>
                         </div>
+
+                        <div class="row" id="mapRow">
+<!--                            <div id="map"></div>-->
+                        </div>
                     </div>
 
-                    <!-- --------------------- -->
+                    <!-- -------------------- -->
                     <!-- Data loading tab pane -->
-                    <!-- --------------------- -->
+                    <!-- -------------------- -->
                     <div class="tab-pane" id="Tab2">
                         <div class="row">
                             <form class="form" role="form" enctype="multipart/form-data">
@@ -198,30 +227,6 @@
                                         </div>
                                     </div>
                                 </div>
-                                
-<!--                                <div class="form-group">
-                                    <div class="row">
-                                        <div class="col-xs-4">
-                                            <div class="input-group">        
-                                                <span class="input-group-btn">
-                                                    <span class="btn btn-primary btn-file">
-							Browse&hellip; <input name="file" type="file">
-                                                    </span>
-                                                </span>
-                                                <input type="text" class="form-control" readonly>
-                                            </div>
-                                        </div>
-                                        <div class="col-xs-8">
-                                            <div class="input-group">
-                                                <input  class="form-control" id="txtUpload" type="text" value="">
-                                                <div class="input-group-btn">
-                                                    <button id="btnUpload" class="btn btn-primary" type="button">Upload</button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <progress></progress>
-                                </div>-->
 
                                 <div class="form-group">
                                     <div class="form-inline">
@@ -346,23 +351,26 @@
                     </div>
                 </div><!-- end tab Content -->
                 <div class="col-xs-1"> </div>
-            </div>	
-
+            </div>
 
             <div class="row">
                 <div class="col-xs-1"> </div>
-                <div id="footer" class="text-center col-xs-10"></div>
+                <div id="footer" class="text-center col-xs-10">
+                Contact : alban.gaignard@univ-nantes.fr
+                </div>
                 <div class="col-xs-1"> </div>
             </div>
-
         </div>
 
-        <script src="js/jquery.js"></script>
-        <script src="js/bootstrap.file-input.js"></script>
-        <script src="js/bootstrap.min.js"></script>
-        <!--        <script src="js/spin.min.js"></script>-->
+        <script src="js/lib/jquery-1.11.3.min.js"></script>
+        <script src="js/lib/bootstrap.min.js"></script>
+        <script src="js/lib/d3.v3.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/2.0.0/handlebars.js"></script>
+        <script src="http://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/leaflet.js"></script>
+
+        <script src="js/config.js"></script>
+        <script src="js/departements.js"></script>
+        <script src="js/mapFranceRendering.js"></script>
         <script src="js/main.js"></script>
-        <script src="js/d3.v3.min.js"></script>
-        <!--<script src="http://d3js.org/d3.v3.min.js"></script>-->
     </body>
 </html>
