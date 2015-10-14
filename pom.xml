@@ -9,6 +9,22 @@
         <slf4j.version>1.7.12</slf4j.version>
     </properties>
 
+    <distributionManagement>
+        <snapshotRepository>
+            <id>hudson.univ-nantes.prive</id>
+            <name>hudson.univ-nantes.prive-snapshots</name>
+            <url>http://hudson.univ-nantes.prive/artifactory/libs-snapshot-local</url>
+        </snapshotRepository>
+    </distributionManagement>
+
+    <repositories>
+        <repository>
+            <id>hudson.univ-nantes.prive</id>
+            <name>hudson.univ-nantes.prive-snapshots</name>
+            <url>http://hudson.univ-nantes.prive/artifactory/libs-snapshot-local</url>
+        </repository>
+    </repositories>
+
     <dependencies>
         <dependency>
             <groupId>junit</groupId>
