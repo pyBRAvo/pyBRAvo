@@ -59,6 +59,7 @@ public class RestEndpointTest {
         mongoDB_server = pb.start();
 
         URI webappUri = EmbeddedJettyServer.extractResourceDir("webapp", true);
+        logger.info("Extracted server code to "+webappUri);
         server = new Server(DatahubUtils.getServerPort());
 
         ServletHolder jerseyServletHolder = new ServletHolder(ServletContainer.class);
