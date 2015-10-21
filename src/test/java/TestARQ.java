@@ -9,6 +9,7 @@ import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -80,6 +81,7 @@ public class TestARQ {
     // The methods must be annotated with annotation @Test. For example:
     //
      @Test
+     @Ignore
      public void hello() {
      
          Query qService = new Query();
