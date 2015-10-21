@@ -16,6 +16,7 @@ import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -53,7 +54,7 @@ public class GalaxyApiTest {
     // The methods must be annotated with annotation @Test. For example:
     //
     @Test
-//    @Ignore
+    @Ignore
     public void hello() {
         //my API Key 5f5c875829e4ac6afae64ba31225cdee
 //        GalaxyInstance galaxyInstance = GalaxyInstanceFactory.get(gURL, gApiKey,true);
