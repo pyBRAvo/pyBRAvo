@@ -45,12 +45,17 @@ public class RestEndpointTest {
 
     private static Logger logger = Logger.getLogger(EmbeddedJettyServer.class);
     private static Server server;
+    private static Process mongoDB_server = null;
 
     public RestEndpointTest() {
     }
 
     @BeforeClass
     public static void setUpClass() throws FileSystemException, URISyntaxException, Exception {
+
+        ProcessBuilder pb = new ProcessBuilder("/usr/local/Cellar/mongodb/3.0.1/bin/mongod");
+        pb.redirectErrorStream(true);
+        mongoDB_server = pb.start();
 
         URI webappUri = EmbeddedJettyServer.extractResourceDir("webapp", true);
         server = new Server(DatahubUtils.getServerPort());
@@ -92,15 +97,20 @@ public class RestEndpointTest {
 
     @AfterClass
     public static void tearDownClass() throws Exception {
+        //clean old sessions
+        DatahubUtils.tagExpiredSessions();
+        DatahubUtils.deleteExpiredSessions();
+
         if (server != null) {
             server.stop();
             server.destroy();
             server = null;
         }
 
-        //clean old sessions
-        DatahubUtils.tagExpiredSessions();
-        DatahubUtils.deleteExpiredSessions();
+        if (mongoDB_server != null) {
+            mongoDB_server.destroy();
+            mongoDB_server = null;
+        }
     }
 
     @Before
@@ -253,6 +263,8 @@ public class RestEndpointTest {
             errorMessage = e.getMessage();
         }
         Assert.assertNotNull(sessionId);
+
+        DAOFactory.getUserDAO().deleteById("zebulon@univ-nantes.fr");
     }
 
     @Test
@@ -286,10 +298,10 @@ public class RestEndpointTest {
         ClientConfig config = new DefaultClientConfig();
         config.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING, Boolean.TRUE);
         Client client = Client.create(config);
-        WebResource service = client.resource(new URI("http://localhost:" + DatahubUtils.getServerPort()+ "/sandbox"));
+        WebResource service = client.resource(new URI("http://localhost:" + DatahubUtils.getServerPort() + "/sandbox"));
 
         String session = DatahubUtils.signin("zebulon@univ-nantes.fr", "SonSecret");
-        
+
         ClientResponse response = service.path("/logout").header("session-id", session).accept("application/json").type("application/json").get(ClientResponse.class);
         if (response.getStatus() != 200) {
             logger.error("Unexpected error, please contact the support team");
