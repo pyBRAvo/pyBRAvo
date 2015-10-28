@@ -1,0 +1,376 @@
+<!--  Web user interface for the Corese/KGRAM framework -->
+<!--  author: alban.gaignard@cnrs.fr -->
+
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <meta charset="utf-8">
+        <style>
+
+            /*.node {
+              stroke: #fff;
+              stroke-width: 1.5px;
+            }*/
+
+            .node text {
+                /*pointer-events: none;*/
+                font: 10px sans-serif;
+            }
+
+            .link {
+                stroke: #999;
+                stroke-opacity: .6;
+                fill: none;
+            }
+
+        </style>
+
+        <!-- For Leaflet web cartography -->
+        <style media="screen" type="text/css">
+            #map { height: 300px; }
+
+            .info {
+                padding: 6px 8px;
+                font: 14px/16px Arial, Helvetica, sans-serif;
+                background: white;
+                background: rgba(255,255,255,0.8);
+                box-shadow: 0 0 15px rgba(0,0,0,0.2);
+                border-radius: 5px;
+            }
+
+            .info h4 {
+                margin: 0 0 5px;
+                color: #777;
+            }
+
+            .legend {
+                line-height: 18px;
+                color: #555;
+            }
+
+            .legend i {
+                width: 18px;
+                height: 18px;
+                float: left;
+                margin-right: 8px;
+                opacity: 0.5;
+            }
+
+        </style>
+
+        <title>SyMeTRIC Data Hub</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <!-- Bootstrap -->
+        <link rel="stylesheet" href="css/bootstrap-flatly.css" media="screen">
+        <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/leaflet.css" />
+    </head>
+
+    <body>
+
+        <nav class="navbar navbar-default" role="navigation">
+            <!--<div class="navbar-inner">-->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavBar">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#">SyMeTRIC Data Hub</a>
+            </div>
+            <div class="collapse navbar-collapse" id="myNavBar">
+                <ul id="tab" class="nav navbar-nav">
+                    <li class="active"><a href="#TabDashboard" data-toggle="tab">Dashboard</a></li>
+                    <li><a id="epidDemoMenu" href="#TabEpidemio"  data-toggle="tab">Epidemiology demo</a></li>
+                    <li><a href="#TabSysBio" data-toggle="tab">Systems biology demo</a></li>
+                    <li><a href="#TabTransplant" data-toggle="tab">Lung transplantation demo</a></li>
+                </ul>
+            </div>
+        </nav>
+
+        <div class="container">
+
+            <div class="row">
+                <div class="col-xs-1"> </div>
+                <div class="tab-content col-xs-10">
+
+
+                    <!-- ---------------------- -->
+                    <!-- Data querying tab pane -->
+                    <!-- ---------------------- -->
+                    <div class="tab-pane active" id="TabEpidemio">
+
+
+                        <div class="row">
+                            <div class="page-header"><h1>Linked Epidemiology demonstration</h1></div>
+                            <p>This demonstration aims at querying CepiDC data dumps through Semantic Web ontologies and datasets, to complement it with fresh linked open genetic data.</p>
+
+                            <div class="row">
+                                <div class="col-xs-4 text-center"> <h2>CépiDc</h2> 
+                                    <p>CépiDc is an epidemiology center 
+                                        providing statistical data on death medical causes in France, since 1968.</p>
+                                    <p>
+                                        Extracted sub-graph: 
+                                    </p>
+                                </div>
+                                <div class="col-xs-4 text-center"> <h2>DOID</h2> <p>Human disease ontology</p></div>
+                                <div class="col-xs-4 text-center"> <h2>OMIM</h2> <p>...</p></div>
+                            </div>
+                        </div>
+
+
+                        <div class="row">
+                            <form class="form" role="form">
+                                <fieldset>
+                                    <div class="form-group">
+                                        <div class="input-group">
+                                            <div class="input-group-addon">Year :</div>
+                                            <select id="selectYear" class="form-control">
+                                                <option value="2007" selected="selected">2007</option>
+                                                <option value="2008">2008</option>
+                                                <option value="2009">2009</option>
+                                                <option value="2010">2010</option>
+                                                <option value="2011">2011</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="input-group">
+                                            <div class="input-group-addon">Search for disease phenotype :</div>
+                                            <input type="text" class="form-control" id="searchLabel" placeholder="aortic">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="radio-inline">
+                                            <input id="radioTableRes" name="inlineRadioOptions" type="radio" value="select" checked>Results as table & map 
+                                        </label>
+                                        <label class="radio-inline">
+                                            <input id="radioGraphRes" name="inlineRadioOptions" type="radio" value="construct">Results as graph 
+                                        </label>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="epidQueryTextArea">Corresponding SPARQL query :</label>
+                                        <TextArea id="epidQueryTextArea" class="form-control" rows="10" >   
+                                            </TextArea>
+                                        </div>
+                                        <button type="button" id="btnQuery" class="btn btn-success pull-right small">Query</button>
+                                    </fieldset>
+                                </form>
+                            <br>
+                            </div>
+                        
+                        
+                        <div class="row">
+                            <p id="parRDFGraph"></p>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="table-responsive">
+                            <table id="tbRes" class="table table-striped" style="table-layout:fixed; word-wrap:break-word">  
+                                <thead>  
+                                </thead>  
+                                <tbody>  
+                                </tbody>  
+                            </table>  
+                            </div>
+                        </div>
+
+                        <div class="row" id="mapRow">
+<!--                            <div id="map"></div>-->
+                        </div>
+                    </div>
+
+                    <!-- -------------------- -->
+                    <!-- Data loading tab pane -->
+                    <!-- -------------------- -->
+                    <div class="tab-pane" id="Tab2">
+                        <div class="row">
+                            <form class="form" role="form" enctype="multipart/form-data">
+                                <div class="form-group">
+                                    <h2>Semantic web data loading</h2>
+                                    <p class="lead">RDF, RDFS, OWL, TTL formats supported.</p>
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <span class="input-group-addon">Into named graph</span>
+                                        <input  id="graphLoad" type="text" class="form-control" placeholder="default">
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-xs-4">
+                                            <select id = "Data_Select" class="form-control">
+                                                <option value ="0" selected="selected">INSEE geographic dataset (2012) - 18Mo</option>
+                                                <option value ="1">INSEE demographic dataset (2010) - 19Mo</option>
+                                                <option value ="2">GINSENG CREATIS dataset - 169Mo</option>
+                                                <option value ="3">GINSENG I3S dataset - 204Mo</option>
+                                                <option value ="4">GINSENG IN2P3 dataset - 466Mo</option>
+                                                <!--<option value ="0" selected="selected">/Users/gaignard/Documents/Experiences/jows-2013/drugbank_dump.rdf</option>
+                                                <option value ="1">/Users/gaignard/Documents/Experiences/jows-2013/chebi.rdf</option>
+                                                <option value ="2">/Users/gaignard/Documents/Experiences/jows-2013/KEGG-2010-11/kegg.cpd.rdf</option>
+                                                <option value ="3">/Users/gaignard/Documents/Experiences/jows-2013/KEGG-2010-11/kegg.dr.rdf</option>
+                                                <option value ="4">/Users/gaignard/Documents/Experiences/jows-2013/KEGG-2010-11/kegg.ec.rdf</option>
+                                                <option value ="5">/Users/gaignard/Documents/Experiences/jows-2013/KEGG-2010-11/kegg.rn.rdf</option>-->
+                                            </select>
+                                        </div>
+                                        <div class="col-xs-8">
+                                            <div class="input-group">
+                                                <input  class="form-control" id="txtLoad" type="text" value="http://nyx.unice.fr/~gaignard/data/cog-2012.ttl">
+                                                <div class="input-group-btn">
+                                                    <button id="btnLoad" class="btn btn-primary" type="button">Load</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="form-inline">
+                                        <div class="form-group">
+                                            <button id="btnReset" class="btn btn-warning" type="button">Reset engine</button>
+                                        </div>
+                                        <div class="form-group">
+                                            <div  class="checkbox"><label><input id="checkEntailments" type="checkbox"> RDFS entailments</label></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- ------------ -->
+                    <!-- DQP tab pane -->
+                    <!-- ------------ -->
+                    <div class="tab-pane" id="Tab3">
+
+                        <div class="row">
+                            <div class="page-header">
+                                <h2>Data sources configuration</h2>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <table id="tbDataSources" class="table table-striped">  
+                                <tbody>  
+                                </tbody>  
+                            </table>  
+                        </div>
+
+                        <div class="row">
+                            <form class="form" role="form">
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-xs-4">
+                                            <select id = "DataSource_Select" class="form-control">
+                                                <option value ="0" selected="selected">http://localhost:8080/sparql</option>
+                                                <option value ="1">http://fr.dbpedia.org/sparql</option>
+                                                <option value ="2">http://dbpedia.org/sparql</option>
+                                                <option value ="3">http://rdf.myexperiment.org/sparql</option>
+                                                <option value ="4">http://pubmed.bio2rdf.org/sparql</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-xs-8">
+                                            <div class="input-group">
+                                                <input class="form-control" id="txtDataSource" type="text" placeholder="http://some.sparql.endpoint" value="http://localhost:8080/sparql" >
+                                                <div class="input-group-btn">
+                                                    <button class="btn btn-primary" id="btnDataSource" type="button">Add data source</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!--<p>
+                                        <button id="btnConfigure" class="btn btn-warning" type="button">Configure KGRAM-DQP</button>
+                                        <button id="btnResetDQP" class="btn btn-inverse" type="button">Reset KGRAM-DQP</button>
+                                </p>-->
+                            </form>
+                        </div>
+
+                        <div class="row">
+                            <div class="page-header">
+                                <h2>Federated SPARQL querying</h2>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <form class="form" role="form">
+                                <div class="form-group">
+                                    <select class="form-control" id = "FedSparql_Select">
+                                        <option value ="0" selected="selected">INSEE query</option>
+                                        <option value ="1" >GINSENG query</option>
+                                        <option value ="2" >GINSENG paths query</option>
+                                        <option value ="3" >GINSENG + DBpedia query</option>
+                                        <option value ="4" >INSEE + DBpedia query</option>
+                                        <option value ="5" >DrugBank + KEGG query 1</option>
+                                        <option value ="6" >DrugBank + KEGG query 2</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <!--<legend>SPARQL 1.1 querying interface</legend>-->
+                                    <textarea id="sparqlFedTextArea" class="form-control" rows="9">
+                                    </textarea>
+                                </div>
+                                <div class="form-group">
+                                    <!--                                                    <div class="row">-->
+                                    <div class="form-inline">
+                                        <div class="form-group"><button id="btnQueryFed" type="button" class="btn btn-success">Query</button></div>
+                                        <div class="form-group"><div  class="checkbox"><label><input id="checkProv" type="checkbox"> Provenance</label></div></div>
+                                        <div class="form-group"><div  class="checkbox"><label><input id="checkAdvanced" type="checkbox"> Advanced</label></div></div>
+                                        <div class="form-group"><div  class="checkbox"><label><input id="checkTPGrouping" type="checkbox"> Triple pattern grouping</label></div></div>
+                                        <div class="form-group"><input class="form-control" id="txtSlice" type="text" size="5" placeholder="Slice size"></div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        
+                        <div class="row">
+                            <p id="parAdvanced"></p>
+                            <table id="tbAdvanced" class="table table-striped">  
+                                <tbody>  
+                                </tbody>  
+                            </table> 
+                        </div>
+                        
+                        <div class="row">
+                            <p id="parProvGraph"></p>
+                        </div>
+
+                        <div class="row">
+                            <table id="tbResFed" class="table table-striped" style="table-layout:fixed; word-wrap:break-word">  
+                                <thead>  
+                                </thead>  
+                                <tbody>  
+                                </tbody>  
+                            </table>
+                        </div>
+                    </div>
+                </div><!-- end tab Content -->
+                <div class="col-xs-1"> </div>
+            </div>
+
+            <div class="row">
+                <div class="col-xs-1"> </div>
+                <div id="footer" class="text-center col-xs-10">
+                Contact : alban.gaignard@univ-nantes.fr
+                </div>
+                <div class="col-xs-1"> </div>
+            </div>
+        </div>
+
+        <script src="js/lib/jquery-1.11.3.min.js"></script>
+        <script src="js/lib/bootstrap.min.js"></script>
+        <script src="js/lib/d3.v3.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/2.0.0/handlebars.js"></script>
+        <script src="http://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/leaflet.js"></script>
+
+        <script src="js/config.js"></script>
+        <script src="js/departements.js"></script>
+        <script src="js/mapFranceRendering.js"></script>
+        <script src="js/main-old.js"></script>
+    </body>
+</html>
