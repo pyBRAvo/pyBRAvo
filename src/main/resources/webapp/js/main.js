@@ -4,50 +4,118 @@
  * author : alban.gaignard@cnrs.fr
  */
 
-function materializeJSinit() {
-    //$(".button-collapse").sideNav({
-//      menuWidth: 240, // Default is 240
-//      edge: 'left', // Choose the horizontal origin
-//      closeOnClick: false // Closes side-nav on <a> clicks, useful for Angular/Meteor
-//    });
-
-// Initialize collapsible (uncomment the line below if you use the dropdown variation)
-//$('.collapsible').collapsible();
-//    $('select').material_select();
-//    $('.button-collapse').sideNav();
-//    $('.collapsible').collapsible({
-//        accordion: false // A setting that changes the collapsible behavior to expandable instead of the default accordion style
-//    });
-//    $('.modal-trigger').leanModal({
-//        dismissible: true, // Modal can be dismissed by clicking outside of the modal
-//        opacity: .5, // Opacity of modal background
-//        in_duration: 200, // Transition in duration
-//        out_duration: 100, // Transition out duration
-//        ready: function () {
-//        }, // Callback for Modal open
-//        complete: function () {
-//        } // Callback for Modal close
-//    });
-
-//    $('.dropdown-button').dropdown();
-
-    $("#collapseOne").collapse({
-        toggle: false
-    });
-
-
-}
+// The root URL for the RESTful services
+var rootURL = "http://" + window.location.host;
+console.log("Connecting to the SyMeTRIC Data API " + rootURL);
 
 var EventBus = _.extend({}, Backbone.Events);
-
 var EVT_INIT = 'init';
 var EVT_LOGIN = 'login';
 var EVT_LOGOUT = 'logout';
+var EVT_LOADING = 'loading';
+var EVT_FINNISHED = 'finnished';
+
+
+////////////////////////////////////////////
+// Web app views
+////////////////////////////////////////////
+
+var WelcomeView = Backbone.View.extend({
+    el: "#mainContainer", //Container div inside which we would be dynamically loading the templates
+    initialize: function () {
+        _.bindAll(this, "render");
+        console.log('Welcome View Initialized');
+    },
+    render: function () {
+        var that = this;
+        //Fetching the template contents
+        $.get('templates/home.html', function (data) {
+            template = _.template(data, {});//Option to pass any dynamic values to template
+            that.$el.html(template());//adding the template content to the main template.
+        }, 'html');
+        return this;
+    }
+});
+
+var myWelcomeView = new WelcomeView();
+
+var DemoEpidemioView = Backbone.View.extend({
+    el: "#mainContainer", //Container div inside which we would be dynamically loading the templates
+    initialize: function () {
+        _.bindAll(this, "render");
+        console.log('DemoEpidemio View Initialized');
+
+        EventBus.on(EVT_LOADING, this.disableButton);
+        EventBus.on(EVT_FINNISHED, this.enableButton);
+
+    },
+    render: function () {
+        var that = this;
+        //Fetching the template contents
+        $.get('templates/demo-epidemio.html', function (data) {
+            template = _.template(data, {});//Option to pass any dynamic values to template
+            that.$el.html(template());//adding the template content to the main template.
+            $("#selectYear").val(2007).trigger('change');
+            initQueryAPI();
+        }, 'html');
+        return this;
+    },
+    events: {
+        "click #btnQuery": "queryEvt",
+        "change #selectYear": "selectYearEvt",
+        "change #searchLabel": "searchLabelEvt",
+        "change input[name=\"radioQueryType\"]": "queryTypeEvt"
+    },
+    queryEvt: function (e) {
+        console.log("queryEvt");
+//        var jsonResults = sparql($('#epidQueryTextArea').val());
+        sparql($('#epidQueryTextArea').val());
+    },
+    disableButton: function () {
+        console.log("disabling button");
+        $('#btnQuery').attr("disabled", true);
+        $('#btnQuery').html("Loading...");
+    },
+    enableButton: function () {
+        console.log("enabling button");
+        $('#btnQuery').attr("disabled", false);
+        $('#btnQuery').html("Query");
+    },
+    selectYearEvt: function (e) {
+        console.log("selectYearEvt");
+        var y = $(e.currentTarget).val();
+        var contextData = {year: y, label: $('#searchLabel').val()};
+        var tpl = ($('#radioTableRes').prop("checked") ? epidemioQueries[0] : epidemioQueries[1]);
+        var q = processHbTemplate(tpl, contextData);
+        $('#epidQueryTextArea').val(q);
+    },
+    searchLabelEvt: function (e) {
+        console.log("searchLabelEvt");
+        var l = $(e.currentTarget).val();
+        var contextData = {year: $('#selectYear').val(), label: l};
+        var tpl = ($('#radioTableRes').prop("checked") ? epidemioQueries[0] : epidemioQueries[1]);
+        var q = processHbTemplate(tpl, contextData);
+        $('#epidQueryTextArea').val(q);
+    },
+    queryTypeEvt: function (e) {
+        console.log("queryTypeEvt");
+        var r = $(e.currentTarget).val();
+        console.log(r);
+        var contextData = {year: $('#selectYear').val(), label: $('#searchLabel').val()};
+        var tpl = ($('#radioTableRes').prop("checked") ? epidemioQueries[0] : epidemioQueries[1]);
+        var q = processHbTemplate(tpl, contextData);
+        $('#epidQueryTextArea').val(q);
+    }
+});
+
+var myDemoEpidemioView = new DemoEpidemioView();
+
+
+//*************************************
+//*************************************
+//*************************************
 
 $(document).ready(function () {
-// Initialize collapse button
-
-    materializeJSinit();
 
     EventBus.trigger(EVT_INIT);
 
@@ -82,6 +150,11 @@ $(document).ready(function () {
         })
     })();
 
+    $('#demo-ld-menu').click(function () {
+        if (! $("#demo-ld-menu").hasClass("disabled")) {
+            myDemoEpidemioView.render();
+        }
+    });
 });
 
 
@@ -89,34 +162,9 @@ $(document).ready(function () {
 // Web app util functions
 ////////////////////////////////////////////
 
-// TODO to be part of a Util.js file
-// 
-
-// Testing Events handling : 
-//Foo = Backbone.Model.extend({
-//  sayHello: function(){
-//    var data = "Hello Wordl!"
-//    EventBus.trigger('event', data);
-//  }
-//});
-//
-//Bar = Backbone.Model.extend({
-//  initialize: function(){
-//    EventBus.on('event', this.callbackMethod);
-//  },
-//  
-//  callbackMethod: function(data) {
-//    console.log(data);
-//  }
-//});
-//
-//var foo = new Foo();
-//var bar = new Bar();
-//foo.sayHello();
-
 EventBus.on(EVT_INIT, function () {
     console.log("EVT_INIT");
-    
+
     var myLoginMenu = '<li class="dropdown" id="menuLogin"> \n\
                                 <a class="dropdown-toggle" href="#" data-toggle="dropdown" id="navLogin">Login</a> \n\
                                 <!--<div class="dropdown-menu" style="padding:17px; width: 300px; ">--> \n\
@@ -146,12 +194,10 @@ EventBus.on(EVT_INIT, function () {
 
     $('#userMenu').html(myLoginMenu);
 
-//    $('.dropdown-button').dropdown();
-
     $('#loginInfo').html('');
     $('#emailField').val('');
     $('#passwordField').val('');
-    
+
     $('#loginBtn').click(function () {
         e = $('#emailField').val();
         p = $('#passwordField').val();
@@ -171,6 +217,15 @@ EventBus.on(EVT_INIT, function () {
             register(e, p);
         }
     });
+
+    //desactivate the demos
+    $("#demo-ld-menu").addClass("disabled");
+    $("#demo-sb-menu").addClass("disabled");
+    $("#demo-om-menu").addClass("disabled");
+    $("#demo-wf-menu").addClass("disabled");
+
+    //render the welcome panel
+    myWelcomeView.render();    
 });
 
 EventBus.on(EVT_LOGIN, function (sessionId) {
@@ -190,7 +245,7 @@ EventBus.on(EVT_LOGIN, function (sessionId) {
                     </li>';
 
     $('#userMenu').html(myMenu);
-    
+
 //    $('.dropdown-toggle').dropdown();
 
     $('#logoutBtn').click(function () {
@@ -200,6 +255,12 @@ EventBus.on(EVT_LOGIN, function (sessionId) {
     $('#loginInfo').html('');
     $('#emailField').val('');
     $('#passwordField').val('');
+
+    //activate the demos
+    $("#demo-ld-menu").removeClass("disabled");
+//    $("#demo-sb-menu").removeClass("disabled");
+//    $("#demo-om-menu").removeClass("disabled");
+//    $("#demo-wf-menu").removeClass("disabled");
 });
 
 EventBus.on(EVT_LOGOUT, function () {
@@ -277,73 +338,6 @@ function readCookie(name) {
 function eraseCookie(name) {
     createCookie(name, "", -1);
 }
-
-////////////////////////////////////////////
-// Events handling
-////////////////////////////////////////////
-
-$('#myTabs a').click(function (e) {
-    e.preventDefault()
-    $(this).tab('show')
-})
-
-$('#btnQuery').click(function () {
-    console.log("clck");
-    var jsonResults = sparql($('#epidQueryTextArea').val());
-});
-
-$('input[name="radioQueryType"]').on('change', function (e) {
-    // var path = $('#Data_Select option:selected').html();
-    var r = $(this).val();
-    console.log(r);
-    var contextData = {year: $('#selectYear').val(), label: $('#searchLabel').val()};
-    var tpl = ($('#radioTableRes').prop("checked") ? epidemioQueries[0] : epidemioQueries[1]);
-    var q = processHbTemplate(tpl, contextData);
-    $('#epidQueryTextArea').val(q);
-    $('#epidQueryTextArea').trigger('autoresize');
-});
-
-$('#selectYear').on('change', function (e) {
-    var y = $(this).val();
-    console.log(y);
-    var contextData = {year: y, label: $('#searchLabel').val()};
-    var tpl = ($('#radioTableRes').prop("checked") ? epidemioQueries[0] : epidemioQueries[1]);
-    var q = processHbTemplate(tpl, contextData);
-    $('#epidQueryTextArea').val(q);
-    $('#epidQueryTextArea').trigger('autoresize');
-});
-
-$('#searchLabel').on('change', function (e) {
-    var l = $(this).val();
-    console.log(l);
-    var contextData = {year: $('#selectYear').val(), label: l};
-    var tpl = ($('#radioTableRes').prop("checked") ? epidemioQueries[0] : epidemioQueries[1]);
-    var q = processHbTemplate(tpl, contextData);
-    $('#epidQueryTextArea').val(q);
-    $('#epidQueryTextArea').trigger('autoresize');
-});
-
-////////////////////////////////////////////
-// Web app initialization
-////////////////////////////////////////////
-
-// The root URL for the RESTful services
-var rootURL = "http://" + window.location.host;
-console.log("Connecting to the SyMeTRIC Data API " + rootURL);
-
-
-// init GUI components
-$('#selectYear').val(2007).change();
-$('#epidQueryTextArea').trigger('autoresize');
-
-initQueryAPI();
-
-//$('#sparqlFedTextArea').val(fedQueries[0]);
-//$('#txtSlice').attr("disabled", true);
-
-// reset the connected data sources so that when the page is reloaded, the gui is synchronized with the server. 
-// resetDQP();
-
 
 ////////////////////////////////
 // Communication with the API
@@ -435,25 +429,19 @@ function logout() {
 function initQueryAPI() {
     console.log('Initializing the Query API');
 
-//    $('#btnQuery').attr("disabled", true);
-    $('#btnQuery').addClass("disabled");
-    $("#btnQuery").html("Loading...");
+    EventBus.trigger(EVT_LOADING);
 
     $.ajax({
         type: 'GET',
         url: rootURL + '/query/init',
         dataType: "text",
         success: function (data, textStatus, jqXHR) {
-            //infoSuccess('Query API init done');
-//            $('#btnQuery').attr("disabled", false);
-            $('#btnQuery').removeClass("disabled");
-            $("#btnQuery").html("Query");
+            EventBus.trigger(EVT_FINNISHED);
         },
         error: function (jqXHR, textStatus, errorThrown) {
             infoError('Query API init error: ' + textStatus);
             console.log(errorThrown);
-            $('#btnQuery').removeClass("disabled");
-            $("#btnQuery").html("Query");
+            EventBus.trigger(EVT_FINNISHED);
         }
     });
 }
@@ -532,7 +520,7 @@ function load() {
 function sparql(sparqlQuery) {
     console.log("sending query");
     $('#btnQuery').attr("disabled", true);
-    $("#btnQuery").html("Querying ...");
+    $('#btnQuery').html("Querying ...");
 
 //    var trimedQuery = $.trim(sparqlQuery);
 //    var isConstruct = trimedQuery.toLowerCase().lastIndexOf("construct",0) === 0;
@@ -595,7 +583,7 @@ function sparql(sparqlQuery) {
 //            console.log(errorThrown);
             console.log(jqXHR.responseText);
             $('#btnQuery').attr("disabled", false);
-            $("#btnQuery").html("Query");
+            $('#btnQuery').html("Query");
         }
     });
 }
