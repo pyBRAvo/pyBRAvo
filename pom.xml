@@ -10,7 +10,7 @@
     </properties>
 
     <repositories>
-<!--        <repository>
+        <!--        <repository>
             <id>hudson.univ-nantes.prive-snapshots</id>
             <name>hudson.univ-nantes.prive-snapshots</name>
             <url>http://hudson.univ-nantes.prive/artifactory/libs-snapshot-local</url>
@@ -194,8 +194,19 @@
         <dependency>
             <groupId>fr.inria.wimmics</groupId>
             <artifactId>corese-server</artifactId>
-            <version>3.1.7</version>
+            <version>3.1.8</version>
         </dependency>
+        
+<!--        <dependency>
+            <groupId>fr.inria.wimmics</groupId>
+            <artifactId>corese-server</artifactId>
+            <version>3.1.4-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>fr.inria.wimmics</groupId>
+            <artifactId>kgtool</artifactId>
+            <version>3.1.4-SNAPSHOT</version>
+        </dependency>-->
         
     </dependencies>
 
