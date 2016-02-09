@@ -85,7 +85,7 @@ var DemoEpidemioView = Backbone.View.extend({
         console.log("selectYearEvt");
         var y = $(e.currentTarget).val();
         var contextData = {year: y, label: $('#searchLabel').val()};
-        var tpl = ($('#radioTableRes').prop("checked") ? epidemioQueries[0] : epidemioQueries[1]);
+        var tpl = ($('#radioTableRes').prop("checked") ? epidemioQueries[1] : epidemioQueries[2]);
         var q = processHbTemplate(tpl, contextData);
         $('#epidQueryTextArea').val(q);
     },
@@ -93,7 +93,7 @@ var DemoEpidemioView = Backbone.View.extend({
         console.log("searchLabelEvt");
         var l = $(e.currentTarget).val();
         var contextData = {year: $('#selectYear').val(), label: l};
-        var tpl = ($('#radioTableRes').prop("checked") ? epidemioQueries[0] : epidemioQueries[1]);
+        var tpl = ($('#radioTableRes').prop("checked") ? epidemioQueries[1] : epidemioQueries[2]);
         var q = processHbTemplate(tpl, contextData);
         $('#epidQueryTextArea').val(q);
     },
@@ -102,7 +102,7 @@ var DemoEpidemioView = Backbone.View.extend({
         var r = $(e.currentTarget).val();
         console.log(r);
         var contextData = {year: $('#selectYear').val(), label: $('#searchLabel').val()};
-        var tpl = ($('#radioTableRes').prop("checked") ? epidemioQueries[0] : epidemioQueries[1]);
+        var tpl = ($('#radioTableRes').prop("checked") ? epidemioQueries[1] : epidemioQueries[2]);
         var q = processHbTemplate(tpl, contextData);
         $('#epidQueryTextArea').val(q);
     }
@@ -134,7 +134,7 @@ $(document).ready(function () {
             dataType: "text",
             complete: setTimeout(function () {
                 checkSessionValidity()
-            }, 60000),
+            }, 60000), 
             timeout: 2000,
             success: function (data) {
                 if (data.indexOf("true") > -1) {
@@ -236,7 +236,7 @@ EventBus.on(EVT_LOGIN, function (sessionId) {
     createCookie("sid", sessionId, 7);
 
 
-    var myMenu = '<li class="dropdown"> <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="material-icons right">perm_identity</i></a> \n\
+    var myMenu = '<li class="dropdown"> <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-user"></span></a> \n\
                         <ul class="dropdown-menu"> \n\
                             <li><a href="#!">Profile</a></li> \n\
                             <li class="divider"></li> \n\
