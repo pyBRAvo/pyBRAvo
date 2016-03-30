@@ -15,11 +15,11 @@ PREFIX om: <http://bio2rdf.org/omim_vocabulary:> \n \
 PREFIX b: <http://bio2rdf.org/bio2rdf_vocabulary:> \n \
 \n \
 SELECT DISTINCT (?reg as ?area) \n \
-    (SUM(?nb) AS ?cases) \n \
+    (group_concat(distinct ?nb; separator=", ") AS ?cases) \n \
     (group_concat(distinct ?icd10; separator=", ") AS ?ICD)  \n \
     (group_concat(distinct ?label; separator=", ") AS ?labels) \n \
     (group_concat(distinct ?ncit; separator=", ") AS ?omimRefs) \n \
-    (group_concat(distinct ?gs; separator=", ") AS ?geneIds)  WHERE { \n \
+    WHERE { \n \
     ?doidClass rdfs:label ?label . \n \
     FILTER regex(?label, "{{label}}") . \n \
     ?doidClass oboInOwl:id ?doid . \n \
@@ -42,53 +42,106 @@ SELECT DISTINCT (?reg as ?area) \n \
     #OPTIONAL {\n \
     #    SERVICE <http://omim.bio2rdf.org/sparql> { \n \
     #        ?s om:phenotype-map ?map . \n \
-    #        ?map om:geneSymbols/b:identifier ?gs . \n \
+    #        ?map om:gene-symbol/b:identifier ?gs . \n \
     #    } \n \
     #}\n \
-} \n\
-GROUP BY ?area #?icd10 \n\
-ORDER BY DESC(?cases)',
+} \n \
+GROUP BY ?reg \n \
+ORDER BY ?reg', 
+    
+'PREFIX oboInOwl:<http://www.geneontology.org/formats/oboInOwl#> \n'
+ +'PREFIX om: <http://bio2rdf.org/omim_vocabulary:> \n'
+ +'PREFIX b: <http://bio2rdf.org/bio2rdf_vocabulary:> \n'
+ +'PREFIX dbp: <http://dbpedia.org/property/> \n'
+ +'PREFIX dbo: <http://dbpedia.org/ontology/> \n'
+ +'PREFIX dcterms: <http://purl.org/dc/terms/> \n'
+ +'\n'
+ +'SELECT DISTINCT \n'
+ +'   (?reg as ?area) \n'
+ +'   (group_concat(distinct ?nb; separator=", ") AS ?cases) \n'
+ +'   (?pop as ?population) \n'
+ +'   (group_concat(distinct ?icd10; separator=", ") AS ?ICD)  \n'
+ +'   (group_concat(distinct ?label; separator=", ") AS ?labels) \n'
+ +'   (group_concat(distinct ?ncit; separator=", ") AS ?omimRefs) \n'
+ +'   (group_concat(distinct ?gs; separator=", ") AS ?geneIds)  WHERE { \n'
+ +'   SERVICE <http://live.dbpedia.org/sparql> { \n'
+ +'       ?dpt dbp:subdivisionName <http://dbpedia.org/resource/France> . \n'
+ +'       ?dpt dbp:blankInfoSec ?dptCode . \n'
+ +'       ?dpt dbp:populationTotal ?pop . \n'
+ +'   } \n'
+ +'   \n'
+ +'   ?doidClass rdfs:label ?label . \n'
+ +'   FILTER (regex(?label, "{{label}}")) . \n'
+ +'   \n'
+ +'   ?doidSubClass rdfs:subClassOf* ?doidClass . \n'
+ //+'   ?doidSubClass rdfs:label ?subClassLabel . \n'
+ +'   ?doidClass rdfs:subClassOf* ?doidSuperClass . \n'
+ //+'   ?doidSuperClass rdfs:label ?superClassLabel . \n'
+ 
+ +'   \n'
+ +'   ?doidSubClass oboInOwl:hasDbXref ?ncit . \n'
+ +'   FILTER strstarts(str(?ncit), "OMI") . \n'
+ +'\n'
+ +'   { {?t owl:sameAs ?doidClass} UNION {?t owl:sameAs ?doidSubClass} } UNION {?t owl:sameAs ?doidSuperClass} \n'
+ +'   ?x rdf:type ?t . \n'
+ +'   ?x <http://cepidc.data.symetric.org/has-icd10-cause> ?icd10 . \n'
+ +'   ?x <http://cepidc.data.symetric.org/refers-to-gender> "T" . \n'
+ +'   ?x <http://cepidc.data.symetric.org/refers-to-period> "{{year}}" . \n'
+ +'   ?x <http://cepidc.data.symetric.org/has-value-for-all-ages> ?nb . \n'
+ +'   FILTER (?nb > 0) . \n'
+ +'   ?x <http://cepidc.data.symetric.org/refers-to-geographical-area> ?reg . \n'
+ +'    \n'
+ +'   FILTER (regex(xsd:string(?dptCode), ?reg)) . \n'
+ +'    \n'
+ +'   BIND(URI(LCASE(CONCAT("http://bio2rdf.org/",?ncit))) as ?s) . \n'
+ +'   SERVICE <http://omim.bio2rdf.org/sparql> { \n'
+ +'       ?s om:phenotype-map ?map . \n'
+ +'       ?map om:gene-symbol/b:identifier ?gs . \n'
+ +'   } \n'
+ +'} \n'
+ +'GROUP BY ?reg \n'
+ +'ORDER BY ?reg',
 
-'PREFIX oboInOwl:<http://www.geneontology.org/formats/oboInOwl#> \n '
-+ 'PREFIX om: <http://bio2rdf.org/omim_vocabulary:> \n '
-+ 'PREFIX b: <http://bio2rdf.org/bio2rdf_vocabulary:> \n ' 
-+ '\n '
-+ 'CONSTRUCT { \n '
-+ '    \n '
-+ '    ?t owl:sameAs ?doidClass . \n '
-+ '    ?doidClass rdfs:label ?label . \n '
-+ '    ?x rdf:type ?t . \n '
-+ '    \n '
-+ '    ?x <http://cepidc.data.symetric.org/has-value-for-all-ages> ?nb . \n '
-+ '    ?x <http://cepidc.data.symetric.org/refers-to-geographical-area> ?reg . \n '
-+ '    \n '
-+ '} WHERE { \n '
-+ '    ?doidClass rdfs:label ?label . \n '
-+ '  FILTER regex(?label, \"{{label}}\") . \n '
-+ '    ?doidClass oboInOwl:id ?doid . \n '
-+ '    OPTIONAL { \n '
-+ '        ?doidClass oboInOwl:hasDbXref ?ncit . \n '
-+ '        FILTER strstarts(str(?ncit), \"OMI\") . \n '
-+ '    } \n '
-+ '    \n '
-+ '    ?t owl:sameAs ?doidClass . \n '
-+ '    ?x rdf:type ?t . \n '
-+ '\n '    
-+ '    ?x <http://cepidc.data.symetric.org/has-icd10-cause> ?icd10 . \n '
-+ '    ?x <http://cepidc.data.symetric.org/refers-to-gender> "T" . \n '
-+ '    ?x <http://cepidc.data.symetric.org/refers-to-period> "{{year}}" . \n '
-+ '    ?x <http://cepidc.data.symetric.org/has-value-for-all-ages> ?nb . \n '
-+ '    FILTER (?nb > 0) . \n '
-+ '    ?x <http://cepidc.data.symetric.org/refers-to-geographical-area> ?reg . \n '
-+ '    \n '
-+ '    BIND(URI(LCASE(CONCAT("http://bio2rdf.org/",?ncit))) as ?s) . \n '
-+ '    #OPTIONAL { \n '
-+ '    #    SERVICE <http://omim.bio2rdf.org/sparql> { \n '
-+ '    #        ?s om:phenotype-map ?map . \n '
-+ '    #        ?map om:geneSymbols/b:identifier ?gs . \n '
-+ '    #    } \n '
-+ '    #}\n '
-+ '}\n '
+'PREFIX oboInOwl:<http://www.geneontology.org/formats/oboInOwl#> \n'
++ 'PREFIX om: <http://bio2rdf.org/omim_vocabulary:> \n'
++ 'PREFIX b: <http://bio2rdf.org/bio2rdf_vocabulary:> \n' 
++ '\n'
++ 'CONSTRUCT { \n'
++ '    \n'
++ '    ?t owl:sameAs ?doidClass . \n'
++ '    ?doidClass rdfs:label ?label . \n'
++ '    ?x rdf:type ?t . \n'
++ '    \n'
++ '    ?x <http://cepidc.data.symetric.org/has-value-for-all-ages> ?nb . \n'
++ '    ?x <http://cepidc.data.symetric.org/refers-to-geographical-area> ?reg . \n'
++ '    \n'
++ '} WHERE { \n'
++ '    ?doidClass rdfs:label ?label . \n'
++ '  FILTER regex(?label, \"{{label}}\") . \n'
++ '    ?doidClass oboInOwl:id ?doid . \n'
++ '    OPTIONAL { \n'
++ '        ?doidClass oboInOwl:hasDbXref ?ncit . \n'
++ '        FILTER strstarts(str(?ncit), \"OMI\") . \n'
++ '    } \n'
++ '    \n'
++ '    ?t owl:sameAs ?doidClass . \n'
++ '    ?x rdf:type ?t . \n'
++ '\n'    
++ '    ?x <http://cepidc.data.symetric.org/has-icd10-cause> ?icd10 . \n'
++ '    ?x <http://cepidc.data.symetric.org/refers-to-gender> "T" . \n'
++ '    ?x <http://cepidc.data.symetric.org/refers-to-period> "{{year}}" . \n'
++ '    ?x <http://cepidc.data.symetric.org/has-value-for-all-ages> ?nb . \n'
++ '    FILTER (?nb > 0) . \n'
++ '    ?x <http://cepidc.data.symetric.org/refers-to-geographical-area> ?reg . \n'
++ '    \n'
++ '    BIND(URI(LCASE(CONCAT("http://bio2rdf.org/",?ncit))) as ?s) . \n'
++ '    #OPTIONAL { \n'
++ '    #    SERVICE <http://omim.bio2rdf.org/sparql> { \n'
++ '    #        ?s om:phenotype-map ?map . \n'
++ '    #        ?map om:geneSymbols/b:identifier ?gs . \n'
++ '    #    } \n'
++ '    #}\n'
++ '}\n'
 ];
 
 var fedQueries = [

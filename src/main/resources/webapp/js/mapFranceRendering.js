@@ -10,7 +10,7 @@ function displayMap(jsonData) {
 
     $('#mapRow').html('');
     $('#mapRow').append('<div id="map"></div>');
-    
+
     //if (map != undefined) { map.remove(); }
     var initZoom = 6.5;
     var map = L.map('map').setView([47.5, 1], initZoom);
@@ -35,35 +35,47 @@ function displayMap(jsonData) {
     // var marker = L.marker([51.387, 7.664]).addTo(map);
     // marker.bindPopup("This is Berlin.").openPopup();
 
+    function sumCases(list) {
+        var array = list.split(",");
+        var sum = 0;
+        for (var j = 0; j < array.length; j++) {
+            var num = parseInt(array[j]) || 0;
+            sum += num;
+        }
+        return sum;
+    }
+
     function getCaseNb(obj, code) {
         var bindings = jsonData.results.bindings == null ? [] : (jsonData.results.bindings instanceof Array ? jsonData.results.bindings : [jsonData.results.bindings]);
 //        var listVar = jsonData.head.vars == null ? [] : (jsonData.head.vars instanceof Array ? jsonData.head.vars : [jsonData.head.vars]);
-        
+
 //        for (var i in bindings) {
-          for  (var i = 0; i < bindings.length; i++) {
+        for (var i = 0; i < bindings.length; i++) {
 //            console.log(bindings[i].area.value);
             if (bindings[i].area.value) {
                 if (bindings[i].area.value == code) {
-                    return bindings[i].cases.value;
+                    
+                    return sumCases(bindings[i].cases.value);
                 }
             }
         } // for
         return null;
     } // getCaseNb
-    
+
     function getInfos(obj, code) {
         var bindings = jsonData.results.bindings == null ? [] : (jsonData.results.bindings instanceof Array ? jsonData.results.bindings : [jsonData.results.bindings]);
 //        var listVar = jsonData.head.vars == null ? [] : (jsonData.head.vars instanceof Array ? jsonData.head.vars : [jsonData.head.vars]);
-        
+
 //        for (var i in bindings) {
-          for  (var i = 0; i < bindings.length; i++) {
+        for (var i = 0; i < bindings.length; i++) {
 //            console.log(bindings[i].area.value);
             if (bindings[i].area.value) {
                 if (bindings[i].area.value == code) {
-                    var infos = {   area : bindings[i].area.value, 
-                                cases : bindings[i].cases.value, 
-                                icd10 : bindings[i].ICD.value, 
-                                omimRefs : bindings[i].omimRefs.value};
+                    var infos = {area: bindings[i].area.value,
+                        cases: sumCases(bindings[i].cases.value),
+                        icd10: bindings[i].ICD.value,
+//                        omimRefs: bindings[i].omimRefs.value};
+                        genes: bindings[i].geneIds.value};
                     return infos;
                 }
             }
@@ -160,7 +172,7 @@ function displayMap(jsonData) {
     // method that we will use to update the control based on feature properties passed
     info.update = function (props) {
         // var nb = getCaseNb(cases,props.code);
-        if ( ! props) {
+        if (!props) {
             this._div.innerHTML = '<h5>Death cases in France, North West area</h5>';
         } else {
             var infos = getInfos(jsonData, props.code);
@@ -171,9 +183,9 @@ function displayMap(jsonData) {
             this._div.innerHTML = '<h5>Death cases in France, North West area</h5>' +
                     ((infos)
                             ? '<b>' + props.nom + '(' + props.code + ') </b><br />'
-                            + 'Decease cases : '+ infos.cases + '<br />'
-                            +' ICD10 codes : '+ infos.icd10 + '<br />'
-                            + 'OMIM references : '+ infos.omimRefs +'<br />'
+                            + 'Decease cases : ' + infos.cases + '<br />'
+                            + ' ICD10 codes : ' + infos.icd10 + '<br />'
+                            + 'Genes : ' + infos.genes + '<br />'
                             : '');
         }
     };

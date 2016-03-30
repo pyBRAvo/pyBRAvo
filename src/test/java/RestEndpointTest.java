@@ -53,8 +53,8 @@ public class RestEndpointTest {
     @BeforeClass
     public static void setUpClass() throws FileSystemException, URISyntaxException, Exception {
 
-        ProcessBuilder pb = new ProcessBuilder("mongod");
-//        ProcessBuilder pb = new ProcessBuilder("/usr/local/Cellar/mongodb/3.0.1/bin/mongod");
+//        ProcessBuilder pb = new ProcessBuilder("mongod");
+        ProcessBuilder pb = new ProcessBuilder("/usr/local/Cellar/mongodb/3.0.1/bin/mongod");
         pb.redirectErrorStream(true);
         mongoDB_server = pb.start();
 

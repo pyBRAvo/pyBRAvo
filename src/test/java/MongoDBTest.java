@@ -29,8 +29,8 @@ public class MongoDBTest {
 
     @BeforeClass
     public static void initiate() throws IOException, InterruptedException {
-        ProcessBuilder pb = new ProcessBuilder("mongod");
-//        ProcessBuilder pb = new ProcessBuilder("/usr/local/Cellar/mongodb/3.0.1/bin/mongod");
+//        ProcessBuilder pb = new ProcessBuilder("mongod");
+        ProcessBuilder pb = new ProcessBuilder("/usr/local/Cellar/mongodb/3.0.1/bin/mongod");
         pb.redirectErrorStream(true);
         mongoDB_server = pb.start();
     }

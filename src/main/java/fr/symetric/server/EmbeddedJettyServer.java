@@ -114,8 +114,8 @@ public class EmbeddedJettyServer {
 
             ResourceHandler resource_handler = new ResourceHandler();
 //            resource_handler.setWelcomeFiles(new String[]{"index.html"});
-            resource_handler.setResourceBase(webappUri.getRawPath());
-//            resource_handler.setResourceBase("/Users/gaignard/Documents/Dev/symetric-api-server/src/main/resources/webapp");
+//            resource_handler.setResourceBase(webappUri.getRawPath());
+            resource_handler.setResourceBase("/Users/gaignard/Documents/Dev/symetric-api-server/src/main/resources/webapp");
             ContextHandler staticContextHandler = new ContextHandler();
             staticContextHandler.setContextPath("/");
             staticContextHandler.setHandler(resource_handler);

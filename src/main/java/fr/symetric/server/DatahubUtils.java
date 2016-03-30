@@ -47,7 +47,7 @@ public class DatahubUtils {
             Session s = sessionRep.get(id);
             Date lastAccess = s.getLastAccessedTime();
             Date expirationDate = new Date();
-            expirationDate.setTime(lastAccess.getTime() + 600000); //10mn = 600000 ms
+            expirationDate.setTime(lastAccess.getTime() + 60000*30); //30mn = 600000 ms
 
             if (now.after(expirationDate) && s.isActive()) {
                 s.setActive(false);
