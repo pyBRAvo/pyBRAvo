@@ -1,0 +1,1806 @@
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+
+<http://cepidc.data.symetric.org/2007.44.I35.0> <http://cepidc.data.symetric.org/has-icd10-cause> "I35" ;
+	rdfs:label "Total des rubriques √† 4 chiffres" ;
+	<http://cepidc.data.symetric.org/refers-to-gender> "M" ;
+	<http://cepidc.data.symetric.org/has-value-for-all-ages> "48"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1m> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1-4> "*"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-5-14> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-15-24> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-25-34> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-35-44> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-45-54> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-55-64> "3"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-65-74> "9"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-75-84> "22"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-85-94> "14"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-95p> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/refers-to-period> "2007" ;
+	<http://cepidc.data.symetric.org/refers-to-geographical-area> "44" ;
+	a <http://cepidc.data.symetric.org/I35> .
+
+<http://cepidc.data.symetric.org/2007.44.I35.1> <http://cepidc.data.symetric.org/has-icd10-cause> "I35" ;
+	rdfs:label "Total des rubriques √† 4 chiffres" ;
+	<http://cepidc.data.symetric.org/refers-to-gender> "F" ;
+	<http://cepidc.data.symetric.org/has-value-for-all-ages> "49"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1m> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1-4> "*"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-5-14> "*"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-15-24> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-25-34> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-35-44> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-45-54> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-55-64> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-65-74> "2"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-75-84> "18"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-85-94> "25"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-95p> "4"^^xsd:int ;
+	<http://cepidc.data.symetric.org/refers-to-period> "2007" ;
+	<http://cepidc.data.symetric.org/refers-to-geographical-area> "44" ;
+	a <http://cepidc.data.symetric.org/I35> .
+
+<http://cepidc.data.symetric.org/2007.44.I35.2> <http://cepidc.data.symetric.org/has-icd10-cause> "I35" ;
+	rdfs:label "Total des rubriques √† 4 chiffres" ;
+	<http://cepidc.data.symetric.org/refers-to-gender> "T" ;
+	<http://cepidc.data.symetric.org/has-value-for-all-ages> "97"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1m> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1-4> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-5-14> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-15-24> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-25-34> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-35-44> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-45-54> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-55-64> "3"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-65-74> "11"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-75-84> "40"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-85-94> "39"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-95p> "4"^^xsd:int ;
+	<http://cepidc.data.symetric.org/refers-to-period> "2007" ;
+	<http://cepidc.data.symetric.org/refers-to-geographical-area> "44" ;
+	a <http://cepidc.data.symetric.org/I35> .
+
+<http://cepidc.data.symetric.org/2007.44.I35.0.3> <http://cepidc.data.symetric.org/has-icd10-cause> "I35.0" ;
+	rdfs:label " " ;
+	<http://cepidc.data.symetric.org/refers-to-gender> "M" ;
+	<http://cepidc.data.symetric.org/has-value-for-all-ages> "38"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1m> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1-4> "*"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-5-14> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-15-24> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-25-34> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-35-44> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-45-54> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-55-64> "2"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-65-74> "6"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-75-84> "18"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-85-94> "12"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-95p> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/refers-to-period> "2007" ;
+	<http://cepidc.data.symetric.org/refers-to-geographical-area> "44" ;
+	a <http://cepidc.data.symetric.org/I35.0> .
+
+<http://cepidc.data.symetric.org/2007.44.I35.0.4> <http://cepidc.data.symetric.org/has-icd10-cause> "I35.0" ;
+	rdfs:label " " ;
+	<http://cepidc.data.symetric.org/refers-to-gender> "F" ;
+	<http://cepidc.data.symetric.org/has-value-for-all-ages> "41"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1m> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1-4> "*"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-5-14> "*"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-15-24> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-25-34> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-35-44> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-45-54> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-55-64> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-65-74> "1"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-75-84> "15"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-85-94> "22"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-95p> "3"^^xsd:int ;
+	<http://cepidc.data.symetric.org/refers-to-period> "2007" ;
+	<http://cepidc.data.symetric.org/refers-to-geographical-area> "44" ;
+	a <http://cepidc.data.symetric.org/I35.0> .
+
+<http://cepidc.data.symetric.org/2007.44.I35.0.5> <http://cepidc.data.symetric.org/has-icd10-cause> "I35.0" ;
+	rdfs:label " " ;
+	<http://cepidc.data.symetric.org/refers-to-gender> "T" ;
+	<http://cepidc.data.symetric.org/has-value-for-all-ages> "79"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1m> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1-4> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-5-14> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-15-24> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-25-34> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-35-44> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-45-54> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-55-64> "2"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-65-74> "7"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-75-84> "33"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-85-94> "34"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-95p> "3"^^xsd:int ;
+	<http://cepidc.data.symetric.org/refers-to-period> "2007" ;
+	<http://cepidc.data.symetric.org/refers-to-geographical-area> "44" ;
+	a <http://cepidc.data.symetric.org/I35.0> .
+
+<http://cepidc.data.symetric.org/2007.44.I35.1.6> <http://cepidc.data.symetric.org/has-icd10-cause> "I35.1" ;
+	rdfs:label " " ;
+	<http://cepidc.data.symetric.org/refers-to-gender> "M" ;
+	<http://cepidc.data.symetric.org/has-value-for-all-ages> "3"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1m> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1-4> "*"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-5-14> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-15-24> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-25-34> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-35-44> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-45-54> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-55-64> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-65-74> "1"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-75-84> "1"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-85-94> "1"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-95p> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/refers-to-period> "2007" ;
+	<http://cepidc.data.symetric.org/refers-to-geographical-area> "44" ;
+	a <http://cepidc.data.symetric.org/I35.1> .
+
+<http://cepidc.data.symetric.org/2007.44.I35.1.7> <http://cepidc.data.symetric.org/has-icd10-cause> "I35.1" ;
+	rdfs:label " " ;
+	<http://cepidc.data.symetric.org/refers-to-gender> "F" ;
+	<http://cepidc.data.symetric.org/has-value-for-all-ages> "1"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1m> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1-4> "*"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-5-14> "*"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-15-24> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-25-34> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-35-44> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-45-54> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-55-64> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-65-74> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-75-84> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-85-94> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-95p> "1"^^xsd:int ;
+	<http://cepidc.data.symetric.org/refers-to-period> "2007" ;
+	<http://cepidc.data.symetric.org/refers-to-geographical-area> "44" ;
+	a <http://cepidc.data.symetric.org/I35.1> .
+
+<http://cepidc.data.symetric.org/2007.44.I35.1.8> <http://cepidc.data.symetric.org/has-icd10-cause> "I35.1" ;
+	rdfs:label " " ;
+	<http://cepidc.data.symetric.org/refers-to-gender> "T" ;
+	<http://cepidc.data.symetric.org/has-value-for-all-ages> "4"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1m> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1-4> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-5-14> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-15-24> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-25-34> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-35-44> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-45-54> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-55-64> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-65-74> "1"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-75-84> "1"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-85-94> "1"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-95p> "1"^^xsd:int ;
+	<http://cepidc.data.symetric.org/refers-to-period> "2007" ;
+	<http://cepidc.data.symetric.org/refers-to-geographical-area> "44" ;
+	a <http://cepidc.data.symetric.org/I35.1> .
+
+<http://cepidc.data.symetric.org/2007.44.I35.2.9> <http://cepidc.data.symetric.org/has-icd10-cause> "I35.2" ;
+	rdfs:label " " ;
+	<http://cepidc.data.symetric.org/refers-to-gender> "M" ;
+	<http://cepidc.data.symetric.org/has-value-for-all-ages> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1m> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1-4> "*"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-5-14> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-15-24> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-25-34> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-35-44> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-45-54> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-55-64> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-65-74> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-75-84> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-85-94> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-95p> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/refers-to-period> "2007" ;
+	<http://cepidc.data.symetric.org/refers-to-geographical-area> "44" ;
+	a <http://cepidc.data.symetric.org/I35.2> .
+
+<http://cepidc.data.symetric.org/2007.44.I35.2.10> <http://cepidc.data.symetric.org/has-icd10-cause> "I35.2" ;
+	rdfs:label " " ;
+	<http://cepidc.data.symetric.org/refers-to-gender> "F" ;
+	<http://cepidc.data.symetric.org/has-value-for-all-ages> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1m> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1-4> "*"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-5-14> "*"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-15-24> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-25-34> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-35-44> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-45-54> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-55-64> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-65-74> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-75-84> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-85-94> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-95p> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/refers-to-period> "2007" ;
+	<http://cepidc.data.symetric.org/refers-to-geographical-area> "44" ;
+	a <http://cepidc.data.symetric.org/I35.2> .
+
+<http://cepidc.data.symetric.org/2007.44.I35.2.11> <http://cepidc.data.symetric.org/has-icd10-cause> "I35.2" ;
+	rdfs:label " " ;
+	<http://cepidc.data.symetric.org/refers-to-gender> "T" ;
+	<http://cepidc.data.symetric.org/has-value-for-all-ages> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1m> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1-4> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-5-14> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-15-24> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-25-34> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-35-44> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-45-54> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-55-64> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-65-74> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-75-84> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-85-94> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-95p> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/refers-to-period> "2007" ;
+	<http://cepidc.data.symetric.org/refers-to-geographical-area> "44" ;
+	a <http://cepidc.data.symetric.org/I35.2> .
+
+<http://cepidc.data.symetric.org/2007.44.I35.8.12> <http://cepidc.data.symetric.org/has-icd10-cause> "I35.8" ;
+	rdfs:label " " ;
+	<http://cepidc.data.symetric.org/refers-to-gender> "M" ;
+	<http://cepidc.data.symetric.org/has-value-for-all-ages> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1m> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1-4> "*"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-5-14> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-15-24> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-25-34> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-35-44> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-45-54> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-55-64> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-65-74> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-75-84> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-85-94> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-95p> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/refers-to-period> "2007" ;
+	<http://cepidc.data.symetric.org/refers-to-geographical-area> "44" ;
+	a <http://cepidc.data.symetric.org/I35.8> .
+
+<http://cepidc.data.symetric.org/2007.44.I35.8.13> <http://cepidc.data.symetric.org/has-icd10-cause> "I35.8" ;
+	rdfs:label " " ;
+	<http://cepidc.data.symetric.org/refers-to-gender> "F" ;
+	<http://cepidc.data.symetric.org/has-value-for-all-ages> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1m> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1-4> "*"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-5-14> "*"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-15-24> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-25-34> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-35-44> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-45-54> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-55-64> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-65-74> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-75-84> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-85-94> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-95p> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/refers-to-period> "2007" ;
+	<http://cepidc.data.symetric.org/refers-to-geographical-area> "44" ;
+	a <http://cepidc.data.symetric.org/I35.8> .
+
+<http://cepidc.data.symetric.org/2007.44.I35.8.14> <http://cepidc.data.symetric.org/has-icd10-cause> "I35.8" ;
+	rdfs:label " " ;
+	<http://cepidc.data.symetric.org/refers-to-gender> "T" ;
+	<http://cepidc.data.symetric.org/has-value-for-all-ages> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1m> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1-4> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-5-14> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-15-24> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-25-34> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-35-44> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-45-54> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-55-64> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-65-74> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-75-84> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-85-94> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-95p> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/refers-to-period> "2007" ;
+	<http://cepidc.data.symetric.org/refers-to-geographical-area> "44" ;
+	a <http://cepidc.data.symetric.org/I35.8> .
+
+<http://cepidc.data.symetric.org/2007.44.I35.9.15> <http://cepidc.data.symetric.org/has-icd10-cause> "I35.9" ;
+	rdfs:label " " ;
+	<http://cepidc.data.symetric.org/refers-to-gender> "M" ;
+	<http://cepidc.data.symetric.org/has-value-for-all-ages> "7"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1m> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1-4> "*"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-5-14> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-15-24> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-25-34> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-35-44> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-45-54> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-55-64> "1"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-65-74> "2"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-75-84> "3"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-85-94> "1"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-95p> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/refers-to-period> "2007" ;
+	<http://cepidc.data.symetric.org/refers-to-geographical-area> "44" ;
+	a <http://cepidc.data.symetric.org/I35.9> .
+
+<http://cepidc.data.symetric.org/2007.44.I35.9.16> <http://cepidc.data.symetric.org/has-icd10-cause> "I35.9" ;
+	rdfs:label " " ;
+	<http://cepidc.data.symetric.org/refers-to-gender> "F" ;
+	<http://cepidc.data.symetric.org/has-value-for-all-ages> "7"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1m> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1-4> "*"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-5-14> "*"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-15-24> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-25-34> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-35-44> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-45-54> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-55-64> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-65-74> "1"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-75-84> "3"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-85-94> "3"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-95p> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/refers-to-period> "2007" ;
+	<http://cepidc.data.symetric.org/refers-to-geographical-area> "44" ;
+	a <http://cepidc.data.symetric.org/I35.9> .
+
+<http://cepidc.data.symetric.org/2007.44.I35.9.17> <http://cepidc.data.symetric.org/has-icd10-cause> "I35.9" ;
+	rdfs:label " " ;
+	<http://cepidc.data.symetric.org/refers-to-gender> "T" ;
+	<http://cepidc.data.symetric.org/has-value-for-all-ages> "14"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1m> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1-4> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-5-14> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-15-24> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-25-34> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-35-44> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-45-54> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-55-64> "1"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-65-74> "3"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-75-84> "6"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-85-94> "4"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-95p> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/refers-to-period> "2007" ;
+	<http://cepidc.data.symetric.org/refers-to-geographical-area> "44" ;
+	a <http://cepidc.data.symetric.org/I35.9> .
+
+<http://cepidc.data.symetric.org/2008.44.I35.18> <http://cepidc.data.symetric.org/has-icd10-cause> "I35" ;
+	rdfs:label "Total des rubriques √† 4 chiffres" ;
+	<http://cepidc.data.symetric.org/refers-to-gender> "M" ;
+	<http://cepidc.data.symetric.org/has-value-for-all-ages> "51"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1m> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1-4> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-5-14> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-15-24> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-25-34> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-35-44> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-45-54> "1"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-55-64> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-65-74> "5"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-75-84> "22"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-85-94> "23"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-95p> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/refers-to-period> "2008" ;
+	<http://cepidc.data.symetric.org/refers-to-geographical-area> "44" ;
+	a <http://cepidc.data.symetric.org/I35> .
+
+<http://cepidc.data.symetric.org/2008.44.I35.19> <http://cepidc.data.symetric.org/has-icd10-cause> "I35" ;
+	rdfs:label "Total des rubriques √† 4 chiffres" ;
+	<http://cepidc.data.symetric.org/refers-to-gender> "F" ;
+	<http://cepidc.data.symetric.org/has-value-for-all-ages> "52"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1m> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1-4> "*"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-5-14> "*"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-15-24> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-25-34> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-35-44> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-45-54> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-55-64> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-65-74> "3"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-75-84> "23"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-85-94> "21"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-95p> "5"^^xsd:int ;
+	<http://cepidc.data.symetric.org/refers-to-period> "2008" ;
+	<http://cepidc.data.symetric.org/refers-to-geographical-area> "44" ;
+	a <http://cepidc.data.symetric.org/I35> .
+
+<http://cepidc.data.symetric.org/2008.44.I35.20> <http://cepidc.data.symetric.org/has-icd10-cause> "I35" ;
+	rdfs:label "Total des rubriques √† 4 chiffres" ;
+	<http://cepidc.data.symetric.org/refers-to-gender> "T" ;
+	<http://cepidc.data.symetric.org/has-value-for-all-ages> "103"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1m> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1-4> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-5-14> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-15-24> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-25-34> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-35-44> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-45-54> "1"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-55-64> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-65-74> "8"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-75-84> "45"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-85-94> "44"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-95p> "5"^^xsd:int ;
+	<http://cepidc.data.symetric.org/refers-to-period> "2008" ;
+	<http://cepidc.data.symetric.org/refers-to-geographical-area> "44" ;
+	a <http://cepidc.data.symetric.org/I35> .
+
+<http://cepidc.data.symetric.org/2008.44.I35.0.21> <http://cepidc.data.symetric.org/has-icd10-cause> "I35.0" ;
+	rdfs:label " " ;
+	<http://cepidc.data.symetric.org/refers-to-gender> "M" ;
+	<http://cepidc.data.symetric.org/has-value-for-all-ages> "41"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1m> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1-4> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-5-14> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-15-24> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-25-34> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-35-44> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-45-54> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-55-64> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-65-74> "3"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-75-84> "17"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-85-94> "21"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-95p> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/refers-to-period> "2008" ;
+	<http://cepidc.data.symetric.org/refers-to-geographical-area> "44" ;
+	a <http://cepidc.data.symetric.org/I35.0> .
+
+<http://cepidc.data.symetric.org/2008.44.I35.0.22> <http://cepidc.data.symetric.org/has-icd10-cause> "I35.0" ;
+	rdfs:label " " ;
+	<http://cepidc.data.symetric.org/refers-to-gender> "F" ;
+	<http://cepidc.data.symetric.org/has-value-for-all-ages> "45"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1m> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1-4> "*"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-5-14> "*"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-15-24> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-25-34> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-35-44> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-45-54> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-55-64> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-65-74> "2"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-75-84> "19"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-85-94> "19"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-95p> "5"^^xsd:int ;
+	<http://cepidc.data.symetric.org/refers-to-period> "2008" ;
+	<http://cepidc.data.symetric.org/refers-to-geographical-area> "44" ;
+	a <http://cepidc.data.symetric.org/I35.0> .
+
+<http://cepidc.data.symetric.org/2008.44.I35.0.23> <http://cepidc.data.symetric.org/has-icd10-cause> "I35.0" ;
+	rdfs:label " " ;
+	<http://cepidc.data.symetric.org/refers-to-gender> "T" ;
+	<http://cepidc.data.symetric.org/has-value-for-all-ages> "86"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1m> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1-4> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-5-14> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-15-24> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-25-34> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-35-44> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-45-54> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-55-64> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-65-74> "5"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-75-84> "36"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-85-94> "40"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-95p> "5"^^xsd:int ;
+	<http://cepidc.data.symetric.org/refers-to-period> "2008" ;
+	<http://cepidc.data.symetric.org/refers-to-geographical-area> "44" ;
+	a <http://cepidc.data.symetric.org/I35.0> .
+
+<http://cepidc.data.symetric.org/2008.44.I35.1.24> <http://cepidc.data.symetric.org/has-icd10-cause> "I35.1" ;
+	rdfs:label " " ;
+	<http://cepidc.data.symetric.org/refers-to-gender> "M" ;
+	<http://cepidc.data.symetric.org/has-value-for-all-ages> "3"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1m> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1-4> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-5-14> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-15-24> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-25-34> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-35-44> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-45-54> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-55-64> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-65-74> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-75-84> "3"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-85-94> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-95p> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/refers-to-period> "2008" ;
+	<http://cepidc.data.symetric.org/refers-to-geographical-area> "44" ;
+	a <http://cepidc.data.symetric.org/I35.1> .
+
+<http://cepidc.data.symetric.org/2008.44.I35.1.25> <http://cepidc.data.symetric.org/has-icd10-cause> "I35.1" ;
+	rdfs:label " " ;
+	<http://cepidc.data.symetric.org/refers-to-gender> "F" ;
+	<http://cepidc.data.symetric.org/has-value-for-all-ages> "3"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1m> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1-4> "*"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-5-14> "*"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-15-24> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-25-34> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-35-44> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-45-54> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-55-64> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-65-74> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-75-84> "3"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-85-94> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-95p> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/refers-to-period> "2008" ;
+	<http://cepidc.data.symetric.org/refers-to-geographical-area> "44" ;
+	a <http://cepidc.data.symetric.org/I35.1> .
+
+<http://cepidc.data.symetric.org/2008.44.I35.1.26> <http://cepidc.data.symetric.org/has-icd10-cause> "I35.1" ;
+	rdfs:label " " ;
+	<http://cepidc.data.symetric.org/refers-to-gender> "T" ;
+	<http://cepidc.data.symetric.org/has-value-for-all-ages> "6"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1m> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1-4> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-5-14> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-15-24> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-25-34> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-35-44> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-45-54> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-55-64> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-65-74> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-75-84> "6"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-85-94> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-95p> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/refers-to-period> "2008" ;
+	<http://cepidc.data.symetric.org/refers-to-geographical-area> "44" ;
+	a <http://cepidc.data.symetric.org/I35.1> .
+
+<http://cepidc.data.symetric.org/2008.44.I35.2.27> <http://cepidc.data.symetric.org/has-icd10-cause> "I35.2" ;
+	rdfs:label " " ;
+	<http://cepidc.data.symetric.org/refers-to-gender> "M" ;
+	<http://cepidc.data.symetric.org/has-value-for-all-ages> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1m> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1-4> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-5-14> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-15-24> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-25-34> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-35-44> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-45-54> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-55-64> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-65-74> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-75-84> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-85-94> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-95p> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/refers-to-period> "2008" ;
+	<http://cepidc.data.symetric.org/refers-to-geographical-area> "44" ;
+	a <http://cepidc.data.symetric.org/I35.2> .
+
+<http://cepidc.data.symetric.org/2008.44.I35.2.28> <http://cepidc.data.symetric.org/has-icd10-cause> "I35.2" ;
+	rdfs:label " " ;
+	<http://cepidc.data.symetric.org/refers-to-gender> "F" ;
+	<http://cepidc.data.symetric.org/has-value-for-all-ages> "1"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1m> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1-4> "*"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-5-14> "*"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-15-24> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-25-34> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-35-44> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-45-54> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-55-64> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-65-74> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-75-84> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-85-94> "1"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-95p> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/refers-to-period> "2008" ;
+	<http://cepidc.data.symetric.org/refers-to-geographical-area> "44" ;
+	a <http://cepidc.data.symetric.org/I35.2> .
+
+<http://cepidc.data.symetric.org/2008.44.I35.2.29> <http://cepidc.data.symetric.org/has-icd10-cause> "I35.2" ;
+	rdfs:label " " ;
+	<http://cepidc.data.symetric.org/refers-to-gender> "T" ;
+	<http://cepidc.data.symetric.org/has-value-for-all-ages> "1"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1m> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1-4> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-5-14> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-15-24> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-25-34> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-35-44> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-45-54> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-55-64> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-65-74> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-75-84> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-85-94> "1"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-95p> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/refers-to-period> "2008" ;
+	<http://cepidc.data.symetric.org/refers-to-geographical-area> "44" ;
+	a <http://cepidc.data.symetric.org/I35.2> .
+
+<http://cepidc.data.symetric.org/2008.44.I35.8.30> <http://cepidc.data.symetric.org/has-icd10-cause> "I35.8" ;
+	rdfs:label " " ;
+	<http://cepidc.data.symetric.org/refers-to-gender> "M" ;
+	<http://cepidc.data.symetric.org/has-value-for-all-ages> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1m> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1-4> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-5-14> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-15-24> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-25-34> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-35-44> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-45-54> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-55-64> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-65-74> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-75-84> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-85-94> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-95p> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/refers-to-period> "2008" ;
+	<http://cepidc.data.symetric.org/refers-to-geographical-area> "44" ;
+	a <http://cepidc.data.symetric.org/I35.8> .
+
+<http://cepidc.data.symetric.org/2008.44.I35.8.31> <http://cepidc.data.symetric.org/has-icd10-cause> "I35.8" ;
+	rdfs:label " " ;
+	<http://cepidc.data.symetric.org/refers-to-gender> "F" ;
+	<http://cepidc.data.symetric.org/has-value-for-all-ages> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1m> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1-4> "*"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-5-14> "*"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-15-24> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-25-34> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-35-44> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-45-54> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-55-64> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-65-74> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-75-84> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-85-94> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-95p> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/refers-to-period> "2008" ;
+	<http://cepidc.data.symetric.org/refers-to-geographical-area> "44" ;
+	a <http://cepidc.data.symetric.org/I35.8> .
+
+<http://cepidc.data.symetric.org/2008.44.I35.8.32> <http://cepidc.data.symetric.org/has-icd10-cause> "I35.8" ;
+	rdfs:label " " ;
+	<http://cepidc.data.symetric.org/refers-to-gender> "T" ;
+	<http://cepidc.data.symetric.org/has-value-for-all-ages> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1m> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1-4> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-5-14> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-15-24> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-25-34> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-35-44> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-45-54> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-55-64> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-65-74> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-75-84> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-85-94> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-95p> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/refers-to-period> "2008" ;
+	<http://cepidc.data.symetric.org/refers-to-geographical-area> "44" ;
+	a <http://cepidc.data.symetric.org/I35.8> .
+
+<http://cepidc.data.symetric.org/2008.44.I35.9.33> <http://cepidc.data.symetric.org/has-icd10-cause> "I35.9" ;
+	rdfs:label " " ;
+	<http://cepidc.data.symetric.org/refers-to-gender> "M" ;
+	<http://cepidc.data.symetric.org/has-value-for-all-ages> "7"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1m> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1-4> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-5-14> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-15-24> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-25-34> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-35-44> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-45-54> "1"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-55-64> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-65-74> "2"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-75-84> "2"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-85-94> "2"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-95p> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/refers-to-period> "2008" ;
+	<http://cepidc.data.symetric.org/refers-to-geographical-area> "44" ;
+	a <http://cepidc.data.symetric.org/I35.9> .
+
+<http://cepidc.data.symetric.org/2008.44.I35.9.34> <http://cepidc.data.symetric.org/has-icd10-cause> "I35.9" ;
+	rdfs:label " " ;
+	<http://cepidc.data.symetric.org/refers-to-gender> "F" ;
+	<http://cepidc.data.symetric.org/has-value-for-all-ages> "3"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1m> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1-4> "*"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-5-14> "*"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-15-24> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-25-34> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-35-44> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-45-54> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-55-64> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-65-74> "1"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-75-84> "1"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-85-94> "1"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-95p> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/refers-to-period> "2008" ;
+	<http://cepidc.data.symetric.org/refers-to-geographical-area> "44" ;
+	a <http://cepidc.data.symetric.org/I35.9> .
+
+<http://cepidc.data.symetric.org/2008.44.I35.9.35> <http://cepidc.data.symetric.org/has-icd10-cause> "I35.9" ;
+	rdfs:label " " ;
+	<http://cepidc.data.symetric.org/refers-to-gender> "T" ;
+	<http://cepidc.data.symetric.org/has-value-for-all-ages> "10"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1m> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1-4> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-5-14> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-15-24> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-25-34> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-35-44> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-45-54> "1"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-55-64> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-65-74> "3"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-75-84> "3"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-85-94> "3"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-95p> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/refers-to-period> "2008" ;
+	<http://cepidc.data.symetric.org/refers-to-geographical-area> "44" ;
+	a <http://cepidc.data.symetric.org/I35.9> .
+
+<http://cepidc.data.symetric.org/2009.44.I35.36> <http://cepidc.data.symetric.org/has-icd10-cause> "I35" ;
+	rdfs:label "Total des rubriques √† 4 chiffres" ;
+	<http://cepidc.data.symetric.org/refers-to-gender> "M" ;
+	<http://cepidc.data.symetric.org/has-value-for-all-ages> "52"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1m> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1-4> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-5-14> "*"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-15-24> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-25-34> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-35-44> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-45-54> "1"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-55-64> "1"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-65-74> "3"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-75-84> "23"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-85-94> "22"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-95p> "2"^^xsd:int ;
+	<http://cepidc.data.symetric.org/refers-to-period> "2009" ;
+	<http://cepidc.data.symetric.org/refers-to-geographical-area> "44" ;
+	a <http://cepidc.data.symetric.org/I35> .
+
+<http://cepidc.data.symetric.org/2009.44.I35.37> <http://cepidc.data.symetric.org/has-icd10-cause> "I35" ;
+	rdfs:label "Total des rubriques √† 4 chiffres" ;
+	<http://cepidc.data.symetric.org/refers-to-gender> "F" ;
+	<http://cepidc.data.symetric.org/has-value-for-all-ages> "56"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1m> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1-4> "*"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-5-14> "*"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-15-24> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-25-34> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-35-44> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-45-54> "1"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-55-64> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-65-74> "2"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-75-84> "14"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-85-94> "27"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-95p> "12"^^xsd:int ;
+	<http://cepidc.data.symetric.org/refers-to-period> "2009" ;
+	<http://cepidc.data.symetric.org/refers-to-geographical-area> "44" ;
+	a <http://cepidc.data.symetric.org/I35> .
+
+<http://cepidc.data.symetric.org/2009.44.I35.38> <http://cepidc.data.symetric.org/has-icd10-cause> "I35" ;
+	rdfs:label "Total des rubriques √† 4 chiffres" ;
+	<http://cepidc.data.symetric.org/refers-to-gender> "T" ;
+	<http://cepidc.data.symetric.org/has-value-for-all-ages> "108"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1m> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1-4> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-5-14> "*"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-15-24> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-25-34> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-35-44> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-45-54> "2"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-55-64> "1"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-65-74> "5"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-75-84> "37"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-85-94> "49"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-95p> "14"^^xsd:int ;
+	<http://cepidc.data.symetric.org/refers-to-period> "2009" ;
+	<http://cepidc.data.symetric.org/refers-to-geographical-area> "44" ;
+	a <http://cepidc.data.symetric.org/I35> .
+
+<http://cepidc.data.symetric.org/2009.44.I35.0.39> <http://cepidc.data.symetric.org/has-icd10-cause> "I35.0" ;
+	rdfs:label " " ;
+	<http://cepidc.data.symetric.org/refers-to-gender> "M" ;
+	<http://cepidc.data.symetric.org/has-value-for-all-ages> "46"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1m> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1-4> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-5-14> "*"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-15-24> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-25-34> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-35-44> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-45-54> "1"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-55-64> "1"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-65-74> "1"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-75-84> "20"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-85-94> "21"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-95p> "2"^^xsd:int ;
+	<http://cepidc.data.symetric.org/refers-to-period> "2009" ;
+	<http://cepidc.data.symetric.org/refers-to-geographical-area> "44" ;
+	a <http://cepidc.data.symetric.org/I35.0> .
+
+<http://cepidc.data.symetric.org/2009.44.I35.0.40> <http://cepidc.data.symetric.org/has-icd10-cause> "I35.0" ;
+	rdfs:label " " ;
+	<http://cepidc.data.symetric.org/refers-to-gender> "F" ;
+	<http://cepidc.data.symetric.org/has-value-for-all-ages> "47"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1m> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1-4> "*"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-5-14> "*"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-15-24> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-25-34> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-35-44> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-45-54> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-55-64> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-65-74> "2"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-75-84> "10"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-85-94> "25"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-95p> "10"^^xsd:int ;
+	<http://cepidc.data.symetric.org/refers-to-period> "2009" ;
+	<http://cepidc.data.symetric.org/refers-to-geographical-area> "44" ;
+	a <http://cepidc.data.symetric.org/I35.0> .
+
+<http://cepidc.data.symetric.org/2009.44.I35.0.41> <http://cepidc.data.symetric.org/has-icd10-cause> "I35.0" ;
+	rdfs:label " " ;
+	<http://cepidc.data.symetric.org/refers-to-gender> "T" ;
+	<http://cepidc.data.symetric.org/has-value-for-all-ages> "93"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1m> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1-4> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-5-14> "*"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-15-24> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-25-34> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-35-44> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-45-54> "1"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-55-64> "1"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-65-74> "3"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-75-84> "30"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-85-94> "46"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-95p> "12"^^xsd:int ;
+	<http://cepidc.data.symetric.org/refers-to-period> "2009" ;
+	<http://cepidc.data.symetric.org/refers-to-geographical-area> "44" ;
+	a <http://cepidc.data.symetric.org/I35.0> .
+
+<http://cepidc.data.symetric.org/2009.44.I35.1.42> <http://cepidc.data.symetric.org/has-icd10-cause> "I35.1" ;
+	rdfs:label " " ;
+	<http://cepidc.data.symetric.org/refers-to-gender> "M" ;
+	<http://cepidc.data.symetric.org/has-value-for-all-ages> "1"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1m> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1-4> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-5-14> "*"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-15-24> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-25-34> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-35-44> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-45-54> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-55-64> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-65-74> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-75-84> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-85-94> "1"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-95p> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/refers-to-period> "2009" ;
+	<http://cepidc.data.symetric.org/refers-to-geographical-area> "44" ;
+	a <http://cepidc.data.symetric.org/I35.1> .
+
+<http://cepidc.data.symetric.org/2009.44.I35.1.43> <http://cepidc.data.symetric.org/has-icd10-cause> "I35.1" ;
+	rdfs:label " " ;
+	<http://cepidc.data.symetric.org/refers-to-gender> "F" ;
+	<http://cepidc.data.symetric.org/has-value-for-all-ages> "7"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1m> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1-4> "*"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-5-14> "*"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-15-24> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-25-34> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-35-44> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-45-54> "1"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-55-64> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-65-74> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-75-84> "4"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-85-94> "1"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-95p> "1"^^xsd:int ;
+	<http://cepidc.data.symetric.org/refers-to-period> "2009" ;
+	<http://cepidc.data.symetric.org/refers-to-geographical-area> "44" ;
+	a <http://cepidc.data.symetric.org/I35.1> .
+
+<http://cepidc.data.symetric.org/2009.44.I35.1.44> <http://cepidc.data.symetric.org/has-icd10-cause> "I35.1" ;
+	rdfs:label " " ;
+	<http://cepidc.data.symetric.org/refers-to-gender> "T" ;
+	<http://cepidc.data.symetric.org/has-value-for-all-ages> "8"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1m> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1-4> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-5-14> "*"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-15-24> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-25-34> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-35-44> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-45-54> "1"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-55-64> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-65-74> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-75-84> "4"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-85-94> "2"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-95p> "1"^^xsd:int ;
+	<http://cepidc.data.symetric.org/refers-to-period> "2009" ;
+	<http://cepidc.data.symetric.org/refers-to-geographical-area> "44" ;
+	a <http://cepidc.data.symetric.org/I35.1> .
+
+<http://cepidc.data.symetric.org/2009.44.I35.2.45> <http://cepidc.data.symetric.org/has-icd10-cause> "I35.2" ;
+	rdfs:label " " ;
+	<http://cepidc.data.symetric.org/refers-to-gender> "M" ;
+	<http://cepidc.data.symetric.org/has-value-for-all-ages> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1m> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1-4> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-5-14> "*"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-15-24> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-25-34> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-35-44> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-45-54> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-55-64> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-65-74> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-75-84> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-85-94> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-95p> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/refers-to-period> "2009" ;
+	<http://cepidc.data.symetric.org/refers-to-geographical-area> "44" ;
+	a <http://cepidc.data.symetric.org/I35.2> .
+
+<http://cepidc.data.symetric.org/2009.44.I35.2.46> <http://cepidc.data.symetric.org/has-icd10-cause> "I35.2" ;
+	rdfs:label " " ;
+	<http://cepidc.data.symetric.org/refers-to-gender> "F" ;
+	<http://cepidc.data.symetric.org/has-value-for-all-ages> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1m> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1-4> "*"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-5-14> "*"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-15-24> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-25-34> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-35-44> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-45-54> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-55-64> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-65-74> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-75-84> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-85-94> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-95p> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/refers-to-period> "2009" ;
+	<http://cepidc.data.symetric.org/refers-to-geographical-area> "44" ;
+	a <http://cepidc.data.symetric.org/I35.2> .
+
+<http://cepidc.data.symetric.org/2009.44.I35.2.47> <http://cepidc.data.symetric.org/has-icd10-cause> "I35.2" ;
+	rdfs:label " " ;
+	<http://cepidc.data.symetric.org/refers-to-gender> "T" ;
+	<http://cepidc.data.symetric.org/has-value-for-all-ages> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1m> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1-4> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-5-14> "*"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-15-24> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-25-34> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-35-44> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-45-54> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-55-64> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-65-74> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-75-84> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-85-94> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-95p> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/refers-to-period> "2009" ;
+	<http://cepidc.data.symetric.org/refers-to-geographical-area> "44" ;
+	a <http://cepidc.data.symetric.org/I35.2> .
+
+<http://cepidc.data.symetric.org/2009.44.I35.8.48> <http://cepidc.data.symetric.org/has-icd10-cause> "I35.8" ;
+	rdfs:label " " ;
+	<http://cepidc.data.symetric.org/refers-to-gender> "M" ;
+	<http://cepidc.data.symetric.org/has-value-for-all-ages> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1m> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1-4> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-5-14> "*"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-15-24> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-25-34> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-35-44> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-45-54> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-55-64> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-65-74> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-75-84> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-85-94> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-95p> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/refers-to-period> "2009" ;
+	<http://cepidc.data.symetric.org/refers-to-geographical-area> "44" ;
+	a <http://cepidc.data.symetric.org/I35.8> .
+
+<http://cepidc.data.symetric.org/2009.44.I35.8.49> <http://cepidc.data.symetric.org/has-icd10-cause> "I35.8" ;
+	rdfs:label " " ;
+	<http://cepidc.data.symetric.org/refers-to-gender> "F" ;
+	<http://cepidc.data.symetric.org/has-value-for-all-ages> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1m> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1-4> "*"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-5-14> "*"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-15-24> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-25-34> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-35-44> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-45-54> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-55-64> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-65-74> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-75-84> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-85-94> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-95p> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/refers-to-period> "2009" ;
+	<http://cepidc.data.symetric.org/refers-to-geographical-area> "44" ;
+	a <http://cepidc.data.symetric.org/I35.8> .
+
+<http://cepidc.data.symetric.org/2009.44.I35.8.50> <http://cepidc.data.symetric.org/has-icd10-cause> "I35.8" ;
+	rdfs:label " " ;
+	<http://cepidc.data.symetric.org/refers-to-gender> "T" ;
+	<http://cepidc.data.symetric.org/has-value-for-all-ages> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1m> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1-4> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-5-14> "*"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-15-24> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-25-34> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-35-44> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-45-54> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-55-64> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-65-74> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-75-84> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-85-94> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-95p> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/refers-to-period> "2009" ;
+	<http://cepidc.data.symetric.org/refers-to-geographical-area> "44" ;
+	a <http://cepidc.data.symetric.org/I35.8> .
+
+<http://cepidc.data.symetric.org/2009.44.I35.9.51> <http://cepidc.data.symetric.org/has-icd10-cause> "I35.9" ;
+	rdfs:label " " ;
+	<http://cepidc.data.symetric.org/refers-to-gender> "M" ;
+	<http://cepidc.data.symetric.org/has-value-for-all-ages> "5"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1m> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1-4> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-5-14> "*"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-15-24> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-25-34> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-35-44> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-45-54> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-55-64> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-65-74> "2"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-75-84> "3"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-85-94> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-95p> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/refers-to-period> "2009" ;
+	<http://cepidc.data.symetric.org/refers-to-geographical-area> "44" ;
+	a <http://cepidc.data.symetric.org/I35.9> .
+
+<http://cepidc.data.symetric.org/2009.44.I35.9.52> <http://cepidc.data.symetric.org/has-icd10-cause> "I35.9" ;
+	rdfs:label " " ;
+	<http://cepidc.data.symetric.org/refers-to-gender> "F" ;
+	<http://cepidc.data.symetric.org/has-value-for-all-ages> "2"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1m> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1-4> "*"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-5-14> "*"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-15-24> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-25-34> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-35-44> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-45-54> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-55-64> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-65-74> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-75-84> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-85-94> "1"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-95p> "1"^^xsd:int ;
+	<http://cepidc.data.symetric.org/refers-to-period> "2009" ;
+	<http://cepidc.data.symetric.org/refers-to-geographical-area> "44" ;
+	a <http://cepidc.data.symetric.org/I35.9> .
+
+<http://cepidc.data.symetric.org/2009.44.I35.9.53> <http://cepidc.data.symetric.org/has-icd10-cause> "I35.9" ;
+	rdfs:label " " ;
+	<http://cepidc.data.symetric.org/refers-to-gender> "T" ;
+	<http://cepidc.data.symetric.org/has-value-for-all-ages> "7"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1m> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1-4> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-5-14> "*"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-15-24> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-25-34> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-35-44> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-45-54> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-55-64> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-65-74> "2"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-75-84> "3"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-85-94> "1"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-95p> "1"^^xsd:int ;
+	<http://cepidc.data.symetric.org/refers-to-period> "2009" ;
+	<http://cepidc.data.symetric.org/refers-to-geographical-area> "44" ;
+	a <http://cepidc.data.symetric.org/I35.9> .
+
+<http://cepidc.data.symetric.org/2010.44.I35.54> <http://cepidc.data.symetric.org/has-icd10-cause> "I35" ;
+	rdfs:label "Total des rubriques √† 4 chiffres" ;
+	<http://cepidc.data.symetric.org/refers-to-gender> "M" ;
+	<http://cepidc.data.symetric.org/has-value-for-all-ages> "28"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1m> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1-4> "*"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-5-14> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-15-24> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-25-34> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-35-44> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-45-54> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-55-64> "1"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-65-74> "8"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-75-84> "7"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-85-94> "12"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-95p> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/refers-to-period> "2010" ;
+	<http://cepidc.data.symetric.org/refers-to-geographical-area> "44" ;
+	a <http://cepidc.data.symetric.org/I35> .
+
+<http://cepidc.data.symetric.org/2010.44.I35.55> <http://cepidc.data.symetric.org/has-icd10-cause> "I35" ;
+	rdfs:label "Total des rubriques √† 4 chiffres" ;
+	<http://cepidc.data.symetric.org/refers-to-gender> "F" ;
+	<http://cepidc.data.symetric.org/has-value-for-all-ages> "59"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1m> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1-4> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-5-14> "*"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-15-24> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-25-34> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-35-44> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-45-54> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-55-64> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-65-74> "1"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-75-84> "15"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-85-94> "41"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-95p> "2"^^xsd:int ;
+	<http://cepidc.data.symetric.org/refers-to-period> "2010" ;
+	<http://cepidc.data.symetric.org/refers-to-geographical-area> "44" ;
+	a <http://cepidc.data.symetric.org/I35> .
+
+<http://cepidc.data.symetric.org/2010.44.I35.56> <http://cepidc.data.symetric.org/has-icd10-cause> "I35" ;
+	rdfs:label "Total des rubriques √† 4 chiffres" ;
+	<http://cepidc.data.symetric.org/refers-to-gender> "T" ;
+	<http://cepidc.data.symetric.org/has-value-for-all-ages> "87"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1m> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1-4> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-5-14> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-15-24> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-25-34> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-35-44> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-45-54> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-55-64> "1"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-65-74> "9"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-75-84> "22"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-85-94> "53"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-95p> "2"^^xsd:int ;
+	<http://cepidc.data.symetric.org/refers-to-period> "2010" ;
+	<http://cepidc.data.symetric.org/refers-to-geographical-area> "44" ;
+	a <http://cepidc.data.symetric.org/I35> .
+
+<http://cepidc.data.symetric.org/2010.44.I35.0.57> <http://cepidc.data.symetric.org/has-icd10-cause> "I35.0" ;
+	rdfs:label " " ;
+	<http://cepidc.data.symetric.org/refers-to-gender> "M" ;
+	<http://cepidc.data.symetric.org/has-value-for-all-ages> "21"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1m> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1-4> "*"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-5-14> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-15-24> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-25-34> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-35-44> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-45-54> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-55-64> "1"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-65-74> "4"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-75-84> "5"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-85-94> "11"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-95p> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/refers-to-period> "2010" ;
+	<http://cepidc.data.symetric.org/refers-to-geographical-area> "44" ;
+	a <http://cepidc.data.symetric.org/I35.0> .
+
+<http://cepidc.data.symetric.org/2010.44.I35.0.58> <http://cepidc.data.symetric.org/has-icd10-cause> "I35.0" ;
+	rdfs:label " " ;
+	<http://cepidc.data.symetric.org/refers-to-gender> "F" ;
+	<http://cepidc.data.symetric.org/has-value-for-all-ages> "52"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1m> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1-4> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-5-14> "*"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-15-24> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-25-34> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-35-44> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-45-54> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-55-64> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-65-74> "1"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-75-84> "14"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-85-94> "35"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-95p> "2"^^xsd:int ;
+	<http://cepidc.data.symetric.org/refers-to-period> "2010" ;
+	<http://cepidc.data.symetric.org/refers-to-geographical-area> "44" ;
+	a <http://cepidc.data.symetric.org/I35.0> .
+
+<http://cepidc.data.symetric.org/2010.44.I35.0.59> <http://cepidc.data.symetric.org/has-icd10-cause> "I35.0" ;
+	rdfs:label " " ;
+	<http://cepidc.data.symetric.org/refers-to-gender> "T" ;
+	<http://cepidc.data.symetric.org/has-value-for-all-ages> "73"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1m> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1-4> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-5-14> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-15-24> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-25-34> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-35-44> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-45-54> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-55-64> "1"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-65-74> "5"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-75-84> "19"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-85-94> "46"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-95p> "2"^^xsd:int ;
+	<http://cepidc.data.symetric.org/refers-to-period> "2010" ;
+	<http://cepidc.data.symetric.org/refers-to-geographical-area> "44" ;
+	a <http://cepidc.data.symetric.org/I35.0> .
+
+<http://cepidc.data.symetric.org/2010.44.I35.1.60> <http://cepidc.data.symetric.org/has-icd10-cause> "I35.1" ;
+	rdfs:label " " ;
+	<http://cepidc.data.symetric.org/refers-to-gender> "M" ;
+	<http://cepidc.data.symetric.org/has-value-for-all-ages> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1m> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1-4> "*"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-5-14> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-15-24> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-25-34> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-35-44> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-45-54> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-55-64> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-65-74> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-75-84> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-85-94> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-95p> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/refers-to-period> "2010" ;
+	<http://cepidc.data.symetric.org/refers-to-geographical-area> "44" ;
+	a <http://cepidc.data.symetric.org/I35.1> .
+
+<http://cepidc.data.symetric.org/2010.44.I35.1.61> <http://cepidc.data.symetric.org/has-icd10-cause> "I35.1" ;
+	rdfs:label " " ;
+	<http://cepidc.data.symetric.org/refers-to-gender> "F" ;
+	<http://cepidc.data.symetric.org/has-value-for-all-ages> "3"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1m> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1-4> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-5-14> "*"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-15-24> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-25-34> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-35-44> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-45-54> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-55-64> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-65-74> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-75-84> "1"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-85-94> "2"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-95p> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/refers-to-period> "2010" ;
+	<http://cepidc.data.symetric.org/refers-to-geographical-area> "44" ;
+	a <http://cepidc.data.symetric.org/I35.1> .
+
+<http://cepidc.data.symetric.org/2010.44.I35.1.62> <http://cepidc.data.symetric.org/has-icd10-cause> "I35.1" ;
+	rdfs:label " " ;
+	<http://cepidc.data.symetric.org/refers-to-gender> "T" ;
+	<http://cepidc.data.symetric.org/has-value-for-all-ages> "3"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1m> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1-4> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-5-14> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-15-24> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-25-34> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-35-44> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-45-54> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-55-64> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-65-74> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-75-84> "1"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-85-94> "2"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-95p> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/refers-to-period> "2010" ;
+	<http://cepidc.data.symetric.org/refers-to-geographical-area> "44" ;
+	a <http://cepidc.data.symetric.org/I35.1> .
+
+<http://cepidc.data.symetric.org/2010.44.I35.2.63> <http://cepidc.data.symetric.org/has-icd10-cause> "I35.2" ;
+	rdfs:label " " ;
+	<http://cepidc.data.symetric.org/refers-to-gender> "M" ;
+	<http://cepidc.data.symetric.org/has-value-for-all-ages> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1m> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1-4> "*"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-5-14> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-15-24> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-25-34> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-35-44> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-45-54> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-55-64> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-65-74> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-75-84> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-85-94> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-95p> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/refers-to-period> "2010" ;
+	<http://cepidc.data.symetric.org/refers-to-geographical-area> "44" ;
+	a <http://cepidc.data.symetric.org/I35.2> .
+
+<http://cepidc.data.symetric.org/2010.44.I35.2.64> <http://cepidc.data.symetric.org/has-icd10-cause> "I35.2" ;
+	rdfs:label " " ;
+	<http://cepidc.data.symetric.org/refers-to-gender> "F" ;
+	<http://cepidc.data.symetric.org/has-value-for-all-ages> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1m> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1-4> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-5-14> "*"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-15-24> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-25-34> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-35-44> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-45-54> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-55-64> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-65-74> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-75-84> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-85-94> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-95p> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/refers-to-period> "2010" ;
+	<http://cepidc.data.symetric.org/refers-to-geographical-area> "44" ;
+	a <http://cepidc.data.symetric.org/I35.2> .
+
+<http://cepidc.data.symetric.org/2010.44.I35.2.65> <http://cepidc.data.symetric.org/has-icd10-cause> "I35.2" ;
+	rdfs:label " " ;
+	<http://cepidc.data.symetric.org/refers-to-gender> "T" ;
+	<http://cepidc.data.symetric.org/has-value-for-all-ages> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1m> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1-4> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-5-14> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-15-24> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-25-34> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-35-44> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-45-54> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-55-64> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-65-74> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-75-84> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-85-94> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-95p> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/refers-to-period> "2010" ;
+	<http://cepidc.data.symetric.org/refers-to-geographical-area> "44" ;
+	a <http://cepidc.data.symetric.org/I35.2> .
+
+<http://cepidc.data.symetric.org/2010.44.I35.8.66> <http://cepidc.data.symetric.org/has-icd10-cause> "I35.8" ;
+	rdfs:label " " ;
+	<http://cepidc.data.symetric.org/refers-to-gender> "M" ;
+	<http://cepidc.data.symetric.org/has-value-for-all-ages> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1m> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1-4> "*"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-5-14> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-15-24> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-25-34> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-35-44> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-45-54> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-55-64> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-65-74> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-75-84> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-85-94> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-95p> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/refers-to-period> "2010" ;
+	<http://cepidc.data.symetric.org/refers-to-geographical-area> "44" ;
+	a <http://cepidc.data.symetric.org/I35.8> .
+
+<http://cepidc.data.symetric.org/2010.44.I35.8.67> <http://cepidc.data.symetric.org/has-icd10-cause> "I35.8" ;
+	rdfs:label " " ;
+	<http://cepidc.data.symetric.org/refers-to-gender> "F" ;
+	<http://cepidc.data.symetric.org/has-value-for-all-ages> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1m> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1-4> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-5-14> "*"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-15-24> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-25-34> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-35-44> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-45-54> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-55-64> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-65-74> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-75-84> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-85-94> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-95p> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/refers-to-period> "2010" ;
+	<http://cepidc.data.symetric.org/refers-to-geographical-area> "44" ;
+	a <http://cepidc.data.symetric.org/I35.8> .
+
+<http://cepidc.data.symetric.org/2010.44.I35.8.68> <http://cepidc.data.symetric.org/has-icd10-cause> "I35.8" ;
+	rdfs:label " " ;
+	<http://cepidc.data.symetric.org/refers-to-gender> "T" ;
+	<http://cepidc.data.symetric.org/has-value-for-all-ages> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1m> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1-4> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-5-14> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-15-24> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-25-34> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-35-44> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-45-54> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-55-64> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-65-74> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-75-84> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-85-94> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-95p> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/refers-to-period> "2010" ;
+	<http://cepidc.data.symetric.org/refers-to-geographical-area> "44" ;
+	a <http://cepidc.data.symetric.org/I35.8> .
+
+<http://cepidc.data.symetric.org/2010.44.I35.9.69> <http://cepidc.data.symetric.org/has-icd10-cause> "I35.9" ;
+	rdfs:label " " ;
+	<http://cepidc.data.symetric.org/refers-to-gender> "M" ;
+	<http://cepidc.data.symetric.org/has-value-for-all-ages> "7"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1m> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1-4> "*"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-5-14> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-15-24> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-25-34> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-35-44> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-45-54> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-55-64> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-65-74> "4"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-75-84> "2"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-85-94> "1"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-95p> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/refers-to-period> "2010" ;
+	<http://cepidc.data.symetric.org/refers-to-geographical-area> "44" ;
+	a <http://cepidc.data.symetric.org/I35.9> .
+
+<http://cepidc.data.symetric.org/2010.44.I35.9.70> <http://cepidc.data.symetric.org/has-icd10-cause> "I35.9" ;
+	rdfs:label " " ;
+	<http://cepidc.data.symetric.org/refers-to-gender> "F" ;
+	<http://cepidc.data.symetric.org/has-value-for-all-ages> "4"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1m> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1-4> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-5-14> "*"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-15-24> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-25-34> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-35-44> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-45-54> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-55-64> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-65-74> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-75-84> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-85-94> "4"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-95p> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/refers-to-period> "2010" ;
+	<http://cepidc.data.symetric.org/refers-to-geographical-area> "44" ;
+	a <http://cepidc.data.symetric.org/I35.9> .
+
+<http://cepidc.data.symetric.org/2010.44.I35.9.71> <http://cepidc.data.symetric.org/has-icd10-cause> "I35.9" ;
+	rdfs:label " " ;
+	<http://cepidc.data.symetric.org/refers-to-gender> "T" ;
+	<http://cepidc.data.symetric.org/has-value-for-all-ages> "11"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1m> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1-4> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-5-14> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-15-24> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-25-34> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-35-44> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-45-54> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-55-64> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-65-74> "4"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-75-84> "2"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-85-94> "5"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-95p> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/refers-to-period> "2010" ;
+	<http://cepidc.data.symetric.org/refers-to-geographical-area> "44" ;
+	a <http://cepidc.data.symetric.org/I35.9> .
+
+<http://cepidc.data.symetric.org/2011.44.I35.72> <http://cepidc.data.symetric.org/has-icd10-cause> "I35" ;
+	rdfs:label "Total des rubriques √† 4 chiffres" ;
+	<http://cepidc.data.symetric.org/refers-to-gender> "M" ;
+	<http://cepidc.data.symetric.org/has-value-for-all-ages> "34"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1m> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1-4> "*"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-5-14> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-15-24> "1"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-25-34> "1"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-35-44> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-45-54> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-55-64> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-65-74> "3"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-75-84> "10"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-85-94> "18"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-95p> "1"^^xsd:int ;
+	<http://cepidc.data.symetric.org/refers-to-period> "2011" ;
+	<http://cepidc.data.symetric.org/refers-to-geographical-area> "44" ;
+	a <http://cepidc.data.symetric.org/I35> .
+
+<http://cepidc.data.symetric.org/2011.44.I35.73> <http://cepidc.data.symetric.org/has-icd10-cause> "I35" ;
+	rdfs:label "Total des rubriques √† 4 chiffres" ;
+	<http://cepidc.data.symetric.org/refers-to-gender> "F" ;
+	<http://cepidc.data.symetric.org/has-value-for-all-ages> "52"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1m> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1-4> "*"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-5-14> "*"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-15-24> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-25-34> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-35-44> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-45-54> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-55-64> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-65-74> "3"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-75-84> "13"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-85-94> "31"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-95p> "5"^^xsd:int ;
+	<http://cepidc.data.symetric.org/refers-to-period> "2011" ;
+	<http://cepidc.data.symetric.org/refers-to-geographical-area> "44" ;
+	a <http://cepidc.data.symetric.org/I35> .
+
+<http://cepidc.data.symetric.org/2011.44.I35.74> <http://cepidc.data.symetric.org/has-icd10-cause> "I35" ;
+	rdfs:label "Total des rubriques √† 4 chiffres" ;
+	<http://cepidc.data.symetric.org/refers-to-gender> "T" ;
+	<http://cepidc.data.symetric.org/has-value-for-all-ages> "86"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1m> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1-4> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-5-14> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-15-24> "1"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-25-34> "1"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-35-44> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-45-54> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-55-64> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-65-74> "6"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-75-84> "23"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-85-94> "49"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-95p> "6"^^xsd:int ;
+	<http://cepidc.data.symetric.org/refers-to-period> "2011" ;
+	<http://cepidc.data.symetric.org/refers-to-geographical-area> "44" ;
+	a <http://cepidc.data.symetric.org/I35> .
+
+<http://cepidc.data.symetric.org/2011.44.I35.0.75> <http://cepidc.data.symetric.org/has-icd10-cause> "I35.0" ;
+	rdfs:label " " ;
+	<http://cepidc.data.symetric.org/refers-to-gender> "M" ;
+	<http://cepidc.data.symetric.org/has-value-for-all-ages> "28"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1m> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1-4> "*"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-5-14> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-15-24> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-25-34> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-35-44> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-45-54> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-55-64> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-65-74> "2"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-75-84> "8"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-85-94> "17"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-95p> "1"^^xsd:int ;
+	<http://cepidc.data.symetric.org/refers-to-period> "2011" ;
+	<http://cepidc.data.symetric.org/refers-to-geographical-area> "44" ;
+	a <http://cepidc.data.symetric.org/I35.0> .
+
+<http://cepidc.data.symetric.org/2011.44.I35.0.76> <http://cepidc.data.symetric.org/has-icd10-cause> "I35.0" ;
+	rdfs:label " " ;
+	<http://cepidc.data.symetric.org/refers-to-gender> "F" ;
+	<http://cepidc.data.symetric.org/has-value-for-all-ages> "43"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1m> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1-4> "*"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-5-14> "*"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-15-24> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-25-34> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-35-44> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-45-54> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-55-64> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-65-74> "1"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-75-84> "10"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-85-94> "27"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-95p> "5"^^xsd:int ;
+	<http://cepidc.data.symetric.org/refers-to-period> "2011" ;
+	<http://cepidc.data.symetric.org/refers-to-geographical-area> "44" ;
+	a <http://cepidc.data.symetric.org/I35.0> .
+
+<http://cepidc.data.symetric.org/2011.44.I35.0.77> <http://cepidc.data.symetric.org/has-icd10-cause> "I35.0" ;
+	rdfs:label " " ;
+	<http://cepidc.data.symetric.org/refers-to-gender> "T" ;
+	<http://cepidc.data.symetric.org/has-value-for-all-ages> "71"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1m> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1-4> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-5-14> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-15-24> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-25-34> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-35-44> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-45-54> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-55-64> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-65-74> "3"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-75-84> "18"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-85-94> "44"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-95p> "6"^^xsd:int ;
+	<http://cepidc.data.symetric.org/refers-to-period> "2011" ;
+	<http://cepidc.data.symetric.org/refers-to-geographical-area> "44" ;
+	a <http://cepidc.data.symetric.org/I35.0> .
+
+<http://cepidc.data.symetric.org/2011.44.I35.1.78> <http://cepidc.data.symetric.org/has-icd10-cause> "I35.1" ;
+	rdfs:label " " ;
+	<http://cepidc.data.symetric.org/refers-to-gender> "M" ;
+	<http://cepidc.data.symetric.org/has-value-for-all-ages> "1"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1m> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1-4> "*"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-5-14> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-15-24> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-25-34> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-35-44> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-45-54> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-55-64> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-65-74> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-75-84> "1"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-85-94> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-95p> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/refers-to-period> "2011" ;
+	<http://cepidc.data.symetric.org/refers-to-geographical-area> "44" ;
+	a <http://cepidc.data.symetric.org/I35.1> .
+
+<http://cepidc.data.symetric.org/2011.44.I35.1.79> <http://cepidc.data.symetric.org/has-icd10-cause> "I35.1" ;
+	rdfs:label " " ;
+	<http://cepidc.data.symetric.org/refers-to-gender> "F" ;
+	<http://cepidc.data.symetric.org/has-value-for-all-ages> "4"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1m> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1-4> "*"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-5-14> "*"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-15-24> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-25-34> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-35-44> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-45-54> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-55-64> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-65-74> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-75-84> "3"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-85-94> "1"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-95p> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/refers-to-period> "2011" ;
+	<http://cepidc.data.symetric.org/refers-to-geographical-area> "44" ;
+	a <http://cepidc.data.symetric.org/I35.1> .
+
+<http://cepidc.data.symetric.org/2011.44.I35.1.80> <http://cepidc.data.symetric.org/has-icd10-cause> "I35.1" ;
+	rdfs:label " " ;
+	<http://cepidc.data.symetric.org/refers-to-gender> "T" ;
+	<http://cepidc.data.symetric.org/has-value-for-all-ages> "5"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1m> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1-4> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-5-14> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-15-24> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-25-34> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-35-44> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-45-54> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-55-64> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-65-74> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-75-84> "4"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-85-94> "1"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-95p> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/refers-to-period> "2011" ;
+	<http://cepidc.data.symetric.org/refers-to-geographical-area> "44" ;
+	a <http://cepidc.data.symetric.org/I35.1> .
+
+<http://cepidc.data.symetric.org/2011.44.I35.2.81> <http://cepidc.data.symetric.org/has-icd10-cause> "I35.2" ;
+	rdfs:label " " ;
+	<http://cepidc.data.symetric.org/refers-to-gender> "M" ;
+	<http://cepidc.data.symetric.org/has-value-for-all-ages> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1m> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1-4> "*"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-5-14> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-15-24> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-25-34> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-35-44> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-45-54> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-55-64> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-65-74> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-75-84> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-85-94> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-95p> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/refers-to-period> "2011" ;
+	<http://cepidc.data.symetric.org/refers-to-geographical-area> "44" ;
+	a <http://cepidc.data.symetric.org/I35.2> .
+
+<http://cepidc.data.symetric.org/2011.44.I35.2.82> <http://cepidc.data.symetric.org/has-icd10-cause> "I35.2" ;
+	rdfs:label " " ;
+	<http://cepidc.data.symetric.org/refers-to-gender> "F" ;
+	<http://cepidc.data.symetric.org/has-value-for-all-ages> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1m> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1-4> "*"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-5-14> "*"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-15-24> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-25-34> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-35-44> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-45-54> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-55-64> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-65-74> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-75-84> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-85-94> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-95p> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/refers-to-period> "2011" ;
+	<http://cepidc.data.symetric.org/refers-to-geographical-area> "44" ;
+	a <http://cepidc.data.symetric.org/I35.2> .
+
+<http://cepidc.data.symetric.org/2011.44.I35.2.83> <http://cepidc.data.symetric.org/has-icd10-cause> "I35.2" ;
+	rdfs:label " " ;
+	<http://cepidc.data.symetric.org/refers-to-gender> "T" ;
+	<http://cepidc.data.symetric.org/has-value-for-all-ages> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1m> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1-4> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-5-14> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-15-24> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-25-34> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-35-44> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-45-54> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-55-64> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-65-74> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-75-84> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-85-94> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-95p> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/refers-to-period> "2011" ;
+	<http://cepidc.data.symetric.org/refers-to-geographical-area> "44" ;
+	a <http://cepidc.data.symetric.org/I35.2> .
+
+<http://cepidc.data.symetric.org/2011.44.I35.8.84> <http://cepidc.data.symetric.org/has-icd10-cause> "I35.8" ;
+	rdfs:label " " ;
+	<http://cepidc.data.symetric.org/refers-to-gender> "M" ;
+	<http://cepidc.data.symetric.org/has-value-for-all-ages> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1m> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1-4> "*"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-5-14> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-15-24> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-25-34> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-35-44> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-45-54> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-55-64> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-65-74> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-75-84> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-85-94> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-95p> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/refers-to-period> "2011" ;
+	<http://cepidc.data.symetric.org/refers-to-geographical-area> "44" ;
+	a <http://cepidc.data.symetric.org/I35.8> .
+
+<http://cepidc.data.symetric.org/2011.44.I35.8.85> <http://cepidc.data.symetric.org/has-icd10-cause> "I35.8" ;
+	rdfs:label " " ;
+	<http://cepidc.data.symetric.org/refers-to-gender> "F" ;
+	<http://cepidc.data.symetric.org/has-value-for-all-ages> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1m> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1-4> "*"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-5-14> "*"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-15-24> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-25-34> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-35-44> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-45-54> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-55-64> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-65-74> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-75-84> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-85-94> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-95p> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/refers-to-period> "2011" ;
+	<http://cepidc.data.symetric.org/refers-to-geographical-area> "44" ;
+	a <http://cepidc.data.symetric.org/I35.8> .
+
+<http://cepidc.data.symetric.org/2011.44.I35.8.86> <http://cepidc.data.symetric.org/has-icd10-cause> "I35.8" ;
+	rdfs:label " " ;
+	<http://cepidc.data.symetric.org/refers-to-gender> "T" ;
+	<http://cepidc.data.symetric.org/has-value-for-all-ages> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1m> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1-4> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-5-14> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-15-24> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-25-34> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-35-44> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-45-54> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-55-64> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-65-74> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-75-84> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-85-94> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-95p> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/refers-to-period> "2011" ;
+	<http://cepidc.data.symetric.org/refers-to-geographical-area> "44" ;
+	a <http://cepidc.data.symetric.org/I35.8> .
+
+<http://cepidc.data.symetric.org/2011.44.I35.9.87> <http://cepidc.data.symetric.org/has-icd10-cause> "I35.9" ;
+	rdfs:label " " ;
+	<http://cepidc.data.symetric.org/refers-to-gender> "M" ;
+	<http://cepidc.data.symetric.org/has-value-for-all-ages> "5"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1m> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1-4> "*"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-5-14> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-15-24> "1"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-25-34> "1"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-35-44> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-45-54> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-55-64> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-65-74> "1"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-75-84> "1"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-85-94> "1"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-95p> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/refers-to-period> "2011" ;
+	<http://cepidc.data.symetric.org/refers-to-geographical-area> "44" ;
+	a <http://cepidc.data.symetric.org/I35.9> .
+
+<http://cepidc.data.symetric.org/2011.44.I35.9.88> <http://cepidc.data.symetric.org/has-icd10-cause> "I35.9" ;
+	rdfs:label " " ;
+	<http://cepidc.data.symetric.org/refers-to-gender> "F" ;
+	<http://cepidc.data.symetric.org/has-value-for-all-ages> "5"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1m> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1-4> "*"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-5-14> "*"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-15-24> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-25-34> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-35-44> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-45-54> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-55-64> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-65-74> "2"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-75-84> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-85-94> "3"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-95p> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/refers-to-period> "2011" ;
+	<http://cepidc.data.symetric.org/refers-to-geographical-area> "44" ;
+	a <http://cepidc.data.symetric.org/I35.9> .
+
+<http://cepidc.data.symetric.org/2011.44.I35.9.89> <http://cepidc.data.symetric.org/has-icd10-cause> "I35.9" ;
+	rdfs:label " " ;
+	<http://cepidc.data.symetric.org/refers-to-gender> "T" ;
+	<http://cepidc.data.symetric.org/has-value-for-all-ages> "10"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1m> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-1-4> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-5-14> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-15-24> "1"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-25-34> "1"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-35-44> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-45-54> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-55-64> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-65-74> "3"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-75-84> "1"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-85-94> "4"^^xsd:int ;
+	<http://cepidc.data.symetric.org/has-value-for-age-95p> "0"^^xsd:int ;
+	<http://cepidc.data.symetric.org/refers-to-period> "2011" ;
+	<http://cepidc.data.symetric.org/refers-to-geographical-area> "44" ;
+	a <http://cepidc.data.symetric.org/I35.9> .

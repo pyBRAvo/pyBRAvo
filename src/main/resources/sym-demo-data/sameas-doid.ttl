@@ -1,0 +1,16 @@
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix cepidc: <http://cepidc.data.symetric.org/> .
+@prefix doid: <http://purl.obolibrary.org/obo/>
+
+cepidc:I35 owl:sameAs doid:DOID_62 .
+cepidc:I35.0 owl:sameAs doid:DOID_1712 .
+cepidc:I35.1 owl:sameAs doid:DOID_57 .
+cepidc:C73 owl:sameAs doid:DOID_1781 .
+cepidc:I34 owl:sameAs doid:DOID_61 .
+cepidc:I34.0 owl:sameAs doid:DOID_11502 .
+cepidc:I34.1 owl:sameAs doid:DOID_988 .
+cepidc:I34.2 owl:sameAs doid:DOID_1754 .
