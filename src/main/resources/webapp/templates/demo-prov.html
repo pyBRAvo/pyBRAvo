@@ -1,0 +1,55 @@
+<div class="row">
+	<div class="col-xs-12">
+		<h3>Galaxy PROV exporter</h3>
+		This demonstration aims at transforming your Galaxy analyis (histories) into a shareable provenance graph, based on the PROV vocabulary.
+	</div>
+</div>
+
+</p>
+<div class="row">
+	<div class="col-xs-12">
+		<form>
+			<div class="form-group">
+				<label for="inputKey">Your Galaxy API key</label>
+				<input type="password" class="form-control" id="inputKey" placeholder="API key" value="dd3b7fce727d53ac00512ea19a8f5d4f">
+			</div>
+
+			<label for="inputGalaxyUrl">Your Galaxy instance URL</label>
+			<div class="input-group">
+				<input type="text" class="form-control" id="inputGalaxyUrl" placeholder="http://galaxy-bird.univ-nantes.fr/galaxy/" value="http://galaxy-bird.univ-nantes.fr/galaxy/">
+				<span class="input-group-btn">
+					<button class="btn btn-default" type="button" id="btnGalaxyHist">Go!</button>
+				</span>
+			</div><!-- /input-group -->
+		</form>
+	</div>
+</div>
+
+
+</p>
+<div class="row">
+	<div class="col-xs-12">
+		<p id="parProvGraph"></p>
+	</div>
+</div>
+
+</p>
+<div class="row">
+	<div class="col-xs-12">
+		<p id="parProvTriples"></p>
+	</div>
+</div>
+
+
+</p>
+<div class="row">
+	<div class="col-xs-12">
+		<!-- <table id="tableGalaxyHistories" class="table table-striped" style="table-layout:fixed; word-wrap:break-word">   -->
+		<table id="tableGalaxyHistories" class="table table-striped" style="table-layout:fixed; word-wrap:break-word">  
+			<thead>  
+			</thead>  
+			<tbody>  
+			</tbody>  
+		</table>
+	</div>
+</div>
