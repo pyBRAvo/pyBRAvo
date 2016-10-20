@@ -5,6 +5,8 @@
  */
 package fr.symetric.api;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import fr.cnrs.ga2prov.GHistAPI;
 import fr.cnrs.ga2prov.GHistFactory;
 import fr.cnrs.ga2prov.Util;
@@ -98,6 +100,7 @@ public class Provenance {
     @Path("/visProv/{hid}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response visProv(GalaxyCredential cred, @PathParam("hid") String hid) {
+        // TODO 
         GHistFactory.initInstance(cred.getInstanceUrl(), cred.getApiKey());
         try {
             GHistAPI gAPI = GHistFactory.getInstance();
@@ -121,16 +124,16 @@ public class Provenance {
 
             String filterQuery = "PREFIX prov:<http://www.w3.org/ns/prov#>\n"
                     + "CONSTRUCT {\n"
-                    + "	?x ?p ?y .\n"
-                    + " ?x rdfs:label ?xL .\n"
-                    + " ?y rdfs:label ?yL .\n"
+                    + "	?xL ?p ?yL .\n"
+//                    + " ?x rdfs:label ?xL .\n"
+//                    + " ?y rdfs:label ?yL .\n"
                     + "} WHERE {\n"
                     + "	?x ?p ?y .\n"
                     + " OPTIONAL {?x rdfs:label ?xL} .\n"
                     + " OPTIONAL {?y rdfs:label ?yL} .\n"
                     //                        + "	FILTER (?p NOT IN (rdf:type, prov:wasGeneratedBy, prov:qualifiedAssociation, prov:hadPlan, prov:agent, rdfs:comment)) \n"
                     //                            + "	FILTER (?p IN (prov:wasDerivedFrom, rdfs:label, prov:wasAttributedTo, prov:startedAtTime, prov:endedAtTime )) \n"
-                    + "	FILTER (?p IN (prov:wasDerivedFrom, rdfs:label, prov:wasAttributedTo)) \n"
+                    + "	FILTER (?p IN (prov:wasDerivedFrom, prov:wasAttributedTo)) \n"
                     + "} ";
             maps = exec.query(filterQuery);
 
@@ -142,18 +145,27 @@ public class Provenance {
                     + "\"d3\" : "
                     + JSOND3Format.create(g).toString()
                     + " }";
+
+//            Gson gson = new Gson();
+//            try {
+//                Object o = gson.fromJson(mapsProvJson, Object.class);
+//                logger.debug(new GsonBuilder().setPrettyPrinting().create().toJson(o));
+//            } catch (Exception e) {
+//                logger.error("invalid json format");
+//            }
+
             sw.stop();
             logger.info("Filtered PROV graph and D3 data formatting in " + sw.getTime() + " ms");
 
             /////////////////////////////////////////////         
             ///// TO BE REMOVED !! 
-            String htmlOut = Util.genHtmlViz(mapsProvJson);
-            java.nio.file.Path pathHtml = Files.createTempFile("provenanceDisplay-", ".html");
-            Files.write(pathHtml, htmlOut.getBytes(), StandardOpenOption.WRITE);
-            logger.info("HTML visualization written in " + pathHtml.toString());
-            java.nio.file.Path pathProv = Files.createTempFile("provenanceRDF-", ".ttl");
-            Files.write(pathProv, provTTL.getBytes(), StandardOpenOption.WRITE);
-            logger.info("RDF provenance written in " + pathProv.toString());
+//            String htmlOut = Util.genHtmlViz(mapsProvJson);
+//            java.nio.file.Path pathHtml = Files.createTempFile("provenanceDisplay-", ".html");
+//            Files.write(pathHtml, htmlOut.getBytes(), StandardOpenOption.WRITE);
+//            logger.info("HTML visualization written in " + pathHtml.toString());
+//            java.nio.file.Path pathProv = Files.createTempFile("provenanceRDF-", ".ttl");
+//            Files.write(pathProv, provTTL.getBytes(), StandardOpenOption.WRITE);
+//            logger.info("RDF provenance written in " + pathProv.toString());
             /////////////////////////////////////////////         
 
             return Response.status(200).header("Access-Control-Allow-Origin", "*").entity(mapsProvJson).build();
