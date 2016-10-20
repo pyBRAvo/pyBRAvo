@@ -14,6 +14,8 @@ var EVT_LOGIN = 'login';
 var EVT_LOGOUT = 'logout';
 var EVT_LOADING = 'loading';
 var EVT_FINNISHED = 'finnished';
+var EVT_PROV_WORKING = 'prov working';
+var EVT_PROV_DONE = 'prov done';
 
 
 ////////////////////////////////////////////
@@ -38,6 +40,64 @@ var WelcomeView = Backbone.View.extend({
 });
 
 var myWelcomeView = new WelcomeView();
+
+var DemoProvView = Backbone.View.extend({
+    el: "#mainContainer", //Container div inside which we would be dynamically loading the templates
+    initialize: function () {
+        _.bindAll(this, "render");
+        console.log('Prov demo view initialized');
+
+        EventBus.on(EVT_PROV_WORKING, this.disableButton);
+        EventBus.on(EVT_PROV_DONE, this.enableButton);
+    },
+    render: function () {
+        var that = this;
+        //Fetching the template contents
+        $.get('templates/demo-prov.html', function (data) {
+            template = _.template(data, {});//Option to pass any dynamic values to template
+            that.$el.html(template());//adding the template content to the main template.
+        }, 'html');
+        return this;
+    },
+    events: {
+        "click #btnGalaxyHist": "listHistEvt",
+        "click #genProvBtn": "genProvEvt",
+        "click #visProvBtn": "visProvEvt"
+    },
+    disableButton: function () {
+        $('.myBtnD3Prov').attr("disabled", true);
+        $('.myBtnRDFProv').attr("disabled", true);
+    },
+    enableButton: function () {
+        $('.myBtnD3Prov').attr("disabled", false);
+        $('.myBtnRDFProv').attr("disabled", false);
+    },
+    listHistEvt: function (e) {
+        console.log("listHistEvt") ;
+        var credentials = {instanceUrl: $('#inputGalaxyUrl').val(), apiKey: $('#inputKey').val()} ;
+        console.log(credentials) ;
+        listGalaxyHistories(credentials) ;
+    },
+    genProvEvt: function (e) {
+        EventBus.trigger(EVT_PROV_WORKING);
+        var id = $(e.currentTarget).attr("data-id") ;
+        var name = $(e.currentTarget).closest('tr').children('td').eq(0).text() ;
+        console.log("CLICKED "+id+ " | " +name) ;
+        var credentials = {instanceUrl: $('#inputGalaxyUrl').val(), apiKey: $('#inputKey').val()} ;
+        getProvTriples(credentials, id) ;
+
+    },
+    visProvEvt: function (e) {
+        EventBus.trigger(EVT_PROV_WORKING);
+        var id = $(e.currentTarget).attr("data-id") ;
+        var name = $(e.currentTarget).closest('tr').children('td').eq(0).text() ;
+        console.log("CLICKED "+id+ " | " +name) ;
+        var credentials = {instanceUrl: $('#inputGalaxyUrl').val(), apiKey: $('#inputKey').val()} ;
+        getProvVis(credentials, id) ;
+    }
+});
+
+var myDemoProvView = new DemoProvView();
 
 var DemoEpidemioView = Backbone.View.extend({
     el: "#mainContainer", //Container div inside which we would be dynamically loading the templates
@@ -155,6 +215,13 @@ $(document).ready(function () {
             myDemoEpidemioView.render();
         }
     });
+
+    $('#demo-wf-menu').click(function () {
+        if (! $("#demo-wf-menu").hasClass("disabled")) {
+            myDemoProvView.render();
+        }
+    });
+
 });
 
 
@@ -222,7 +289,7 @@ EventBus.on(EVT_INIT, function () {
     $("#demo-ld-menu").addClass("disabled");
     $("#demo-sb-menu").addClass("disabled");
     $("#demo-om-menu").addClass("disabled");
-    $("#demo-wf-menu").addClass("disabled");
+    $("#demo-wf-menu").addClass("enabled");
 
     //render the welcome panel
     myWelcomeView.render();    
@@ -260,7 +327,7 @@ EventBus.on(EVT_LOGIN, function (sessionId) {
     $("#demo-ld-menu").removeClass("disabled");
 //    $("#demo-sb-menu").removeClass("disabled");
 //    $("#demo-om-menu").removeClass("disabled");
-//    $("#demo-wf-menu").removeClass("disabled");
+    $("#demo-wf-menu").removeClass("disabled");
 });
 
 EventBus.on(EVT_LOGOUT, function () {
@@ -339,9 +406,106 @@ function eraseCookie(name) {
     createCookie(name, "", -1);
 }
 
-////////////////////////////////
+////////////////////////////////////////////////////////////////
+// Communication with the Provenance
+////////////////////////////////////////////////////////////////
+function listGalaxyHistories(credentials) {
+    $.ajax({
+        type: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        url: rootURL + '/provenance/histories',
+        data: JSON.stringify(credentials),
+        dataType: "json",
+        success: function (data, textStatus, jqXHR) {
+            var obj = JSON.parse(data);
+            console.log(obj);
+            renderGalaxyHistories(obj) ;
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            infoError(jqXHR.responseText);
+        }
+    });
+}
+
+function getProvTriples(credentials, hid) {
+    $('#genProvBtn[data-id='+hid+']').html("Loading ...");
+    $('#genProvBtn[data-id='+hid+']').attr("disabled", true);
+    console.log("disabling btn "+hid);
+    $.ajax({
+        type: 'POST',
+        headers: {
+            'Accept': 'text/plain',
+            'Content-Type': 'application/json'
+        },
+        url: rootURL + '/provenance/genProv/'+hid,
+        data: JSON.stringify(credentials),
+        dataType: "text",
+        success: function (data, textStatus, jqXHR) {
+            $('#parProvTriples').html("<textarea id=\"codeArea\" rows=\"3\" readonly></textarea>");
+            $('#parProvGraph').html("");
+
+            var code = CodeMirror.fromTextArea(document.getElementById("codeArea"), {
+                lineNumbers: true,
+                readOnly: true,
+                mode: "text/turtle"
+            });
+            code.getDoc().setValue(data);
+
+            $('#genProvBtn[data-id='+hid+']').html("export PROV");
+            $('#genProvBtn[data-id='+hid+']').attr("disabled", false);
+            console.log("enabling btn "+hid);
+            EventBus.trigger(EVT_PROV_DONE);
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            console.log(jqXHR.responseText);(jqXHR.responseText);
+            $('#genProvBtn[data-id='+hid+']').html("export PROV");
+            $('#genProvBtn[data-id='+hid+']').attr("disabled", false);
+            console.log("enabling btn "+hid);
+            EventBus.trigger(EVT_PROV_DONE);
+        }
+    });
+}
+
+function getProvVis(credentials, hid) {
+    $('#visProvBtn[data-id='+hid+']').html("Loading ...");
+    $('#visProvBtn[data-id='+hid+']').attr("disabled", true);
+    console.log("disabling btn "+hid);
+    $.ajax({
+        type: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        url: rootURL + '/provenance/visProv/'+hid,
+        data: JSON.stringify(credentials),
+        dataType: "json",
+        success: function (data, textStatus, jqXHR) {
+            renderProv(data);
+            $('#visProvBtn[data-id='+hid+']').html("visualise PROV");
+            $('#visProvBtn[data-id='+hid+']').attr("disabled", false);
+            console.log("enabling btn "+hid);
+            EventBus.trigger(EVT_PROV_DONE);
+
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            //response = jqXHR.responseText;
+            // infoError(jqXHR.responseText);
+            console.log(jqXHR.responseText);
+            $('#visProvBtn[data-id='+hid+']').html("visualise PROV");
+            $('#visProvBtn[data-id='+hid+']').attr("disabled", false);
+            console.log("enabling btn "+hid);
+            EventBus.trigger(EVT_PROV_DONE);
+        }
+    });
+}
+
+
+////////////////////////////////////////////////////////////////
 // Communication with the API
-////////////////////////////////
+////////////////////////////////////////////////////////////////
 
 function login(email, password) {
     $.ajax({
@@ -729,14 +893,6 @@ function testEndpoint(endpointURL, rowIndex) {
     });
 }
 
-
-
-
-
-
-
-
-
 ////////////////////////////////
 // HTML rendering
 ////////////////////////////////
@@ -746,6 +902,40 @@ function loginInfo(message) {
 }
 function loginInfoReset() {
     $('#loginInfo').text();
+}
+
+function renderGalaxyHistories(data) {
+    $('#tableGalaxyHistories thead tr').remove();
+    $('#tableGalaxyHistories tbody tr').remove();
+
+    // $('#tableGalaxyHistories thead').html('<tr> <th>Available Galaxy histories</th> <th>Provenance export</th></tr>');
+    $('#tableGalaxyHistories thead').html('<tr> <th></th> <th></th> </tr>');
+
+    if (data.histories.length > 0) {
+        $.each(data.histories, function (index, item) {
+            //console.log(item);
+            var row = "<tr>";
+            row = row + "<td>" + htmlEncode(item.label) + "</td>";
+            row = row + "<td align=right >\n\
+                        <button id=\"genProvBtn\" data-id=\""+item.id+"\" class=\"btn btn-xs btn-success myBtnRDFProv\" type=button>export PROV</button> \n\
+                        <button id=\"visProvBtn\" data-id=\""+item.id+"\" class=\"btn btn-xs btn-info myBtnD3Prov\" type=button>visualise PROV</button></td>" ;
+            row = row + "</tr>";
+
+            $('#tableGalaxyHistories tbody').append(row);
+        });
+    }
+
+    $('#tableGalaxyHistories').DataTable({
+        dom:' <"search"f><"top"l>rt<"bottom"ip><"clear">',
+        paging: false, 
+        ordering:  false
+    });
+}
+
+function renderProv(data) {
+    $('#parProvGraph').html("");
+    $('#parProvTriples').html("");
+    renderD3(data,"#parProvGraph");
 }
 
 function renderList(data) {
