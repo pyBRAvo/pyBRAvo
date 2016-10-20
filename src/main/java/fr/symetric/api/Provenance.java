@@ -100,7 +100,7 @@ public class Provenance {
     @Path("/visProv/{hid}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response visProv(GalaxyCredential cred, @PathParam("hid") String hid) {
-        // TODO 
+        //TODO remove mappings from JSON sended, only keep D3 graph
         GHistFactory.initInstance(cred.getInstanceUrl(), cred.getApiKey());
         try {
             GHistAPI gAPI = GHistFactory.getInstance();
