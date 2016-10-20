@@ -65,6 +65,17 @@ and open the template in the editor.
                 opacity: 0.5;
             }
 
+            .CodeMirror {
+                border: 1px solid #eee;
+                height: auto;
+                width: auto;
+                font-size: 8pt;
+            }
+
+            .row {
+                padding-top: 20px;
+            }
+
 
         </style>
 
@@ -92,7 +103,9 @@ and open the template in the editor.
         <link type="text/css" rel="stylesheet" href="css/bootstrap.min.css" />
         <link type="text/css" rel="stylesheet" href="css/simple-sidebar.css" />
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
-        <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/leaflet.css" />
+        <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/leaflet.css"/>
+        <link rel="stylesheet" href="css/codemirror.css">
+
     </head>
 
 
@@ -124,7 +137,7 @@ and open the template in the editor.
                                     <li id="demo-om-menu"><a href="#">Linked *Omics Data</a></li>
                                     <li class="divider"></li>
                                     <!--<li class="navbar-header">Nav header</li>-->
-                                    <li id="demo-wf-menu"><a href="#">Galaxy RNA-seq workflows</a></li>
+                                    <li id="demo-wf-menu"><a href="#">Linked Galaxy histories</a></li>
                                     <!--<li><a href="#">One more separated link</a></li>-->
                                 </ul>
                             </li>
@@ -203,12 +216,19 @@ and open the template in the editor.
                 </footer>-->
 
         <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+        <script type="text/javascript" src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
+        <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.2.2/js/dataTables.buttons.min.js"></script>
+        <script type="text/javascript" src="https://cdn.datatables.net/1.10.12/js/dataTables.bootstrap.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/2.0.0/handlebars.js"></script>
         <script type="text/javascript" src="js/lib/underscore-min.js"></script>
         <script type="text/javascript" src="js/lib/backbone-min.js"></script>
         <script type="text/javascript" src="js/lib/bootstrap.min.js"></script>
         <script src="js/lib/d3.v3.min.js"></script>
         <script src="http://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/leaflet.js"></script>
+
+        <script src="js/lib/codemirror.js"></script>
+        <script src="js/lib/sparql.js"></script>
+        <script src="js/lib/turtle.js"></script>
 
         <script src="js/config.js"></script>
         <script src="js/departements.js"></script>
