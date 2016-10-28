@@ -43,7 +43,7 @@ import org.mortbay.jetty.servlet.ServletHolder;
  */
 public class RestProvTest {
 
-    private static Logger logger = Logger.getLogger(EmbeddedJettyServer.class);
+    private static Logger logger = Logger.getLogger(RestProvTest.class);
     private static Server server;
     private static Process mongoDB_server = null;
 
@@ -155,8 +155,9 @@ public class RestProvTest {
 
 //        logger.info(response.getEntity(String.class));
     }
-    
+
     @Test
+    @Ignore
     public void visProv() throws URISyntaxException, MalformedURLException, IOException {
 
         ClientConfig config = new DefaultClientConfig();
@@ -171,4 +172,6 @@ public class RestProvTest {
 
 //        logger.info(response.getEntity(String.class));
     }
+
+    
 }

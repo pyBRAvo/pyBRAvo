@@ -11,17 +11,30 @@ import com.github.jmchilton.blend4j.galaxy.ToolsClient;
 import com.github.jmchilton.blend4j.galaxy.beans.History;
 import com.github.jmchilton.blend4j.galaxy.beans.HistoryContents;
 import com.github.jmchilton.blend4j.galaxy.beans.HistoryContentsProvenance;
+import com.sun.jersey.api.client.Client;
+import com.sun.jersey.api.client.ClientResponse;
+import com.sun.jersey.api.client.WebResource;
+import com.sun.jersey.api.client.config.ClientConfig;
+import com.sun.jersey.api.client.config.DefaultClientConfig;
+import com.sun.jersey.api.json.JSONConfiguration;
+import com.sun.jersey.core.util.MultivaluedMapImpl;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import javax.ws.rs.core.MultivaluedMap;
+import org.apache.log4j.Logger;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -29,6 +42,8 @@ import org.junit.Test;
  * @author Alban Gaignard <alban.gaignard@cnrs.fr>
  */
 public class GalaxyApiTest {
+
+    private static Logger logger = Logger.getLogger(GalaxyApiTest.class);
 
     public GalaxyApiTest() {
     }
@@ -60,6 +75,7 @@ public class GalaxyApiTest {
     // The methods must be annotated with annotation @Test. For example:
     //
     @Test
+    @Ignore
     public void hello() throws JSONException {
         //my API Key 5f5c875829e4ac6afae64ba31225cdee
 //        GalaxyInstance galaxyInstance = GalaxyInstanceFactory.get(gURL, gApiKey,true);
@@ -90,7 +106,7 @@ public class GalaxyApiTest {
                 + "@prefix sioc: <http://rdfs.org/sioc/ns#> .\n"
                 + "@prefix prov: <http://www.w3.org/ns/prov#> .\n"
                 + "@prefix sym:   <http://fr.symetric/vocab#> .\n"
-                + "@prefix dcterms: <http://purl.org/dc/terms/> .\n" 
+                + "@prefix dcterms: <http://purl.org/dc/terms/> .\n"
                 + "\n"
                 + "<> \n"
                 + "   a prov:Bundle, prov:Entity;\n"
@@ -110,19 +126,18 @@ public class GalaxyApiTest {
                     HistoryContentsProvenance hProv = historiesClient.showProvenance(historyId, datasetId);
 //                    System.out.println("\t produced by tool " + hProv.getToolId());
 //                    System.out.println("\t produced during job " + hProv.getJobId());
-                    
-                    
-                    sb.append("<#"+hProv.getJobId()+">\n"
+
+                    sb.append("<#" + hProv.getJobId() + ">\n"
                             + "    a prov:Activity;\n"
-                            + "    prov:used <#"+c.getId()+">;\n"
-                            + "    prov:wasAssociatedTo <#"+hProv.getToolId()+">.\n\n");
-                    
-                    sb.append("<#"+c.getId()+">\n"
+                            + "    prov:used <#" + c.getId() + ">;\n"
+                            + "    prov:wasAssociatedTo <#" + hProv.getToolId() + ">.\n\n");
+
+                    sb.append("<#" + c.getId() + ">\n"
                             + "    a prov:Entity;\n"
-                            + "    prov:wasGeneratedBy <#"+hProv.getJobId()+">;\n"
-                            + "    prov:wasAttributedTo <#"+hProv.getToolId()+">;\n"
-                            + "    rdfs:label \""+c.getName()+"\";\n");
-                    
+                            + "    prov:wasGeneratedBy <#" + hProv.getJobId() + ">;\n"
+                            + "    prov:wasAttributedTo <#" + hProv.getToolId() + ">;\n"
+                            + "    rdfs:label \"" + c.getName() + "\";\n");
+
 //                    System.out.println("\t with parameters : ");
                     Map<String, Object> params = hProv.getParameters();
                     for (String k : params.keySet()) {
@@ -131,7 +146,7 @@ public class GalaxyApiTest {
                             String jsonString = params.get(k).toString();
                             if (jsonString.startsWith("{")) {
                                 JSONObject json = new JSONObject(jsonString);
-                                sb.append("    prov:wasDerivedFrom <#"+json.get("id")+">;\n");
+                                sb.append("    prov:wasDerivedFrom <#" + json.get("id") + ">;\n");
                             }
                         }
                     }
@@ -145,5 +160,46 @@ public class GalaxyApiTest {
 //        System.out.println("");
         System.out.println("");
         System.out.println(sb.toString());
+    }
+
+    @Test
+    public void galaxyRestConnect() throws URISyntaxException, MalformedURLException, IOException {
+        //http://galaxy.readthedocs.io/en/master/lib/galaxy.webapps.galaxy.api.html#module-galaxy.webapps.galaxy.api.histories
+
+        String gURL = "http://galaxy-bird.univ-nantes.fr/galaxy/";
+        String gKey = "dd3b7fce727d53ac00512ea19a8f5d4f";
+
+        ClientConfig config = new DefaultClientConfig();
+        Client client = Client.create(config);
+        config.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING, Boolean.TRUE);
+        WebResource service = client.resource(new URI(gURL));
+
+//        MultivaluedMap<String, String> params = new MultivaluedMapImpl();
+//        params.add("key", gKey);
+
+        ClientResponse responseHist = service.path("/api/histories").queryParam("key", gKey).accept("application/json").type("application/json").get(ClientResponse.class);
+        System.out.println("----------");
+        System.out.println(responseHist.getEntity(String.class));
+        System.out.println("----------");
+        
+        ClientResponse responseJob = service.path("/api/jobs/2773e5acaa7ffd7f").queryParam("key", gKey).accept("application/json").type("application/json").get(ClientResponse.class);
+        System.out.println("----------");
+        System.out.println(responseJob.getEntity(String.class));
+        System.out.println("----------");
+        
+        ClientResponse responseJobIn = service.path("/api/jobs/2773e5acaa7ffd7f/inputs").queryParam("key", gKey).accept("application/json").type("application/json").get(ClientResponse.class);
+        System.out.println("----------");
+        System.out.println(responseJobIn.getEntity(String.class));
+        System.out.println("----------");
+        
+        ClientResponse responseJobOut = service.path("/api/jobs/2773e5acaa7ffd7f/outputs").queryParam("key", gKey).accept("application/json").type("application/json").get(ClientResponse.class);
+        System.out.println("----------");
+        System.out.println(responseJobOut.getEntity(String.class));
+        System.out.println("----------");
+        
+        ClientResponse responseDS = service.path("/api/datasets/694ed270b1759660").queryParam("key", gKey).accept("application/json").type("application/json").get(ClientResponse.class);
+        System.out.println("----------");
+        System.out.println(responseDS.getEntity(String.class));
+        System.out.println("----------");
     }
 }

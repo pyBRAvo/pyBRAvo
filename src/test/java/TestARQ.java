@@ -86,7 +86,7 @@ public class TestARQ {
      
          Query qService = new Query();
          qService.init();
-         qService.jenaQuery(myQuery);
+//         qService.jenaQuery(myQuery);
      
      }
 }

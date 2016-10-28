@@ -2,15 +2,12 @@
 import fr.symetric.server.models.DAOFactory;
 import fr.symetric.server.models.User;
 import fr.symetric.server.models.UserRepositoryDAO;
-import java.io.File;
 import java.io.IOException;
-import java.util.Map;
+import org.apache.log4j.Logger;
 import org.junit.AfterClass;
 import static org.junit.Assert.assertTrue;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -23,7 +20,7 @@ import org.slf4j.LoggerFactory;
  */
 public class MongoDBTest {
 
-    private final static Logger logger = LoggerFactory.getLogger(MongoDBTest.class);
+    private final static Logger logger = Logger.getLogger(MongoDBTest.class);
 
     private static Process mongoDB_server = null;
 
