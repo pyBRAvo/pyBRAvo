@@ -5,9 +5,10 @@
  */
 package fr.symetric.server.models;
 
-import com.google.code.morphia.Morphia;
-import com.google.code.morphia.dao.BasicDAO;
-import com.mongodb.Mongo;
+
+import com.mongodb.MongoClient;
+import org.mongodb.morphia.Morphia;
+import org.mongodb.morphia.dao.BasicDAO;
 
 /**
  *
@@ -15,7 +16,7 @@ import com.mongodb.Mongo;
  */
 public class SessionRepositoryDAO extends BasicDAO<Session, String> {
 
-    public SessionRepositoryDAO(Class<Session> entityClass, Mongo mongo, Morphia morphia, String dbName) {
+    public SessionRepositoryDAO(Class<Session> entityClass, MongoClient mongo, Morphia morphia, String dbName) {
         super(entityClass, mongo, morphia, dbName);
     }
     

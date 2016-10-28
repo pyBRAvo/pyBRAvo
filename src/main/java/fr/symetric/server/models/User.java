@@ -5,11 +5,11 @@
  */
 package fr.symetric.server.models;
 
-import com.google.code.morphia.annotations.Entity;
-import com.google.code.morphia.annotations.Id;
 import java.security.Principal;
 import java.util.HashSet;
 import java.util.Set;
+import org.mongodb.morphia.annotations.Entity;
+import org.mongodb.morphia.annotations.Id;
 
 /**
  *

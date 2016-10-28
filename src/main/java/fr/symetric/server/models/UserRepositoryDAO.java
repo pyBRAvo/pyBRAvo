@@ -5,11 +5,11 @@
  */
 package fr.symetric.server.models;
 
-import com.google.code.morphia.Morphia;
-import com.google.code.morphia.dao.BasicDAO;
-import com.mongodb.Mongo;
+import com.mongodb.MongoClient;
 import java.util.Iterator;
 import java.util.regex.Pattern;
+import org.mongodb.morphia.Morphia;
+import org.mongodb.morphia.dao.BasicDAO;
 
 /**
  *
@@ -17,7 +17,7 @@ import java.util.regex.Pattern;
  */
 public class UserRepositoryDAO extends BasicDAO<User, String> {
 
-    public UserRepositoryDAO(Class<User> entityClass, Mongo mongo, Morphia morphia, String dbName) {
+    public UserRepositoryDAO(Class<User> entityClass, MongoClient mongo, Morphia morphia, String dbName) {
         super(entityClass, mongo, morphia, dbName);
     }
 

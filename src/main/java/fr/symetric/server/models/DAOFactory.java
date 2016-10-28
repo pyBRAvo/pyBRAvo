@@ -5,22 +5,23 @@
  */
 package fr.symetric.server.models;
 
-import com.google.code.morphia.Morphia;
-import com.mongodb.Mongo;
+import com.mongodb.MongoClient;
 import fr.symetric.util.MongoUtil;
+import org.mongodb.morphia.Morphia;
 
 /**
  *
  * @author Alban Gaignard <alban.gaignard@cnrs.fr>
  */
 public class DAOFactory {
-    private static Mongo mongo = MongoUtil.getMongo();
+    private static MongoClient mongo = MongoUtil.getMongo();
     private static Morphia morphia = new Morphia();
     private static final String dbname = "symetric_user_db";
     
     private static SessionRepositoryDAO sessionDao = null;
     private static UserRepositoryDAO userDao = null;
     private static ActivityRepositoryDAO activityDao = null;
+    private static ProvMetricsRepositoryDAO provMetricsDao = null;
     
     public static synchronized SessionRepositoryDAO getSessionDAO() {
         if (sessionDao == null) {
@@ -46,6 +47,15 @@ public class DAOFactory {
             return activityDao;
         } else {
             return activityDao;
+        }
+    }
+    
+    public static synchronized ProvMetricsRepositoryDAO getProvMetricsDAO() {
+        if (provMetricsDao == null) {
+            provMetricsDao = new ProvMetricsRepositoryDAO(ProvMetrics.class, mongo, morphia, dbname);
+            return provMetricsDao;
+        } else {
+            return provMetricsDao;
         }
     }
 }
