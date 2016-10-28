@@ -7,24 +7,22 @@
 
 </p>
 <div class="row">
-	<div class="col-xs-12">
-		<form>
-			<div class="form-group">
-				<label for="inputKey">Your Galaxy API key</label>
-				<input type="password" class="form-control" id="inputKey" placeholder="API key" value="dd3b7fce727d53ac00512ea19a8f5d4f">
-			</div>
-
-			<label for="inputGalaxyUrl">Your Galaxy instance URL</label>
-			<div class="input-group">
-				<input type="text" class="form-control" id="inputGalaxyUrl" placeholder="http://galaxy-bird.univ-nantes.fr/galaxy/" value="http://galaxy-bird.univ-nantes.fr/galaxy/">
-				<span class="input-group-btn">
-					<button class="btn btn-default" type="button" id="btnGalaxyHist">Go!</button>
-				</span>
-			</div><!-- /input-group -->
-		</form>
+	<div class="col-xs-6">
+		<label for="inputGalaxyUrl">Your Galaxy instance URL</label>
+		<div class="input-group">
+			<input type="text" class="form-control" id="inputGalaxyUrl" placeholder="http://galaxy-bird.univ-nantes.fr/galaxy/" value="http://galaxy-bird.univ-nantes.fr/galaxy/">
+			<span class="input-group-btn">
+				<button class="btn btn-default" type="button" id="btnGalaxyHist">Go!</button>
+			</span>
+		</div><!-- /input-group -->
+	</div>
+	<div class="col-xs-6">
+		<div class="form-group">
+			<label for="inputKey">Your Galaxy API key</label>
+			<input type="password" class="form-control" id="inputKey" placeholder="API key" value="dd3b7fce727d53ac00512ea19a8f5d4f">
+		</div>
 	</div>
 </div>
-
 
 </p>
 <div class="row">
@@ -33,10 +31,12 @@
 	</div>
 </div>
 
+
 </p>
 <div class="row">
 	<div class="col-xs-12">
 		<p id="parProvTriples"></p>
+		<p id="parProvButtons"></p>
 	</div>
 </div>
 

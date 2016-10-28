@@ -61,8 +61,8 @@ var DemoProvView = Backbone.View.extend({
     },
     events: {
         "click #btnGalaxyHist": "listHistEvt",
-        "click #genProvBtn": "genProvEvt",
-        "click #visProvBtn": "visProvEvt"
+        "click .myBtnRDFProv": "genProvEvt",
+        "click .myBtnD3Prov": "visProvEvt"
     },
     disableButton: function () {
         $('.myBtnD3Prov').attr("disabled", true);
@@ -75,25 +75,25 @@ var DemoProvView = Backbone.View.extend({
     listHistEvt: function (e) {
         console.log("listHistEvt") ;
         var credentials = {instanceUrl: $('#inputGalaxyUrl').val(), apiKey: $('#inputKey').val()} ;
-        console.log(credentials) ;
+        //console.log(credentials) ;
         listGalaxyHistories(credentials) ;
     },
     genProvEvt: function (e) {
         EventBus.trigger(EVT_PROV_WORKING);
-        var id = $(e.currentTarget).attr("data-id") ;
+        var id = $(e.currentTarget).attr("gHistoryId") ;
         var name = $(e.currentTarget).closest('tr').children('td').eq(0).text() ;
         console.log("CLICKED "+id+ " | " +name) ;
         var credentials = {instanceUrl: $('#inputGalaxyUrl').val(), apiKey: $('#inputKey').val()} ;
-        getProvTriples(credentials, id) ;
+        getProvTriples(credentials, id, name) ;
 
     },
     visProvEvt: function (e) {
         EventBus.trigger(EVT_PROV_WORKING);
-        var id = $(e.currentTarget).attr("data-id") ;
+        var id = $(e.currentTarget).attr("gHistoryId") ;
         var name = $(e.currentTarget).closest('tr').children('td').eq(0).text() ;
         console.log("CLICKED "+id+ " | " +name) ;
         var credentials = {instanceUrl: $('#inputGalaxyUrl').val(), apiKey: $('#inputKey').val()} ;
-        getProvVis(credentials, id) ;
+        getProvVis(credentials, id, name) ;
     }
 });
 
@@ -356,14 +356,17 @@ function alertTimeout(wait) {
 }
 
 function infoSuccess(message) {
+    console.log("INFO" + message);
     Materialize.toast(message, 2000);
 }
 
 function infoWarning(message) {
+    console.log("WARN" + message);
     Materialize.toast("<i class=\"material-icons\">warning</i> " + message, 2000);
 }
 
 function infoError(message) {
+    console.log("ERROR" + message);
     Materialize.toast("<i class=\"material-icons\">error_outline</i> " + message, 2000);
 }
 
@@ -421,7 +424,7 @@ function listGalaxyHistories(credentials) {
         dataType: "json",
         success: function (data, textStatus, jqXHR) {
             var obj = JSON.parse(data);
-            console.log(obj);
+            //console.log(obj);
             renderGalaxyHistories(obj) ;
         },
         error: function (jqXHR, textStatus, errorThrown) {
@@ -430,9 +433,9 @@ function listGalaxyHistories(credentials) {
     });
 }
 
-function getProvTriples(credentials, hid) {
-    $('#genProvBtn[data-id='+hid+']').html("Loading ...");
-    $('#genProvBtn[data-id='+hid+']').attr("disabled", true);
+function getProvTriples(credentials, hid, title) {
+    $('#genProvBtn-'+hid+'[gHistoryId='+hid+']').html("Loading ...");
+    $('#genProvBtn-'+hid+'[gHistoryId='+hid+']').attr("disabled", true);
     console.log("disabling btn "+hid);
     $.ajax({
         type: 'POST',
@@ -444,8 +447,9 @@ function getProvTriples(credentials, hid) {
         data: JSON.stringify(credentials),
         dataType: "text",
         success: function (data, textStatus, jqXHR) {
-            $('#parProvTriples').html("<textarea id=\"codeArea\" rows=\"3\" readonly></textarea>");
             $('#parProvGraph').html("");
+            $('#parProvTriples').html("<textarea id=\"codeArea\" rows=\"3\" readonly></textarea>");
+            $('#parProvTriples').append("<p class=\"text-right\"><em>"+title+"</em></p>");
 
             var code = CodeMirror.fromTextArea(document.getElementById("codeArea"), {
                 lineNumbers: true,
@@ -454,24 +458,24 @@ function getProvTriples(credentials, hid) {
             });
             code.getDoc().setValue(data);
 
-            $('#genProvBtn[data-id='+hid+']').html("export PROV");
-            $('#genProvBtn[data-id='+hid+']').attr("disabled", false);
+            $('#genProvBtn-'+hid+'[gHistoryId='+hid+']').html("export PROV");
+            $('#genProvBtn-'+hid+'[gHistoryId='+hid+']').attr("disabled", false);
             console.log("enabling btn "+hid);
             EventBus.trigger(EVT_PROV_DONE);
         },
         error: function (jqXHR, textStatus, errorThrown) {
             console.log(jqXHR.responseText);(jqXHR.responseText);
-            $('#genProvBtn[data-id='+hid+']').html("export PROV");
-            $('#genProvBtn[data-id='+hid+']').attr("disabled", false);
+            $('#genProvBtn-'+hid+'[gHistoryId='+hid+']').html("export PROV");
+            $('#genProvBtn-'+hid+'[gHistoryId='+hid+']').attr("disabled", false);
             console.log("enabling btn "+hid);
             EventBus.trigger(EVT_PROV_DONE);
         }
     });
 }
 
-function getProvVis(credentials, hid) {
-    $('#visProvBtn[data-id='+hid+']').html("Loading ...");
-    $('#visProvBtn[data-id='+hid+']').attr("disabled", true);
+function getProvVis(credentials, hid, title) {
+    $('#visProvBtn-'+hid+'[gHistoryId='+hid+']').html("Loading ...");
+    $('#visProvBtn-'+hid+'[gHistoryId='+hid+']').attr("disabled", true);
     console.log("disabling btn "+hid);
     $.ajax({
         type: 'POST',
@@ -483,9 +487,9 @@ function getProvVis(credentials, hid) {
         data: JSON.stringify(credentials),
         dataType: "json",
         success: function (data, textStatus, jqXHR) {
-            renderProv(data);
-            $('#visProvBtn[data-id='+hid+']').html("visualise PROV");
-            $('#visProvBtn[data-id='+hid+']').attr("disabled", false);
+            renderProv(data, title);
+            $('#visProvBtn-'+hid+'[gHistoryId='+hid+']').html("visualise PROV");
+            $('#visProvBtn-'+hid+'[gHistoryId='+hid+']').attr("disabled", false);
             console.log("enabling btn "+hid);
             EventBus.trigger(EVT_PROV_DONE);
 
@@ -494,14 +498,13 @@ function getProvVis(credentials, hid) {
             //response = jqXHR.responseText;
             // infoError(jqXHR.responseText);
             console.log(jqXHR.responseText);
-            $('#visProvBtn[data-id='+hid+']').html("visualise PROV");
-            $('#visProvBtn[data-id='+hid+']').attr("disabled", false);
+            $('#visProvBtn-'+hid+'[gHistoryId='+hid+']').html("visualise PROV");
+            $('#visProvBtn-'+hid+'[gHistoryId='+hid+']').attr("disabled", false);
             console.log("enabling btn "+hid);
             EventBus.trigger(EVT_PROV_DONE);
         }
     });
 }
-
 
 ////////////////////////////////////////////////////////////////
 // Communication with the API
@@ -907,6 +910,8 @@ function loginInfoReset() {
 function renderGalaxyHistories(data) {
     $('#tableGalaxyHistories thead tr').remove();
     $('#tableGalaxyHistories tbody tr').remove();
+    // var table = $('#tableGalaxyHistories').DataTable();
+    // table.destroy();
 
     // $('#tableGalaxyHistories thead').html('<tr> <th>Available Galaxy histories</th> <th>Provenance export</th></tr>');
     $('#tableGalaxyHistories thead').html('<tr> <th></th> <th></th> </tr>');
@@ -917,8 +922,8 @@ function renderGalaxyHistories(data) {
             var row = "<tr>";
             row = row + "<td>" + htmlEncode(item.label) + "</td>";
             row = row + "<td align=right >\n\
-                        <button id=\"genProvBtn\" data-id=\""+item.id+"\" class=\"btn btn-xs btn-success myBtnRDFProv\" type=button>export PROV</button> \n\
-                        <button id=\"visProvBtn\" data-id=\""+item.id+"\" class=\"btn btn-xs btn-info myBtnD3Prov\" type=button>visualise PROV</button></td>" ;
+                        <button id=\"genProvBtn-"+item.id+"\" gHistoryId=\""+item.id+"\" class=\"btn btn-xs btn-success myBtnRDFProv\" type=button>export PROV</button> \n\
+                        <button id=\"visProvBtn-"+item.id+"\" gHistoryId=\""+item.id+"\" class=\"btn btn-xs btn-info myBtnD3Prov\" type=button>visualise PROV</button></td>" ;
             row = row + "</tr>";
 
             $('#tableGalaxyHistories tbody').append(row);
@@ -927,15 +932,18 @@ function renderGalaxyHistories(data) {
 
     $('#tableGalaxyHistories').DataTable({
         dom:' <"search"f><"top"l>rt<"bottom"ip><"clear">',
-        paging: false, 
+        retrieve: true,
+        paging: true, 
+        reponsive: true,
         ordering:  false
     });
 }
 
-function renderProv(data) {
-    $('#parProvGraph').html("");
+function renderProv(data, title) {
     $('#parProvTriples').html("");
+    $('#parProvGraph').html("");
     renderD3(data,"#parProvGraph");
+    $('#parProvGraph').append("<p class=\"text-right\"><em>"+title+"</em></p>");
 }
 
 function renderList(data) {
