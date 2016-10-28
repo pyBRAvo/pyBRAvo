@@ -5,11 +5,9 @@
  */
 package fr.symetric.util;
 
-import com.mongodb.Mongo;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.log4j.Logger;
 
 /**
  *
@@ -17,13 +15,13 @@ import org.slf4j.LoggerFactory;
  */
 public class MongoUtil {
 
-    private final static Logger logger = LoggerFactory.getLogger(MongoUtil.class);
+    private final static Logger logger = Logger.getLogger(MongoUtil.class);
 
     private static final int port = 27017;
     private static final String host = "localhost";
-    private static Mongo mongo = null;
+    private static MongoClient mongo = null;
 
-    public static Mongo getMongo() {
+    public static MongoClient getMongo() {
         if (mongo == null) {
             try {
                 mongo = new MongoClient(host, port);
