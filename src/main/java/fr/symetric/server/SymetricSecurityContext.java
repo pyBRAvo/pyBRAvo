@@ -11,8 +11,7 @@ import java.security.Principal;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.log4j.Logger;
 
 /**
  *
@@ -23,7 +22,7 @@ public class SymetricSecurityContext implements SecurityContext {
     private final User user;
     private final Session session;
     
-    private static Logger logger = LoggerFactory.getLogger(SymetricSecurityContext.class);
+    private static Logger logger = Logger.getLogger(SymetricSecurityContext.class);
 
     public SymetricSecurityContext(Session session, User user) {
         this.session = session;

@@ -9,7 +9,6 @@ import fr.symetric.server.models.SessionRepositoryDAO;
 import fr.symetric.server.models.UserRepositoryDAO;
 import fr.symetric.server.models.User;
 import fr.symetric.server.models.Session;
-import com.google.code.morphia.query.Query;
 import com.google.common.collect.ImmutableSet;
 import com.sun.jersey.spi.container.ContainerRequest;
 import com.sun.jersey.spi.container.ContainerRequestFilter;
@@ -23,9 +22,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import javax.ws.rs.ext.Provider;
+import org.apache.log4j.Logger;
+import org.mongodb.morphia.query.Query;
 import org.mortbay.jetty.HttpHeaders;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -41,7 +40,7 @@ import org.slf4j.LoggerFactory;
 @Provider    // register as jersey's provider
 public class AuditingFilter implements ResourceFilter, ContainerRequestFilter {
 
-    private static Logger logger = LoggerFactory.getLogger(AuditingFilter.class);
+    private static Logger logger = Logger.getLogger(AuditingFilter.class);
     private final static Set<String> REDACTED_HEADERS = ImmutableSet.of(HttpHeaders.AUTHORIZATION);
 
     private SessionRepositoryDAO sessionRepository = DAOFactory.getSessionDAO();  // DAO to access Sessions

@@ -6,15 +6,9 @@ package fr.symetric.server;
 
 import com.sun.jersey.spi.container.servlet.ServletContainer;
 import java.io.File;
-import static java.lang.ProcessBuilder.Redirect.to;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.concurrent.Callable;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.TimeUnit;
 import org.apache.commons.cli.BasicParser;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -28,6 +22,8 @@ import org.apache.commons.vfs.FileObject;
 import org.apache.commons.vfs.FileSystemException;
 import org.apache.commons.vfs.VFS;
 import org.apache.commons.io.FileUtils;
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
 import org.mortbay.jetty.Handler;
 import org.mortbay.jetty.Server;
 import org.mortbay.jetty.handler.ContextHandler;
@@ -35,8 +31,6 @@ import org.mortbay.jetty.handler.HandlerList;
 import org.mortbay.jetty.handler.ResourceHandler;
 import org.mortbay.jetty.servlet.Context;
 import org.mortbay.jetty.servlet.ServletHolder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Embedded HTTP server for Corese. Using Jetty implementation.
@@ -45,14 +39,16 @@ import org.slf4j.LoggerFactory;
  */
 public class EmbeddedJettyServer {
 
-    private static Logger logger = LoggerFactory.getLogger(EmbeddedJettyServer.class);
+    private static Logger logger = Logger.getLogger(EmbeddedJettyServer.class);
     private static String dataPath = null;
 //    private static ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(5);
 
     public static void main(String args[]) throws Exception {
 
+        Logger mongoLogger = Logger.getLogger("com.mongodb");
+        mongoLogger.setLevel(Level.OFF); // e.g. or Log.WARNING, etc.
+
         //Concurent tasks to be executed periodically
-        
 //        ScheduledFuture scheduledFuture = scheduledExecutorService.schedule(new Callable() {
 //            public Object call() throws Exception {
 //                logger.info("Running periodic session cleaning");
@@ -61,7 +57,6 @@ public class EmbeddedJettyServer {
 //                return "Periodic session cleaning done.";
 //            }
 //        }, 60, TimeUnit.SECONDS);
-
         Options options = new Options();
         Option portOpt = new Option("p", "port", true, "specify the server port");
         Option helpOpt = new Option("h", "help", false, "print this message");
@@ -113,9 +108,9 @@ public class EmbeddedJettyServer {
             logger.info("----------------------------------------------");
 
             ResourceHandler resource_handler = new ResourceHandler();
-//            resource_handler.setWelcomeFiles(new String[]{"index.html"});
-            resource_handler.setResourceBase(webappUri.getRawPath());
-//            resource_handler.setResourceBase("/Users/gaignard/Documents/Dev/symetric-api-server/src/main/resources/webapp");
+            resource_handler.setWelcomeFiles(new String[]{"index.html"});
+//            resource_handler.setResourceBase(webappUri.getRawPath());
+            resource_handler.setResourceBase("/Users/gaignard-a/Documents/Dev/symetric-api-server/src/main/resources/webapp");
             ContextHandler staticContextHandler = new ContextHandler();
             staticContextHandler.setContextPath("/");
             staticContextHandler.setHandler(resource_handler);
@@ -144,13 +139,11 @@ public class EmbeddedJettyServer {
             logger.info("Extracting directory " + dirname + " to " + tmpF.getName());
             localDir.createFolder();
             localDir.copyFrom(dir_jar, new AllFileSelector());
-        } else {
-            if (overwrite) {
-                logger.info("Overwritting directory " + dirname + " in " + tmpF.getName());
-                localDir.delete(new FileDepthSelector(0, 5));
-                localDir.createFolder();
-                localDir.copyFrom(dir_jar, new AllFileSelector());
-            }
+        } else if (overwrite) {
+            logger.info("Overwritting directory " + dirname + " in " + tmpF.getName());
+            localDir.delete(new FileDepthSelector(0, 5));
+            localDir.createFolder();
+            localDir.copyFrom(dir_jar, new AllFileSelector());
         }
         return localDir.getURL().toURI();
     }

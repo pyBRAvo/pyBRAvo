@@ -24,14 +24,14 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import org.apache.jena.query.QueryExecution;
-import org.apache.jena.query.QueryExecutionFactory;
-import org.apache.jena.query.QueryFactory;
-import org.apache.jena.query.ResultSet;
-import org.apache.jena.query.ResultSetFormatter;
-import org.apache.jena.rdf.model.Model;
-import org.apache.jena.rdf.model.ModelFactory;
-import org.apache.jena.riot.RDFDataMgr;
+//import org.apache.jena.query.QueryExecution;
+//import org.apache.jena.query.QueryExecutionFactory;
+//import org.apache.jena.query.QueryFactory;
+//import org.apache.jena.query.ResultSet;
+//import org.apache.jena.query.ResultSetFormatter;
+//import org.apache.jena.rdf.model.Model;
+//import org.apache.jena.rdf.model.ModelFactory;
+//import org.apache.jena.riot.RDFDataMgr;
 import org.apache.log4j.Logger;
 
 /**
@@ -51,28 +51,28 @@ public class Query {
 
     private String headerAccept = "Access-Control-Allow-Origin";
 
-    Model model = ModelFactory.createDefaultModel();
+//    Model model = ModelFactory.createDefaultModel();
 
     public Query() {
 
     }
 
-    @GET
-    @Path("/jena")
-    @Produces(MediaType.APPLICATION_JSON)
-//    @RolesAllowed({"user"})
-//    @Audit
-    public Response jenaQuery(@QueryParam("query") String queryString) {
-
-        org.apache.jena.query.Query query = QueryFactory.create(queryString);
-
-        try (QueryExecution qexec = QueryExecutionFactory.create(query, model)) {
-            ResultSet results = qexec.execSelect();
-            ResultSetFormatter.outputAsJSON(System.out, results);
-        }
-
-        return Response.status(200).build();
-    }
+//    @GET
+//    @Path("/jena")
+//    @Produces(MediaType.APPLICATION_JSON)
+////    @RolesAllowed({"user"})
+////    @Audit
+//    public Response jenaQuery(@QueryParam("query") String queryString) {
+//
+//        org.apache.jena.query.Query query = QueryFactory.create(queryString);
+//
+//        try (QueryExecution qexec = QueryExecutionFactory.create(query, model)) {
+//            ResultSet results = qexec.execSelect();
+//            ResultSetFormatter.outputAsJSON(System.out, results);
+//        }
+//
+//        return Response.status(200).build();
+//    }
 
     @GET
     @Path("/sparql")
@@ -140,7 +140,7 @@ public class Query {
             exec = QueryProcess.create(graph);
 
             Load ld = Load.create(graph);
-            ld.load("/Users/gaignard/Documents/Projets/Region-SyMeTRIC/Demonstrateurs/Demonstrateur-SemWeb/csv-cepidc-I35-44/rdf");
+            ld.load("/Users/gaignard-a/Documents/Projets/Region-SyMeTRIC/Demonstrateurs/Demonstrateur-SemWeb/csv-cepidc-I35-44/rdf");
             logger.debug(graph.size() + " triples loaded");
 //            File d = new File("/Users/gaignard/Documents/Projets/Region-SyMeTRIC/Demonstrateurs/Demonstrateur-SemWeb/csv-cepidc-I35-44/rdf");
 //            if (d.isDirectory()) {

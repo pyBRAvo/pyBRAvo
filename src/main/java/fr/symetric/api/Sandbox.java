@@ -1,6 +1,5 @@
 package fr.symetric.api;
 
-import com.google.code.morphia.query.Query;
 import fr.symetric.data.MyJsonData;
 import fr.symetric.data.UserCredential;
 import fr.symetric.server.DatahubUtils;
@@ -25,6 +24,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import org.apache.log4j.Logger;
 import org.jasypt.digest.StandardStringDigester;
+import org.mongodb.morphia.query.Query;
 
 /**
  * Sandbox REST APIs, including auditing and access control

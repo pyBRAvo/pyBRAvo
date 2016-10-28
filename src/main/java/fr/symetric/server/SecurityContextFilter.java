@@ -9,15 +9,14 @@ import fr.symetric.server.models.SessionRepositoryDAO;
 import fr.symetric.server.models.UserRepositoryDAO;
 import fr.symetric.server.models.User;
 import fr.symetric.server.models.Session;
-import com.google.code.morphia.query.Query;
 import com.sun.jersey.spi.container.ContainerRequest;
 import com.sun.jersey.spi.container.ContainerRequestFilter;
 import com.sun.jersey.spi.container.ContainerResponseFilter;
 import com.sun.jersey.spi.container.ResourceFilter;
 import fr.symetric.server.models.DAOFactory;
 import javax.ws.rs.ext.Provider;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.log4j.Logger;
+import org.mongodb.morphia.query.Query;
 
 /**
  *
@@ -33,7 +32,7 @@ import org.slf4j.LoggerFactory;
 @Provider    // register as jersey's provider
 public class SecurityContextFilter implements ResourceFilter, ContainerRequestFilter {
  
-    private static Logger logger = LoggerFactory.getLogger(SecurityContextFilter.class);
+    private static Logger logger = Logger.getLogger(SecurityContextFilter.class);
     
     private SessionRepositoryDAO sessionRepository = DAOFactory.getSessionDAO();  // DAO to access Session
     private UserRepositoryDAO userRepository = DAOFactory.getUserDAO();  // DAO to access User
