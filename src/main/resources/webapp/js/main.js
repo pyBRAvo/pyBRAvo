@@ -57,12 +57,40 @@ var DemoProvView = Backbone.View.extend({
             template = _.template(data, {});//Option to pass any dynamic values to template
             that.$el.html(template());//adding the template content to the main template.
         }, 'html');
+
+        this.displayProvUsage();
+
         return this;
     },
     events: {
         "click #btnGalaxyHist": "listHistEvt",
         "click .myBtnRDFProv": "genProvEvt",
         "click .myBtnD3Prov": "visProvEvt"
+    },
+    displayProvUsage: function () {
+        console.log("Retrieving PROV demo usage statistics.");
+
+        $.ajax({
+            url: rootURL + "/provenance/usage",
+            type: "GET",
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            dataType: "json",
+            success: function (data) {
+                $(function () {
+                    // console.log(data);
+                    var obj = JSON.parse(data);
+                    Highcharts.chart('usageChart', obj);
+                });
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.log(jqXHR);
+                console.log(errorThrown);
+                console.log("Error while retrieving PROV demo usage statistics");
+            }
+        });
     },
     disableButton: function () {
         $('.myBtnD3Prov').attr("disabled", true);
