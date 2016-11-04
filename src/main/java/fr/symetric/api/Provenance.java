@@ -127,7 +127,7 @@ public class Provenance {
                 + "        },\n"
                 + "        series: [{\n"
                 + "            name: 'PROV triples',\n"
-                + "            type: 'spline',\n"
+                + "            type: 'column',\n"
                 + "            yAxis: 1,\n"
                 + "            data: " + y1 + ",\n"
                 + "            tooltip: {\n"
