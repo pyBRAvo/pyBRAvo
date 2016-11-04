@@ -79,7 +79,7 @@ public class Provenance {
                 + "            zoomType: 'xy'\n"
                 + "        },\n"
                 + "        title: {\n"
-                + "            text: 'Galaxy PROV usage statistics'\n"
+                + "            text: 'Galaxy PROV usage'\n"
                 + "        },\n"
                 + "        xAxis: [{\n"
                 + "            categories: " + xAxis + ",\n"
