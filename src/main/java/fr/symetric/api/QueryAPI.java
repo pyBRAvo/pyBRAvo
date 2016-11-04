@@ -39,11 +39,11 @@ import org.apache.log4j.Logger;
  * @author Alban Gaignard <alban.gaignard@cnrs.fr>
  */
 @Path("query")
-public class Query {
+public class QueryAPI {
 
     @Context
     private HttpServletRequest httpRequest;
-    private Logger logger = Logger.getLogger(Query.class);
+    private Logger logger = Logger.getLogger(QueryAPI.class);
 
     // Init RDF graph with RDFS entailments
     private static GraphStore graph = GraphStore.create(true);
@@ -53,7 +53,7 @@ public class Query {
 
 //    Model model = ModelFactory.createDefaultModel();
 
-    public Query() {
+    public QueryAPI() {
 
     }
 
@@ -64,7 +64,7 @@ public class Query {
 ////    @Audit
 //    public Response jenaQuery(@QueryParam("query") String queryString) {
 //
-//        org.apache.jena.query.Query query = QueryFactory.create(queryString);
+//        org.apache.jena.query.QueryAPI query = QueryFactory.create(queryString);
 //
 //        try (QueryExecution qexec = QueryExecutionFactory.create(query, model)) {
 //            ResultSet results = qexec.execSelect();
