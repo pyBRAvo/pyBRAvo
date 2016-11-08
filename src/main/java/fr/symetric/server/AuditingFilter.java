@@ -21,10 +21,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.ext.Provider;
 import org.apache.log4j.Logger;
 import org.mongodb.morphia.query.Query;
-import org.mortbay.jetty.HttpHeaders;
 
 /**
  *
