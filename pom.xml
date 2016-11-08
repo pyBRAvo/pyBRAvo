@@ -37,6 +37,10 @@
                     <groupId>org.slf4j</groupId>
                     <artifactId>slf4j-log4j12</artifactId>
                 </exclusion>
+                <exclusion>
+                    <groupId>org.mortbay.jetty</groupId>
+                    <artifactId>jetty</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
         
@@ -160,6 +164,20 @@
             <version>6.1.26</version>
             <type>jar</type>
         </dependency>
+        
+<!--        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-server</artifactId>
+            <version>9.3.13.v20161014</version>
+            <type>jar</type>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-servlet</artifactId>
+            <version>9.3.13.v20161014</version>
+            <type>jar</type>
+        </dependency>-->
         
         <dependency>
             <groupId>commons-cli</groupId>

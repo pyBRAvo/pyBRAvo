@@ -317,7 +317,7 @@ EventBus.on(EVT_INIT, function () {
     $("#demo-ld-menu").addClass("disabled");
     $("#demo-sb-menu").addClass("disabled");
     $("#demo-om-menu").addClass("disabled");
-    $("#demo-wf-menu").addClass("enabled");
+    $("#demo-wf-menu").addClass("disabled");
 
     //render the welcome panel
     myWelcomeView.render();    
