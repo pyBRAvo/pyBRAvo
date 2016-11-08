@@ -6,6 +6,7 @@ package fr.symetric.server;
 
 import com.sun.jersey.spi.container.servlet.ServletContainer;
 import java.io.File;
+import java.net.InetAddress;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -29,6 +30,7 @@ import org.mortbay.jetty.Server;
 import org.mortbay.jetty.handler.ContextHandler;
 import org.mortbay.jetty.handler.HandlerList;
 import org.mortbay.jetty.handler.ResourceHandler;
+import org.mortbay.jetty.security.SslSelectChannelConnector;
 import org.mortbay.jetty.servlet.Context;
 import org.mortbay.jetty.servlet.ServletHolder;
 
@@ -90,7 +92,19 @@ public class EmbeddedJettyServer {
             }
 
             URI webappUri = EmbeddedJettyServer.extractResourceDir("webapp", true);
-            Server server = new Server(DatahubUtils.getServerPort());
+//            Server server = new Server(DatahubUtils.getServerPort());
+            Server server = new Server();
+
+            SslSelectChannelConnector connector = new SslSelectChannelConnector();
+            connector.setReuseAddress(false);
+            URL keystoreUrl = EmbeddedJettyServer.class.getClassLoader().getResource("keystore.jks");
+//            connector.setKeystore("/Users/gaignard-a/Documents/Dev/symetric-api-server/keystore.jks");
+            connector.setKeystore(keystoreUrl.toString());
+            connector.setKeystoreType("JKS");
+            connector.setKeyPassword("symetric");
+            connector.setPassword("symetric");
+            connector.setPort(DatahubUtils.getServerPort());
+            server.addConnector(connector);
 
             ServletHolder jerseyServletHolder = new ServletHolder(ServletContainer.class);
             jerseyServletHolder.setInitParameter("com.sun.jersey.config.property.resourceConfigClass", "com.sun.jersey.api.core.PackagesResourceConfig");
@@ -102,20 +116,20 @@ public class EmbeddedJettyServer {
             Context servletCtx = new Context(server, "/", Context.SESSIONS);
             servletCtx.addServlet(jerseyServletHolder, "/*");
 
-            logger.info("----------------------------------------------");
-            logger.info("SyMeTRIC sandbox API started on http://localhost:" + DatahubUtils.getServerPort() + "/sandbox");
-            logger.info("SyMeTRIC queryAPI started on http://localhost:" + DatahubUtils.getServerPort() + "/query");
-            logger.info("----------------------------------------------");
+//            logger.info("----------------------------------------------");
+//            logger.info("SyMeTRIC sandbox API started on http://localhost:" + DatahubUtils.getServerPort() + "/sandbox");
+//            logger.info("SyMeTRIC queryAPI started on http://localhost:" + DatahubUtils.getServerPort() + "/query");
+//            logger.info("----------------------------------------------");
 
             ResourceHandler resource_handler = new ResourceHandler();
             resource_handler.setWelcomeFiles(new String[]{"index.html"});
-//            resource_handler.setResourceBase(webappUri.getRawPath());
-            resource_handler.setResourceBase("/Users/gaignard-a/Documents/Dev/symetric-api-server/src/main/resources/webapp");
+            resource_handler.setResourceBase(webappUri.getRawPath());
+//            resource_handler.setResourceBase("/Users/gaignard-a/Documents/Dev/symetric-api-server/src/main/resources/webapp");
             ContextHandler staticContextHandler = new ContextHandler();
             staticContextHandler.setContextPath("/");
             staticContextHandler.setHandler(resource_handler);
             logger.info("----------------------------------------------");
-            logger.info("SyMeTRIC sandbox webapp UI started on http://localhost:" + DatahubUtils.getServerPort());
+            logger.info("SyMeTRIC sandbox webapp UI started on https://"+InetAddress.getLocalHost().getHostAddress()+":" + DatahubUtils.getServerPort());
             logger.info("----------------------------------------------");
 
             HandlerList handlers = new HandlerList();

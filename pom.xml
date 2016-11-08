@@ -164,6 +164,18 @@
             <version>6.1.26</version>
             <type>jar</type>
         </dependency>
+        <dependency>
+            <groupId>org.mortbay.jetty</groupId>
+            <artifactId>jetty-sslengine</artifactId>
+            <version>6.1.26</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>org.mortbay.jetty</groupId>
+            <artifactId>jetty-util</artifactId>
+            <version>6.1.26</version>
+            <type>jar</type>
+        </dependency>
         
 <!--        <dependency>
             <groupId>org.eclipse.jetty</groupId>
