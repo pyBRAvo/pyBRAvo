@@ -5,7 +5,7 @@
  */
 
 // The root URL for the RESTful services
-var rootURL = "http://" + window.location.host;
+var rootURL = "https://" + window.location.host;
 console.log("Connecting to the SyMeTRIC Data API " + rootURL);
 
 var EventBus = _.extend({}, Backbone.Events);
@@ -212,7 +212,7 @@ $(document).ready(function () {
         console.log("Checking session " + sid + " validity for auto logout.");
 
         $.ajax({
-            url: "/sandbox/isactive",
+            url: rootURL + "/sandbox/isactive",
             type: "GET",
             headers: {
                 'Accept': 'application/json',
@@ -222,7 +222,7 @@ $(document).ready(function () {
             dataType: "text",
             complete: setTimeout(function () {
                 checkSessionValidity()
-            }, 60000), 
+            }, 180000), 
             timeout: 2000,
             success: function (data) {
                 if (data.indexOf("true") > -1) {
