@@ -31,13 +31,13 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.mortbay.jetty.Handler;
-import org.mortbay.jetty.Server;
-import org.mortbay.jetty.handler.ContextHandler;
-import org.mortbay.jetty.handler.HandlerList;
-import org.mortbay.jetty.handler.ResourceHandler;
-import org.mortbay.jetty.servlet.Context;
-import org.mortbay.jetty.servlet.ServletHolder;
+//import org.mortbay.jetty.Handler;
+//import org.mortbay.jetty.Server;
+//import org.mortbay.jetty.handler.ContextHandler;
+//import org.mortbay.jetty.handler.HandlerList;
+//import org.mortbay.jetty.handler.ResourceHandler;
+//import org.mortbay.jetty.servlet.Context;
+//import org.mortbay.jetty.servlet.ServletHolder;
 
 /**
  *
@@ -46,7 +46,7 @@ import org.mortbay.jetty.servlet.ServletHolder;
 public class RestProvTest {
 
     private static Logger logger = Logger.getLogger(RestProvTest.class);
-    private static Server server;
+//    private static Server server;
     private static Process mongoDB_server = null;
 
     public RestProvTest() {
@@ -55,48 +55,47 @@ public class RestProvTest {
     @BeforeClass
     public static void setUpClass() throws FileSystemException, URISyntaxException, Exception {
 
-//        ProcessBuilder pb = new ProcessBuilder("mongod");
-        ProcessBuilder pb = new ProcessBuilder("/usr/local/Cellar/mongodb/3.0.1/bin/mongod");
-        pb.redirectErrorStream(true);
-        mongoDB_server = pb.start();
-
-        URI webappUri = EmbeddedJettyServer.extractResourceDir("webapp", true);
-        logger.info("Extracted server code to " + webappUri);
-        server = new Server(DatahubUtils.getServerPort());
-
-        ServletHolder jerseyServletHolder = new ServletHolder(ServletContainer.class);
-        jerseyServletHolder.setInitParameter("com.sun.jersey.config.property.resourceConfigClass", "com.sun.jersey.api.core.PackagesResourceConfig");
-        jerseyServletHolder.setInitParameter("com.sun.jersey.config.property.packages", "fr.symetric.api");
-        jerseyServletHolder.setInitParameter("requestBufferSize", "8192");
-        jerseyServletHolder.setInitParameter("headerBufferSize", "8192");
-        jerseyServletHolder.setInitParameter("com.sun.jersey.api.json.POJOMappingFeature", "true");
-        jerseyServletHolder.setInitParameter("com.sun.jersey.spi.container.ResourceFilters", "fr.symetric.server.ResourceFilterFactory");
-        Context servletCtx = new Context(server, "/", Context.SESSIONS);
-        servletCtx.addServlet(jerseyServletHolder, "/*");
-        logger.info("----------------------------------------------");
-        logger.info("SyMeTRIC sandbox API started on http://localhost:" + DatahubUtils.getServerPort() + "/sandbox");
-        logger.info("----------------------------------------------");
-
-        ResourceHandler resource_handler = new ResourceHandler();
-        resource_handler.setWelcomeFiles(new String[]{"index.html"});
-//            resource_handler.setResourceBase("/Users/gaignard/Documents/Dev/svn-kgram/Dev/trunk/kgserver/src/main/resources/webapp");
-        resource_handler.setResourceBase(webappUri.getRawPath());
-        ContextHandler staticContextHandler = new ContextHandler();
-        staticContextHandler.setContextPath("/");
-        staticContextHandler.setHandler(resource_handler);
-        logger.info("----------------------------------------------");
-        logger.info("SyMeTRIC sandbox webapp UI started on http://localhost:" + DatahubUtils.getServerPort());
-        logger.info("----------------------------------------------");
-
-        HandlerList handlers = new HandlerList();
-        handlers.setHandlers(new Handler[]{staticContextHandler, servletCtx});
-        server.setHandler(handlers);
-
-        try {
-            server.start();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+//        ProcessBuilder pb = new ProcessBuilder("/usr/local/Cellar/mongodb/3.0.1/bin/mongod");
+//        pb.redirectErrorStream(true);
+//        mongoDB_server = pb.start();
+//
+//        URI webappUri = EmbeddedJettyServer.extractResourceDir("webapp", true);
+//        logger.info("Extracted server code to " + webappUri);
+//        server = new Server(DatahubUtils.getServerPort());
+//
+//        ServletHolder jerseyServletHolder = new ServletHolder(ServletContainer.class);
+//        jerseyServletHolder.setInitParameter("com.sun.jersey.config.property.resourceConfigClass", "com.sun.jersey.api.core.PackagesResourceConfig");
+//        jerseyServletHolder.setInitParameter("com.sun.jersey.config.property.packages", "fr.symetric.api");
+//        jerseyServletHolder.setInitParameter("requestBufferSize", "8192");
+//        jerseyServletHolder.setInitParameter("headerBufferSize", "8192");
+//        jerseyServletHolder.setInitParameter("com.sun.jersey.api.json.POJOMappingFeature", "true");
+//        jerseyServletHolder.setInitParameter("com.sun.jersey.spi.container.ResourceFilters", "fr.symetric.server.ResourceFilterFactory");
+//        Context servletCtx = new Context(server, "/", Context.SESSIONS);
+//        servletCtx.addServlet(jerseyServletHolder, "/*");
+//        logger.info("----------------------------------------------");
+//        logger.info("SyMeTRIC sandbox API started on http://localhost:" + DatahubUtils.getServerPort() + "/sandbox");
+//        logger.info("----------------------------------------------");
+//
+//        ResourceHandler resource_handler = new ResourceHandler();
+//        resource_handler.setWelcomeFiles(new String[]{"index.html"});
+////            resource_handler.setResourceBase("/Users/gaignard/Documents/Dev/svn-kgram/Dev/trunk/kgserver/src/main/resources/webapp");
+//        resource_handler.setResourceBase(webappUri.getRawPath());
+//        ContextHandler staticContextHandler = new ContextHandler();
+//        staticContextHandler.setContextPath("/");
+//        staticContextHandler.setHandler(resource_handler);
+//        logger.info("----------------------------------------------");
+//        logger.info("SyMeTRIC sandbox webapp UI started on http://localhost:" + DatahubUtils.getServerPort());
+//        logger.info("----------------------------------------------");
+//
+//        HandlerList handlers = new HandlerList();
+//        handlers.setHandlers(new Handler[]{staticContextHandler, servletCtx});
+//        server.setHandler(handlers);
+//
+//        try {
+//            server.start();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
     }
 
     @AfterClass
@@ -105,11 +104,11 @@ public class RestProvTest {
         DatahubUtils.tagExpiredSessions();
         DatahubUtils.deleteExpiredSessions();
 
-        if (server != null) {
-            server.stop();
-            server.destroy();
-            server = null;
-        }
+//        if (server != null) {
+//            server.stop();
+//            server.destroy();
+//            server = null;
+//        }
 
         if (mongoDB_server != null) {
             mongoDB_server.destroy();

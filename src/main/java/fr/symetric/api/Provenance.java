@@ -7,8 +7,8 @@ package fr.symetric.api;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import fr.cnrs.ga2prov.GHistAPI_v2;
-import fr.cnrs.ga2prov.GHistFactory;
+import fr.univnantes.galaxyld.GHistAPI;
+import fr.univnantes.galaxyld.GHistFactory;
 import fr.inria.edelweiss.kgram.core.Mappings;
 import fr.inria.edelweiss.kgraph.core.Graph;
 import fr.inria.edelweiss.kgraph.query.QueryProcess;
@@ -166,7 +166,7 @@ public class Provenance {
             StringBuilder response = new StringBuilder();
             response.append("{ \"histories\" : [");
 
-            GHistAPI_v2 gAPI = GHistFactory.getInstance();
+            GHistAPI gAPI = GHistFactory.getInstance();
             Map<String, String> histories = gAPI.listHistories();
             for (String id : histories.keySet()) {
                 response.append("{ \"id\":\"" + id + "\", \"label\":\"" + histories.get(id) + "\"},");
@@ -191,7 +191,7 @@ public class Provenance {
     public Response genProv(GalaxyCredential cred, @PathParam("hid") String hid) {
         GHistFactory.init(cred.getInstanceUrl(), cred.getApiKey());
         try {
-            GHistAPI_v2 gAPI = GHistFactory.getInstance();
+            GHistAPI gAPI = GHistFactory.getInstance();
 
             StopWatch sw = new StopWatch();
             sw.start();
@@ -225,7 +225,7 @@ public class Provenance {
         //TODO remove mappings from JSON sended, only keep D3 graph
         GHistFactory.init(cred.getInstanceUrl(), cred.getApiKey());
         try {
-            GHistAPI_v2 gAPI = GHistFactory.getInstance();
+            GHistAPI gAPI = GHistFactory.getInstance();
 
             StopWatch sw = new StopWatch();
             sw.start();
