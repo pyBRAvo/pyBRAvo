@@ -75,7 +75,7 @@ public class Sandbox {
         
         logger.info("Registering user + " + cred.getEmail());
         if (userRep.get(cred.getEmail()) != null) {
-            logger.info("User + " + cred.getEmail()+ " already exists");
+            logger.error("User + " + cred.getEmail()+ " already exists");
             return Response.status(403).entity("User already exists").build();
         }
         
