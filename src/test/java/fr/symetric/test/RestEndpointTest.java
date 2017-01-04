@@ -4,13 +4,13 @@ package fr.symetric.test;
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.api.client.config.ClientConfig;
 import com.sun.jersey.api.client.config.DefaultClientConfig;
 import com.sun.jersey.api.json.JSONConfiguration;
+import com.sun.jersey.client.urlconnection.HTTPSProperties;
 import com.sun.jersey.spi.container.servlet.ServletContainer;
 import fr.symetric.data.MyJsonData;
 import fr.symetric.data.UserCredential;
@@ -19,9 +19,20 @@ import fr.symetric.server.DatahubUtils;
 import fr.symetric.server.models.DAOFactory;
 import fr.symetric.server.models.User;
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.security.cert.X509Certificate;
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 import org.apache.commons.vfs.FileSystemException;
 import org.apache.log4j.Logger;
 import org.junit.After;
@@ -31,13 +42,14 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
-//import org.mortbay.jetty.Handler;
-//import org.mortbay.jetty.Server;
-//import org.mortbay.jetty.handler.ContextHandler;
-//import org.mortbay.jetty.handler.HandlerList;
-//import org.mortbay.jetty.handler.ResourceHandler;
-//import org.mortbay.jetty.servlet.Context;
-//import org.mortbay.jetty.servlet.ServletHolder;
+import org.mortbay.jetty.Handler;
+import org.mortbay.jetty.Server;
+import org.mortbay.jetty.handler.ContextHandler;
+import org.mortbay.jetty.handler.HandlerList;
+import org.mortbay.jetty.handler.ResourceHandler;
+import org.mortbay.jetty.security.SslSelectChannelConnector;
+import org.mortbay.jetty.servlet.Context;
+import org.mortbay.jetty.servlet.ServletHolder;
 
 /**
  *
@@ -46,7 +58,8 @@ import org.junit.Test;
 public class RestEndpointTest {
 
     private static Logger logger = Logger.getLogger(EmbeddedJettyServer.class);
-//    private static Server server;
+    private static Server server;
+    private static Client client;
     private static Process mongoDB_server = null;
 
     public RestEndpointTest() {
@@ -55,48 +68,84 @@ public class RestEndpointTest {
     @BeforeClass
     public static void setUpClass() throws FileSystemException, URISyntaxException, Exception {
 
+        TrustManager[] trustAllCerts = {new X509TrustManager() {
+            @Override
+            public X509Certificate[] getAcceptedIssuers() {
+                return null;
+            }
+
+            @Override
+            public void checkClientTrusted(X509Certificate[] certs, String authType) {
+            }
+
+            @Override
+            public void checkServerTrusted(X509Certificate[] certs, String authType) {
+            }
+        }};
+
+        SSLContext ctx = SSLContext.getInstance("SSL");
+        ctx.init(null, trustAllCerts, new SecureRandom());
+
+        ClientConfig config = new DefaultClientConfig();
+        config.getProperties().put(HTTPSProperties.PROPERTY_HTTPS_PROPERTIES, new HTTPSProperties(
+                new HostnameVerifier() {
+            @Override
+            public boolean verify(String s, SSLSession sslSession) {
+                logger.info(s);
+                logger.info(sslSession);
+                return true;
+            }
+        }, ctx)
+        );
+        config.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING, Boolean.TRUE);
+        client = Client.create(config);
+
+        /////////
 //        ProcessBuilder pb = new ProcessBuilder("mongod");
-//        ProcessBuilder pb = new ProcessBuilder("/usr/local/Cellar/mongodb/3.0.1/bin/mongod");
-//        pb.redirectErrorStream(true);
-//        mongoDB_server = pb.start();
+        ProcessBuilder pb = new ProcessBuilder("/usr/local/Cellar/mongodb/3.0.1/bin/mongod");
+        pb.redirectErrorStream(true);
+        mongoDB_server = pb.start();
 //
-//        URI webappUri = EmbeddedJettyServer.extractResourceDir("webapp", true);
-//        logger.info("Extracted server code to "+webappUri);
-//        server = new Server(DatahubUtils.getServerPort());
-//
-//        ServletHolder jerseyServletHolder = new ServletHolder(ServletContainer.class);
-//        jerseyServletHolder.setInitParameter("com.sun.jersey.config.property.resourceConfigClass", "com.sun.jersey.api.core.PackagesResourceConfig");
-//        jerseyServletHolder.setInitParameter("com.sun.jersey.config.property.packages", "fr.symetric.api");
-//        jerseyServletHolder.setInitParameter("requestBufferSize", "8192");
-//        jerseyServletHolder.setInitParameter("headerBufferSize", "8192");
-//        jerseyServletHolder.setInitParameter("com.sun.jersey.api.json.POJOMappingFeature", "true");
-//        jerseyServletHolder.setInitParameter("com.sun.jersey.spi.container.ResourceFilters", "fr.symetric.server.ResourceFilterFactory");
-//        Context servletCtx = new Context(server, "/", Context.SESSIONS);
-//        servletCtx.addServlet(jerseyServletHolder, "/*");
-//        logger.info("----------------------------------------------");
-//        logger.info("SyMeTRIC sandbox API started on http://localhost:" + DatahubUtils.getServerPort() + "/sandbox");
-//        logger.info("----------------------------------------------");
-//
-//        ResourceHandler resource_handler = new ResourceHandler();
-//        resource_handler.setWelcomeFiles(new String[]{"index.html"});
-////            resource_handler.setResourceBase("/Users/gaignard/Documents/Dev/svn-kgram/Dev/trunk/kgserver/src/main/resources/webapp");
-//        resource_handler.setResourceBase(webappUri.getRawPath());
-//        ContextHandler staticContextHandler = new ContextHandler();
-//        staticContextHandler.setContextPath("/");
-//        staticContextHandler.setHandler(resource_handler);
-//        logger.info("----------------------------------------------");
-//        logger.info("SyMeTRIC sandbox webapp UI started on http://localhost:" + DatahubUtils.getServerPort());
-//        logger.info("----------------------------------------------");
-//
-//        HandlerList handlers = new HandlerList();
-//        handlers.setHandlers(new Handler[]{staticContextHandler, servletCtx});
-//        server.setHandler(handlers);
-//
-//        try {
-//            server.start();
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
+        URI webappUri = EmbeddedJettyServer.extractResourceDir("web", true);
+        server = new Server();
+
+        SslSelectChannelConnector connector = new SslSelectChannelConnector();
+        connector.setReuseAddress(false);
+        URL keystoreUrl = EmbeddedJettyServer.class.getClassLoader().getResource("keystore.jks");
+        connector.setKeystore(keystoreUrl.toString());
+        connector.setKeystoreType("JKS");
+        connector.setKeyPassword("symetric");
+        connector.setPassword("symetric");
+        connector.setPort(DatahubUtils.getServerPort());
+        server.addConnector(connector);
+
+        ServletHolder jerseyServletHolder = new ServletHolder(ServletContainer.class);
+        jerseyServletHolder.setInitParameter("com.sun.jersey.config.property.resourceConfigClass", "com.sun.jersey.api.core.PackagesResourceConfig");
+        jerseyServletHolder.setInitParameter("com.sun.jersey.config.property.packages", "fr.symetric.api");
+        jerseyServletHolder.setInitParameter("requestBufferSize", "8192");
+        jerseyServletHolder.setInitParameter("headerBufferSize", "8192");
+        jerseyServletHolder.setInitParameter("com.sun.jersey.api.json.POJOMappingFeature", "true");
+        jerseyServletHolder.setInitParameter("com.sun.jersey.spi.container.ResourceFilters", "fr.symetric.server.ResourceFilterFactory");
+        Context servletCtx = new Context(server, "/", Context.SESSIONS);
+        servletCtx.addServlet(jerseyServletHolder, "/*");
+
+        ResourceHandler resource_handler = new ResourceHandler();
+        resource_handler.setWelcomeFiles(new String[]{"index.html"});
+        resource_handler.setResourceBase(webappUri.getRawPath());
+//            resource_handler.setResourceBase("/Users/gaignard-a/Documents/Dev/symetric-api-server/src/main/resources/web");
+        ContextHandler staticContextHandler = new ContextHandler();
+        staticContextHandler.setContextPath("/");
+        staticContextHandler.setHandler(resource_handler);
+        logger.info("----------------------------------------------");
+        logger.info("SyMeTRIC sandbox webapp UI started on https://" + InetAddress.getLocalHost().getHostAddress() + ":" + DatahubUtils.getServerPort());
+        logger.info("----------------------------------------------");
+
+        HandlerList handlers = new HandlerList();
+        handlers.setHandlers(new Handler[]{staticContextHandler, servletCtx});
+        server.setHandler(handlers);
+
+        server.start();
+//        server.join();
     }
 
     @AfterClass
@@ -104,13 +153,14 @@ public class RestEndpointTest {
         //clean old sessions
         DatahubUtils.tagExpiredSessions();
         DatahubUtils.deleteExpiredSessions();
+        
+        DAOFactory.getUserDAO().deleteById("zebulon@univ-nantes.fr");
 
-//        if (server != null) {
-//            server.stop();
-//            server.destroy();
-//            server = null;
-//        }
-
+        if (server != null) {
+            server.stop();
+            server.destroy();
+            server = null;
+        }
         if (mongoDB_server != null) {
             mongoDB_server.destroy();
             mongoDB_server = null;
@@ -126,11 +176,9 @@ public class RestEndpointTest {
     }
 
     @Test
-    public void sayHello() throws URISyntaxException, MalformedURLException, IOException {
+    public void sayHello() throws URISyntaxException, MalformedURLException, IOException, NoSuchAlgorithmException, KeyManagementException {
 
-        ClientConfig config = new DefaultClientConfig();
-        Client client = Client.create(config);
-        WebResource service = client.resource(new URI("http://localhost:" + DatahubUtils.getServerPort() + "/sandbox"));
+        WebResource service = client.resource(new URI("https://localhost:" + DatahubUtils.getServerPort() + "/sandbox"));
 
         String param = "Marcel";
         String response = service.path("sayHello").path(param).get(String.class).toString();
@@ -140,10 +188,7 @@ public class RestEndpointTest {
 
     @Test
     public void sendJson() throws URISyntaxException, MalformedURLException, IOException {
-        ClientConfig config = new DefaultClientConfig();
-        config.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING, Boolean.TRUE);
-        Client client = Client.create(config);
-        WebResource service = client.resource(new URI("http://localhost:" + DatahubUtils.getServerPort() + "/sandbox/sendJson"));
+        WebResource service = client.resource(new URI("https://localhost:" + DatahubUtils.getServerPort() + "/sandbox/sendJson"));
 
         // sending a JSON string
         String jsonData = "{\"id\":\"1234\",\"label\":\"MyLabel\"}";
@@ -175,9 +220,7 @@ public class RestEndpointTest {
 
     @Test
     public void auditedSayHello() throws URISyntaxException, MalformedURLException, IOException {
-        ClientConfig config = new DefaultClientConfig();
-        Client client = Client.create(config);
-        WebResource service = client.resource(new URI("http://localhost:" + DatahubUtils.getServerPort() + "/sandbox"));
+        WebResource service = client.resource(new URI("https://localhost:" + DatahubUtils.getServerPort() + "/sandbox"));
 
         String response = service.path("hellopublic").header("X-Forwarded-For", "127.0.0.1").get(String.class).toString();
         logger.info(response);
@@ -185,10 +228,7 @@ public class RestEndpointTest {
 
     @Test
     public void signIn() throws URISyntaxException, MalformedURLException, IOException {
-        ClientConfig config = new DefaultClientConfig();
-        config.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING, Boolean.TRUE);
-        Client client = Client.create(config);
-        WebResource service = client.resource(new URI("http://localhost:" + DatahubUtils.getServerPort() + "/sandbox"));
+        WebResource service = client.resource(new URI("https://localhost:" + DatahubUtils.getServerPort() + "/sandbox"));
 
         UserCredential uCred = new UserCredential();
         uCred.setEmail("zebulon@univ-nantes.fr");
@@ -226,10 +266,7 @@ public class RestEndpointTest {
 
     @Test
     public void loginTest() throws URISyntaxException, MalformedURLException, IOException {
-        ClientConfig config = new DefaultClientConfig();
-        config.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING, Boolean.TRUE);
-        Client client = Client.create(config);
-        WebResource service = client.resource(new URI("http://localhost:" + DatahubUtils.getServerPort() + "/sandbox"));
+        WebResource service = client.resource(new URI("https://localhost:" + DatahubUtils.getServerPort() + "/sandbox"));
 
         UserCredential uCred = new UserCredential();
         uCred.setEmail("zebulon@univ-nantes.fr");
@@ -266,17 +303,14 @@ public class RestEndpointTest {
         } catch (Exception e) {
             errorMessage = e.getMessage();
         }
-        Assert.assertNotNull(sessionId);
-
         DAOFactory.getUserDAO().deleteById("zebulon@univ-nantes.fr");
+        
+        Assert.assertNotNull(sessionId);
     }
 
     @Test
     public void testAuthVsPublic() throws URISyntaxException {
-        ClientConfig config = new DefaultClientConfig();
-        config.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING, Boolean.TRUE);
-        Client client = Client.create(config);
-        WebResource service = client.resource(new URI("http://localhost:" + DatahubUtils.getServerPort() + "/sandbox"));
+        WebResource service = client.resource(new URI("https://localhost:" + DatahubUtils.getServerPort() + "/sandbox"));
 
         //check public access
         String response = service.path("hellopublic").get(String.class).toString();
@@ -290,23 +324,47 @@ public class RestEndpointTest {
             Assert.assertTrue(e.getMessage().contains("403"));
         }
 
-        // and after a sign-in
-        String session = DatahubUtils.signin("zebulon@univ-nantes.fr", "SonSecret");
+        // and after a sign-in (fictive user)
+        UserCredential uCred = new UserCredential();
+        uCred.setEmail("zebulon@univ-nantes.fr");
+        uCred.setPassword("SonSecret");
+
+        String sessionId = null;
+        ClientResponse cResponse = service.path("/signin").accept("application/json").type("application/json").post(ClientResponse.class, uCred);
+        if (cResponse.getStatus() != 200) {
+            logger.error("Unexpected error, please contact the support team");
+            throw new RuntimeException("Failed : HTTP error code : " + cResponse.getStatus());
+        }
+        String session = cResponse.getEntity(String.class);
+        logger.info("User successfully registered : " + sessionId);
+        
         String response3 = service.path("helloauth").header("session-id", session).get(String.class).toString();
         logger.info(response3);
         DAOFactory.getUserDAO().deleteById("zebulon@univ-nantes.fr");
+        
+        Assert.assertTrue(response3.contains("hello"));
     }
 
     @Test
     public void logout() throws URISyntaxException {
-        ClientConfig config = new DefaultClientConfig();
-        config.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING, Boolean.TRUE);
-        Client client = Client.create(config);
-        WebResource service = client.resource(new URI("http://localhost:" + DatahubUtils.getServerPort() + "/sandbox"));
+        WebResource service = client.resource(new URI("https://localhost:" + DatahubUtils.getServerPort() + "/sandbox"));
 
-        String session = DatahubUtils.signin("zebulon@univ-nantes.fr", "SonSecret");
+        // Create a fictive user
+        UserCredential uCred = new UserCredential();
+        uCred.setEmail("zebulon@univ-nantes.fr");
+        uCred.setPassword("SonSecret");
 
-        ClientResponse response = service.path("/logout").header("session-id", session).accept("application/json").type("application/json").get(ClientResponse.class);
+        String sessionId = null;
+        ClientResponse response = service.path("/signin").accept("application/json").type("application/json").post(ClientResponse.class, uCred);
+        if (response.getStatus() != 200) {
+            logger.error("Unexpected error, please contact the support team");
+            throw new RuntimeException("Failed : HTTP error code : " + response.getStatus());
+        }
+        String session = response.getEntity(String.class);
+        logger.info("User successfully registered : " + sessionId);
+
+        // LOGOUT
+        response = service.path("/logout").header("session-id", session).accept("application/json").type("application/json").get(ClientResponse.class);
         if (response.getStatus() != 200) {
             logger.error("Unexpected error, please contact the support team");
             DAOFactory.getUserDAO().deleteById("zebulon@univ-nantes.fr");
