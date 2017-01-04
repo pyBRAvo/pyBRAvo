@@ -91,8 +91,7 @@ public class EmbeddedJettyServer {
                 System.out.println("Server: " + dataPath);
             }
 
-            URI webappUri = EmbeddedJettyServer.extractResourceDir("webapp", true);
-//            Server server = new Server(DatahubUtils.getServerPort());
+            URI webappUri = EmbeddedJettyServer.extractResourceDir("web", true);
             Server server = new Server();
 
             SslSelectChannelConnector connector = new SslSelectChannelConnector();
@@ -124,7 +123,7 @@ public class EmbeddedJettyServer {
             ResourceHandler resource_handler = new ResourceHandler();
             resource_handler.setWelcomeFiles(new String[]{"index.html"});
             resource_handler.setResourceBase(webappUri.getRawPath());
-//            resource_handler.setResourceBase("/Users/gaignard-a/Documents/Dev/symetric-api-server/src/main/resources/webapp");
+//            resource_handler.setResourceBase("/Users/gaignard-a/Documents/Dev/symetric-api-server/src/main/resources/web");
             ContextHandler staticContextHandler = new ContextHandler();
             staticContextHandler.setContextPath("/");
             staticContextHandler.setHandler(resource_handler);
