@@ -65,12 +65,13 @@ public class DatahubUtils {
         }
     }
 
+    @Deprecated
     public static String login(String email, String password) throws SecurityException, RuntimeException {
         try {
             ClientConfig config = new DefaultClientConfig();
             config.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING, Boolean.TRUE);
             Client client = Client.create(config);
-            WebResource service = client.resource(new URI("http://localhost:" + DatahubUtils.serverPort + "/sandbox"));
+            WebResource service = client.resource(new URI("https://localhost:" + DatahubUtils.serverPort + "/sandbox"));
 
             UserCredential uCred = new UserCredential();
             uCred.setEmail(email);
@@ -96,12 +97,13 @@ public class DatahubUtils {
         }
     }
 
+    @Deprecated
     public static String signin(String email, String password) {
         try {
             ClientConfig config = new DefaultClientConfig();
             config.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING, Boolean.TRUE);
             Client client = Client.create(config);
-            WebResource service = client.resource(new URI("http://localhost:" + DatahubUtils.serverPort + "/sandbox"));
+            WebResource service = client.resource(new URI("https://localhost:" + DatahubUtils.serverPort + "/sandbox"));
 
             UserCredential uCred = new UserCredential();
             uCred.setEmail(email);
@@ -123,6 +125,7 @@ public class DatahubUtils {
         }
     }
 
+    @Deprecated
     public static void logout(String sid) throws SecurityException, RuntimeException {
         try {
             ClientConfig config = new DefaultClientConfig();
