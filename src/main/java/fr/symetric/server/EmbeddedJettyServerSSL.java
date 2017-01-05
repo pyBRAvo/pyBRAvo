@@ -39,9 +39,9 @@ import org.mortbay.jetty.servlet.ServletHolder;
  *
  * @author alban.gaignard@cnrs.fr
  */
-public class EmbeddedJettyServer {
+public class EmbeddedJettyServerSSL {
 
-    private static Logger logger = Logger.getLogger(EmbeddedJettyServer.class);
+    private static Logger logger = Logger.getLogger(EmbeddedJettyServerSSL.class);
     private static String dataPath = null;
 //    private static ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(5);
 
@@ -91,19 +91,19 @@ public class EmbeddedJettyServer {
                 System.out.println("Server: " + dataPath);
             }
 
-            URI webappUri = EmbeddedJettyServer.extractResourceDir("web", true);
-            Server server = new Server(DatahubUtils.getServerPort());
+            URI webappUri = EmbeddedJettyServerSSL.extractResourceDir("web", true);
+            Server server = new Server();
 
-//            SslSelectChannelConnector connector = new SslSelectChannelConnector();
-//            connector.setReuseAddress(false);
-//            URL keystoreUrl = EmbeddedJettyServer.class.getClassLoader().getResource("keystore.jks");
-////            connector.setKeystore("/Users/gaignard-a/Documents/Dev/symetric-api-server/keystore.jks");
-//            connector.setKeystore(keystoreUrl.toString());
-//            connector.setKeystoreType("JKS");
-//            connector.setKeyPassword("symetric");
-//            connector.setPassword("symetric");
-//            connector.setPort(DatahubUtils.getServerPort());
-//            server.addConnector(connector);
+            SslSelectChannelConnector connector = new SslSelectChannelConnector();
+            connector.setReuseAddress(false);
+            URL keystoreUrl = EmbeddedJettyServer.class.getClassLoader().getResource("keystore.jks");
+//            connector.setKeystore("/Users/gaignard-a/Documents/Dev/symetric-api-server/keystore.jks");
+            connector.setKeystore(keystoreUrl.toString());
+            connector.setKeystoreType("JKS");
+            connector.setKeyPassword("symetric");
+            connector.setPassword("symetric");
+            connector.setPort(DatahubUtils.getServerPort());
+            server.addConnector(connector);
 
             ServletHolder jerseyServletHolder = new ServletHolder(ServletContainer.class);
             jerseyServletHolder.setInitParameter("com.sun.jersey.config.property.resourceConfigClass", "com.sun.jersey.api.core.PackagesResourceConfig");
@@ -128,7 +128,7 @@ public class EmbeddedJettyServer {
             staticContextHandler.setContextPath("/");
             staticContextHandler.setHandler(resource_handler);
             logger.info("----------------------------------------------");
-            logger.info("SyMeTRIC sandbox webapp UI started on http://"+InetAddress.getLocalHost().getHostAddress()+":" + DatahubUtils.getServerPort());
+            logger.info("SyMeTRIC sandbox webapp UI started on https://"+InetAddress.getLocalHost().getHostAddress()+":" + DatahubUtils.getServerPort());
             logger.info("----------------------------------------------");
 
             HandlerList handlers = new HandlerList();
@@ -138,12 +138,12 @@ public class EmbeddedJettyServer {
             server.start();
             server.join();
         } catch (ParseException exp) {
-            System.err.println("Parsing failed. Reason: " + exp.getMessage());
+            System.err.println("Parsing failed.  Reason: " + exp.getMessage());
         }
     }
 
     public static URI extractResourceDir(String dirname, boolean overwrite) throws FileSystemException, URISyntaxException {
-        URL dir_url = EmbeddedJettyServer.class.getClassLoader().getResource(dirname);
+        URL dir_url = EmbeddedJettyServerSSL.class.getClassLoader().getResource(dirname);
         FileObject dir_jar = VFS.getManager().resolveFile(dir_url.toString());
         String tempDir = FileUtils.getTempDirectory() + File.separator + System.getProperty("user.name");
         FileObject tmpF = VFS.getManager().resolveFile(tempDir);

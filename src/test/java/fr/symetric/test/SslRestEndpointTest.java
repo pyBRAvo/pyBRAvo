@@ -55,20 +55,48 @@ import org.mortbay.jetty.servlet.ServletHolder;
  *
  * @author gaignard
  */
-public class RestEndpointTest {
+public class SslRestEndpointTest {
 
     private static Logger logger = Logger.getLogger(EmbeddedJettyServer.class);
     private static Server server;
     private static Client client;
     private static Process mongoDB_server = null;
 
-    public RestEndpointTest() {
+    public SslRestEndpointTest() {
     }
 
     @BeforeClass
     public static void setUpClass() throws FileSystemException, URISyntaxException, Exception {
 
+        TrustManager[] trustAllCerts = {new X509TrustManager() {
+            @Override
+            public X509Certificate[] getAcceptedIssuers() {
+                return null;
+            }
+
+            @Override
+            public void checkClientTrusted(X509Certificate[] certs, String authType) {
+            }
+
+            @Override
+            public void checkServerTrusted(X509Certificate[] certs, String authType) {
+            }
+        }};
+
+        SSLContext ctx = SSLContext.getInstance("SSL");
+        ctx.init(null, trustAllCerts, new SecureRandom());
+
         ClientConfig config = new DefaultClientConfig();
+        config.getProperties().put(HTTPSProperties.PROPERTY_HTTPS_PROPERTIES, new HTTPSProperties(
+                new HostnameVerifier() {
+            @Override
+            public boolean verify(String s, SSLSession sslSession) {
+                logger.info(s);
+                logger.info(sslSession);
+                return true;
+            }
+        }, ctx)
+        );
         config.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING, Boolean.TRUE);
         client = Client.create(config);
 
@@ -79,17 +107,17 @@ public class RestEndpointTest {
         mongoDB_server = pb.start();
 //
         URI webappUri = EmbeddedJettyServer.extractResourceDir("web", true);
-        server = new Server(DatahubUtils.getServerPort());
+        server = new Server();
 
-//        SslSelectChannelConnector connector = new SslSelectChannelConnector();
-//        connector.setReuseAddress(false);
-//        URL keystoreUrl = EmbeddedJettyServer.class.getClassLoader().getResource("keystore.jks");
-//        connector.setKeystore(keystoreUrl.toString());
-//        connector.setKeystoreType("JKS");
-//        connector.setKeyPassword("symetric");
-//        connector.setPassword("symetric");
-//        connector.setPort(DatahubUtils.getServerPort());
-//        server.addConnector(connector);
+        SslSelectChannelConnector connector = new SslSelectChannelConnector();
+        connector.setReuseAddress(false);
+        URL keystoreUrl = EmbeddedJettyServer.class.getClassLoader().getResource("keystore.jks");
+        connector.setKeystore(keystoreUrl.toString());
+        connector.setKeystoreType("JKS");
+        connector.setKeyPassword("symetric");
+        connector.setPassword("symetric");
+        connector.setPort(DatahubUtils.getServerPort());
+        server.addConnector(connector);
 
         ServletHolder jerseyServletHolder = new ServletHolder(ServletContainer.class);
         jerseyServletHolder.setInitParameter("com.sun.jersey.config.property.resourceConfigClass", "com.sun.jersey.api.core.PackagesResourceConfig");
@@ -109,7 +137,7 @@ public class RestEndpointTest {
         staticContextHandler.setContextPath("/");
         staticContextHandler.setHandler(resource_handler);
         logger.info("----------------------------------------------");
-        logger.info("SyMeTRIC sandbox webapp UI started on http://" + InetAddress.getLocalHost().getHostAddress() + ":" + DatahubUtils.getServerPort());
+        logger.info("SyMeTRIC sandbox webapp UI started on https://" + InetAddress.getLocalHost().getHostAddress() + ":" + DatahubUtils.getServerPort());
         logger.info("----------------------------------------------");
 
         HandlerList handlers = new HandlerList();
@@ -150,7 +178,7 @@ public class RestEndpointTest {
     @Test
     public void sayHello() throws URISyntaxException, MalformedURLException, IOException, NoSuchAlgorithmException, KeyManagementException {
 
-        WebResource service = client.resource(new URI("http://localhost:" + DatahubUtils.getServerPort() + "/sandbox"));
+        WebResource service = client.resource(new URI("https://localhost:" + DatahubUtils.getServerPort() + "/sandbox"));
 
         String param = "Marcel";
         String response = service.path("sayHello").path(param).get(String.class).toString();
@@ -160,7 +188,7 @@ public class RestEndpointTest {
 
     @Test
     public void sendJson() throws URISyntaxException, MalformedURLException, IOException {
-        WebResource service = client.resource(new URI("http://localhost:" + DatahubUtils.getServerPort() + "/sandbox/sendJson"));
+        WebResource service = client.resource(new URI("https://localhost:" + DatahubUtils.getServerPort() + "/sandbox/sendJson"));
 
         // sending a JSON string
         String jsonData = "{\"id\":\"1234\",\"label\":\"MyLabel\"}";
@@ -192,7 +220,7 @@ public class RestEndpointTest {
 
     @Test
     public void auditedSayHello() throws URISyntaxException, MalformedURLException, IOException {
-        WebResource service = client.resource(new URI("http://localhost:" + DatahubUtils.getServerPort() + "/sandbox"));
+        WebResource service = client.resource(new URI("https://localhost:" + DatahubUtils.getServerPort() + "/sandbox"));
 
         String response = service.path("hellopublic").header("X-Forwarded-For", "127.0.0.1").get(String.class).toString();
         logger.info(response);
@@ -200,7 +228,7 @@ public class RestEndpointTest {
 
     @Test
     public void signIn() throws URISyntaxException, MalformedURLException, IOException {
-        WebResource service = client.resource(new URI("http://localhost:" + DatahubUtils.getServerPort() + "/sandbox"));
+        WebResource service = client.resource(new URI("https://localhost:" + DatahubUtils.getServerPort() + "/sandbox"));
 
         UserCredential uCred = new UserCredential();
         uCred.setEmail("zebulon@univ-nantes.fr");
@@ -238,7 +266,7 @@ public class RestEndpointTest {
 
     @Test
     public void loginTest() throws URISyntaxException, MalformedURLException, IOException {
-        WebResource service = client.resource(new URI("http://localhost:" + DatahubUtils.getServerPort() + "/sandbox"));
+        WebResource service = client.resource(new URI("https://localhost:" + DatahubUtils.getServerPort() + "/sandbox"));
 
         UserCredential uCred = new UserCredential();
         uCred.setEmail("zebulon@univ-nantes.fr");
@@ -282,7 +310,7 @@ public class RestEndpointTest {
 
     @Test
     public void testAuthVsPublic() throws URISyntaxException {
-        WebResource service = client.resource(new URI("http://localhost:" + DatahubUtils.getServerPort() + "/sandbox"));
+        WebResource service = client.resource(new URI("https://localhost:" + DatahubUtils.getServerPort() + "/sandbox"));
 
         //check public access
         String response = service.path("hellopublic").get(String.class).toString();
@@ -319,7 +347,7 @@ public class RestEndpointTest {
 
     @Test
     public void logout() throws URISyntaxException {
-        WebResource service = client.resource(new URI("http://localhost:" + DatahubUtils.getServerPort() + "/sandbox"));
+        WebResource service = client.resource(new URI("https://localhost:" + DatahubUtils.getServerPort() + "/sandbox"));
 
         // Create a fictive user
         UserCredential uCred = new UserCredential();
