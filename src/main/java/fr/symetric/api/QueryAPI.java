@@ -8,6 +8,7 @@ package fr.symetric.api;
 import fr.inria.acacia.corese.exceptions.EngineException;
 import fr.inria.acacia.corese.triple.parser.Dataset;
 import fr.inria.edelweiss.kgram.core.Mappings;
+import fr.inria.edelweiss.kgraph.api.Loader;
 import fr.inria.edelweiss.kgraph.core.Graph;
 import fr.inria.edelweiss.kgraph.core.GraphStore;
 import fr.inria.edelweiss.kgraph.query.QueryProcess;
@@ -140,7 +141,14 @@ public class QueryAPI {
             exec = QueryProcess.create(graph);
 
             Load ld = Load.create(graph);
-            ld.load("/Users/gaignard-a/Documents/Projets/Region-SyMeTRIC/Demonstrateurs/Demonstrateur-SemWeb/csv-cepidc-I35-44/rdf");
+//            ld.load("/Users/gaignard-a/Documents/Projets/Region-SyMeTRIC/Demonstrateurs/Demonstrateur-SemWeb/csv-cepidc-I35-44/rdf");
+            String[] filenames = {"22.ttl","29.ttl","35.ttl","44-all.ttl","53-49-72.ttl","56.ttl","c73-44.ttl",
+                "c73-85.ttl","i34-44.ttl","i34-85.ttl","i35-44.ttl","i35-85.ttl","sameas-doid.ttl"};
+            for (String f : filenames) {
+                ld.load(QueryAPI.class.getClassLoader().getResourceAsStream("sym-demo-data/"+f),Loader.TURTLE_FORMAT);
+            }
+            ld.load(QueryAPI.class.getClassLoader().getResourceAsStream("sym-demo-data/doid.owl"),Loader.RDFXML_FORMAT);
+            
             logger.debug(graph.size() + " triples loaded");
 //            File d = new File("/Users/gaignard/Documents/Projets/Region-SyMeTRIC/Demonstrateurs/Demonstrateur-SemWeb/csv-cepidc-I35-44/rdf");
 //            if (d.isDirectory()) {
