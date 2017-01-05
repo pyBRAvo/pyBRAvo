@@ -5,7 +5,7 @@
  */
 
 // The root URL for the RESTful services
-var rootURL = "https://" + window.location.host;
+var rootURL = "http://" + window.location.host;
 console.log("Connecting to the SyMeTRIC Data API " + rootURL);
 
 var EventBus = _.extend({}, Backbone.Events);
