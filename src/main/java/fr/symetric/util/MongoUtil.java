@@ -26,6 +26,7 @@ public class MongoUtil {
             try {
                 mongo = new MongoClient(host, port);
                 logger.debug("New Mongo created with [" + host + "] and [" + port + "]");
+                
             } catch (MongoException e) {
                 logger.error(e.getMessage());
             }

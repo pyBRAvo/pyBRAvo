@@ -16,7 +16,7 @@ import org.mongodb.morphia.Morphia;
 public class DAOFactory {
     private static MongoClient mongo = MongoUtil.getMongo();
     private static Morphia morphia = new Morphia();
-    private static final String dbname = "symetric_user_db";
+    private static final String DB_NAME = "symetric_datahub_db";
     
     private static SessionRepositoryDAO sessionDao = null;
     private static UserRepositoryDAO userDao = null;
@@ -25,7 +25,7 @@ public class DAOFactory {
     
     public static synchronized SessionRepositoryDAO getSessionDAO() {
         if (sessionDao == null) {
-            sessionDao = new SessionRepositoryDAO(Session.class, mongo, morphia, dbname);
+            sessionDao = new SessionRepositoryDAO(Session.class, mongo, morphia, DB_NAME);
             return sessionDao;
         } else {
             return sessionDao;
@@ -34,7 +34,7 @@ public class DAOFactory {
     
     public static synchronized UserRepositoryDAO getUserDAO() {
         if (userDao == null) {
-            userDao = new UserRepositoryDAO(User.class, mongo, morphia, dbname);
+            userDao = new UserRepositoryDAO(User.class, mongo, morphia, DB_NAME);
             return userDao;
         } else {
             return userDao;
@@ -43,7 +43,7 @@ public class DAOFactory {
     
     public static synchronized ActivityRepositoryDAO getActivityDAO() {
         if (activityDao == null) {
-            activityDao = new ActivityRepositoryDAO(Activity.class, mongo, morphia, dbname);
+            activityDao = new ActivityRepositoryDAO(Activity.class, mongo, morphia, DB_NAME);
             return activityDao;
         } else {
             return activityDao;
@@ -52,7 +52,7 @@ public class DAOFactory {
     
     public static synchronized ProvMetricsRepositoryDAO getProvMetricsDAO() {
         if (provMetricsDao == null) {
-            provMetricsDao = new ProvMetricsRepositoryDAO(ProvMetrics.class, mongo, morphia, dbname);
+            provMetricsDao = new ProvMetricsRepositoryDAO(ProvMetrics.class, mongo, morphia, DB_NAME);
             return provMetricsDao;
         } else {
             return provMetricsDao;
