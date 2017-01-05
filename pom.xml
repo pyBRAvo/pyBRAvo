@@ -23,27 +23,6 @@
     </repositories>
 
     <dependencies>
-        
-<!--        <dependency>
-            <groupId>fr.cnrs.bird</groupId>
-            <artifactId>Ga2Prov</artifactId>
-            <version>1.0-SNAPSHOT</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.slf4j</groupId>
-                    <artifactId>slf4j-api</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.slf4j</groupId>
-                    <artifactId>slf4j-log4j12</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.mortbay.jetty</groupId>
-                    <artifactId>jetty</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>-->
-        
         <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
@@ -51,9 +30,40 @@
         </dependency>
         
         <dependency>
+               <groupId>org.codehaus.jackson</groupId>
+               <artifactId>jackson-jaxrs</artifactId>
+               <version>1.9.13</version>
+        </dependency>
+        <dependency>
+               <groupId>org.codehaus.jackson</groupId>
+               <artifactId>jackson-core-asl</artifactId>
+               <version>1.9.13</version>
+        </dependency>
+        <dependency>
+               <groupId>org.codehaus.jackson</groupId>
+               <artifactId>jackson-mapper-asl</artifactId>
+               <version>1.9.13</version>
+        </dependency>
+        <dependency>
+               <groupId>org.codehaus.jackson</groupId>
+               <artifactId>jackson-xc</artifactId>
+               <version>1.9.13</version>
+        </dependency>
+        
+        <dependency>
             <groupId>fr.univ-nantes</groupId>
             <artifactId>GalaxyLD</artifactId>
             <version>1.0-SNAPSHOT</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.sun.jersey</groupId>
+                    <artifactId>jersey-json</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.sun.jersey</groupId>
+                    <artifactId>jersey-client</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         
         <dependency>
@@ -94,6 +104,26 @@
                     <artifactId>jersey-json</artifactId>
                 </exclusion>
                 <exclusion>
+                    <groupId>com.sun.jersey</groupId>
+                    <artifactId>jersey-servlet</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.sun.jersey</groupId>
+                    <artifactId>jersey-server</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.sun.jersey</groupId>
+                    <artifactId>jersey-bundle</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>javax.activation</groupId>
+                    <artifactId>activation</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.glassfish.metro</groupId>
+                    <artifactId>webservices-rt</artifactId>
+                </exclusion>
+                <exclusion>
                     <groupId>org.mortbay.jetty</groupId>
                     <artifactId>jetty</artifactId>
                 </exclusion>
@@ -111,7 +141,8 @@
             <groupId>org.slf4j</groupId>           
             <artifactId>slf4j-api</artifactId>     
             <version>1.7.21</version>    
-        </dependency>                              
+        </dependency>
+                                  
         <dependency>                               
             <groupId>org.slf4j</groupId>           
             <artifactId>slf4j-log4j12</artifactId> 
@@ -172,47 +203,18 @@
             <scope>compile</scope>
         </dependency>
         
+
         <dependency>
             <groupId>com.sun.jersey</groupId>
             <artifactId>jersey-bundle</artifactId>
-            <version>1.19</version>
+            <version>1.19.3</version>
         </dependency>
-        
-        <dependency>
-            <groupId>com.sun.jersey</groupId>
-            <artifactId>jersey-server</artifactId>
-            <version>1.19</version>
-        </dependency>
-        
-        <dependency>
-            <groupId>com.sun.jersey</groupId>
-            <artifactId>jersey-core</artifactId>
-            <version>1.19</version>
-        </dependency>
-        
-        <dependency>
-            <groupId>com.sun.jersey.contribs</groupId>
-            <artifactId>jersey-multipart</artifactId>
-            <version>1.19</version>
-        </dependency>
-        
         <dependency>
             <groupId>com.sun.jersey</groupId>
             <artifactId>jersey-json</artifactId>
-            <version>1.19</version>
+            <version>1.19.3</version>
         </dependency>
-        <dependency>
-            <groupId>com.sun.jersey</groupId>
-            <artifactId>jersey-servlet</artifactId>
-            <version>1.19</version>
-        </dependency>
-             
-        <dependency>
-            <groupId>javax.activation</groupId>
-            <artifactId>activation</artifactId>
-            <version>1.1.1</version>
-        </dependency>
-
+        
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>servlet-api</artifactId>
@@ -225,6 +227,7 @@
             <version>6.1.26</version>
             <type>jar</type>
         </dependency>
+        
         <dependency>
             <groupId>org.mortbay.jetty</groupId>
             <artifactId>jetty-sslengine</artifactId>
@@ -263,9 +266,6 @@
             <artifactId>apache-jena-libs</artifactId>
             <type>pom</type>
             <version>3.1.0</version>
-            <exclusions>
-                <exclusion>
-            </exclusions>
         </dependency>-->
         
         <dependency>
@@ -292,24 +292,6 @@
             <version>1.0</version>
             <type>jar</type>
         </dependency>
-        
-        <!--        <dependency>
-            <groupId>fr.inria.wimmics</groupId>
-            <artifactId>corese-server</artifactId>
-            <version>3.1.8</version>
-        </dependency>-->
-        
-        <!--        <dependency>
-            <groupId>fr.inria.wimmics</groupId>
-            <artifactId>corese-server</artifactId>
-            <version>3.1.4-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>fr.inria.wimmics</groupId>
-            <artifactId>kgtool</artifactId>
-            <version>3.1.4-SNAPSHOT</version>
-        </dependency>-->
-        
     </dependencies>
 
     <build>
