@@ -4,7 +4,6 @@
  */
 package fr.symetric.server;
 
-import com.sun.jersey.spi.container.servlet.ServletContainer;
 import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -24,6 +23,15 @@ import org.apache.commons.vfs.VFS;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
+import org.eclipse.jetty.server.Handler;
+import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.server.handler.ContextHandler;
+import org.eclipse.jetty.server.handler.ContextHandlerCollection;
+import org.eclipse.jetty.server.handler.DefaultHandler;
+import org.eclipse.jetty.server.handler.ResourceHandler;
+import org.eclipse.jetty.servlet.ServletContextHandler;
+import org.eclipse.jetty.servlet.ServletHolder;
+import org.glassfish.jersey.servlet.ServletContainer;
 //import org.eclipse.jetty.server.Handler;
 //import org.eclipse.jetty.server.Server;
 //import org.eclipse.jetty.server.handler.ContextHandler;
@@ -91,20 +99,20 @@ public class EmbeddedJettyServerV2 {
                 System.out.println("Server: " + dataPath);
             }
 
-//            URI webappUri = EmbeddedJettyServerV2.extractResourceDir("webapp", true);
-//            Server server = new Server(DatahubUtils.getServerPort());
-//
-//            ServletHolder jerseyServletHolder = new ServletHolder(ServletContainer.class);
-//            jerseyServletHolder.setInitParameter("com.sun.jersey.config.property.resourceConfigClass", "com.sun.jersey.api.core.PackagesResourceConfig");
-//            jerseyServletHolder.setInitParameter("com.sun.jersey.config.property.packages", "fr.symetric.api");
-//            jerseyServletHolder.setInitParameter("requestBufferSize", "8192");
-//            jerseyServletHolder.setInitParameter("headerBufferSize", "8192");
-//            jerseyServletHolder.setInitParameter("com.sun.jersey.api.json.POJOMappingFeature", "true");
-//            jerseyServletHolder.setInitParameter("com.sun.jersey.spi.container.ResourceFilters", "fr.symetric.server.ResourceFilterFactory");
-//
-//            ServletContextHandler servletCtx = new ServletContextHandler(ServletContextHandler.SESSIONS);
-//            servletCtx.setContextPath("/");
-//            servletCtx.addServlet(jerseyServletHolder, "/*");
+            URI webappUri = EmbeddedJettyServerV2.extractResourceDir("web", true);
+            Server server = new Server(DatahubUtils.getServerPort());
+
+            ServletHolder jerseyServletHolder = new ServletHolder(ServletContainer.class);
+            jerseyServletHolder.setInitParameter("com.sun.jersey.config.property.resourceConfigClass", "com.sun.jersey.api.core.PackagesResourceConfig");
+            jerseyServletHolder.setInitParameter("com.sun.jersey.config.property.packages", "fr.symetric.api");
+            jerseyServletHolder.setInitParameter("requestBufferSize", "8192");
+            jerseyServletHolder.setInitParameter("headerBufferSize", "8192");
+            jerseyServletHolder.setInitParameter("com.sun.jersey.api.json.POJOMappingFeature", "true");
+            jerseyServletHolder.setInitParameter("com.sun.jersey.spi.container.ResourceFilters", "fr.symetric.server.ResourceFilterFactory");
+
+            ServletContextHandler servletCtx = new ServletContextHandler(ServletContextHandler.SESSIONS);
+            servletCtx.setContextPath("/");
+            servletCtx.addServlet(jerseyServletHolder, "/*");
 //
 ////            
 ////            HttpConfiguration https = new HttpConfiguration();
@@ -122,26 +130,26 @@ public class EmbeddedJettyServerV2 {
 //            logger.info("SyMeTRIC queryAPI started on http://localhost:" + DatahubUtils.getServerPort() + "/query");
 //            logger.info("----------------------------------------------");
 //
-//            ResourceHandler resource_handler = new ResourceHandler();
-//            resource_handler.setDirectoriesListed(true);
-//            resource_handler.setWelcomeFiles(new String[]{"index.html"});
-////            resource_handler.setResourceBase(webappUri.getRawPath());
+            ResourceHandler resource_handler = new ResourceHandler();
+            resource_handler.setDirectoriesListed(true);
+            resource_handler.setWelcomeFiles(new String[]{"index.html"});
+            resource_handler.setResourceBase(webappUri.getRawPath());
 //            resource_handler.setResourceBase("/Users/gaignard-a/Documents/Dev/symetric-api-server/src/main/resources/webapp");
 //
-//            ContextHandler staticContextHandler = new ContextHandler();
-//            staticContextHandler.setContextPath("/*");
-//            staticContextHandler.setHandler(resource_handler);
-//            
-//            logger.info("----------------------------------------------");
-//            logger.info("SyMeTRIC sandbox webapp UI started on http://localhost:" + DatahubUtils.getServerPort());
-//            logger.info("----------------------------------------------");
-//
-//            ContextHandlerCollection contexts = new ContextHandlerCollection();
-//            contexts.setHandlers(new Handler[]{staticContextHandler, servletCtx, new DefaultHandler()});
-//            server.setHandler(contexts);
+            ContextHandler staticContextHandler = new ContextHandler();
+            staticContextHandler.setContextPath("/*");
+            staticContextHandler.setHandler(resource_handler);
+            
+            logger.info("----------------------------------------------");
+            logger.info("SyMeTRIC sandbox webapp UI started on http://localhost:" + DatahubUtils.getServerPort());
+            logger.info("----------------------------------------------");
 
-//            server.start();
-//            server.join();
+            ContextHandlerCollection contexts = new ContextHandlerCollection();
+            contexts.setHandlers(new Handler[]{staticContextHandler, servletCtx, new DefaultHandler()});
+            server.setHandler(contexts);
+
+            server.start();
+            server.join();
         } catch (ParseException exp) {
             System.err.println("Parsing failed.  Reason: " + exp.getMessage());
         }
