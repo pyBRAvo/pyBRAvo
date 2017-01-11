@@ -154,7 +154,7 @@ var DemoSysbioView = Backbone.View.extend({
                       data: { id: 'b' }
                     },
                     { // edge ab
-                      data: { id: 'ab', source: 'a', target: 'b' }
+                      data: { displayName: 'ab', source: 'a', target: 'b' }
                     }
                 ],
                 style: [ // the stylesheet for the graph
