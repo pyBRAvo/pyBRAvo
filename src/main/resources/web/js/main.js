@@ -143,48 +143,44 @@ var DemoSysbioView = Backbone.View.extend({
         $.get('templates/demo-systemic.html', function (data) {
             template = _.template(data, {});//Option to pass any dynamic values to template
             that.$el.html(template());//adding the template content to the main template.
-            // adding cytoscape graphe
-            var cy = cytoscape({
-                container: document.getElementById('cy'), // container to render in
-                elements: [ // list of graph elements to start with
-                    { // node a
-                      data: { id: 'a' }
-                    },
-                    { // node b
-                      data: { id: 'b' }
-                    },
-                    { // edge ab
-                      data: { displayName: 'ab', source: 'a', target: 'b' }
-                    }
-                ],
-                style: [ // the stylesheet for the graph
-                    {
-                        selector: 'node',
-                        style: {
-                            'background-color': '#666',
-                            'label': 'data(id)'
-                        }
-                    },
-
-                    {
-                        selector: 'edge',
-                        style: {
-                            'width': 3,
-                            'line-color': '#ccc',
-                            'target-arrow-color': '#ccc',
-                            'target-arrow-shape': 'triangle'
-                        }
-                    }
-                ],
-
-                layout: {
-                    name: 'grid',
-                    rows: 1
-                }
-            });
+            
+//            var items = JSON.stringify([{ "id" : "http://pathwaycommons.org/pc2/TemplateReactionRegulation_11477356ece4e65812abcacc0bfc5cd9",
+//                "properties" : {
+//                  "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : [ "http://www.biopax.org/release/biopax-level3.owl#TemplateReactionRegulation" ] ,
+//                  "http://www.biopax.org/release/biopax-level3.owl#controlled" : [ "Transcription of B3GALTL" ] ,
+//                  "http://www.biopax.org/release/biopax-level3.owl#controller" : [ "ZHX2" ] ,
+//                  "http://www.biopax.org/release/biopax-level3.owl#dataSource" : [ "http://pathwaycommons.org/pc2/transfac" ] ,
+//                  "http://www.biopax.org/release/biopax-level3.owl#displayName" : [ "ACTIVATION" ] } },
+//
+//                { "id" : "http://pathwaycommons.org/pc2/TemplateReactionRegulation_6b09ee1185ca4ae5c2b259c7476f401a",
+//                "properties" : {
+//                  "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : [ "http://www.biopax.org/release/biopax-level3.owl#TemplateReactionRegulation" ] ,
+//                  "http://www.biopax.org/release/biopax-level3.owl#controlled" : [ "Transcription of B3GALTL" ] ,
+//                  "http://www.biopax.org/release/biopax-level3.owl#controller" : [ "CYP26A1" ] ,
+//                  "http://www.biopax.org/release/biopax-level3.owl#dataSource" : [ "http://pathwaycommons.org/pc2/transfac" ] ,
+//                  "http://www.biopax.org/release/biopax-level3.owl#displayName" : [ "ACTIVATION" ] } }]);
+            
+            
+            var constructQuery = [
+                "PREFIX bp: <http://www.biopax.org/release/biopax-level3.owl#>",
+                "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>",
+                "CONSTRUCT {",
+                    "?tempReac bp:displayName ?type ; bp:controlled ?controlledName ; bp:controller ?controllerName ; bp:dataSource ?source .",
+                "}WHERE{",
+                    "FILTER( ?classControl IN ( bp:Catalysis, bp:Modulation, bp:TemplateReactionRegulation ) ) .",
+                    "FILTER( ( regex(?controlledName, 'GALT', 'i') or regex(?controllerName, 'GALT', 'i') ) and !regex(?source, 'mirtar', 'i') ) .",
+                    "?tempReac a ?classControl .",
+                    "?tempReac bp:displayName ?reacName ; bp:controlled ?controlled ; bp:controller ?controller ; bp:controlType ?type ; bp:dataSource ?source .",
+                    "?controlled bp:displayName ?controlledName .",
+                    "?controller bp:displayName ?controllerName .",
+                "}"
+            ].join(" ");
+            // Make SPARQL query to PathwayCommons endpoint
+            sparqlSysBio(constructQuery);
+            
         }, 'html');
         return this;
-    },
+    }
 });
 
 var myDemoSysbioView = new DemoSysbioView();
@@ -915,6 +911,128 @@ function sparqlFed(sparqlQuery) {
             console.log(jqXHR.responseText);
             $('#btnQueryFed').attr("disabled", false);
             $("#btnQueryFed").html("Query");
+        }
+    });
+}
+
+function sparqlSysBio(sparqlQuery) {
+    console.log("sending query");
+//    $('#btnQuery').attr("disabled", true);
+//    $('#btnQuery').html("Querying ...");
+    endpointURL = 'http://rdf.pathwaycommons.org/sparql/';
+
+//    console.log('sparql ' + sparqlQuery + ' to ' + endpointURL);
+
+    $.ajax({
+        type: 'GET',
+        headers: {
+            Accept: "application/json"
+        },
+        url: endpointURL,
+        data: {'query': sparqlQuery},
+        //dataType: "application/sparql-results+json",
+        dataType: "json",
+        //contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+        crossDomain: true,
+        success: function (data, textStatus, jqXHR) {
+            // get valid JSON format
+            items = JSON.parse(JSON.stringify(data));
+            
+            // adding cytoscape graphe
+            var cy = cytoscape({
+                container: document.getElementById('cy'), // container to render in
+                
+                boxSelectionEnabled: false,
+                
+                autounselectify: true,
+                style: [ // the stylesheet for the graph
+                    {
+                        selector: 'node',
+                        style: {
+                            'background-color': '#666',
+                            'width' : 10,
+                            'height' : 10,
+                            'font-size' : 5,
+                            'label': 'data(id)'
+                        }
+                    },
+
+                    {
+                        selector: 'edge',
+                        style: {
+                            'width': 1,
+                            'line-color': '#ccc',
+                            'target-arrow-color': '#ccc',
+                            'target-arrow-shape': 'triangle',
+                            'curve-style': 'bezier'
+                            //'label': 'data(type)'
+                        }
+                    }
+                ],
+                
+                zoom: 1,
+                //pan: { x: 100, y: 50 },
+                fit: true,
+                padding: 30,
+
+                layout: {
+                    name: 'breadthfirst',
+                    directed: true,
+                    padding: 10
+                }
+                
+            });
+            //console.log(items);
+            // Tranform JSON format to Cytoscape JSON format
+            var i = 0;
+            for (var item in items) {
+                var name = item; // URI of interaction
+                cy.add([
+                    {
+                        // Controller/source name
+                        data: {
+                           id: items[item]["http://www.biopax.org/release/biopax-level3.owl#controller"][0]["value"],
+                           position: { x: i, y: 1+i }
+                        }
+                    },
+                    {
+                        // Controlled/target name
+                        data: {
+                           id: items[item]["http://www.biopax.org/release/biopax-level3.owl#controlled"][0]["value"],
+                           position: { x: 3, y: 3 }
+                        }
+                    },                    
+                    {
+                        // Directed edge
+                        data: {
+                            id: name,
+                            source: items[item]["http://www.biopax.org/release/biopax-level3.owl#controller"][0]["value"], //controller
+                            target: items[item]["http://www.biopax.org/release/biopax-level3.owl#controlled"][0]["value"], //controlled
+                            type: items[item]["http://www.biopax.org/release/biopax-level3.owl#displayName"][0]["value"]
+                        }   
+                    }
+                ]);
+                i++;
+            }
+                        
+            // Add class tu edge of type ACTIVATION
+            cy.filter(function(i, element){
+                if( element.isEdge() && element.data("type") === 'ACTIVATION' ){
+                    element.addClass('classActiv');
+                }
+            });
+            // Color edge of type ACTIVATION
+            cy.$('.classActiv').style({ 
+                'target-arrow-color' : '#3399ff', 
+                'line-color' : '#3399ff' 
+            });
+            cy.center();
+            cy.layout({name:'breadthfirst'});
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+
+            infoError("SPARQL querying failure: " + errorThrown);
+            console.log(jqXHR.responseText);
         }
     });
 }
