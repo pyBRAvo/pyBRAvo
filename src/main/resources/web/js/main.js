@@ -127,6 +127,68 @@ var DemoProvView = Backbone.View.extend({
 
 var myDemoProvView = new DemoProvView();
 
+var DemoSysbioView = Backbone.View.extend({
+    el: "#mainContainer", //Container div inside which we would be dynamically loading the templates
+    initialize: function () {
+        _.bindAll(this, "render");
+        console.log('DemoSysBio View Initialized');
+
+        EventBus.on(EVT_LOADING, this.disableButton);
+        EventBus.on(EVT_FINNISHED, this.enableButton);
+
+    },
+    render: function () {
+        var that = this;
+        //Fetching the template contents
+        $.get('templates/demo-systemic.html', function (data) {
+            template = _.template(data, {});//Option to pass any dynamic values to template
+            that.$el.html(template());//adding the template content to the main template.
+            // adding cytoscape graphe
+            var cy = cytoscape({
+                container: document.getElementById('cy'), // container to render in
+                elements: [ // list of graph elements to start with
+                    { // node a
+                      data: { id: 'a' }
+                    },
+                    { // node b
+                      data: { id: 'b' }
+                    },
+                    { // edge ab
+                      data: { displayName: 'ab', source: 'a', target: 'b' }
+                    }
+                ],
+                style: [ // the stylesheet for the graph
+                    {
+                        selector: 'node',
+                        style: {
+                            'background-color': '#666',
+                            'label': 'data(id)'
+                        }
+                    },
+
+                    {
+                        selector: 'edge',
+                        style: {
+                            'width': 3,
+                            'line-color': '#ccc',
+                            'target-arrow-color': '#ccc',
+                            'target-arrow-shape': 'triangle'
+                        }
+                    }
+                ],
+
+                layout: {
+                    name: 'grid',
+                    rows: 1
+                }
+            });
+        }, 'html');
+        return this;
+    },
+});
+
+var myDemoSysbioView = new DemoSysbioView();
+
 var DemoEpidemioView = Backbone.View.extend({
     el: "#mainContainer", //Container div inside which we would be dynamically loading the templates
     initialize: function () {
@@ -250,6 +312,12 @@ $(document).ready(function () {
         }
     });
 
+    $('#demo-sb-menu').click(function () {
+        if (! $("#demo-sb-menu").hasClass("disabled")) {
+            myDemoSysbioView.render();
+        }
+    });
+
 });
 
 
@@ -353,7 +421,7 @@ EventBus.on(EVT_LOGIN, function (sessionId) {
 
     //activate the demos
     $("#demo-ld-menu").removeClass("disabled");
-//    $("#demo-sb-menu").removeClass("disabled");
+    $("#demo-sb-menu").removeClass("disabled");
 //    $("#demo-om-menu").removeClass("disabled");
     $("#demo-wf-menu").removeClass("disabled");
 });
