@@ -144,42 +144,27 @@ var DemoSysbioView = Backbone.View.extend({
             template = _.template(data, {});//Option to pass any dynamic values to template
             that.$el.html(template());//adding the template content to the main template.
             
-//            var items = JSON.stringify([{ "id" : "http://pathwaycommons.org/pc2/TemplateReactionRegulation_11477356ece4e65812abcacc0bfc5cd9",
-//                "properties" : {
-//                  "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : [ "http://www.biopax.org/release/biopax-level3.owl#TemplateReactionRegulation" ] ,
-//                  "http://www.biopax.org/release/biopax-level3.owl#controlled" : [ "Transcription of B3GALTL" ] ,
-//                  "http://www.biopax.org/release/biopax-level3.owl#controller" : [ "ZHX2" ] ,
-//                  "http://www.biopax.org/release/biopax-level3.owl#dataSource" : [ "http://pathwaycommons.org/pc2/transfac" ] ,
-//                  "http://www.biopax.org/release/biopax-level3.owl#displayName" : [ "ACTIVATION" ] } },
-//
-//                { "id" : "http://pathwaycommons.org/pc2/TemplateReactionRegulation_6b09ee1185ca4ae5c2b259c7476f401a",
-//                "properties" : {
-//                  "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : [ "http://www.biopax.org/release/biopax-level3.owl#TemplateReactionRegulation" ] ,
-//                  "http://www.biopax.org/release/biopax-level3.owl#controlled" : [ "Transcription of B3GALTL" ] ,
-//                  "http://www.biopax.org/release/biopax-level3.owl#controller" : [ "CYP26A1" ] ,
-//                  "http://www.biopax.org/release/biopax-level3.owl#dataSource" : [ "http://pathwaycommons.org/pc2/transfac" ] ,
-//                  "http://www.biopax.org/release/biopax-level3.owl#displayName" : [ "ACTIVATION" ] } }]);
-            
-            
-            var constructQuery = [
-                "PREFIX bp: <http://www.biopax.org/release/biopax-level3.owl#>",
-                "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>",
-                "CONSTRUCT {",
-                    "?tempReac bp:displayName ?type ; bp:controlled ?controlledName ; bp:controller ?controllerName ; bp:dataSource ?source .",
-                "}WHERE{",
-                    "FILTER( ?classControl IN ( bp:Catalysis, bp:Modulation, bp:TemplateReactionRegulation ) ) .",
-                    "FILTER( ( regex(?controlledName, 'GALT', 'i') or regex(?controllerName, 'GALT', 'i') ) and !regex(?source, 'mirtar', 'i') ) .",
-                    "?tempReac a ?classControl .",
-                    "?tempReac bp:displayName ?reacName ; bp:controlled ?controlled ; bp:controller ?controller ; bp:controlType ?type ; bp:dataSource ?source .",
-                    "?controlled bp:displayName ?controlledName .",
-                    "?controller bp:displayName ?controllerName .",
-                "}"
-            ].join(" ");
-            // Make SPARQL query to PathwayCommons endpoint
-            sparqlSysBio(constructQuery);
-            
         }, 'html');
         return this;
+    },
+    events: {
+        "click #btnSearchNetwork": "querySearchNetwork"
+    },
+    querySearchNetwork: function () {
+        console.log("searchNetworkEvt");
+        var genesList = $('#inputGeneList').val();
+        if (genesList !== "") {
+            // Hide old message
+            document.getElementById("emptyQuery").style.display = 'none';
+            document.getElementById("errorQuery").style.display = 'none';
+            // Display message
+            document.getElementById("sendingQuery").style.display = 'block';
+            // Make SPARQL query to PathwayCommons endpoint
+            sparqlSysBio(genesList);
+        }else{
+            document.getElementById("emptyQuery").style.display = 'block';
+            document.getElementById("errorQuery").style.display = 'none';
+        }
     }
 });
 
@@ -871,30 +856,27 @@ function sparqlFed(sparqlQuery) {
     });
 }
 
-function sparqlSysBio(sparqlQuery) {
-    console.log("sending query");
-//    $('#btnQuery').attr("disabled", true);
-//    $('#btnQuery').html("Querying ...");
-    endpointURL = 'http://rdf.pathwaycommons.org/sparql/';
-
-//    console.log('sparql ' + sparqlQuery + ' to ' + endpointURL);
-
+function sparqlSysBio(genesList) {
+    console.log("Sending query");
+    endpointURL = rootURL + '/systemic/network';
+    genesList = genesList.split(",");
+    console.log(genesList);
+    var genesJSON = JSON.stringify(genesList);
+    
     $.ajax({
         type: 'GET',
         headers: {
             Accept: "application/json"
         },
         url: endpointURL,
-        data: {'query': sparqlQuery},
-        //dataType: "application/sparql-results+json",
+        data: 'genes=' + genesJSON,
         dataType: "json",
-        //contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
         crossDomain: true,
         success: function (data, textStatus, jqXHR) {
-            // get valid JSON format
+            // Get valid JSON format
             items = JSON.parse(JSON.stringify(data));
             
-            // adding cytoscape graphe
+            // Adding cytoscape graphe
             var cy = cytoscape({
                 container: document.getElementById('cy'), // container to render in
                 
@@ -906,13 +888,12 @@ function sparqlSysBio(sparqlQuery) {
                         selector: 'node',
                         style: {
                             'background-color': '#666',
-                            'width' : 10,
-                            'height' : 10,
-                            'font-size' : 5,
+                            'width' : 15,
+                            'height' : 15,
+                            //'font-size' : 10,
                             'label': 'data(id)'
                         }
                     },
-
                     {
                         selector: 'edge',
                         style: {
@@ -927,51 +908,54 @@ function sparqlSysBio(sparqlQuery) {
                 ],
                 
                 zoom: 1,
-                //pan: { x: 100, y: 50 },
-                fit: true,
-                padding: 30,
+                //fit: true,
 
                 layout: {
                     name: 'breadthfirst',
                     directed: true,
-                    padding: 10
+                    fit: true,
+                    padding: 50
                 }
                 
             });
-            //console.log(items);
-            // Tranform JSON format to Cytoscape JSON format
-            var i = 0;
-            for (var item in items) {
-                var name = item; // URI of interaction
-                cy.add([
-                    {
-                        // Controller/source name
-                        data: {
-                           id: items[item]["http://www.biopax.org/release/biopax-level3.owl#controller"][0]["value"],
-                           position: { x: i, y: 1+i }
+            
+            // For each genes of the query
+            for (var object in items) {
+                // Tranform JSON format to Cytoscape JSON format
+                var i = 0;
+                // For a gene each result
+                for (var item in items[object]) {
+                    var name = item; // URI of interaction
+                    cy.add([
+                        {
+                            // Controller/source name
+                            data: {
+                               id: items[object][item]["http://www.biopax.org/release/biopax-level3.owl#controller"][0]["value"],
+                               position: { x: i, y: 1+i }
+                            }
+                        },
+                        {
+                            // Controlled/target name
+                            data: {
+                               id: items[object][item]["http://www.biopax.org/release/biopax-level3.owl#controlled"][0]["value"],
+                               position: { x: 3, y: 3 }
+                            }
+                        },                    
+                        {
+                            // Directed edge
+                            data: {
+                                id: name,
+                                source: items[object][item]["http://www.biopax.org/release/biopax-level3.owl#controller"][0]["value"], //controller
+                                target: items[object][item]["http://www.biopax.org/release/biopax-level3.owl#controlled"][0]["value"], //controlled
+                                type: items[object][item]["http://www.biopax.org/release/biopax-level3.owl#displayName"][0]["value"]
+                            }   
                         }
-                    },
-                    {
-                        // Controlled/target name
-                        data: {
-                           id: items[item]["http://www.biopax.org/release/biopax-level3.owl#controlled"][0]["value"],
-                           position: { x: 3, y: 3 }
-                        }
-                    },                    
-                    {
-                        // Directed edge
-                        data: {
-                            id: name,
-                            source: items[item]["http://www.biopax.org/release/biopax-level3.owl#controller"][0]["value"], //controller
-                            target: items[item]["http://www.biopax.org/release/biopax-level3.owl#controlled"][0]["value"], //controlled
-                            type: items[item]["http://www.biopax.org/release/biopax-level3.owl#displayName"][0]["value"]
-                        }   
-                    }
-                ]);
-                i++;
+                    ]);
+                    i++;
+                }
             }
                         
-            // Add class tu edge of type ACTIVATION
+            // Add class to edge of type ACTIVATION
             cy.filter(function(i, element){
                 if( element.isEdge() && element.data("type") === 'ACTIVATION' ){
                     element.addClass('classActiv');
@@ -982,11 +966,36 @@ function sparqlSysBio(sparqlQuery) {
                 'target-arrow-color' : '#3399ff', 
                 'line-color' : '#3399ff' 
             });
-            cy.center();
-            cy.layout({name:'breadthfirst'});
+            
+            for (var gene in genesList) {
+                var re = new RegExp(".*"+genesList[gene]+".", "g");
+                // Add class to node of name as input
+                cy.filter(function(i, element){
+                    if( element.isNode() && ( element.data("id").match(re))){
+                        element.addClass('classInput');
+                    }
+                });
+            }
+            // Color node wihtout input name
+            cy.$('.classInput').style({ 
+                'background-color': 'red',
+                'width':30,
+                'height':30
+            });
+            // Apply layout on loaded data
+            cy.layout({name:'breadthfirst', padding:50});
+            
+            cy.style()
+                .selector('node')
+                  .style({
+                    'font-size' : 40
+                  })
+                .update(); // update the elements in the graph with the new style
+            document.getElementById("sendingQuery").style.display = 'none';
         },
         error: function (jqXHR, textStatus, errorThrown) {
-
+            document.getElementById("errorQuery").style.display = 'block';
+            document.getElementById("sendingQuery").style.display = 'none';
             infoError("SPARQL querying failure: " + errorThrown);
             console.log(jqXHR.responseText);
         }
