@@ -856,6 +856,21 @@ function sparqlFed(sparqlQuery) {
     });
 }
 
+/*
+ * Check if object exist in array
+ * @obj object to search in array
+ * @list array to check presence of object
+ */
+function containsObject(obj, list) {
+    var i;
+    for (i = 0; i < list.length; i++) {
+        if (list[i]["controller"] === obj["controller"] && list[i]["controlled"] === obj["controlled"]) {
+            return true;
+        }
+    }
+    return false;
+}
+
 function sparqlSysBio(genesList) {
     console.log("Sending query");
     endpointURL = rootURL + '/systemic/network';
@@ -897,7 +912,7 @@ function sparqlSysBio(genesList) {
                     {
                         selector: 'edge',
                         style: {
-                            'width': 1,
+                            'width': 2,
                             'line-color': '#ccc',
                             'target-arrow-color': '#ccc',
                             'target-arrow-shape': 'triangle',
@@ -911,7 +926,7 @@ function sparqlSysBio(genesList) {
                 //fit: true,
 
                 layout: {
-                    name: 'breadthfirst',
+                    name: 'spread',
                     directed: true,
                     fit: true,
                     padding: 50
@@ -919,6 +934,7 @@ function sparqlSysBio(genesList) {
                 
             });
             
+            var toUniq = []; // array of uniq edge
             // For each genes of the query
             for (var object in items) {
                 // Tranform JSON format to Cytoscape JSON format
@@ -926,35 +942,44 @@ function sparqlSysBio(genesList) {
                 // For a gene each result
                 for (var item in items[object]) {
                     var name = item; // URI of interaction
-                    cy.add([
-                        {
-                            // Controller/source name
-                            data: {
-                               id: items[object][item]["http://www.biopax.org/release/biopax-level3.owl#controller"][0]["value"],
-                               position: { x: i, y: 1+i }
+                    var pair = {
+                        controller :items[object][item]["http://www.biopax.org/release/biopax-level3.owl#controller"][0]["value"],
+                        controlled:items[object][item]["http://www.biopax.org/release/biopax-level3.owl#controlled"][0]["value"]
+                    };
+                    
+                    if (containsObject(pair, toUniq) === false){
+                        toUniq.push(pair);
+                        cy.add([
+                            {
+                                // Controller/source name
+                                data: {
+                                   id: items[object][item]["http://www.biopax.org/release/biopax-level3.owl#controller"][0]["value"],
+                                   position: { x: i, y: 1+i }
+                                }
+                            },
+                            {
+                                // Controlled/target name
+                                data: {
+                                   id: items[object][item]["http://www.biopax.org/release/biopax-level3.owl#controlled"][0]["value"].replace('Transcription of',''),
+                                   position: { x: 3, y: 3 }
+                                }
+                            },                    
+                            {
+                                // Directed edge
+                                data: {
+                                    id: name,
+                                    source: items[object][item]["http://www.biopax.org/release/biopax-level3.owl#controller"][0]["value"], //controller
+                                    target: items[object][item]["http://www.biopax.org/release/biopax-level3.owl#controlled"][0]["value"].replace('Transcription of',''), //controlled
+                                    type: items[object][item]["http://www.biopax.org/release/biopax-level3.owl#displayName"][0]["value"]
+                                }   
                             }
-                        },
-                        {
-                            // Controlled/target name
-                            data: {
-                               id: items[object][item]["http://www.biopax.org/release/biopax-level3.owl#controlled"][0]["value"],
-                               position: { x: 3, y: 3 }
-                            }
-                        },                    
-                        {
-                            // Directed edge
-                            data: {
-                                id: name,
-                                source: items[object][item]["http://www.biopax.org/release/biopax-level3.owl#controller"][0]["value"], //controller
-                                target: items[object][item]["http://www.biopax.org/release/biopax-level3.owl#controlled"][0]["value"], //controlled
-                                type: items[object][item]["http://www.biopax.org/release/biopax-level3.owl#displayName"][0]["value"]
-                            }   
-                        }
-                    ]);
-                    i++;
+                        ]);
+                        i++;
+                    }
                 }
-            }
-                        
+            }  
+            // Apply layout on loaded data
+            cy.layout({name:'spread', fit:true});                      
             // Add class to edge of type ACTIVATION
             cy.filter(function(i, element){
                 if( element.isEdge() && element.data("type") === 'ACTIVATION' ){
@@ -964,11 +989,12 @@ function sparqlSysBio(genesList) {
             // Color edge of type ACTIVATION
             cy.$('.classActiv').style({ 
                 'target-arrow-color' : '#3399ff', 
+                'width': 4,
                 'line-color' : '#3399ff' 
             });
-            
+            // Style on input node
             for (var gene in genesList) {
-                var re = new RegExp(".*"+genesList[gene]+".", "g");
+                var re = new RegExp(genesList[gene], "gi");
                 // Add class to node of name as input
                 cy.filter(function(i, element){
                     if( element.isNode() && ( element.data("id").match(re))){
@@ -982,15 +1008,7 @@ function sparqlSysBio(genesList) {
                 'width':30,
                 'height':30
             });
-            // Apply layout on loaded data
-            cy.layout({name:'breadthfirst', padding:50});
             
-            cy.style()
-                .selector('node')
-                  .style({
-                    'font-size' : 40
-                  })
-                .update(); // update the elements in the graph with the new style
             document.getElementById("sendingQuery").style.display = 'none';
         },
         error: function (jqXHR, textStatus, errorThrown) {

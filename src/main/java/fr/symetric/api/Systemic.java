@@ -48,7 +48,7 @@ public class Systemic {
         
         try {
             for(int i=0; i < genesList.length(); i++){
-                if (genesList.get(i) != "" || genesList.get(i) != " ") {
+                if (genesList.get(i) != "" && genesList.get(i) != " ") {
                     StringBuilder result = new StringBuilder();
                     
                     // Construct new graphe
@@ -58,12 +58,13 @@ public class Systemic {
                         +"CONSTRUCT {\n"
                         +"?tempReac bp:displayName ?type ; bp:controlled ?controlledName ; bp:controller ?controllerName ; bp:dataSource ?source .\n"
                         +"} WHERE{ \n"
-                        +"FILTER( ( regex(?controlledName, '"+genesList.get(i)+"', 'i') || regex(?controllerName, '"+genesList.get(i)+"', 'i') ) && !regex(?source, 'mirtar', 'i') ) .\n"
+                        +"FILTER( ( regex(?controlledName, ' "+genesList.get(i)+"$', 'i') ) && !regex(?source, 'mirtar', 'i') ) .\n"
                         +"?tempReac a bp:TemplateReactionRegulation .\n"
                         +"?tempReac bp:displayName ?reacName ; bp:controlled ?controlled ; bp:controller ?controller ; bp:controlType ?type ; bp:dataSource ?source .\n"
                         +"?controlled bp:displayName ?controlledName .\n"
                         +"?controller bp:displayName ?controllerName .\n "
-                        +"}";
+                        +"}"
+                        +"GROUP BY ?controlledName ?controllerName";
                     logger.info("Query created");
 
                     // Parsing json is more simple than XML
