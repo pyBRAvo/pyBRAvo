@@ -50,7 +50,7 @@ public class Systemic {
             for(int i=0; i < genesList.length(); i++){
                 if (genesList.get(i) != "" && genesList.get(i) != " ") {
                     StringBuilder result = new StringBuilder();
-                    
+//                    logger.info(genesList.get(i));
                     // Construct new graphe
                     // Filter on Trancription Factor and wihtout miRNA
                     String filterQuery = "PREFIX bp: <http://www.biopax.org/release/biopax-level3.owl#>\n"

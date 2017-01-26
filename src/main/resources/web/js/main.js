@@ -152,7 +152,7 @@ var DemoSysbioView = Backbone.View.extend({
     },
     querySearchNetwork: function () {
         console.log("searchNetworkEvt");
-        var genesList = $('#inputGeneList').val();
+        var genesList = $('#inputGeneList').val().replace(/\s/g, '');
         if (genesList !== "") {
             // Hide old message
             document.getElementById("emptyQuery").style.display = 'none';
@@ -953,15 +953,15 @@ function sparqlSysBio(genesList) {
                             {
                                 // Controller/source name
                                 data: {
-                                   id: items[object][item]["http://www.biopax.org/release/biopax-level3.owl#controller"][0]["value"],
-                                   position: { x: i, y: 1+i }
+                                   id: items[object][item]["http://www.biopax.org/release/biopax-level3.owl#controller"][0]["value"]
+                                   //position: { x: i, y: 1+i }
                                 }
                             },
                             {
                                 // Controlled/target name
                                 data: {
-                                   id: items[object][item]["http://www.biopax.org/release/biopax-level3.owl#controlled"][0]["value"].replace('Transcription of',''),
-                                   position: { x: 3, y: 3 }
+                                   id: pair["controlled"].replace('Transcription of ','')
+                                   //position: { x: 3, y: 3 }
                                 }
                             },                    
                             {
@@ -969,7 +969,7 @@ function sparqlSysBio(genesList) {
                                 data: {
                                     id: name,
                                     source: items[object][item]["http://www.biopax.org/release/biopax-level3.owl#controller"][0]["value"], //controller
-                                    target: items[object][item]["http://www.biopax.org/release/biopax-level3.owl#controlled"][0]["value"].replace('Transcription of',''), //controlled
+                                    target: items[object][item]["http://www.biopax.org/release/biopax-level3.owl#controlled"][0]["value"].replace('Transcription of ',''), //controlled
                                     type: items[object][item]["http://www.biopax.org/release/biopax-level3.owl#displayName"][0]["value"]
                                 }   
                             }
@@ -989,7 +989,7 @@ function sparqlSysBio(genesList) {
             // Color edge of type ACTIVATION
             cy.$('.classActiv').style({ 
                 'target-arrow-color' : '#3399ff', 
-                'width': 4,
+                'width': 3,
                 'line-color' : '#3399ff' 
             });
             // Style on input node
