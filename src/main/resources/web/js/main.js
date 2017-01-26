@@ -890,7 +890,6 @@ function sparqlSysBio(genesList) {
         success: function (data, textStatus, jqXHR) {
             // Get valid JSON format
             items = JSON.parse(JSON.stringify(data));
-            
             // Adding cytoscape graphe
             var cy = cytoscape({
                 container: document.getElementById('cy'), // container to render in
@@ -926,7 +925,7 @@ function sparqlSysBio(genesList) {
                 //fit: true,
 
                 layout: {
-                    name: 'spread',
+                    name: 'cola',
                     directed: true,
                     fit: true,
                     padding: 50
@@ -979,7 +978,7 @@ function sparqlSysBio(genesList) {
                 }
             }  
             // Apply layout on loaded data
-            cy.layout({name:'spread', fit:true});                      
+            cy.layout({name:'cola', fit:true, nodeSpacing: 5, maxSimulationTime: 2000});                      
             // Add class to edge of type ACTIVATION
             cy.filter(function(i, element){
                 if( element.isEdge() && element.data("type") === 'ACTIVATION' ){
@@ -1010,6 +1009,8 @@ function sparqlSysBio(genesList) {
             });
             
             document.getElementById("sendingQuery").style.display = 'none';
+            // Show legend
+            document.getElementById("graphe-legend").style.display = 'block';
         },
         error: function (jqXHR, textStatus, errorThrown) {
             document.getElementById("errorQuery").style.display = 'block';
