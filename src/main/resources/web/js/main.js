@@ -148,7 +148,8 @@ var DemoSysbioView = Backbone.View.extend({
         return this;
     },
     events: {
-        "click #btnSearchNetwork": "querySearchNetwork"
+        "click #btnSearchNetwork": "querySearchNetwork",
+        "dblclick #cy": "dblclickGraph"
     },
     querySearchNetwork: function () {
         console.log("searchNetworkEvt");
@@ -165,6 +166,13 @@ var DemoSysbioView = Backbone.View.extend({
             document.getElementById("emptyQuery").style.display = 'block';
             document.getElementById("errorQuery").style.display = 'none';
         }
+    },
+    dblclickGraph: function () {
+        console.log("dblclickGraphEvt");
+//        var cy = cytoscape({
+//                container: document.getElementById('cy')
+//            });
+//        cy.reset();
     }
 });
 
@@ -1011,6 +1019,10 @@ function sparqlSysBio(genesList) {
             document.getElementById("sendingQuery").style.display = 'none';
             // Show legend
             document.getElementById("graphe-legend").style.display = 'block';
+            
+            document.getElementById('cy').addEventListener("dblclick", function resetGraph() {
+                cy.fit();
+            });
         },
         error: function (jqXHR, textStatus, errorThrown) {
             document.getElementById("errorQuery").style.display = 'block';
