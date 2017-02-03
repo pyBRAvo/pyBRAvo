@@ -20,7 +20,6 @@ import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
 import org.apache.jena.query.Query;
 import org.apache.jena.query.QueryExecution;

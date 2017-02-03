@@ -132,7 +132,6 @@ var DemoSysbioView = Backbone.View.extend({
     initialize: function () {
         _.bindAll(this, "render");
         console.log('DemoSysBio View Initialized');
-
         EventBus.on(EVT_LOADING, this.disableButton);
         EventBus.on(EVT_FINNISHED, this.enableButton);
 
@@ -148,11 +147,46 @@ var DemoSysbioView = Backbone.View.extend({
         return this;
     },
     events: {
-        "click #btnSearchNetwork": "querySearchNetwork",
-        "dblclick #cy": "dblclickGraph"
+        "click #btnSearchNetwork": "querySearchNetwork"
     },
     querySearchNetwork: function () {
         console.log("searchNetworkEvt");
+        // Initialize graphe visualization
+        var cy = cytoscape({
+            container: document.getElementById('cy'), // container to render in
+            boxSelectionEnabled: false,
+            autounselectify: true,
+            style: [ // the stylesheet for the graph
+                {
+                    selector: 'node',
+                    style: {
+                        'background-color': '#666',
+                        'width' : 15,
+                        'height' : 15,
+                        //'font-size' : 10,
+                        'label': 'data(id)'
+                    }
+                },
+                {
+                    selector: 'edge',
+                    style: {
+                        'width': 2,
+                        'line-color': '#ccc',
+                        'target-arrow-color': '#ccc',
+                        'target-arrow-shape': 'triangle',
+                        'curve-style': 'bezier'
+                        //'label': 'data(type)'
+                    }
+                }
+            ],
+            zoom: 1,
+            layout: {
+                name: 'cola',
+                directed: true,
+                fit: true,
+                padding: 50
+            }
+        });
         var genesList = $('#inputGeneList').val().replace(/\s/g, '');
         if (genesList !== "") {
             // Hide old message
@@ -160,21 +194,58 @@ var DemoSysbioView = Backbone.View.extend({
             document.getElementById("errorQuery").style.display = 'none';
             // Display message
             document.getElementById("sendingQuery").style.display = 'block';
-            // Make SPARQL query to PathwayCommons endpoint
-            sparqlSysBio(genesList);
+            // Make SPARQL initial query to PathwayCommons endpoint
+            sparqlSysBio(genesList, cy);
+            // Make SPARQL queries to PathwayCommons endpoint
+            $( "#btnRunNextRegulation" ).click(function() {
+            var regulatorList = updateList();
+                if (regulatorList.length > 0){
+                    nextLevelRegulation(regulatorList, cy);
+                }
+            });
         }else{
             document.getElementById("emptyQuery").style.display = 'block';
             document.getElementById("errorQuery").style.display = 'none';
         }
-    },
-    dblclickGraph: function () {
-        console.log("dblclickGraphEvt");
-//        var cy = cytoscape({
-//                container: document.getElementById('cy')
-//            });
-//        cy.reset();
     }
 });
+
+function updateList() {
+    var allVals = [];
+    $('#input-next-regulation :checked').each(function() {
+      allVals.push($(this).val());
+    });
+    return allVals;
+}
+
+function nextLevelRegulation(genesList, cy) {
+    endpointURL = rootURL + '/systemic/network';
+    var genesJSON = JSON.stringify(genesList);
+    
+    $.ajax({
+        type: 'GET',
+        headers: {
+            Accept: "application/json"
+        },
+        url: endpointURL,
+        data: 'genes=' + genesJSON,
+        dataType: "json",
+        crossDomain: true,
+        success: function (data, textStatus, jqXHR) {
+            // Get valid JSON format
+            var items = JSON.parse(JSON.stringify(data));
+            var toUniq = graphContent(cy,items); 
+            graphLayout(cy, genesList);
+            checkboxContent(toUniq);
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            document.getElementById("errorQuery").style.display = 'block';
+            document.getElementById("sendingQuery").style.display = 'none';
+            infoError("SPARQL querying failure: " + errorThrown);
+            console.log(jqXHR.responseText);
+        }
+    });
+}
 
 var myDemoSysbioView = new DemoSysbioView();
 
@@ -879,7 +950,7 @@ function containsObject(obj, list) {
     return false;
 }
 
-function sparqlSysBio(genesList) {
+function sparqlSysBio(genesList, cy) {
     console.log("Sending query");
     endpointURL = rootURL + '/systemic/network';
     genesList = genesList.split(",");
@@ -897,129 +968,17 @@ function sparqlSysBio(genesList) {
         crossDomain: true,
         success: function (data, textStatus, jqXHR) {
             // Get valid JSON format
-            items = JSON.parse(JSON.stringify(data));
-            // Adding cytoscape graphe
-            var cy = cytoscape({
-                container: document.getElementById('cy'), // container to render in
-                
-                boxSelectionEnabled: false,
-                
-                autounselectify: true,
-                style: [ // the stylesheet for the graph
-                    {
-                        selector: 'node',
-                        style: {
-                            'background-color': '#666',
-                            'width' : 15,
-                            'height' : 15,
-                            //'font-size' : 10,
-                            'label': 'data(id)'
-                        }
-                    },
-                    {
-                        selector: 'edge',
-                        style: {
-                            'width': 2,
-                            'line-color': '#ccc',
-                            'target-arrow-color': '#ccc',
-                            'target-arrow-shape': 'triangle',
-                            'curve-style': 'bezier'
-                            //'label': 'data(type)'
-                        }
-                    }
-                ],
-                
-                zoom: 1,
-                //fit: true,
-
-                layout: {
-                    name: 'cola',
-                    directed: true,
-                    fit: true,
-                    padding: 50
-                }
-                
-            });
-            
-            var toUniq = []; // array of uniq edge
-            // For each genes of the query
-            for (var object in items) {
-                // Tranform JSON format to Cytoscape JSON format
-                var i = 0;
-                // For a gene each result
-                for (var item in items[object]) {
-                    var name = item; // URI of interaction
-                    var pair = {
-                        controller :items[object][item]["http://www.biopax.org/release/biopax-level3.owl#controller"][0]["value"],
-                        controlled:items[object][item]["http://www.biopax.org/release/biopax-level3.owl#controlled"][0]["value"]
-                    };
-                    
-                    if (containsObject(pair, toUniq) === false){
-                        toUniq.push(pair);
-                        cy.add([
-                            {
-                                // Controller/source name
-                                data: {
-                                   id: items[object][item]["http://www.biopax.org/release/biopax-level3.owl#controller"][0]["value"]
-                                   //position: { x: i, y: 1+i }
-                                }
-                            },
-                            {
-                                // Controlled/target name
-                                data: {
-                                   id: pair["controlled"].replace('Transcription of ','')
-                                   //position: { x: 3, y: 3 }
-                                }
-                            },                    
-                            {
-                                // Directed edge
-                                data: {
-                                    id: name,
-                                    source: items[object][item]["http://www.biopax.org/release/biopax-level3.owl#controller"][0]["value"], //controller
-                                    target: items[object][item]["http://www.biopax.org/release/biopax-level3.owl#controlled"][0]["value"].replace('Transcription of ',''), //controlled
-                                    type: items[object][item]["http://www.biopax.org/release/biopax-level3.owl#displayName"][0]["value"]
-                                }   
-                            }
-                        ]);
-                        i++;
-                    }
-                }
-            }  
+            items = JSON.parse(JSON.stringify(data));            
+            // Set content of graph and get list of uniq regulators
+            var toUniq = graphContent(cy, items) ;
             // Apply layout on loaded data
-            cy.layout({name:'cola', fit:true, nodeSpacing: 5, maxSimulationTime: 2000});                      
-            // Add class to edge of type ACTIVATION
-            cy.filter(function(i, element){
-                if( element.isEdge() && element.data("type") === 'ACTIVATION' ){
-                    element.addClass('classActiv');
-                }
-            });
-            // Color edge of type ACTIVATION
-            cy.$('.classActiv').style({ 
-                'target-arrow-color' : '#3399ff', 
-                'width': 3,
-                'line-color' : '#3399ff' 
-            });
-            // Style on input node
-            for (var gene in genesList) {
-                var re = new RegExp(genesList[gene], "gi");
-                // Add class to node of name as input
-                cy.filter(function(i, element){
-                    if( element.isNode() && ( element.data("id").match(re))){
-                        element.addClass('classInput');
-                    }
-                });
-            }
-            // Color node wihtout input name
-            cy.$('.classInput').style({ 
-                'background-color': 'red',
-                'width':30,
-                'height':30
-            });
-            
+            graphLayout(cy, genesList);
+            // Hide running query message        
             document.getElementById("sendingQuery").style.display = 'none';
             // Show legend
             document.getElementById("graphe-legend").style.display = 'block';
-            
+            document.getElementById("next-level-regulation").style.display = 'block';
+            checkboxContent(toUniq);
             document.getElementById('cy').addEventListener("dblclick", function resetGraph() {
                 cy.fit();
             });
@@ -1032,6 +991,110 @@ function sparqlSysBio(genesList) {
         }
     });
 }
+
+function graphLayout(cy, genesList) {
+    cy.layout({name:'cola', fit:true, nodeSpacing: 5, maxSimulationTime: 2000});                      
+    // Add class to edge of type ACTIVATION
+    cy.filter(function(i, element){
+        if( element.isEdge() && element.data("type") === 'ACTIVATION' ){
+            element.addClass('classActiv');
+        }
+    });
+    // Color edge of type ACTIVATION
+    cy.$('.classActiv').style({ 
+        'target-arrow-color' : '#3399ff', 
+        'width': 3,
+        'line-color' : '#3399ff' 
+    });
+    // Style on input node
+    for (var gene in genesList) {
+        var re = new RegExp(genesList[gene], "gi");
+        // Add class to node of name as input
+        cy.filter(function(i, element){
+            if( element.isNode() && ( element.data("id").match(re))){
+                element.addClass('classInput');
+            }
+        });
+    }
+    // Color node wihtout input name
+    cy.$('.classInput').style({ 
+        'background-color': 'red',
+        'width':30,
+        'height':30
+    });
+    cy.nodes().on("click", function(e){
+        var id = e.cyTarget.id();
+        cy.getElementById(id).remove();
+        cy.layout({name:'cola'});
+    });
+};
+
+function graphContent(cy, items) {
+    var toUniq = []; // array of uniq edge
+    var i = 0;
+    // For each genes of the query
+    for (var object in items) {
+        // Tranform JSON format to Cytoscape JSON format 
+        var name = object.toString(); // URI of interaction
+        if(typeof items[object]["http://www.biopax.org/release/biopax-level3.owl#controller"] !== 'undefined') {
+            var pair = {
+                controller :items[object]["http://www.biopax.org/release/biopax-level3.owl#controller"][0]["value"],
+                controlled:items[object]["http://www.biopax.org/release/biopax-level3.owl#controlled"][0]["value"]
+            };
+
+            if (containsObject(pair, toUniq) === false){
+                toUniq.push(pair);
+                cy.add([
+                    {
+                        // Controller/source name
+                        data: {
+                           id: items[object]["http://www.biopax.org/release/biopax-level3.owl#controller"][0]["value"]
+                           //position: { x: i, y: 1+i }
+                        }
+                    },
+                    {
+                        // Controlled/target name
+                        data: {
+                           id: items[object]["http://www.biopax.org/release/biopax-level3.owl#controlled"][0]["value"].replace('Transcription of ','')
+                           //position: { x: 3, y: 3 }
+                        }
+                    },                    
+                    {
+                        // Directed edge
+                        data: {
+                            id: name,
+                            source: items[object]["http://www.biopax.org/release/biopax-level3.owl#controller"][0]["value"], //controller
+                            target: items[object]["http://www.biopax.org/release/biopax-level3.owl#controlled"][0]["value"].replace('Transcription of ',''), //controlled
+                            type: items[object]["http://www.biopax.org/release/biopax-level3.owl#displayName"][0]["value"]
+                        }   
+                    }
+                ]);
+                i++;
+            }
+        }
+    } 
+    return toUniq.sort();
+};
+
+function checkboxContent(toUniq){
+    var i;
+    // Add list of new gene in panel for next run
+    for (i=0; i< toUniq.length; i++) {
+        var container = document.getElementById("input-next-regulation");
+        // Label of checkbox
+        var label = document.createElement('label');
+        label.id = "next-regulation-label";
+        // Checkbox content
+        var checkbox = document.createElement('input');
+        checkbox.type = "checkbox";
+        checkbox.name = "next-regulation-checkbox";
+        checkbox.value = toUniq[i]["controller"];                
+        container.appendChild(label);
+        label.appendChild(checkbox);
+        label.appendChild(document.createTextNode(" "+toUniq[i]["controller"]));
+        label.style.display = 'block';
+    }
+};
 
 function pollCost() {
     $.ajax({
