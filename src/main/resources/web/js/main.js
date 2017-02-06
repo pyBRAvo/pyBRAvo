@@ -198,8 +198,10 @@ var DemoSysbioView = Backbone.View.extend({
             sparqlSysBio(genesList, cy);
             // Make SPARQL queries to PathwayCommons endpoint
             $( "#btnRunNextRegulation" ).click(function() {
-            var regulatorList = updateList();
+                // Get gene list
+                var regulatorList = updateList();
                 if (regulatorList.length > 0){
+                    // Run SPARQL query
                     nextLevelRegulation(regulatorList, cy);
                 }
             });
@@ -213,7 +215,8 @@ var DemoSysbioView = Backbone.View.extend({
 function updateList() {
     var allVals = [];
     $('#input-next-regulation :checked').each(function() {
-      allVals.push($(this).val());
+        allVals.push($(this).val());
+        $(this).attr('disabled', true);
     });
     return allVals;
 }
@@ -221,6 +224,8 @@ function updateList() {
 function nextLevelRegulation(genesList, cy) {
     endpointURL = rootURL + '/systemic/network';
     var genesJSON = JSON.stringify(genesList);
+    // Show 'query on run' message
+    document.getElementById("sendingQuery").style.display = 'block';
     
     $.ajax({
         type: 'GET',
@@ -232,10 +237,14 @@ function nextLevelRegulation(genesList, cy) {
         dataType: "json",
         crossDomain: true,
         success: function (data, textStatus, jqXHR) {
+            document.getElementById("sendingQuery").style.display = 'none';
             // Get valid JSON format
             var items = JSON.parse(JSON.stringify(data));
+            // Load new genes to graphe
             var toUniq = graphContent(cy,items); 
+            // Apply layout
             graphLayout(cy, genesList);
+            // Add item to checkbox
             checkboxContent(toUniq);
         },
         error: function (jqXHR, textStatus, errorThrown) {
@@ -978,10 +987,15 @@ function sparqlSysBio(genesList, cy) {
             // Show legend
             document.getElementById("graphe-legend").style.display = 'block';
             document.getElementById("next-level-regulation").style.display = 'block';
+            // Remove old checkbo;x
+            var container = document.getElementById("input-next-regulation");
+            while (container.hasChildNodes()){
+                container.removeChild(container.firstChild);
+            }
             checkboxContent(toUniq);
             document.getElementById('cy').addEventListener("dblclick", function resetGraph() {
                 cy.fit();
-            });
+            });          
         },
         error: function (jqXHR, textStatus, errorThrown) {
             document.getElementById("errorQuery").style.display = 'block';
@@ -1011,17 +1025,20 @@ function graphLayout(cy, genesList) {
         var re = new RegExp(genesList[gene], "gi");
         // Add class to node of name as input
         cy.filter(function(i, element){
-            if( element.isNode() && ( element.data("id").match(re))){
-                element.addClass('classInput');
+            if( element.isNode() ) {
+                if ( element.data("id").match(re)) {
+                    element.addClass('classInput');
+                }
             }
         });
     }
-    // Color node wihtout input name
+    // Color node with input name
     cy.$('.classInput').style({ 
         'background-color': 'red',
         'width':30,
         'height':30
     });
+    // On click remove node and redraw graph
     cy.nodes().on("click", function(e){
         var id = e.cyTarget.id();
         cy.getElementById(id).remove();
@@ -1072,27 +1089,35 @@ function graphContent(cy, items) {
                 i++;
             }
         }
-    } 
+    }
     return toUniq.sort();
 };
 
+/*
+ * Add checkbox
+ * @toUniq : Array of object controller and controlled
+ */
 function checkboxContent(toUniq){
     var i;
+    var controller = [];
     // Add list of new gene in panel for next run
     for (i=0; i< toUniq.length; i++) {
-        var container = document.getElementById("input-next-regulation");
-        // Label of checkbox
-        var label = document.createElement('label');
-        label.id = "next-regulation-label";
-        // Checkbox content
-        var checkbox = document.createElement('input');
-        checkbox.type = "checkbox";
-        checkbox.name = "next-regulation-checkbox";
-        checkbox.value = toUniq[i]["controller"];                
-        container.appendChild(label);
-        label.appendChild(checkbox);
-        label.appendChild(document.createTextNode(" "+toUniq[i]["controller"]));
-        label.style.display = 'block';
+        if( $.inArray(toUniq[i]["controller"], controller) === -1){
+            controller.push(toUniq[i]["controller"]);
+            var container = document.getElementById("input-next-regulation");
+            // Label of checkbox
+            var label = document.createElement('label');
+            label.id = "next-regulation-label";
+            // Checkbox content
+            var checkbox = document.createElement('input');
+            checkbox.type = "checkbox";
+            checkbox.name = "next-regulation-checkbox";
+            checkbox.value = toUniq[i]["controller"];                
+            container.appendChild(label);
+            label.appendChild(checkbox);
+            label.appendChild(document.createTextNode(" "+toUniq[i]["controller"]));
+            label.style.display = 'block';
+        }
     }
 };
 
