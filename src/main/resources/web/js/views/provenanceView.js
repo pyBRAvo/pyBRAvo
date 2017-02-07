@@ -1,3 +1,9 @@
+/**
+ * Provenance view code
+ * 
+ * @author : alban.gaignard@cnrs.fr
+ */
+
 var DemoProvView = Backbone.View.extend({
     el: "#mainContainer", //Container div inside which we would be dynamically loading the templates
     initialize: function () {

@@ -1,7 +1,14 @@
-////////////////////////////////////////////////////////////////
-// Communication with the API
-////////////////////////////////////////////////////////////////
+/**
+ * Communication with the API
+ *
+ * @author : alban.gaignard@cnrs.fr
+ */
 
+/**
+ * 
+ * @param {string} email
+ * @param {string} password
+ */
 function login(email, password) {
     $.ajax({
         type: 'POST',
@@ -31,6 +38,11 @@ function login(email, password) {
     });
 }
 
+/**
+ * 
+ * @param {string} email
+ * @param {string} password
+ */
 function register(email, password) {
     $.ajax({
         type: 'POST',
@@ -56,6 +68,9 @@ function register(email, password) {
     });
 }
 
+/**
+ * 
+ */
 function logout() {
     var sid = readCookie("sid");
     $.ajax({

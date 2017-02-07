@@ -1,6 +1,13 @@
-////////////////////////////////////////////////////////////////
-// Communication with the Provenance
-////////////////////////////////////////////////////////////////
+/**
+ * Communication with the Provenance
+ *
+ * @author : alban.gaignard@cnrs.fr
+ */
+ 
+/**
+ * 
+ * @param {type} credentials
+ */
 function listGalaxyHistories(credentials) {
     $.ajax({
         type: 'POST',
@@ -22,6 +29,13 @@ function listGalaxyHistories(credentials) {
     });
 }
 
+/**
+ * 
+ * @param {type} credentials
+ * @param {type} hid
+ * @param {type} title
+ * @returns {undefined}
+ */
 function getProvTriples(credentials, hid, title) {
     $('#genProvBtn-'+hid+'[gHistoryId='+hid+']').html("Loading ...");
     $('#genProvBtn-'+hid+'[gHistoryId='+hid+']').attr("disabled", true);
@@ -62,6 +76,13 @@ function getProvTriples(credentials, hid, title) {
     });
 }
 
+/**
+ * 
+ * @param {type} credentials
+ * @param {type} hid
+ * @param {type} title
+ * @returns {undefined}
+ */
 function getProvVis(credentials, hid, title) {
     $('#visProvBtn-'+hid+'[gHistoryId='+hid+']').html("Loading ...");
     $('#visProvBtn-'+hid+'[gHistoryId='+hid+']').attr("disabled", true);
@@ -95,6 +116,10 @@ function getProvVis(credentials, hid, title) {
     });
 }
 
+/**
+ * 
+ * @param {type} data
+ */
 function renderGalaxyHistories(data) {
     $('#tableGalaxyHistories thead tr').remove();
     $('#tableGalaxyHistories tbody tr').remove();
@@ -125,7 +150,14 @@ function renderGalaxyHistories(data) {
         reponsive: true,
         ordering:  false
     });
-}
+};
+
+/**
+ * 
+ * @param {type} data
+ * @param {type} title
+ * @returns {undefined}
+ */
 function renderProv(data, title) {
     $('#parProvTriples').html("");
     $('#parProvGraph').html("");
@@ -133,6 +165,12 @@ function renderProv(data, title) {
     $('#parProvGraph').append("<p class=\"text-right\"><em>"+title+"</em></p>");
 }
 
+/**
+ * 
+ * @param {type} data
+ * @param {type} htmlCompId
+ * @returns {undefined}
+ */
 function renderD3(data, htmlCompId) {
     var d3Data = data.d3;
     var mappings = data.mappings;

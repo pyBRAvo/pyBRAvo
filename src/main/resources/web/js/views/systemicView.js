@@ -1,3 +1,9 @@
+/** 
+ * Systemic view code
+ *
+ * @author : Marie Lefebvre
+ */
+
 var DemoSysbioView = Backbone.View.extend({
     el: "#mainContainer", //Container div inside which we would be dynamically loading the templates
     initialize: function () {

@@ -1,18 +1,14 @@
-/*
- * Check if object exist in array
- * @obj object to search in array
- * @list array to check presence of object
+/** 
+ * Systemic API code
+ *
+ * @author : Marie Lefebvre
  */
-function containsObject(obj, list) {
-    var i;
-    for (i = 0; i < list.length; i++) {
-        if (list[i]["controller"] === obj["controller"] && list[i]["controlled"] === obj["controlled"]) {
-            return true;
-        }
-    }
-    return false;
-}
 
+/**
+ * Initial API to get initial graphe
+ * @param {array} genesList
+ * @param {Cytoscape object} cy
+ */
 function sparqlSysBio(genesList, cy) {
     console.log("Sending query");
     endpointURL = rootURL + '/systemic/network';
@@ -55,6 +51,52 @@ function sparqlSysBio(genesList, cy) {
     });
 }
 
+/**
+ * API to add regulation 
+ * @param {array} genesList
+ * @param {Cytoscape object} cy
+ * 
+ */
+function nextLevelRegulation(genesList, cy) {
+    endpointURL = rootURL + '/systemic/network';
+    var genesJSON = JSON.stringify(genesList);
+    // Show 'query on run' message
+    document.getElementById("sendingQuery").style.display = 'block';
+    
+    $.ajax({
+        type: 'GET',
+        headers: {
+            Accept: "application/json"
+        },
+        url: endpointURL,
+        data: 'genes=' + genesJSON,
+        dataType: "json",
+        crossDomain: true,
+        success: function (data, textStatus, jqXHR) {
+            document.getElementById("sendingQuery").style.display = 'none';
+            // Get valid JSON format
+            var items = JSON.parse(JSON.stringify(data));
+            // Load new genes to graphe
+            var toUniq = graphContent(cy,items); 
+            // Apply layout
+            graphLayout(cy, genesList);
+            // Add item to checkbox
+            checkboxContent(toUniq);
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            document.getElementById("errorQuery").style.display = 'block';
+            document.getElementById("sendingQuery").style.display = 'none';
+            infoError("SPARQL querying failure: " + errorThrown);
+            console.log(jqXHR.responseText);
+        }
+    });
+}
+
+/**
+ * Define and custome graphe layout
+ * @param {Cytoscape object} cy
+ * @param {array} genesList
+ */
 function graphLayout(cy, genesList) {
     cy.layout({name:'cola', fit:true, nodeSpacing: 5, maxSimulationTime: 2000});                      
     // Add class to edge of type ACTIVATION
@@ -95,6 +137,12 @@ function graphLayout(cy, genesList) {
     });
 };
 
+/**
+ * Add content to graphe
+ * @param {Cytoscape object} cy
+ * @param {array} items
+ * @returns {Array|graphContent.uniqEdge}
+ */
 function graphContent(cy, items) {
     var uniqEdge = []; // array of uniq edge
     // For each genes of the query
@@ -143,9 +191,9 @@ function graphContent(cy, items) {
     return uniqEdge;
 };
 
-/*
- * Add checkbox
- * @toUniq : Array of object controller and controlled
+/**
+ * Add content to checkbox
+ * @param {array of object} toUniq
  */
 function checkboxContent(toUniq){
     var i;
@@ -171,6 +219,25 @@ function checkboxContent(toUniq){
     }
 };
 
+/**
+ * Check if object exist in array
+ * @param {object} obj : object to search in array
+ * @param {array} list : array to check presence of object
+ */
+function containsObject(obj, list) {
+    var i;
+    for (i = 0; i < list.length; i++) {
+        if (list[i]["controller"] === obj["controller"] && list[i]["controlled"] === obj["controlled"]) {
+            return true;
+        }
+    }
+    return false;
+};
+
+/**
+ * 
+ * @returns {Array|updateList.allVals}
+ */
 function updateList() {
     var allVals = [];
     $('#input-next-regulation :checked').each(function() {
@@ -178,39 +245,4 @@ function updateList() {
         $(this).attr('disabled', true);
     });
     return allVals;
-}
-
-function nextLevelRegulation(genesList, cy) {
-    endpointURL = rootURL + '/systemic/network';
-    var genesJSON = JSON.stringify(genesList);
-    // Show 'query on run' message
-    document.getElementById("sendingQuery").style.display = 'block';
-    
-    $.ajax({
-        type: 'GET',
-        headers: {
-            Accept: "application/json"
-        },
-        url: endpointURL,
-        data: 'genes=' + genesJSON,
-        dataType: "json",
-        crossDomain: true,
-        success: function (data, textStatus, jqXHR) {
-            document.getElementById("sendingQuery").style.display = 'none';
-            // Get valid JSON format
-            var items = JSON.parse(JSON.stringify(data));
-            // Load new genes to graphe
-            var toUniq = graphContent(cy,items); 
-            // Apply layout
-            graphLayout(cy, genesList);
-            // Add item to checkbox
-            checkboxContent(toUniq);
-        },
-        error: function (jqXHR, textStatus, errorThrown) {
-            document.getElementById("errorQuery").style.display = 'block';
-            document.getElementById("sendingQuery").style.display = 'none';
-            infoError("SPARQL querying failure: " + errorThrown);
-            console.log(jqXHR.responseText);
-        }
-    });
-}
+};
