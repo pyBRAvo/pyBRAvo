@@ -66,7 +66,7 @@ public class SystemicTest {
     }
 
     String q1 = "PREFIX bp: <http://www.biopax.org/release/biopax-level3.owl#>\n"
-            + "SELECT * FROM <http://fr.symetric#PC>  WHERE { ?x ?p ?y .} LIMIT 10";
+            + "SELECT * FROM <http://192.54.201.50:8890/PC>  WHERE { ?x ?p ?y .} LIMIT 10";
 
     @Test
     @Ignore
@@ -96,11 +96,44 @@ public class SystemicTest {
     }
 
     @Test
+    @Ignore
     public void testSparqlLocalEndpoint() throws URISyntaxException, UnsupportedEncodingException {
         ClientConfig config = new DefaultClientConfig();
         config.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING, Boolean.TRUE);
         Client client = Client.create(config);
         WebResource service = client.resource(new URI("http://172.18.253.113:9099/sparql"));
+        System.out.println(q1);
+        String encoded = UriComponent.encode(q1, UriComponent.Type.QUERY);
+        System.out.println(encoded);
+//        String contentType = "application/json";
+        String contentType = "text/turtle";
+
+        ClientResponse response = service.queryParam("query", encoded)
+                .queryParam("format", contentType)
+                .accept(contentType)
+                .get(ClientResponse.class);
+
+        if (response.getStatus() != 200) {
+            logger.warn("Error from SPARQL endpoint.");
+            System.out.println(response.getEntity(String.class));
+        } else {
+            logger.info("Successful SPARQL querying.");
+            String output = response.getEntity(String.class);
+            InputStream is = new ByteArrayInputStream(output.getBytes(StandardCharsets.UTF_8));
+            
+            Model m = ModelFactory.createDefaultModel();
+            RDFDataMgr.read(m, is, Lang.TTL);
+            
+            m.write(System.out, "NT");
+        }
+    }
+    
+    @Test
+    public void testSparqlIFBEndpoint() throws URISyntaxException, UnsupportedEncodingException {
+        ClientConfig config = new DefaultClientConfig();
+        config.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING, Boolean.TRUE);
+        Client client = Client.create(config);
+        WebResource service = client.resource(new URI("http://192.54.201.50/sparql"));
         System.out.println(q1);
         String encoded = UriComponent.encode(q1, UriComponent.Type.QUERY);
         System.out.println(encoded);

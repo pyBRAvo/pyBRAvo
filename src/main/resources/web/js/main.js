@@ -41,295 +41,6 @@ var WelcomeView = Backbone.View.extend({
 
 var myWelcomeView = new WelcomeView();
 
-var DemoProvView = Backbone.View.extend({
-    el: "#mainContainer", //Container div inside which we would be dynamically loading the templates
-    initialize: function () {
-        _.bindAll(this, "render");
-        console.log('Prov demo view initialized');
-
-        EventBus.on(EVT_PROV_WORKING, this.disableButton);
-        EventBus.on(EVT_PROV_DONE, this.enableButton);
-    },
-    render: function () {
-        var that = this;
-        //Fetching the template contents
-        $.get('templates/demo-prov.html', function (data) {
-            template = _.template(data, {});//Option to pass any dynamic values to template
-            that.$el.html(template());//adding the template content to the main template.
-        }, 'html');
-
-        this.displayProvUsage();
-
-        return this;
-    },
-    events: {
-        "click #btnGalaxyHist": "listHistEvt",
-        "click .myBtnRDFProv": "genProvEvt",
-        "click .myBtnD3Prov": "visProvEvt"
-    },
-    displayProvUsage: function () {
-        console.log("Retrieving PROV demo usage statistics.");
-
-        $.ajax({
-            url: rootURL + "/provenance/usage",
-            type: "GET",
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            dataType: "json",
-            success: function (data) {
-                $(function () {
-                    // console.log(data);
-                    var obj = JSON.parse(data);
-                    Highcharts.chart('usageChart', obj);
-                });
-            },
-            error: function (jqXHR, textStatus, errorThrown) {
-                console.log(jqXHR);
-                console.log(errorThrown);
-                console.log("Error while retrieving PROV demo usage statistics");
-            }
-        });
-    },
-    disableButton: function () {
-        $('.myBtnD3Prov').attr("disabled", true);
-        $('.myBtnRDFProv').attr("disabled", true);
-    },
-    enableButton: function () {
-        $('.myBtnD3Prov').attr("disabled", false);
-        $('.myBtnRDFProv').attr("disabled", false);
-    },
-    listHistEvt: function (e) {
-        console.log("listHistEvt") ;
-        var credentials = {instanceUrl: $('#inputGalaxyUrl').val(), apiKey: $('#inputKey').val()} ;
-        //console.log(credentials) ;
-        listGalaxyHistories(credentials) ;
-    },
-    genProvEvt: function (e) {
-        EventBus.trigger(EVT_PROV_WORKING);
-        var id = $(e.currentTarget).attr("gHistoryId") ;
-        var name = $(e.currentTarget).closest('tr').children('td').eq(0).text() ;
-        console.log("CLICKED "+id+ " | " +name) ;
-        var credentials = {instanceUrl: $('#inputGalaxyUrl').val(), apiKey: $('#inputKey').val()} ;
-        getProvTriples(credentials, id, name) ;
-
-    },
-    visProvEvt: function (e) {
-        EventBus.trigger(EVT_PROV_WORKING);
-        var id = $(e.currentTarget).attr("gHistoryId") ;
-        var name = $(e.currentTarget).closest('tr').children('td').eq(0).text() ;
-        console.log("CLICKED "+id+ " | " +name) ;
-        var credentials = {instanceUrl: $('#inputGalaxyUrl').val(), apiKey: $('#inputKey').val()} ;
-        getProvVis(credentials, id, name) ;
-    }
-});
-
-var myDemoProvView = new DemoProvView();
-
-var DemoSysbioView = Backbone.View.extend({
-    el: "#mainContainer", //Container div inside which we would be dynamically loading the templates
-    initialize: function () {
-        _.bindAll(this, "render");
-        console.log('DemoSysBio View Initialized');
-        EventBus.on(EVT_LOADING, this.disableButton);
-        EventBus.on(EVT_FINNISHED, this.enableButton);
-
-    },
-    render: function () {
-        var that = this;
-        //Fetching the template contents
-        $.get('templates/demo-systemic.html', function (data) {
-            template = _.template(data, {});//Option to pass any dynamic values to template
-            that.$el.html(template());//adding the template content to the main template.
-            
-        }, 'html');
-        return this;
-    },
-    events: {
-        "click #btnSearchNetwork": "querySearchNetwork"
-    },
-    querySearchNetwork: function () {
-        console.log("searchNetworkEvt");
-        // Initialize graphe visualization
-        var cy = cytoscape({
-            container: document.getElementById('cy'), // container to render in
-            boxSelectionEnabled: false,
-            autounselectify: true,
-            style: [ // the stylesheet for the graph
-                {
-                    selector: 'node',
-                    style: {
-                        'background-color': '#666',
-                        'width' : 15,
-                        'height' : 15,
-                        //'font-size' : 10,
-                        'label': 'data(id)'
-                    }
-                },
-                {
-                    selector: 'edge',
-                    style: {
-                        'width': 2,
-                        'line-color': '#ccc',
-                        'target-arrow-color': '#ccc',
-                        'target-arrow-shape': 'triangle',
-                        'curve-style': 'bezier'
-                        //'label': 'data(type)'
-                    }
-                }
-            ],
-            zoom: 1,
-            layout: {
-                name: 'cola',
-                directed: true,
-                fit: true,
-                padding: 50
-            }
-        });
-        var genesList = $('#inputGeneList').val().replace(/\s/g, '');
-        if (genesList !== "") {
-            // Hide old message
-            document.getElementById("emptyQuery").style.display = 'none';
-            document.getElementById("errorQuery").style.display = 'none';
-            // Display message
-            document.getElementById("sendingQuery").style.display = 'block';
-            // Make SPARQL initial query to PathwayCommons endpoint
-            sparqlSysBio(genesList, cy);
-            // Make SPARQL queries to PathwayCommons endpoint
-            $( "#btnRunNextRegulation" ).click(function() {
-                // Get gene list
-                var regulatorList = updateList();
-                if (regulatorList.length > 0){
-                    // Run SPARQL query
-                    nextLevelRegulation(regulatorList, cy);
-                }
-            });
-        }else{
-            document.getElementById("emptyQuery").style.display = 'block';
-            document.getElementById("errorQuery").style.display = 'none';
-        }
-    }
-});
-
-function updateList() {
-    var allVals = [];
-    $('#input-next-regulation :checked').each(function() {
-        allVals.push($(this).val());
-        $(this).attr('disabled', true);
-    });
-    return allVals;
-}
-
-function nextLevelRegulation(genesList, cy) {
-    endpointURL = rootURL + '/systemic/network';
-    var genesJSON = JSON.stringify(genesList);
-    // Show 'query on run' message
-    document.getElementById("sendingQuery").style.display = 'block';
-    
-    $.ajax({
-        type: 'GET',
-        headers: {
-            Accept: "application/json"
-        },
-        url: endpointURL,
-        data: 'genes=' + genesJSON,
-        dataType: "json",
-        crossDomain: true,
-        success: function (data, textStatus, jqXHR) {
-            document.getElementById("sendingQuery").style.display = 'none';
-            // Get valid JSON format
-            var items = JSON.parse(JSON.stringify(data));
-            // Load new genes to graphe
-            var toUniq = graphContent(cy,items); 
-            // Apply layout
-            graphLayout(cy, genesList);
-            // Add item to checkbox
-            checkboxContent(toUniq);
-        },
-        error: function (jqXHR, textStatus, errorThrown) {
-            document.getElementById("errorQuery").style.display = 'block';
-            document.getElementById("sendingQuery").style.display = 'none';
-            infoError("SPARQL querying failure: " + errorThrown);
-            console.log(jqXHR.responseText);
-        }
-    });
-}
-
-var myDemoSysbioView = new DemoSysbioView();
-
-var DemoEpidemioView = Backbone.View.extend({
-    el: "#mainContainer", //Container div inside which we would be dynamically loading the templates
-    initialize: function () {
-        _.bindAll(this, "render");
-        console.log('DemoEpidemio View Initialized');
-
-        EventBus.on(EVT_LOADING, this.disableButton);
-        EventBus.on(EVT_FINNISHED, this.enableButton);
-
-    },
-    render: function () {
-        var that = this;
-        //Fetching the template contents
-        $.get('templates/demo-epidemio.html', function (data) {
-            template = _.template(data, {});//Option to pass any dynamic values to template
-            that.$el.html(template());//adding the template content to the main template.
-            $("#selectYear").val(2007).trigger('change');
-            initQueryAPI();
-        }, 'html');
-        return this;
-    },
-    events: {
-        "click #btnQuery": "queryEvt",
-        "change #selectYear": "selectYearEvt",
-        "change #searchLabel": "searchLabelEvt",
-        "change input[name=\"radioQueryType\"]": "queryTypeEvt"
-    },
-    queryEvt: function (e) {
-        console.log("queryEvt");
-//        var jsonResults = sparql($('#epidQueryTextArea').val());
-        sparql($('#epidQueryTextArea').val());
-    },
-    disableButton: function () {
-        console.log("disabling button");
-        $('#btnQuery').attr("disabled", true);
-        $('#btnQuery').html("Loading...");
-    },
-    enableButton: function () {
-        console.log("enabling button");
-        $('#btnQuery').attr("disabled", false);
-        $('#btnQuery').html("Query");
-    },
-    selectYearEvt: function (e) {
-        console.log("selectYearEvt");
-        var y = $(e.currentTarget).val();
-        var contextData = {year: y, label: $('#searchLabel').val()};
-        var tpl = ($('#radioTableRes').prop("checked") ? epidemioQueries[1] : epidemioQueries[2]);
-        var q = processHbTemplate(tpl, contextData);
-        $('#epidQueryTextArea').val(q);
-    },
-    searchLabelEvt: function (e) {
-        console.log("searchLabelEvt");
-        var l = $(e.currentTarget).val();
-        var contextData = {year: $('#selectYear').val(), label: l};
-        var tpl = ($('#radioTableRes').prop("checked") ? epidemioQueries[1] : epidemioQueries[2]);
-        var q = processHbTemplate(tpl, contextData);
-        $('#epidQueryTextArea').val(q);
-    },
-    queryTypeEvt: function (e) {
-        console.log("queryTypeEvt");
-        var r = $(e.currentTarget).val();
-        console.log(r);
-        var contextData = {year: $('#selectYear').val(), label: $('#searchLabel').val()};
-        var tpl = ($('#radioTableRes').prop("checked") ? epidemioQueries[1] : epidemioQueries[2]);
-        var q = processHbTemplate(tpl, contextData);
-        $('#epidQueryTextArea').val(q);
-    }
-});
-
-var myDemoEpidemioView = new DemoEpidemioView();
-
-
 //*************************************
 //*************************************
 //*************************************
@@ -352,7 +63,7 @@ $(document).ready(function () {
             },
             dataType: "text",
             complete: setTimeout(function () {
-                checkSessionValidity()
+                checkSessionValidity();
             }, 180000), 
             timeout: 2000,
             success: function (data) {
@@ -574,626 +285,6 @@ function eraseCookie(name) {
     createCookie(name, "", -1);
 }
 
-////////////////////////////////////////////////////////////////
-// Communication with the Provenance
-////////////////////////////////////////////////////////////////
-function listGalaxyHistories(credentials) {
-    $.ajax({
-        type: 'POST',
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-        },
-        url: rootURL + '/provenance/histories',
-        data: JSON.stringify(credentials),
-        dataType: "json",
-        success: function (data, textStatus, jqXHR) {
-            var obj = JSON.parse(data);
-            //console.log(obj);
-            renderGalaxyHistories(obj) ;
-        },
-        error: function (jqXHR, textStatus, errorThrown) {
-            infoError(jqXHR.responseText);
-        }
-    });
-}
-
-function getProvTriples(credentials, hid, title) {
-    $('#genProvBtn-'+hid+'[gHistoryId='+hid+']').html("Loading ...");
-    $('#genProvBtn-'+hid+'[gHistoryId='+hid+']').attr("disabled", true);
-    console.log("disabling btn "+hid);
-    $.ajax({
-        type: 'POST',
-        headers: {
-            'Accept': 'text/plain',
-            'Content-Type': 'application/json'
-        },
-        url: rootURL + '/provenance/genProv/'+hid,
-        data: JSON.stringify(credentials),
-        dataType: "text",
-        success: function (data, textStatus, jqXHR) {
-            $('#parProvGraph').html("");
-            $('#parProvTriples').html("<textarea id=\"codeArea\" rows=\"3\" readonly></textarea>");
-            $('#parProvTriples').append("<p class=\"text-right\"><em>"+title+"</em></p>");
-
-            var code = CodeMirror.fromTextArea(document.getElementById("codeArea"), {
-                lineNumbers: true,
-                readOnly: true,
-                mode: "text/turtle"
-            });
-            code.getDoc().setValue(data);
-
-            $('#genProvBtn-'+hid+'[gHistoryId='+hid+']').html("export PROV");
-            $('#genProvBtn-'+hid+'[gHistoryId='+hid+']').attr("disabled", false);
-            console.log("enabling btn "+hid);
-            EventBus.trigger(EVT_PROV_DONE);
-        },
-        error: function (jqXHR, textStatus, errorThrown) {
-            console.log(jqXHR.responseText);(jqXHR.responseText);
-            $('#genProvBtn-'+hid+'[gHistoryId='+hid+']').html("export PROV");
-            $('#genProvBtn-'+hid+'[gHistoryId='+hid+']').attr("disabled", false);
-            console.log("enabling btn "+hid);
-            EventBus.trigger(EVT_PROV_DONE);
-        }
-    });
-}
-
-function getProvVis(credentials, hid, title) {
-    $('#visProvBtn-'+hid+'[gHistoryId='+hid+']').html("Loading ...");
-    $('#visProvBtn-'+hid+'[gHistoryId='+hid+']').attr("disabled", true);
-    console.log("disabling btn "+hid);
-    $.ajax({
-        type: 'POST',
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-        },
-        url: rootURL + '/provenance/visProv/'+hid,
-        data: JSON.stringify(credentials),
-        dataType: "json",
-        success: function (data, textStatus, jqXHR) {
-            renderProv(data, title);
-            $('#visProvBtn-'+hid+'[gHistoryId='+hid+']').html("visualise PROV");
-            $('#visProvBtn-'+hid+'[gHistoryId='+hid+']').attr("disabled", false);
-            console.log("enabling btn "+hid);
-            EventBus.trigger(EVT_PROV_DONE);
-
-        },
-        error: function (jqXHR, textStatus, errorThrown) {
-            //response = jqXHR.responseText;
-            // infoError(jqXHR.responseText);
-            console.log(jqXHR.responseText);
-            $('#visProvBtn-'+hid+'[gHistoryId='+hid+']').html("visualise PROV");
-            $('#visProvBtn-'+hid+'[gHistoryId='+hid+']').attr("disabled", false);
-            console.log("enabling btn "+hid);
-            EventBus.trigger(EVT_PROV_DONE);
-        }
-    });
-}
-
-////////////////////////////////////////////////////////////////
-// Communication with the API
-////////////////////////////////////////////////////////////////
-
-function login(email, password) {
-    $.ajax({
-        type: 'POST',
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-        },
-        url: rootURL + '/sandbox/login',
-        data: JSON.stringify({'email': email, 'password': password}),
-        dataType: "text",
-        success: function (data, textStatus, jqXHR) {
-
-            EventBus.trigger(EVT_LOGIN, data);
-
-        },
-        error: function (jqXHR, textStatus, errorThrown) {
-            response = jqXHR.responseText;
-//            infoError(jqXHR.responseText);
-            if (response.indexOf("unregistered") > -1) {
-                loginInfo("Unknown user email, please register first.");
-            } else if (response.indexOf("wrong") > -1) {
-                loginInfo(("Please check your password."));
-            } else {
-                infoError(jqXHR.responseText);
-            }
-        }
-    });
-}
-
-function register(email, password) {
-    $.ajax({
-        type: 'POST',
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-        },
-        url: rootURL + '/sandbox/signin',
-        data: JSON.stringify({'email': email, 'password': password}),
-        dataType: "text",
-        success: function (data, textStatus, jqXHR) {
-            EventBus.trigger(EVT_LOGIN, data);
-        },
-        error: function (jqXHR, textStatus, errorThrown) {
-            response = jqXHR.responseText;
-//            infoError(jqXHR.responseText);
-            if (response.indexOf("exists") > -1) {
-                loginInfo("User already exists, please enter another email adress, or ask for password reset.");
-            } else {
-                infoError(jqXHR.responseText);
-            }
-        }
-    });
-}
-
-function logout() {
-    var sid = readCookie("sid");
-    $.ajax({
-        type: 'GET',
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-            'session-id': sid
-        },
-        url: rootURL + '/sandbox/logout',
-        dataType: "text",
-        success: function (data, textStatus, jqXHR) {
-            EventBus.trigger(EVT_LOGOUT);
-        },
-        error: function (jqXHR, textStatus, errorThrown) {
-            response = jqXHR.responseText;
-            infoError(jqXHR.responseText);
-            if (response.indexOf("unregistered") > -1) {
-                loginInfo("Unknown user email, please register first.");
-            } else if (response.indexOf("wrong") > -1) {
-                loginInfo(("Please check your password."));
-            } else {
-                infoError(jqXHR.responseText);
-            }
-        }
-    });
-}
-
-// http call to reset the remote knowledge graph
-function initQueryAPI() {
-    console.log('Initializing the Query API');
-
-    EventBus.trigger(EVT_LOADING);
-
-    $.ajax({
-        type: 'GET',
-        url: rootURL + '/query/init',
-        dataType: "text",
-        success: function (data, textStatus, jqXHR) {
-            EventBus.trigger(EVT_FINNISHED);
-        },
-        error: function (jqXHR, textStatus, errorThrown) {
-            infoError('Query API init error: ' + textStatus);
-            console.log(errorThrown);
-            EventBus.trigger(EVT_FINNISHED);
-        }
-    });
-}
-
-
-
-function load() {
-    $('#btnLoad').attr("disabled", true);
-    $("#btnLoad").html("Loading ...");
-    console.log('Loading ' + $('#txtLoad').val() + ' to ' + rootURL + ' / ' + $('#graphLoad').val());
-    $.ajax({
-        type: 'POST',
-        url: rootURL + '/sparql/load',
-        data: {'remote_path': $('#txtLoad').val(), 'source': $('#graphLoad').val()},
-        dataType: "text",
-        success: function (data, textStatus, jqXHR) {
-            console.log(data);
-            infoSuccess("Loading done.");
-            $('#btnLoad').attr("disabled", false);
-            $("#btnLoad").html("Load");
-        },
-        error: function (jqXHR, textStatus, errorThrown) {
-            infoError('Corese/KGRAM error: ' + textStatus);
-            console.log(errorThrown);
-            console.log(jqXHR);
-            $('#btnLoad').attr("disabled", false);
-            $("#btnLoad").html("Load");
-        }
-    });
-}
-
-function sparql(sparqlQuery) {
-    console.log("sending query");
-    $('#btnQuery').attr("disabled", true);
-    $('#btnQuery').html("Querying ...");
-
-//    var trimedQuery = $.trim(sparqlQuery);
-//    var isConstruct = trimedQuery.toLowerCase().lastIndexOf("construct",0) === 0;
-//    var isDescribe = trimedQuery.toLowerCase().lastIndexOf("describe",0) === 0;
-//    var isSelect = trimedQuery.toLowerCase().lastIndexOf("select",0) === 0;
-//    var isInsert = trimedQuery.toLowerCase().lastIndexOf("insert",0) === 0;
-
-    var isConstruct = (sparqlQuery.toLowerCase().indexOf("construct") >= 0) || (sparqlQuery.toLowerCase().indexOf("describe") >= 0);
-    //var isConstruct = (sparqlQuery.toLowerCase().indexOf("construct") >= 0);
-    var isUpdate = (sparqlQuery.toLowerCase().indexOf("insert") >= 0) || (sparqlQuery.toLowerCase().indexOf("delete") >= 0);
-
-
-    if (isConstruct) {
-        endpointURL = rootURL + '/query/d3';
-    } else {
-        endpointURL = rootURL + '/query/sparql';
-    }
-//    console.log('sparql ' + sparqlQuery + ' to ' + endpointURL);
-
-    $.ajax({
-        type: 'GET',
-        headers: {
-            Accept: "application/json"
-        },
-        url: endpointURL,
-        data: {'query': sparqlQuery},
-        //dataType: "application/sparql-results+json",
-        dataType: "json",
-        crossDomain: true,
-        success: function (data, textStatus, jqXHR) {
-//            console.log(data);
-            $('#parRDFGraph svg').remove();
-            if (!isConstruct) {
-                var keyNb = Object.keys(data.results.bindings[0]).length;
-                // If the answer is not empty
-                if (keyNb > 0) {
-                    renderList(data);
-                    displayMap(data);
-                } else {
-                    $('#tbRes thead tr').remove();
-                    $('#tbRes tbody tr').remove();
-                    $('#map').remove();
-                }
-            } else {
-                $('#tbRes thead tr').remove();
-                $('#tbRes tbody tr').remove();
-                $('#map').remove();
-                renderD3(data, "#parRDFGraph");
-            }
-
-            $('#btnQuery').attr("disabled", false);
-            $("#btnQuery").html("Query");
-        },
-        error: function (jqXHR, textStatus, errorThrown) {
-            $('#tbRes thead tr').remove();
-            $('#tbRes tbody tr').remove();
-            $('#map').remove();
-
-            infoError("SPARQL querying failure: " + errorThrown);
-//            console.log(errorThrown);
-            console.log(jqXHR.responseText);
-            $('#btnQuery').attr("disabled", false);
-            $('#btnQuery').html("Query");
-        }
-    });
-}
-
-
-function sparqlFed(sparqlQuery) {
-    $('#btnQueryFed').attr("disabled", true);
-    $("#btnQueryFed").html("Querying ...");
-    $('#tbAdvanced tbody').html("");
-    $('#tbResFed thead').html("");
-    $('#tbResFed tbody').html("");
-    $('#parProvGraph svg').remove();
-
-    console.log('Federated sparql querying ' + sparqlQuery);
-    fedURL = '';
-    if ($('#checkProv').prop('checked')) {
-        fedURL = rootURL + '/dqp/sparqlprov';
-    } else {
-        fedURL = rootURL + '/dqp/sparql';
-    }
-
-    if ($('#checkAdvanced').prop('checked')) {
-        pollCost();
-    } else {
-        $('#parAdvanced').html("");
-    }
-
-    var boolTPgrouping = $('#checkTPGrouping').prop('checked');
-    if (boolTPgrouping) {
-        console.log("Triple pattern grouping enabled");
-    } else {
-        console.log("Triple pattern grouping disabled");
-    }
-
-
-    $.ajax({
-        type: 'GET',
-        headers: {
-            Accept: "application/sparql-results+json"
-        },
-        // url: rootURL + '/dqp/sparql',
-        url: fedURL,
-        data: {'query': sparqlQuery, 'tpgrouping': boolTPgrouping, 'slicing': $('#txtSlice').val()},
-        //dataType: "application/sparql-results+json",
-        dataType: "json",
-        crossDomain: true,
-        success: function (data, textStatus, jqXHR) {
-//                        console.log(data)
-            if ($('#checkProv').prop('checked')) {
-                renderListFed(data.mappings);
-                renderD3(data, "#parProvGraph");
-            } else {
-                renderListFed(data);
-            }
-
-            $('#btnQueryFed').attr("disabled", false);
-            $("#btnQueryFed").html("Query");
-        },
-        error: function (jqXHR, textStatus, errorThrown) {
-            infoError("SPARQL querying failure: " + textStatus);
-            $('#tbResFed thead tr').remove();
-            $('#tbResFed tbody tr').remove();
-            $('#parProvGraph svg').remove();
-
-            console.log(errorThrown);
-            console.log(jqXHR.responseText);
-            $('#btnQueryFed').attr("disabled", false);
-            $("#btnQueryFed").html("Query");
-        }
-    });
-}
-
-/*
- * Check if object exist in array
- * @obj object to search in array
- * @list array to check presence of object
- */
-function containsObject(obj, list) {
-    var i;
-    for (i = 0; i < list.length; i++) {
-        if (list[i]["controller"] === obj["controller"] && list[i]["controlled"] === obj["controlled"]) {
-            return true;
-        }
-    }
-    return false;
-}
-
-function sparqlSysBio(genesList, cy) {
-    console.log("Sending query");
-    endpointURL = rootURL + '/systemic/network';
-    genesList = genesList.split(",");
-    console.log(genesList);
-    var genesJSON = JSON.stringify(genesList);
-    
-    $.ajax({
-        type: 'GET',
-        headers: {
-            Accept: "application/json"
-        },
-        url: endpointURL,
-        data: 'genes=' + genesJSON,
-        dataType: "json",
-        crossDomain: true,
-        success: function (data, textStatus, jqXHR) {
-            // Get valid JSON format
-            items = JSON.parse(JSON.stringify(data));            
-            // Set content of graph and get list of uniq regulators
-            var toUniq = graphContent(cy, items) ;
-            // Apply layout on loaded data
-            graphLayout(cy, genesList);
-            // Hide running query message        
-            document.getElementById("sendingQuery").style.display = 'none';
-            // Show legend
-            document.getElementById("graphe-legend").style.display = 'block';
-            document.getElementById("next-level-regulation").style.display = 'block';
-            // Remove old checkbo;x
-            var container = document.getElementById("input-next-regulation");
-            while (container.hasChildNodes()){
-                container.removeChild(container.firstChild);
-            }
-            checkboxContent(toUniq);
-            document.getElementById('cy').addEventListener("dblclick", function resetGraph() {
-                cy.fit();
-            });          
-        },
-        error: function (jqXHR, textStatus, errorThrown) {
-            document.getElementById("errorQuery").style.display = 'block';
-            document.getElementById("sendingQuery").style.display = 'none';
-            infoError("SPARQL querying failure: " + errorThrown);
-            console.log(jqXHR.responseText);
-        }
-    });
-}
-
-function graphLayout(cy, genesList) {
-    cy.layout({name:'cola', fit:true, nodeSpacing: 5, maxSimulationTime: 2000});                      
-    // Add class to edge of type ACTIVATION
-    cy.filter(function(i, element){
-        if( element.isEdge() && element.data("type") === 'ACTIVATION' ){
-            element.addClass('classActiv');
-        }
-    });
-    // Color edge of type ACTIVATION
-    cy.$('.classActiv').style({ 
-        'target-arrow-color' : '#3399ff', 
-        'width': 3,
-        'line-color' : '#3399ff' 
-    });
-    // Style on input node
-    for (var gene in genesList) {
-        var re = new RegExp(genesList[gene], "gi");
-        // Add class to node of name as input
-        cy.filter(function(i, element){
-            if( element.isNode() ) {
-                if ( element.data("id").match(re)) {
-                    element.addClass('classInput');
-                }
-            }
-        });
-    }
-    // Color node with input name
-    cy.$('.classInput').style({ 
-        'background-color': 'red',
-        'width':30,
-        'height':30
-    });
-    // On click remove node and redraw graph
-    cy.nodes().on("click", function(e){
-        var id = e.cyTarget.id();
-        cy.getElementById(id).remove();
-        cy.layout({name:'cola'});
-    });
-};
-
-function graphContent(cy, items) {
-    var toUniq = []; // array of uniq edge
-    var i = 0;
-    // For each genes of the query
-    for (var object in items) {
-        // Tranform JSON format to Cytoscape JSON format 
-        var name = object.toString(); // URI of interaction
-        if(typeof items[object]["http://www.biopax.org/release/biopax-level3.owl#controller"] !== 'undefined') {
-            var pair = {
-                controller :items[object]["http://www.biopax.org/release/biopax-level3.owl#controller"][0]["value"],
-                controlled:items[object]["http://www.biopax.org/release/biopax-level3.owl#controlled"][0]["value"]
-            };
-
-            if (containsObject(pair, toUniq) === false){
-                toUniq.push(pair);
-                cy.add([
-                    {
-                        // Controller/source name
-                        data: {
-                           id: items[object]["http://www.biopax.org/release/biopax-level3.owl#controller"][0]["value"]
-                           //position: { x: i, y: 1+i }
-                        }
-                    },
-                    {
-                        // Controlled/target name
-                        data: {
-                           id: items[object]["http://www.biopax.org/release/biopax-level3.owl#controlled"][0]["value"].replace('Transcription of ','')
-                           //position: { x: 3, y: 3 }
-                        }
-                    },                    
-                    {
-                        // Directed edge
-                        data: {
-                            id: name,
-                            source: items[object]["http://www.biopax.org/release/biopax-level3.owl#controller"][0]["value"], //controller
-                            target: items[object]["http://www.biopax.org/release/biopax-level3.owl#controlled"][0]["value"].replace('Transcription of ',''), //controlled
-                            type: items[object]["http://www.biopax.org/release/biopax-level3.owl#displayName"][0]["value"]
-                        }   
-                    }
-                ]);
-                i++;
-            }
-        }
-    }
-    return toUniq.sort();
-};
-
-/*
- * Add checkbox
- * @toUniq : Array of object controller and controlled
- */
-function checkboxContent(toUniq){
-    var i;
-    var controller = [];
-    // Add list of new gene in panel for next run
-    for (i=0; i< toUniq.length; i++) {
-        if( $.inArray(toUniq[i]["controller"], controller) === -1){
-            controller.push(toUniq[i]["controller"]);
-            var container = document.getElementById("input-next-regulation");
-            // Label of checkbox
-            var label = document.createElement('label');
-            label.id = "next-regulation-label";
-            // Checkbox content
-            var checkbox = document.createElement('input');
-            checkbox.type = "checkbox";
-            checkbox.name = "next-regulation-checkbox";
-            checkbox.value = toUniq[i]["controller"];                
-            container.appendChild(label);
-            label.appendChild(checkbox);
-            label.appendChild(document.createTextNode(" "+toUniq[i]["controller"]));
-            label.style.display = 'block';
-        }
-    }
-};
-
-function pollCost() {
-    $.ajax({
-        url: rootURL + '/dqp/getCost',
-        type: 'GET',
-        dataType: 'json',
-        success: function (data) {
-            // depending on the data, either call setTimeout or simply don't
-//            renderCostOneTab(data);
-            renderCostMultiTab(data);
-            if ($('#btnQueryFed').is(":disabled")) {
-                setTimeout(pollCost, 500);
-            }
-        },
-        error: function (jqXHR, textStatus, errorThrown) {
-            console.log(textStatus);
-            console.log(jqXHR.responseText);
-            console.log(errorThrown);
-            infoError(rootURL + '/dqp/getCost' + " does not monitor DQP cost");
-        }
-    });
-}
-
-
-function addDataSource(endpointURL) {
-    if (!validDataSources.contains(endpointURL)) {
-        $('#tbDataSources tbody').append("<tr> \n\
-                    <td>" + endpointURL + "</td>\n\
-                    <td align=right >\n\
-                        <button id=\"testBtn\" class=\"btn btn-xs btn-success\" type=button>Test</button> \n\
-                        <button id=\"delBtn\" class=\"btn btn-xs btn-danger\" type=button>Delete</button></td> \n\
-                    </tr>");
-        testEndpoint(endpointURL, $('#tbDataSources tbody tr:last').index());
-    }
-}
-
-function testEndpoint(endpointURL, rowIndex) {
-    console.log("Testing " + endpointURL + " endpoint !");
-    $.ajax({
-        type: 'POST',
-        url: rootURL + '/dqp/testDatasources',
-        data: {'endpointUrl': endpointURL},
-        dataType: 'json',
-        success: function (data, textStatus, jqXHR) {
-            console.log(data);
-            if (data.test === true) {
-                console.log(endpointURL + " responds to SPARQL queries");
-
-                //update the icon of the data source
-                $('#tbDataSources tbody tr:eq(' + rowIndex + ') td:eq(1)').html('<button id=\"testBtn\" class=\"btn btn-xs btn-success\" type=button>Test</button> \n\
-                            <button id=\"delBtn\" class=\"btn btn-xs btn-danger\" type=button>Delete</button>\n\
-                            <i class=\"glyphicon glyphicon-ok\"></i>');
-                //update the internal list of data sources
-                if (!validDataSources.contains(endpointURL)) {
-                    validDataSources.push(endpointURL);
-                }
-                resetDQP();
-            } else {
-                console.log(endpointURL + " does NOT respond to SPARQL queries");
-            }
-        },
-        error: function (jqXHR, textStatus, errorThrown) {
-            console.log(jqXHR);
-            console.log(errorThrown);
-            infoError(endpointURL + " does not responds to SPARQL queries");
-            //update the icon of the data source
-            //$('#tbDataSources tbody tr:eq('+rowIndex+')').append('<td><i class=\"icon-warning-sign\"></i></td>');
-            $('#tbDataSources tbody tr:eq(' + rowIndex + ') td:eq(1)').html('<button id=\"testBtn\" class=\"btn btn-xs btn-success\" type=button>Test</button> \n\
-                            <button id=\"delBtn\" class=\"btn btn-xs btn-danger\" type=button>Delete</button>\n\
-                            <i class=\"glyphicon glyphicon-warning-sign\"></i></td>');
-        }
-    });
-}
-
 ////////////////////////////////
 // HTML rendering
 ////////////////////////////////
@@ -1205,440 +296,373 @@ function loginInfoReset() {
     $('#loginInfo').text();
 }
 
-function renderGalaxyHistories(data) {
-    $('#tableGalaxyHistories thead tr').remove();
-    $('#tableGalaxyHistories tbody tr').remove();
-    // var table = $('#tableGalaxyHistories').DataTable();
-    // table.destroy();
+//
+// TO REMOVE ?
+//
 
-    // $('#tableGalaxyHistories thead').html('<tr> <th>Available Galaxy histories</th> <th>Provenance export</th></tr>');
-    $('#tableGalaxyHistories thead').html('<tr> <th></th> <th></th> </tr>');
+//
+//function load() {
+//    $('#btnLoad').attr("disabled", true);
+//    $("#btnLoad").html("Loading ...");
+//    console.log('Loading ' + $('#txtLoad').val() + ' to ' + rootURL + ' / ' + $('#graphLoad').val());
+//    $.ajax({
+//        type: 'POST',
+//        url: rootURL + '/sparql/load',
+//        data: {'remote_path': $('#txtLoad').val(), 'source': $('#graphLoad').val()},
+//        dataType: "text",
+//        success: function (data, textStatus, jqXHR) {
+//            console.log(data);
+//            infoSuccess("Loading done.");
+//            $('#btnLoad').attr("disabled", false);
+//            $("#btnLoad").html("Load");
+//        },
+//        error: function (jqXHR, textStatus, errorThrown) {
+//            infoError('Corese/KGRAM error: ' + textStatus);
+//            console.log(errorThrown);
+//            console.log(jqXHR);
+//            $('#btnLoad').attr("disabled", false);
+//            $("#btnLoad").html("Load");
+//        }
+//    });
+//}
+//
 
-    if (data.histories.length > 0) {
-        $.each(data.histories, function (index, item) {
-            //console.log(item);
-            var row = "<tr>";
-            row = row + "<td>" + htmlEncode(item.label) + "</td>";
-            row = row + "<td align=right >\n\
-                        <button id=\"genProvBtn-"+item.id+"\" gHistoryId=\""+item.id+"\" class=\"btn btn-xs btn-success myBtnRDFProv\" type=button>export PROV</button> \n\
-                        <button id=\"visProvBtn-"+item.id+"\" gHistoryId=\""+item.id+"\" class=\"btn btn-xs btn-info myBtnD3Prov\" type=button>visualise PROV</button></td>" ;
-            row = row + "</tr>";
+//
+//function sparqlFed(sparqlQuery) {
+//    $('#btnQueryFed').attr("disabled", true);
+//    $("#btnQueryFed").html("Querying ...");
+//    $('#tbAdvanced tbody').html("");
+//    $('#tbResFed thead').html("");
+//    $('#tbResFed tbody').html("");
+//    $('#parProvGraph svg').remove();
+//
+//    console.log('Federated sparql querying ' + sparqlQuery);
+//    fedURL = '';
+//    if ($('#checkProv').prop('checked')) {
+//        fedURL = rootURL + '/dqp/sparqlprov';
+//    } else {
+//        fedURL = rootURL + '/dqp/sparql';
+//    }
+//
+//    if ($('#checkAdvanced').prop('checked')) {
+//        pollCost();
+//    } else {
+//        $('#parAdvanced').html("");
+//    }
+//
+//    var boolTPgrouping = $('#checkTPGrouping').prop('checked');
+//    if (boolTPgrouping) {
+//        console.log("Triple pattern grouping enabled");
+//    } else {
+//        console.log("Triple pattern grouping disabled");
+//    }
+//
+//
+//    $.ajax({
+//        type: 'GET',
+//        headers: {
+//            Accept: "application/sparql-results+json"
+//        },
+//        // url: rootURL + '/dqp/sparql',
+//        url: fedURL,
+//        data: {'query': sparqlQuery, 'tpgrouping': boolTPgrouping, 'slicing': $('#txtSlice').val()},
+//        //dataType: "application/sparql-results+json",
+//        dataType: "json",
+//        crossDomain: true,
+//        success: function (data, textStatus, jqXHR) {
+////                        console.log(data)
+//            if ($('#checkProv').prop('checked')) {
+//                renderListFed(data.mappings);
+//                renderD3(data, "#parProvGraph");
+//            } else {
+//                renderListFed(data);
+//            }
+//
+//            $('#btnQueryFed').attr("disabled", false);
+//            $("#btnQueryFed").html("Query");
+//        },
+//        error: function (jqXHR, textStatus, errorThrown) {
+//            infoError("SPARQL querying failure: " + textStatus);
+//            $('#tbResFed thead tr').remove();
+//            $('#tbResFed tbody tr').remove();
+//            $('#parProvGraph svg').remove();
+//
+//            console.log(errorThrown);
+//            console.log(jqXHR.responseText);
+//            $('#btnQueryFed').attr("disabled", false);
+//            $("#btnQueryFed").html("Query");
+//        }
+//    });
+//}
 
-            $('#tableGalaxyHistories tbody').append(row);
-        });
-    }
+//function pollCost() {
+//    $.ajax({
+//        url: rootURL + '/dqp/getCost',
+//        type: 'GET',
+//        dataType: 'json',
+//        success: function (data) {
+//            // depending on the data, either call setTimeout or simply don't
+////            renderCostOneTab(data);
+//            renderCostMultiTab(data);
+//            if ($('#btnQueryFed').is(":disabled")) {
+//                setTimeout(pollCost, 500);
+//            }
+//        },
+//        error: function (jqXHR, textStatus, errorThrown) {
+//            console.log(textStatus);
+//            console.log(jqXHR.responseText);
+//            console.log(errorThrown);
+//            infoError(rootURL + '/dqp/getCost' + " does not monitor DQP cost");
+//        }
+//    });
+//}
 
-    $('#tableGalaxyHistories').DataTable({
-        dom:' <"search"f><"top"l>rt<"bottom"ip><"clear">',
-        retrieve: true,
-        paging: true, 
-        reponsive: true,
-        ordering:  false
-    });
-}
+//
+//function addDataSource(endpointURL) {
+//    if (!validDataSources.contains(endpointURL)) {
+//        $('#tbDataSources tbody').append("<tr> \n\
+//                    <td>" + endpointURL + "</td>\n\
+//                    <td align=right >\n\
+//                        <button id=\"testBtn\" class=\"btn btn-xs btn-success\" type=button>Test</button> \n\
+//                        <button id=\"delBtn\" class=\"btn btn-xs btn-danger\" type=button>Delete</button></td> \n\
+//                    </tr>");
+//        testEndpoint(endpointURL, $('#tbDataSources tbody tr:last').index());
+//    }
+//}
 
-function renderProv(data, title) {
-    $('#parProvTriples').html("");
-    $('#parProvGraph').html("");
-    renderD3(data,"#parProvGraph");
-    $('#parProvGraph').append("<p class=\"text-right\"><em>"+title+"</em></p>");
-}
+//function testEndpoint(endpointURL, rowIndex) {
+//    console.log("Testing " + endpointURL + " endpoint !");
+//    $.ajax({
+//        type: 'POST',
+//        url: rootURL + '/dqp/testDatasources',
+//        data: {'endpointUrl': endpointURL},
+//        dataType: 'json',
+//        success: function (data, textStatus, jqXHR) {
+//            console.log(data);
+//            if (data.test === true) {
+//                console.log(endpointURL + " responds to SPARQL queries");
+//
+//                //update the icon of the data source
+//                $('#tbDataSources tbody tr:eq(' + rowIndex + ') td:eq(1)').html('<button id=\"testBtn\" class=\"btn btn-xs btn-success\" type=button>Test</button> \n\
+//                            <button id=\"delBtn\" class=\"btn btn-xs btn-danger\" type=button>Delete</button>\n\
+//                            <i class=\"glyphicon glyphicon-ok\"></i>');
+//                //update the internal list of data sources
+//                if (!validDataSources.contains(endpointURL)) {
+//                    validDataSources.push(endpointURL);
+//                }
+//                resetDQP();
+//            } else {
+//                console.log(endpointURL + " does NOT respond to SPARQL queries");
+//            }
+//        },
+//        error: function (jqXHR, textStatus, errorThrown) {
+//            console.log(jqXHR);
+//            console.log(errorThrown);
+//            infoError(endpointURL + " does not responds to SPARQL queries");
+//            //update the icon of the data source
+//            //$('#tbDataSources tbody tr:eq('+rowIndex+')').append('<td><i class=\"icon-warning-sign\"></i></td>');
+//            $('#tbDataSources tbody tr:eq(' + rowIndex + ') td:eq(1)').html('<button id=\"testBtn\" class=\"btn btn-xs btn-success\" type=button>Test</button> \n\
+//                            <button id=\"delBtn\" class=\"btn btn-xs btn-danger\" type=button>Delete</button>\n\
+//                            <i class=\"glyphicon glyphicon-warning-sign\"></i></td>');
+//        }
+//    });
+//}
 
-function renderList(data) {
+//function renderList(data) {
+//
+//    // JAX-RS serializes an empty list as null, and a 'collection of one' as an object (not an 'array of one')
+//    var listVal = data.results.bindings == null ? [] : (data.results.bindings instanceof Array ? data.results.bindings : [data.results.bindings]);
+//    var listVar = data.head.vars == null ? [] : (data.head.vars instanceof Array ? data.head.vars : [data.head.vars]);
+//
+//    $('#tbRes thead tr').remove();
+//    $('#tbRes tbody tr').remove();
+//
+//    if (data.results.bindings.length > 0) {
+//        //Rendering the headers
+//        var tableHeader = '<tr>';
+//        $.each(listVar, function (index, item) {
+//            tableHeader = tableHeader + '<th>?' + item + '</th>';
+//        });
+//        tableHeader = tableHeader + '</tr>';
+//        $('#tbRes thead').html(tableHeader);
+//
+//        //Rendering the values
+//        $.each(listVal, function (index, item) {
+//            var row = "<tr>";
+//
+//            for (var i = 0; i < listVar.length; i++) {
+//                var v = listVar[i];
+//                if (item.hasOwnProperty(v)) {
+//                    row = row + "<td>" + htmlEncode(item[v].value) + "</td>";
+//                } else {
+//                    row = row + "<td></td>";
+//                }
+//            }
+//
+//            row = row + "</tr>";
+////                $('#tbRes tbody').prepend(row);
+//            $('#tbRes tbody').append(row);
+//        });
+//    }
+//}
 
-    // JAX-RS serializes an empty list as null, and a 'collection of one' as an object (not an 'array of one')
-    var listVal = data.results.bindings == null ? [] : (data.results.bindings instanceof Array ? data.results.bindings : [data.results.bindings]);
-    var listVar = data.head.vars == null ? [] : (data.head.vars instanceof Array ? data.head.vars : [data.head.vars]);
-
-    $('#tbRes thead tr').remove();
-    $('#tbRes tbody tr').remove();
-
-    if (data.results.bindings.length > 0) {
-        //Rendering the headers
-        var tableHeader = '<tr>';
-        $.each(listVar, function (index, item) {
-            tableHeader = tableHeader + '<th>?' + item + '</th>';
-        });
-        tableHeader = tableHeader + '</tr>';
-        $('#tbRes thead').html(tableHeader);
-
-        //Rendering the values
-        $.each(listVal, function (index, item) {
-            var row = "<tr>";
-
-            for (var i = 0; i < listVar.length; i++) {
-                var v = listVar[i];
-                if (item.hasOwnProperty(v)) {
-                    row = row + "<td>" + htmlEncode(item[v].value) + "</td>";
-                } else {
-                    row = row + "<td></td>";
-                }
-            }
-
-            row = row + "</tr>";
-//                $('#tbRes tbody').prepend(row);
-            $('#tbRes tbody').append(row);
-        });
-    }
-}
-
-function renderCostMultiTab(data) {
-    $('#parAdvanced').html("");
-
-    var table = "<table id=\"tbAdvanced\" class=\"table table-striped\"> \n <tbody>  ";
-
-    var totalQReq = data.totalQueryReq;
-    var totalQRes = data.totalQueryRes;
-    var totalSrcReq = data.totalSourceReq;
-    var totalSrcRes = data.totalSourceRes;
-
-    var listQCost = data.queryCost;
-    // number of requests per subqueries
-
-
-    table = table + "<caption><strong>Requests per subquery</strong></caption> \n";
-    $.each(listQCost, function (index, item) {
-        console.log(listQCost[index].query);
-        console.log(listQCost[index].nbReq);
-        console.log(listQCost[index].nbRes);
-        var query = listQCost[index].query;
-        var v = Math.round(100 * (listQCost[index].nbReq) / totalQReq);
-        var p = '<div class="progress"> \n\
-                <div class="progress-bar mypopover" role="progressbar" aria-valuenow="' + v + '" aria-valuemin="0" aria-valuemax="' + 100 + '" style="width: ' + v + '%;"> \n\
-               <span>' + v + '% of total requests</span> \n\
-               </div> \n\
-                </div>';
-        table = table + "<tr> \n\
-                    <td>" + htmlEncode(query) + "</td>\n\
-                    <td align=left >\n\
-                    " + p + "\n\
-                </td></tr> \n";
-        //$('#parAdvanced').append(p);
-        //console.log(query+' : '+v+'% of total requests');
-    });
-    table = table + "</tbody></table>";
-    $('#parAdvanced').append(table);
-    $('#parAdvanced').append("<br>");
-
-    table = "<table id=\"tbAdvanced\" class=\"table table-striped\"> \n <tbody>  ";
-    // number of results per subqueries
-    table = table + "<caption><strong>Results per subquery</strong></caption> \n";
-    $.each(listQCost, function (index, item) {
-        //console.log(listQCost[index].query);
-        //console.log(listQCost[index].nbReq);
-        //console.log(listQCost[index].nbRes);
-        var query = listQCost[index].query;
-        var v = Math.round(100 * (listQCost[index].nbRes) / totalQRes);
-        var p = '<div class="progress"> \n\
-                <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="' + v + '" aria-valuemin="0" aria-valuemax="' + 100 + '" style="width: ' + v + '%;"> \n\
-                <span>' + v + '% of total results</span> \n\
-                </div> \n\
-            </div>';
-        table = table + "<tr> \n\
-                    <td>" + htmlEncode(query) + "</td>\n\
-                    <td align=left >\n\
-                    " + p + "\n\
-                </td></tr> \n";
-        //$('#parAdvanced').append(p);
-        //console.log(query+' : '+v+'% of total results');
-    });
-    table = table + "</tbody></table>";
-    $('#parAdvanced').append(table);
-    $('#parAdvanced').append("<br>");
-    // $('#parAdvanced').append("<br>");
-
-
-
-    var listSrcCost = data.sourceCost;
-    table = "<table id=\"tbAdvanced\" class=\"table table-striped\"> \n <tbody>  ";
-    // number of requests per source
-    table = table + "<caption><strong>Requests per source</strong></caption> \n";
-    $.each(listSrcCost, function (index, item) {
-        //console.log(listQCost[index].query);
-        //console.log(listQCost[index].nbReq);
-        //console.log(listQCost[index].nbRes);
-        var source = listSrcCost[index].source;
-        var v = Math.round(100 * (listSrcCost[index].nbReq) / totalSrcReq);
-        var p = '<div class="progress"> \n\
-                <div class="progress-bar" role="progressbar" aria-valuenow="' + v + '" aria-valuemin="0" aria-valuemax="' + 100 + '" style="width: ' + v + '%;"> \n\
-               <span>' + v + '% of total requests</span> \n\
-               </div> \n\
-            </div>';
-        table = table + "<tr> \n\
-                    <td>" + htmlEncode(source) + "</td>\n\
-                    <td align=left >\n\
-                    " + p + "\n\
-                </td></tr> \n";
-        //$('#parAdvanced').append(p);
-        //console.log(source+' : '+v+'% of total requests');
-    });
-    table = table + "</tbody></table>";
-    $('#parAdvanced').append(table);
-    $('#parAdvanced').append("<br>");
-
-    // number of results per source
-    table = "<table id=\"tbAdvanced\" class=\"table table-striped\"> \n <tbody>  ";
-    table = table + "<caption><strong>Results per source</strong></caption> \n";
-    $.each(listSrcCost, function (index, item) {
-        //console.log(listQCost[index].query);
-        //console.log(listQCost[index].nbReq);
-        //console.log(listQCost[index].nbRes);
-        var source = listSrcCost[index].source;
-        var v = Math.round(100 * (listSrcCost[index].nbRes) / totalSrcRes);
-        var p = '<div class="progress"> \n\
-                <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="' + v + '" aria-valuemin="0" aria-valuemax="' + 100 + '" style="width: ' + v + '%;"> \n\
-                <span>' + v + '% of total results</span> \n\
-                </div> \n\
-            </div>';
-        table = table + "<tr> \n\
-                    <td>" + htmlEncode(source) + "</td>\n\
-                    <td align=left >\n\
-                    " + p + "\n\
-                </td></tr> \n";
-        //$('#parAdvanced').append(p);
-        //console.log(source+' : '+v+'% of total results');
-    });
-    table = table + "</tbody></table>";
-    $('#parAdvanced').append(table);
-    $('#parAdvanced').append("<br>");
-//    $('#tbAdvanced').append(table);
-}
-
-function renderD3(data, htmlCompId) {
-    var d3Data = data.d3;
-    var mappings = data.mappings;
-    var sMaps = JSON.stringify(mappings);
-
-    var width = $(htmlCompId).parent().width();
-//        var height = $("svg").parent().height();
-    var height = 400;
-    var color = d3.scale.category20();
-
-    var force = d3.layout.force()
-            .charge(-200)
-            .linkDistance(50)
-//        .friction(.8)
-            .size([width, height]);
-
-    var svg = d3.select(htmlCompId).append("svg")
-//    	.attr("width", width)
-//    	.attr("height", height)
-            .attr("viewBox", "0 0 600 400")
-            .attr("width", "100%")
-            .attr("height", 400)
-            .attr("preserveAspectRatio", "xMidYMid")
-            .style("background-color", "#F4F2F5");
-
-    force.nodes(d3Data.nodes).links(d3Data.edges).start();
-
-    var link = svg.selectAll(".link")
-            .data(d3Data.edges)
-            .enter().append("path")
-            .attr("d", "M0,-5L10,0L0,5")
-            // .enter().append("line")
-            .attr("class", "link")
-            .style("stroke-width", function (d) {
-                if (d.label.indexOf("prov#") !== -1) {
-                    return 4;
-                }
-                return 4;
-            })
-            .on("mouseout", function (d, i) {
-                d3.select(this).style("stroke", " #a0a0a0");
-            })
-            .on("mouseover", function (d, i) {
-                d3.select(this).style("stroke", " #000000");
-            });
-
-    link.append("title")
-            .text(function (d) {
-                return d.label;
-            });
-
-
-    var node_drag = d3.behavior.drag()
-            .on("dragstart", dragstart)
-            .on("drag", dragmove)
-            .on("dragend", dragend);
-
-    function dragstart(d, i) {
-        force.stop() // stops the force auto positioning before you start dragging
-    }
-
-    function dragmove(d, i) {
-        d.px += d3.event.dx;
-        d.py += d3.event.dy;
-        d.x += d3.event.dx;
-        d.y += d3.event.dy;
-        tick(); // this is the key to make it work together with updating both px,py,x,y on d !
-    }
-
-    function dragend(d, i) {
-        d.fixed = true; // of course set the node to fixed so the force doesn't include the node in its auto positioning stuff
-        tick();
-        force.resume();
-    }
-
-    var node = svg.selectAll("g.node")
-            .data(d3Data.nodes)
-            .enter().append("g")
-            .attr("class", "node")
-            // .call(force.drag);
-            .call(node_drag);
-
-    node.append("title")
-            .text(function (d) {
-                return d.name;
-            });
-
-    node.append("circle")
-            .attr("class", "node")
-            .attr("r", function (d) {
-                if (d.group === 0) {
-                    return 6;
-                }
-                return 12;
-            })
-            .on("dblclick", function (d) {
-                d.fixed = false;
-            })
-            .on("mouseover", fade(.1)).on("mouseout", fade(1))
-            .style("stroke", function (d) {
-                return color(d.group);
-            })
-            .style("stroke-width", 5)
-            .style("stroke-width", function (d) {
-                if (sMaps.indexOf(d.name) !== -1) {
-                    return 8;
-                }
-                return 3;
-            })
-            // 	.style("stroke-dasharray",function(d) {
-            // if (sMaps.indexOf(d.name) !== -1) {
-            //   		return "5,5";
-            // }
-            // 		return "none";
-            // 	})
-            // .style("fill", "white")
-            .style("fill", function (d) {
-                return color(d.group);
-            });
-    // .on("mouseout", function(d, i) {
-    //  	d3.select(this).style("fill", "white");
-    // })
-    // .on("mouseover", function(d, i) {
-    //  	d3.select(this).style("fill", function(d) { return color(d.group); });
-    // }) ;
-
-    node.append("svg:text")
-            .attr("text-anchor", "middle")
-            // .attr("fill","white")
-            .style("pointer-events", "none")
-            .attr("font-size", "18px")
-            .attr("font-weight", "200")
-            .text(function (d) {
-                var vName = "\"" + d.name.substring(2, d.name.length);
-//                console.log(vName);
-                if (((sMaps.indexOf(vName) !== -1) || (sMaps.indexOf(d.name) !== -1)) && (d.group !== 0)) {
-                    return d.name;
-                }
-            });
+//function renderCostMultiTab(data) {
+//    $('#parAdvanced').html("");
+//
+//    var table = "<table id=\"tbAdvanced\" class=\"table table-striped\"> \n <tbody>  ";
+//
+//    var totalQReq = data.totalQueryReq;
+//    var totalQRes = data.totalQueryRes;
+//    var totalSrcReq = data.totalSourceReq;
+//    var totalSrcRes = data.totalSourceRes;
+//
+//    var listQCost = data.queryCost;
+//    // number of requests per subqueries
+//
+//
+//    table = table + "<caption><strong>Requests per subquery</strong></caption> \n";
+//    $.each(listQCost, function (index, item) {
+//        console.log(listQCost[index].query);
+//        console.log(listQCost[index].nbReq);
+//        console.log(listQCost[index].nbRes);
+//        var query = listQCost[index].query;
+//        var v = Math.round(100 * (listQCost[index].nbReq) / totalQReq);
+//        var p = '<div class="progress"> \n\
+//                <div class="progress-bar mypopover" role="progressbar" aria-valuenow="' + v + '" aria-valuemin="0" aria-valuemax="' + 100 + '" style="width: ' + v + '%;"> \n\
+//               <span>' + v + '% of total requests</span> \n\
+//               </div> \n\
+//                </div>';
+//        table = table + "<tr> \n\
+//                    <td>" + htmlEncode(query) + "</td>\n\
+//                    <td align=left >\n\
+//                    " + p + "\n\
+//                </td></tr> \n";
+//        //$('#parAdvanced').append(p);
+//        //console.log(query+' : '+v+'% of total requests');
+//    });
+//    table = table + "</tbody></table>";
+//    $('#parAdvanced').append(table);
+//    $('#parAdvanced').append("<br>");
+//
+//    table = "<table id=\"tbAdvanced\" class=\"table table-striped\"> \n <tbody>  ";
+//    // number of results per subqueries
+//    table = table + "<caption><strong>Results per subquery</strong></caption> \n";
+//    $.each(listQCost, function (index, item) {
+//        //console.log(listQCost[index].query);
+//        //console.log(listQCost[index].nbReq);
+//        //console.log(listQCost[index].nbRes);
+//        var query = listQCost[index].query;
+//        var v = Math.round(100 * (listQCost[index].nbRes) / totalQRes);
+//        var p = '<div class="progress"> \n\
+//                <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="' + v + '" aria-valuemin="0" aria-valuemax="' + 100 + '" style="width: ' + v + '%;"> \n\
+//                <span>' + v + '% of total results</span> \n\
+//                </div> \n\
+//            </div>';
+//        table = table + "<tr> \n\
+//                    <td>" + htmlEncode(query) + "</td>\n\
+//                    <td align=left >\n\
+//                    " + p + "\n\
+//                </td></tr> \n";
+//        //$('#parAdvanced').append(p);
+//        //console.log(query+' : '+v+'% of total results');
+//    });
+//    table = table + "</tbody></table>";
+//    $('#parAdvanced').append(table);
+//    $('#parAdvanced').append("<br>");
+//    // $('#parAdvanced').append("<br>");
+//
+//
+//
+//    var listSrcCost = data.sourceCost;
+//    table = "<table id=\"tbAdvanced\" class=\"table table-striped\"> \n <tbody>  ";
+//    // number of requests per source
+//    table = table + "<caption><strong>Requests per source</strong></caption> \n";
+//    $.each(listSrcCost, function (index, item) {
+//        //console.log(listQCost[index].query);
+//        //console.log(listQCost[index].nbReq);
+//        //console.log(listQCost[index].nbRes);
+//        var source = listSrcCost[index].source;
+//        var v = Math.round(100 * (listSrcCost[index].nbReq) / totalSrcReq);
+//        var p = '<div class="progress"> \n\
+//                <div class="progress-bar" role="progressbar" aria-valuenow="' + v + '" aria-valuemin="0" aria-valuemax="' + 100 + '" style="width: ' + v + '%;"> \n\
+//               <span>' + v + '% of total requests</span> \n\
+//               </div> \n\
+//            </div>';
+//        table = table + "<tr> \n\
+//                    <td>" + htmlEncode(source) + "</td>\n\
+//                    <td align=left >\n\
+//                    " + p + "\n\
+//                </td></tr> \n";
+//        //$('#parAdvanced').append(p);
+//        //console.log(source+' : '+v+'% of total requests');
+//    });
+//    table = table + "</tbody></table>";
+//    $('#parAdvanced').append(table);
+//    $('#parAdvanced').append("<br>");
+//
+//    // number of results per source
+//    table = "<table id=\"tbAdvanced\" class=\"table table-striped\"> \n <tbody>  ";
+//    table = table + "<caption><strong>Results per source</strong></caption> \n";
+//    $.each(listSrcCost, function (index, item) {
+//        //console.log(listQCost[index].query);
+//        //console.log(listQCost[index].nbReq);
+//        //console.log(listQCost[index].nbRes);
+//        var source = listSrcCost[index].source;
+//        var v = Math.round(100 * (listSrcCost[index].nbRes) / totalSrcRes);
+//        var p = '<div class="progress"> \n\
+//                <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="' + v + '" aria-valuemin="0" aria-valuemax="' + 100 + '" style="width: ' + v + '%;"> \n\
+//                <span>' + v + '% of total results</span> \n\
+//                </div> \n\
+//            </div>';
+//        table = table + "<tr> \n\
+//                    <td>" + htmlEncode(source) + "</td>\n\
+//                    <td align=left >\n\
+//                    " + p + "\n\
+//                </td></tr> \n";
+//        //$('#parAdvanced').append(p);
+//        //console.log(source+' : '+v+'% of total results');
+//    });
+//    table = table + "</tbody></table>";
+//    $('#parAdvanced').append(table);
+//    $('#parAdvanced').append("<br>");
+////    $('#tbAdvanced').append(table);
+//}
 
 
-    var linkedByIndex = {};
-    d3Data.edges.forEach(function (d) {
-        linkedByIndex[d.source.index + "," + d.target.index] = 1;
-    });
+//function renderListFed(data) {
+//    // JAX-RS serializes an empty list as null, and a 'collection of one' as an object (not an 'array of one')
+//    var listVal = data.results.bindings == null ? [] : (data.results.bindings instanceof Array ? data.results.bindings : [data.results.bindings]);
+//    var listVar = data.head.vars == null ? [] : (data.head.vars instanceof Array ? data.head.vars : [data.head.vars]);
+//
+////	$('#tbResFed thead tr').remove();
+////	$('#tbResFed tbody tr').remove();
+//
+//    //Rendering the headers
+//    var tableHeader = '<tr>';
+//    $.each(listVar, function (index, item) {
+//        tableHeader = tableHeader + '<th>?' + item + '</th>';
+//    });
+//    tableHeader = tableHeader + '</tr>';
+//    $('#tbResFed thead').html(tableHeader);
+//
+//    //Rendering the values
+//    $.each(listVal, function (index, item) {
+//        var row = "<tr>";
+//
+//        for (var i = 0; i < listVar.length; i++) {
+//            var v = listVar[i];
+//            if (item.hasOwnProperty(v)) {
+//                row = row + "<td>" + htmlEncode(item[v].value) + "</td>";
+//            } else {
+//                row = row + "<td></td>";
+//            }
+//        }
+//
+//        row = row + "</tr>";
+//        $('#tbResFed tbody').append(row);
+//    });
+//}
 
-    function isConnected(a, b) {
-        return linkedByIndex[a.index + "," + b.index] || linkedByIndex[b.index + "," + a.index] || a.index === b.index;
-    }
 
-    force.on("tick", tick);
-
-    function tick() {
-        link.attr("x1", function (d) {
-            return d.source.x;
-        })
-                .attr("y1", function (d) {
-                    return d.source.y;
-                })
-                .attr("x2", function (d) {
-                    return d.target.x;
-                })
-                .attr("y2", function (d) {
-                    return d.target.y;
-                });
-
-        node.attr("transform", function (d) {
-            return "translate(" + d.x + "," + d.y + ")";
-        });
-
-        link.attr("d", function (d) {
-            var dx = d.target.x - d.source.x,
-                    dy = d.target.y - d.source.y,
-                    dr = Math.sqrt(dx * dx + dy * dy);
-
-            return "M" + d.source.x + "," + d.source.y + "A" + dr + "," + dr + " 0 0,1 " + d.target.x + "," + d.target.y;
-        });
-    }
-    ;
-
-    function fade(opacity) {
-        return function (d) {
-            node.style("stroke-opacity", function (o) {
-                thisOpacity = isConnected(d, o) ? 1 : opacity;
-                this.setAttribute('fill-opacity', thisOpacity);
-                return thisOpacity;
-            });
-
-            link.style("stroke-opacity", function (o) {
-                return o.source === d || o.target === d ? 1 : opacity;
-            });
-        };
-    }
-}
-
-function renderListFed(data) {
-    // JAX-RS serializes an empty list as null, and a 'collection of one' as an object (not an 'array of one')
-    var listVal = data.results.bindings == null ? [] : (data.results.bindings instanceof Array ? data.results.bindings : [data.results.bindings]);
-    var listVar = data.head.vars == null ? [] : (data.head.vars instanceof Array ? data.head.vars : [data.head.vars]);
-
-//	$('#tbResFed thead tr').remove();
-//	$('#tbResFed tbody tr').remove();
-
-    //Rendering the headers
-    var tableHeader = '<tr>';
-    $.each(listVar, function (index, item) {
-        tableHeader = tableHeader + '<th>?' + item + '</th>';
-    });
-    tableHeader = tableHeader + '</tr>';
-    $('#tbResFed thead').html(tableHeader);
-
-    //Rendering the values
-    $.each(listVal, function (index, item) {
-        var row = "<tr>";
-
-        for (var i = 0; i < listVar.length; i++) {
-            var v = listVar[i];
-            if (item.hasOwnProperty(v)) {
-                row = row + "<td>" + htmlEncode(item[v].value) + "</td>";
-            } else {
-                row = row + "<td></td>";
-            }
-        }
-
-        row = row + "</tr>";
-        $('#tbResFed tbody').append(row);
-    });
-}
-
-// Given a JSON data specifying the value associated to a tag, returns the 
-// processed template with (Handlebars.js)
-function processHbTemplate(hbTemplate, contextData) {
-    var theTemplate = Handlebars.compile(hbTemplate);
-    var theCompiledHtml = theTemplate(contextData);
-    return theCompiledHtml;
-}
 
 
