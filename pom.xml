@@ -309,8 +309,8 @@
                 <artifactId>maven-shade-plugin</artifactId>
                 <version>2.3</version>
                 <configuration>
-<!--                    <createDependencyReducedPom>true</createDependencyReducedPom>
-                    <shadedArtifactAttached>true</shadedArtifactAttached>-->
+                    <createDependencyReducedPom>true</createDependencyReducedPom>
+                    <shadedArtifactAttached>true</shadedArtifactAttached>
                     <shadedClassifierName>datahub-launcher</shadedClassifierName>
                     <filters>
                         <filter>
