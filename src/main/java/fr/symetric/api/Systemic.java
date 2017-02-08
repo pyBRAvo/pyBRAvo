@@ -78,7 +78,7 @@ public class Systemic {
                     // Parsing json is more simple than XML
                     String contentType = "application/json";
                     // URI of the SPARQL Endpoint
-                    String accessUri = "http://rdf.pathwaycommons.org/sparql";
+                    String accessUri = "http://192.54.201.50/sparql";
 
                     URI requestURI = javax.ws.rs.core.UriBuilder.fromUri(accessUri)
                                .queryParam("query", "{query}")
