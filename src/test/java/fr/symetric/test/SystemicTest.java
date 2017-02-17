@@ -12,6 +12,12 @@ import com.sun.jersey.api.client.config.ClientConfig;
 import com.sun.jersey.api.client.config.DefaultClientConfig;
 import com.sun.jersey.api.json.JSONConfiguration;
 import com.sun.jersey.api.uri.UriComponent;
+import fr.inria.edelweiss.kgraph.api.Loader;
+import fr.inria.edelweiss.kgraph.core.GraphStore;
+import fr.inria.edelweiss.kgraph.query.QueryProcess;
+import fr.inria.edelweiss.kgtool.load.Load;
+import fr.inria.edelweiss.kgtool.load.LoadException;
+import fr.symetric.api.QueryAPI;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -21,6 +27,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.logging.Level;
 import org.apache.jena.query.Query;
 import org.apache.jena.query.QueryExecution;
 import org.apache.jena.query.QueryExecutionFactory;
@@ -127,7 +134,8 @@ public class SystemicTest {
             m.write(System.out, "NT");
         }
     }
-    
+   
+    @Ignore
     @Test
     public void testSparqlIFBEndpoint() throws URISyntaxException, UnsupportedEncodingException {
         ClientConfig config = new DefaultClientConfig();

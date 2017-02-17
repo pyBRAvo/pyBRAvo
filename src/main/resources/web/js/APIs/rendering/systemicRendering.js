@@ -47,6 +47,7 @@ function graphLayout(cy, genesList) {
         cy.getElementById(id).remove();
         cy.layout({name:'cola'});
     });
+    displayQttInfo(cy);
 };
 
 /**
@@ -129,6 +130,18 @@ function checkboxContent(toUniq){
             label.style.display = 'block';
         }
     }
+};
+
+/**
+ * 
+ * @param {Cytoscape object} cy
+ */
+function displayQttInfo(cy){
+    var nbNodes = cy.nodes().size();
+    var nbEdges = cy.edges().size();
+    document.getElementById("total-info-nodes").innerHTML = nbNodes+" total nodes";
+    document.getElementById("total-info-edges").innerHTML = nbEdges+" total edges";
+    document.getElementById("btn-download").style.display = "block";
 };
 
 /**
