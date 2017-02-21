@@ -10,7 +10,6 @@
  * @param {Cytoscape object} cy
  */
 function sparqlSysBio(genesList, cy) {
-    console.log("sparqlSysBio");
     endpointURL = rootURL + '/systemic/network';
     genesList = genesList.split(",");
     console.log(genesList);
@@ -43,9 +42,18 @@ function sparqlSysBio(genesList, cy) {
                 container.removeChild(container.firstChild);
             }
             checkboxContent(toUniq);
+            // Listen to dbclick on graph to fit on network
             document.getElementById('cy').addEventListener("dblclick", function resetGraph() {
                 cy.fit();
-            });          
+            });
+            document.getElementById('btn-download').addEventListener("click", function exportGraph() {
+                var graphJson = cy.json();
+                var a = document.getElementById('a');
+                var blob = new Blob([JSON.stringify(graphJson)], {'type':'application/json'});
+                a.href = window.URL.createObjectURL(blob);
+                a.download = 'graph.json';
+                a.click();
+            }); 
         },
         error: function (jqXHR, textStatus, errorThrown) {
             document.getElementById("errorQuery").style.display = 'block';
@@ -78,6 +86,7 @@ function nextLevelRegulation(genesList, cy) {
         dataType: "json",
         crossDomain: true,
         success: function (data, textStatus, jqXHR) {
+            // Hide message
             document.getElementById("sendingQuery").style.display = 'none';
             // Get valid JSON format
             var items = JSON.parse(JSON.stringify(data));

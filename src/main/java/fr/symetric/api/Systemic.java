@@ -66,7 +66,10 @@ public class Systemic {
                         +"CONSTRUCT {\n"
                         +"?tempReac bp:displayName ?type ; bp:controlled ?controlledName ; bp:controller ?controllerName ; bp:dataSource ?source .\n"
                         +"} WHERE{ \n"
-                        +"FILTER( ( regex(?controlledName, ' "+genesList.get(i)+"$', 'i') ) && !regex(?source, 'mirtar', 'i') ) .\n"
+                        + "FILTER( (?controlledName = 'Transcription of "+genesList.get(i)+"'^^<http://www.w3.org/2001/XMLSchema#string>) "
+                            + "and (?controllerName != '"+genesList.get(i)+"') "
+                            + "and (?source != \"mirtarbase\") ) .\n"
+                        //+"FILTER( ( regex(?controlledName, ' "+genesList.get(i)+"$', 'i') ) && !regex(?source, 'mirtar', 'i') ) .\n"
                         +"?tempReac a bp:TemplateReactionRegulation .\n"
                         +"?tempReac bp:displayName ?reacName ; bp:controlled ?controlled ; bp:controller ?controller ; bp:controlType ?type ; bp:dataSource ?source .\n"
                         +"?controlled bp:displayName ?controlledName .\n"
@@ -78,7 +81,7 @@ public class Systemic {
                     // Parsing json is more simple than XML
                     String contentType = "application/json";
                     // URI of the SPARQL Endpoint
-                    String accessUri = "http://192.54.201.50/sparql";
+                    String accessUri = "http://rdf.pathwaycommons.org/sparql";
 
                     URI requestURI = javax.ws.rs.core.UriBuilder.fromUri(accessUri)
                                .queryParam("query", "{query}")
