@@ -44,6 +44,13 @@ public class Systemic {
     private Logger logger = Logger.getLogger(Systemic.class);
     private String headerAccept = "Access-Control-Allow-Origin";
     
+    /**
+     *  ?? Transcription of "+genesList.get(i) ??
+     *  ?? --> BioPAX doc ?? PathwayCommons ??
+     * @param genes
+     * @return
+     * @throws JSONException
+     */
     @GET
     @Path("/network")
     @Produces(MediaType.APPLICATION_JSON)
