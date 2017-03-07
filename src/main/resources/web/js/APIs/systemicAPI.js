@@ -36,11 +36,6 @@ function sparqlSysBio(genesList, cy) {
             // Show legend
             document.getElementById("graphe-legend").style.display = 'block';
             document.getElementById("next-level-regulation").style.display = 'block';
-            // Remove old checkbox
-            var container = document.getElementById("input-next-regulation");
-            while (container.hasChildNodes()){
-                container.removeChild(container.firstChild);
-            }
             checkboxContent(toUniq);
             // Listen to dbclick on graph to fit on network
             document.getElementById('cy').addEventListener("dblclick", function resetGraph() {

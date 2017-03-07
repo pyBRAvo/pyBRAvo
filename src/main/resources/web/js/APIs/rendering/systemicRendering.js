@@ -109,9 +109,19 @@ function graphContent(cy, items) {
  * @param {array of object} toUniq
  */
 function checkboxContent(toUniq){
+    var container = document.getElementById("input-next-regulation");
+    var innerDivId = [];
+    $(("#input-next-regulation")).find('input').each(function(){
+        toUniq.push({"controller" : $(this).attr('value')});
+    });
+    toUniq.sort(function(a,b){
+        return a.controller > b.controller;
+    });
+    while (container.hasChildNodes()){
+        container.removeChild(container.firstChild);
+    }
     var i;
     var controller = [];
-    var container = document.getElementById("input-next-regulation");
     // Add list of new gene in panel for next run
     for (i=0; i< toUniq.length; i++) {
         if( $.inArray(toUniq[i]["controller"], controller) === -1){
@@ -123,7 +133,12 @@ function checkboxContent(toUniq){
             var checkbox = document.createElement('input');
             checkbox.type = "checkbox";
             checkbox.name = "next-regulation-checkbox";
-            checkbox.value = toUniq[i]["controller"];                
+            checkbox.value = toUniq[i]["controller"];  
+//            if( $.inArray(toUniq[i]["controller"], regulatorChecked) !== -1){
+//                console.log("checked");
+//                checkbox.checked = 'true';
+//                checkbox.disabled = 'true';
+//            }
             container.appendChild(label);
             label.appendChild(checkbox);
             label.appendChild(document.createTextNode(" "+toUniq[i]["controller"]));
