@@ -41,12 +41,12 @@ function sparqlSysBio(genesList, cy) {
             document.getElementById('cy').addEventListener("dblclick", function resetGraph() {
                 cy.fit();
             });
-            var CSV = [["source","target","\n"]];
-            cy.edges().forEach(function( ele ){
-                CSV.push([ele["_private"]["data"]["source"], ele["_private"]["data"]["target"],"\n"]);
-            });
             document.getElementById('btn-download').addEventListener("click", function exportGraph() {
                 // var graphJson = cy.json();
+                var CSV = [["source","target","\n"]];
+                cy.edges().forEach(function( ele ){
+                    CSV.push([ele["_private"]["data"]["source"], ele["_private"]["data"]["target"],"\n"]);
+                });
                 var a = document.getElementById('a');
                 // var blob = new Blob([JSON.stringify(graphJson)], {'type':'application/json'});
                 var blob = new Blob(CSV, {'type':'text/csv'});
