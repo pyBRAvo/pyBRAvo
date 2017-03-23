@@ -170,8 +170,8 @@ function checkboxContent(toUniq){
 function displayQttInfo(cy){
     var nbNodes = cy.nodes().size();
     var nbEdges = cy.edges().size();
-    document.getElementById("total-info-nodes").innerHTML = nbNodes+" total nodes";
-    document.getElementById("total-info-edges").innerHTML = nbEdges+" total edges";
+    document.getElementById("total-info-nodes").innerHTML = nbNodes+" nodes";
+    document.getElementById("total-info-edges").innerHTML = nbEdges+" edges";
     document.getElementById("btn-download").style.display = "block";
 };
 

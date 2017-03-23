@@ -103,10 +103,11 @@ function nextLevelRegulation(genesList, cy) {
             graphLayout(cy, genesList);
             // Add item to checkbox
             checkboxContent(toUniq);
+            // Event : check all checkbox
             document.getElementById('toggle').addEventListener("click", function checklist() {
                 var checker = $('.toggle').is(':checked');
+                // When toggle click, check all
                 $('input:checkbox.next-regulation-checkbox').each(function() {
-                    console.log('toto');
                     $(this).prop('checked',checker);
                 });
             });
