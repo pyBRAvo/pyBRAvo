@@ -41,6 +41,13 @@ function sparqlSysBio(genesList, cy) {
             document.getElementById('cy').addEventListener("dblclick", function resetGraph() {
                 cy.fit();
             });
+            document.getElementById('toggle').addEventListener("click", function checklist() {
+                var checker = $('.toggle').is(':checked');
+                $('input:checkbox.next-regulation-checkbox').each(function() {
+                    console.log('toto');
+                    $(this).prop('checked',checker);
+                });
+            }); 
             document.getElementById('btn-download').addEventListener("click", function exportGraph() {
                 // var graphJson = cy.json();
                 var CSV = [["source","target","\n"]];
@@ -96,6 +103,13 @@ function nextLevelRegulation(genesList, cy) {
             graphLayout(cy, genesList);
             // Add item to checkbox
             checkboxContent(toUniq);
+            document.getElementById('toggle').addEventListener("click", function checklist() {
+                var checker = $('.toggle').is(':checked');
+                $('input:checkbox.next-regulation-checkbox').each(function() {
+                    console.log('toto');
+                    $(this).prop('checked',checker);
+                });
+            });
         },
         error: function (jqXHR, textStatus, errorThrown) {
             document.getElementById("errorQuery").style.display = 'block';

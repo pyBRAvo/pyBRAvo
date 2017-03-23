@@ -113,16 +113,20 @@ function checkboxContent(toUniq){
     var checklist = [];
     // Add existing gene list in checkbox to the new gene list
     $(("#input-next-regulation")).find('input').each(function(){
-        toUniq.push({"controller" : $(this).attr('value')});
-        if ($(this).is(':checked')) {
-            checklist.push($(this).attr('value'));
+        if ($(this).attr('value') !== 'All') {
+            toUniq.push({"controller" : $(this).attr('value')});
+            if ($(this).is(':checked')) {
+                checklist.push($(this).attr('value'));
+            }
         }
     });
-    console.log(checklist);
+    
     // Sort gene list
     toUniq.sort(function(a,b){
         return a.controller > b.controller;
     });
+    // Add 'All' selection
+    toUniq.unshift({"controller" : "All"});
     // Remove checkbox content
     while (container.hasChildNodes()){
         container.removeChild(container.firstChild);
@@ -140,11 +144,16 @@ function checkboxContent(toUniq){
             var checkbox = document.createElement('input');
             checkbox.type = "checkbox";
             checkbox.name = "next-regulation-checkbox";
+            checkbox.className = "next-regulation-checkbox";
             checkbox.value = toUniq[i]["controller"];
             // Recheck  
             if ($.inArray(toUniq[i]["controller"], checklist) !== -1) {
                 checkbox.checked = true;
                 checkbox.disabled = true;
+            }
+            if (toUniq[i]["controller"] === 'All') {
+                checkbox.className = "toggle";
+                checkbox.id = "toggle";
             }
             container.appendChild(label);
             label.appendChild(checkbox);
