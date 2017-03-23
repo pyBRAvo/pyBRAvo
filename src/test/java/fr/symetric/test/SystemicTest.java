@@ -18,14 +18,18 @@ import fr.inria.edelweiss.kgraph.query.QueryProcess;
 import fr.inria.edelweiss.kgtool.load.Load;
 import fr.inria.edelweiss.kgtool.load.LoadException;
 import fr.symetric.api.QueryAPI;
+import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
 import java.util.logging.Level;
 import org.apache.jena.query.Query;
@@ -185,6 +189,54 @@ public class SystemicTest {
             ResultSet resultTemp = qexec.execSelect();
             System.out.println(ResultSetFormatter.asText(resultTemp));
             qexec.close(); // Close construct execution
+        }
+    }
+    
+    @Test
+    public void testSPARQLServiceQuery() throws MalformedURLException, IOException {
+        
+        String[] geneList = {"GALT","CAD"};
+        Model m = ModelFactory.createDefaultModel();
+        
+        for (String gene : geneList) {
+            StringBuilder result = new StringBuilder();
+            String query = "PREFIX bp: <http://www.biopax.org/release/biopax-level3.owl#>\n"
+                +"PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n"
+                +"CONSTRUCT {\n"
+                +"?tempReac bp:displayName ?type ; bp:controlled ?controlledName ; bp:controller ?controllerName ; bp:dataSource ?source .\n"
+                +"} WHERE{ \n"
+                + "FILTER( (?controlledName = 'Transcription of "+gene+"'^^<http://www.w3.org/2001/XMLSchema#string>) "
+                    + "and (?controllerName != '"+gene+"') "
+                    + "and (?source != 'mirtarbase') ) .\n"
+                +"?tempReac a bp:TemplateReactionRegulation .\n"
+                +"?tempReac bp:displayName ?reacName ; bp:controlled ?controlled ; bp:controller ?controller ; bp:controlType ?type ; bp:dataSource ?source .\n"
+                +"?controlled bp:displayName ?controlledName .\n"
+                +"?controller bp:displayName ?controllerName .\n "
+                +"}"
+                +"GROUP BY ?controlledName ?controllerName";
+            String contentType = "application/json";
+            // URI of the SPARQL Endpoint
+            String accessUri = "http://rdf.pathwaycommons.org/sparql";
+
+            URI requestURI = javax.ws.rs.core.UriBuilder.fromUri(accessUri)
+                       .queryParam("query", "{query}")
+                       .queryParam("format", "{format}")
+                       .build(query, contentType);
+            URLConnection con = requestURI.toURL().openConnection();
+            con.addRequestProperty("Accept", contentType);
+            InputStream in = con.getInputStream();
+
+            // Read result
+            BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+
+            String lineResult;
+            while((lineResult = reader.readLine()) != null) {
+                result.append(lineResult);
+            }
+            System.out.println(result.toString());
+            // Prepare model
+            ByteArrayInputStream bais = new ByteArrayInputStream(result.toString().getBytes());
+            m.read(bais, null, "RDF/JSON");
         }
     }
 }

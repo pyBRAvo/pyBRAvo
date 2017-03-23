@@ -128,6 +128,7 @@ public class Systemic {
      * Next levels of regulation
      * @author Marie Lefebvre
      * @param constructModel : initial graphe
+     * @return model
      */
     public Model selectQuery(Model constructModel) {
         // SPARQL Query to get controller of a model
