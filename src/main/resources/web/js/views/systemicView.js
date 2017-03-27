@@ -52,41 +52,7 @@ var DemoSysbioView = Backbone.View.extend({
     querySearchNetwork: function () {
         console.log("querySearchNetworkEvt");
         // Initialize graphe visualization
-        var cy = cytoscape({
-            container: document.getElementById('cy'), // container to render in
-            boxSelectionEnabled: false,
-            autounselectify: true,
-            style: [ // the stylesheet for the graph
-                {
-                    selector: 'node',
-                    style: {
-                        'background-color': '#666',
-                        'width' : 15,
-                        'height' : 15,
-                        //'font-size' : 10,
-                        'label': 'data(id)'
-                    }
-                },
-                {
-                    selector: 'edge',
-                    style: {
-                        'width': 2,
-                        'line-color': '#ccc',
-                        'target-arrow-color': '#ccc',
-                        'target-arrow-shape': 'triangle',
-                        'curve-style': 'bezier'
-                        //'label': 'data(type)'
-                    }
-                }
-            ],
-            zoom: 1,
-            layout: {
-                name: 'cola',
-                directed: true,
-                fit: true,
-                padding: 50
-            }
-        });
+        var cy = initialCy();
         var genesList = $('#inputGeneList').val().replace(/\s/g, '');
         if (genesList !== "") {
             // Hide old message
@@ -99,7 +65,7 @@ var DemoSysbioView = Backbone.View.extend({
             // Listen to event
             $( "#btnRunNextRegulation" ).click(function() {
                 // Get gene list
-                var regulatorList = updateList();
+                var regulatorList = updateList("regulation");
                 if (regulatorList.length > 0){
                     // Make SPARQL queries to PathwayCommons endpoint
                     nextLevelRegulation(regulatorList, cy);
@@ -113,40 +79,7 @@ var DemoSysbioView = Backbone.View.extend({
     querySearchSignalingNetwork: function () {
         console.log("querySearchSignalingNetworkEvt");
         // Initialize graphe visualization
-        var cy = cytoscape({
-            container: document.getElementById('cy'), // container to render in
-            boxSelectionEnabled: false,
-            autounselectify: true,
-            style: [ // the stylesheet for the graph
-                {
-                    selector: 'node',
-                    style: {
-                        'background-color': '#666',
-                        'width' : 12,
-                        'height' : 12,
-                        'label': 'data(id)'
-                    }
-                },
-                {
-                    selector: 'edge',
-                    style: {
-                        'width': 2,
-                        'line-color': '#ccc',
-                        'target-arrow-color': '#ccc',
-                        'target-arrow-shape': 'triangle',
-                        'curve-style': 'bezier'
-                        //'label': 'data(type)'
-                    }
-                }
-            ],
-            zoom: 1,
-            layout: {
-                name: 'cola',
-                directed: true,
-                fit: true,
-                padding: 50
-            }
-        });
+        var cy = initialCy();
         var genesList = $('#inputSignalingGeneList').val().replace(/\s/g, '');
         if (genesList !== "") {
             // Hide old message
@@ -159,7 +92,7 @@ var DemoSysbioView = Backbone.View.extend({
             // Listen to event
             $( "#btnRunNextSignaling" ).click(function() {
                 // Get gene list
-                var regulatorList = updateList();
+                var regulatorList = updateList("signaling");
                 if (regulatorList.length > 0){
                     // Make SPARQL queries to PathwayCommons endpoint
                     nextLevelSignaling(regulatorList, cy);
@@ -173,3 +106,42 @@ var DemoSysbioView = Backbone.View.extend({
 });
 
 var myDemoSysbioView = new DemoSysbioView();
+
+function initialCy() {
+    var cy = cytoscape({
+        container: document.getElementById('cy'), // container to render in
+        boxSelectionEnabled: false,
+        autounselectify: true,
+        style: [ // the stylesheet for the graph
+            {
+                selector: 'node',
+                style: {
+                    'background-color': '#666',
+                    'width' : 12,
+                    'height' : 12,
+                    'label': 'data(id)'
+                }
+            },
+            {
+                selector: 'edge',
+                style: {
+                    'width': 2,
+                    'line-color': '#ccc',
+                    'mid-target-arrow-color': '#ccc',
+                    'mid-target-arrow-shape': 'triangle',
+                    'curve-style': 'bezier'
+                    //'label': 'data(type)'
+                }
+            }
+        ],
+        grabbable: true,
+        zoom: 1,
+        layout: {
+            name: 'cola',
+            directed: true,
+            fit: true,
+            padding: 50
+        }
+    });
+    return cy;
+}

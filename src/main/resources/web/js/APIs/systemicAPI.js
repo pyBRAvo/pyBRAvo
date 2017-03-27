@@ -30,13 +30,13 @@ function sparqlSysBio(genesList, cy) {
             // Set content of graph and get list of uniq regulators
             var toUniq = graphContent(cy, items) ;
             // Apply layout on loaded data
-            graphLayout(cy, genesList);
+            graphLayout(cy, genesList, true);
             // Hide running query message        
             document.getElementById("sendingQuery").style.display = 'none';
             // Show legend
             document.getElementById("graphe-legend").style.display = 'block';
             document.getElementById("next-level-regulation").style.display = 'block';
-            checkboxContent(toUniq);
+            checkboxContent(toUniq, "regulation");
             // Listen to dbclick on graph to fit on network
             document.getElementById('cy').addEventListener("dblclick", function resetGraph() {
                 cy.fit();
@@ -44,7 +44,6 @@ function sparqlSysBio(genesList, cy) {
             document.getElementById('toggle').addEventListener("click", function checklist() {
                 var checker = $('.toggle').is(':checked');
                 $('input:checkbox.next-regulation-checkbox').each(function() {
-                    console.log('toto');
                     $(this).prop('checked',checker);
                 });
             }); 
@@ -102,7 +101,7 @@ function nextLevelRegulation(genesList, cy) {
             // Apply layout
             graphLayout(cy, genesList);
             // Add item to checkbox
-            checkboxContent(toUniq);
+            checkboxContent(toUniq, "regulation");
             // Event : check all checkbox
             document.getElementById('toggle').addEventListener("click", function checklist() {
                 var checker = $('.toggle').is(':checked');
@@ -127,7 +126,7 @@ function nextLevelRegulation(genesList, cy) {
  * @param {Cytoscape object} cy
  */
 function sparqlSignaling(genesList, cy) {
-    endpointURL = rootURL + '/systemic/network-signaling';
+    endpointURL = rootURL + '/systemic/network';
     genesList = genesList.split(",");
     console.log(genesList);
     var genesJSON = JSON.stringify(genesList);
@@ -147,13 +146,13 @@ function sparqlSignaling(genesList, cy) {
             // Set content of graph and get list of uniq regulators
             var toUniq = graphContent(cy, items) ;
             // Apply layout on loaded data
-            graphLayout(cy, genesList);
+            graphLayout(cy, genesList, true);
             // Hide running query message        
             document.getElementById("sendingQuery").style.display = 'none';
             // Show legend
             document.getElementById("graphe-legend").style.display = 'block';
             document.getElementById("next-level-signaling").style.display = 'block';
-            checkboxContent(toUniq);
+            checkboxContent(toUniq, "signaling");
             // Listen to dbclick on graph to fit on network
             document.getElementById('cy').addEventListener("dblclick", function resetGraph() {
                 cy.fit();
@@ -161,7 +160,6 @@ function sparqlSignaling(genesList, cy) {
             document.getElementById('toggle').addEventListener("click", function checklist() {
                 var checker = $('.toggle').is(':checked');
                 $('input:checkbox.next-signaling-checkbox').each(function() {
-                    console.log('toto');
                     $(this).prop('checked',checker);
                 });
             }); 
@@ -219,7 +217,7 @@ function nextLevelSignaling(genesList, cy) {
             // Apply layout
             graphLayout(cy, genesList);
             // Add item to checkbox
-            checkboxContent(toUniq);
+            checkboxContent(toUniq, "signaling");
             // Event : check all checkbox
             document.getElementById('toggle').addEventListener("click", function checklist() {
                 var checker = $('.toggle').is(':checked');

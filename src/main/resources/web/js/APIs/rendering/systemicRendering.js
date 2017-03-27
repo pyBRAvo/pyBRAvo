@@ -8,8 +8,9 @@
  * Define and custome graphe layout
  * @param {Cytoscape object} cy
  * @param {array} genesList
+ * @param {boolean} initial
  */
-function graphLayout(cy, genesList) {
+function graphLayout(cy, genesList, initial=false) {
     cy.layout({name:'cola', fit:true, nodeSpacing: 5, maxSimulationTime: 2000});                      
     // Add class to edge of type ACTIVATION
     cy.filter(function(i, element){
@@ -19,27 +20,37 @@ function graphLayout(cy, genesList) {
     });
     // Color edge of type ACTIVATION
     cy.$('.classActiv').style({ 
-        'target-arrow-color' : '#3399ff', 
-        'width': 3,
+        'mid-target-arrow-color' : '#3399ff', 
+        'width': 2,
         'line-color' : '#3399ff' 
     });
-    // Style on input node
+    // Style on input nodes
     for (var gene in genesList) {
         var re = new RegExp(genesList[gene], "gi");
-        // Add class to node of name as input
+        // Add class to node of name as initial input
         cy.filter(function(i, element){
-            if( element.isNode() ) {
+            if( element.isNode() && initial === true) {
                 if ( element.data("id").match(re)) {
-                    element.addClass('classInput');
+                    element.addClass('class-input');
+                }
+            }
+            if(  element.isNode() && initial === false ){
+                if ( element.data("id").match(re)) {
+                    element.addClass('class-second-input');
                 }
             }
         });
     }
     // Color node with input name
-    cy.$('.classInput').style({ 
+    cy.$('.class-input').style({ 
         'background-color': 'red',
-        'width':30,
-        'height':30
+        'width':25,
+        'height':25
+    });
+    cy.$('.class-second-input').style({ 
+        'background-color': '#FFBF00',
+        'width':20,
+        'height':20
     });
     // On click remove node and redraw graph
     cy.nodes().on("click", function(e){
@@ -108,11 +119,13 @@ function graphContent(cy, items) {
  * Add content to checkbox
  * @param {array of object} toUniq
  */
-function checkboxContent(toUniq){
-    var container = document.getElementById("input-next-regulation");
+function checkboxContent(toUniq, className){
+    var container = document.getElementById("input-next-"+className);
     var checklist = [];
+    var inputClass = "#input-next-"+className;
+    var checkboxClass = "next-"+className+"-checkbox";
     // Add existing gene list in checkbox to the new gene list
-    $(("#input-next-regulation")).find('input').each(function(){
+    $((inputClass)).find('input').each(function(){
         if ($(this).attr('value') !== 'All') {
             toUniq.push({"controller" : $(this).attr('value')});
             if ($(this).is(':checked')) {
@@ -139,12 +152,12 @@ function checkboxContent(toUniq){
             controller.push(toUniq[i]["controller"]);
             // Label of checkbox
             var label = document.createElement('label');
-            label.id = "next-regulation-label";
+            label.id = "next-"+className+"-label";
             // Checkbox content
             var checkbox = document.createElement('input');
             checkbox.type = "checkbox";
-            checkbox.name = "next-regulation-checkbox";
-            checkbox.className = "next-regulation-checkbox";
+            checkbox.name = checkboxClass;
+            checkbox.className = checkboxClass;
             checkbox.value = toUniq[i]["controller"];
             // Recheck  
             if ($.inArray(toUniq[i]["controller"], checklist) !== -1) {
@@ -194,9 +207,10 @@ function containsObject(obj, list) {
  * 
  * @returns {Array|updateList.allVals}
  */
-function updateList() {
+function updateList(classType) {
     var allVals = [];
-    $('#input-next-regulation :checked').each(function() {
+    var className = '#input-next-'+classType+' :checked'
+    $(className).each(function() {
         allVals.push($(this).val());
         $(this).attr('disabled', true);
     });
