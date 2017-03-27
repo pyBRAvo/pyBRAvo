@@ -36,22 +36,29 @@ function sparqlSysBio(genesList, cy) {
             // Show legend
             document.getElementById("graphe-legend").style.display = 'block';
             document.getElementById("next-level-regulation").style.display = 'block';
-            // Remove old checkbox
-            var container = document.getElementById("input-next-regulation");
-            while (container.hasChildNodes()){
-                container.removeChild(container.firstChild);
-            }
             checkboxContent(toUniq);
             // Listen to dbclick on graph to fit on network
             document.getElementById('cy').addEventListener("dblclick", function resetGraph() {
                 cy.fit();
             });
+            document.getElementById('toggle').addEventListener("click", function checklist() {
+                var checker = $('.toggle').is(':checked');
+                $('input:checkbox.next-regulation-checkbox').each(function() {
+                    console.log('toto');
+                    $(this).prop('checked',checker);
+                });
+            }); 
             document.getElementById('btn-download').addEventListener("click", function exportGraph() {
-                var graphJson = cy.json();
+                // var graphJson = cy.json();
+                var CSV = [["source","target","\n"]];
+                cy.edges().forEach(function( ele ){
+                    CSV.push([ele["_private"]["data"]["source"], ele["_private"]["data"]["target"],"\n"]);
+                });
                 var a = document.getElementById('a');
-                var blob = new Blob([JSON.stringify(graphJson)], {'type':'application/json'});
+                // var blob = new Blob([JSON.stringify(graphJson)], {'type':'application/json'});
+                var blob = new Blob(CSV, {'type':'text/csv'});
                 a.href = window.URL.createObjectURL(blob);
-                a.download = 'graph.json';
+                a.download = 'graph.csv';
                 a.click();
             }); 
         },
@@ -96,6 +103,14 @@ function nextLevelRegulation(genesList, cy) {
             graphLayout(cy, genesList);
             // Add item to checkbox
             checkboxContent(toUniq);
+            // Event : check all checkbox
+            document.getElementById('toggle').addEventListener("click", function checklist() {
+                var checker = $('.toggle').is(':checked');
+                // When toggle click, check all
+                $('input:checkbox.next-regulation-checkbox').each(function() {
+                    $(this).prop('checked',checker);
+                });
+            });
         },
         error: function (jqXHR, textStatus, errorThrown) {
             document.getElementById("errorQuery").style.display = 'block';

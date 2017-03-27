@@ -11,12 +11,12 @@ var DemoSysbioView = Backbone.View.extend({
         console.log('DemoSysBio View Initialized');
         EventBus.on(EVT_LOADING, this.disableButton);
         EventBus.on(EVT_FINNISHED, this.enableButton);
-
     },
     render: function () {
         var that = this;
+        
         //Fetching the template contents
-        $.get('templates/demo-systemic.html', function (data) {
+        $.get('templates/demo-systemic_home.html', function (data) {
             template = _.template(data, {});//Option to pass any dynamic values to template
             that.$el.html(template());//adding the template content to the main template.
             
@@ -24,7 +24,29 @@ var DemoSysbioView = Backbone.View.extend({
         return this;
     },
     events: {
-        "click #btnSearchNetwork": "querySearchNetwork"
+        "click #btnSearchNetwork": "querySearchNetwork",
+        "click #btnRegulatoryNetwork": "renderRegulatoryNetwork",
+        "click #btnSignalingNetwork": "renderSignalingNetwork"
+    },
+    renderRegulatoryNetwork: function () {
+        var that = this;
+        //Fetching the template contents
+        $.get('templates/demo-systemic-regulatory.html', function (data) {
+            template = _.template(data, {});//Option to pass any dynamic values to template
+            that.$el.html(template());//adding the template content to the main template.
+            
+        }, 'html');
+        return this;
+    },
+    renderSignalingNetwork: function () {
+        var that = this;
+        //Fetching the template contents
+        $.get('templates/demo-systemic-signaling.html', function (data) {
+            template = _.template(data, {});//Option to pass any dynamic values to template
+            that.$el.html(template());//adding the template content to the main template.
+            
+        }, 'html');
+        return this;
     },
     querySearchNetwork: function () {
         console.log("searchNetworkEvt");

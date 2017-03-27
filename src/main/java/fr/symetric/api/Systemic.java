@@ -31,7 +31,6 @@ import org.apache.jena.rdf.model.RDFNode;
 import org.apache.log4j.Logger;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
-import org.codehaus.jettison.json.JSONObject;
 
 
 /**
@@ -73,8 +72,8 @@ public class Systemic {
                         +"CONSTRUCT {\n"
                         +"?tempReac bp:displayName ?type ; bp:controlled ?controlledName ; bp:controller ?controllerName ; bp:dataSource ?source .\n"
                         +"} WHERE{ \n"
-                        + "FILTER( (?controlledName = 'Transcription of "+genesList.get(i)+"'^^<http://www.w3.org/2001/XMLSchema#string>) "
-                            + "and (?controllerName != '"+genesList.get(i)+"') "
+                        + "FILTER( (?controlledName = 'Transcription of "+genesList.get(i).toString().toUpperCase()+"'^^<http://www.w3.org/2001/XMLSchema#string>) "
+                            + "and (?controllerName != '"+genesList.get(i).toString().toUpperCase()+"') "
                             + "and (?source != \"mirtarbase\") ) .\n"
                         //+"FILTER( ( regex(?controlledName, ' "+genesList.get(i)+"$', 'i') ) && !regex(?source, 'mirtar', 'i') ) .\n"
                         +"?tempReac a bp:TemplateReactionRegulation .\n"
@@ -129,6 +128,7 @@ public class Systemic {
      * Next levels of regulation
      * @author Marie Lefebvre
      * @param constructModel : initial graphe
+     * @return model
      */
     public Model selectQuery(Model constructModel) {
         // SPARQL Query to get controller of a model
@@ -173,7 +173,7 @@ public class Systemic {
             +"  CONSTRUCT {\n"
             +"      ?tempReac bp:displayName ?type ; bp:controlled ?controlledName ; bp:controller ?controllerName ; bp:dataSource ?source .\n"
             +"  } WHERE { \n"
-            +"      FILTER( ( regex(?controlledName, ' "+gene+"$', 'i') ) && !regex(?source, 'mirtar', 'i') ) .\n"
+            +"      FILTER( ( regex(?controlledName, ' "+gene.toString().toUpperCase()+"$', 'i') ) && !regex(?source, 'mirtar', 'i') ) .\n"
             +"      ?tempReac a bp:TemplateReactionRegulation .\n"
             +"      ?tempReac bp:displayName ?reacName ; bp:controlled ?controlled ; bp:controller ?controller ; bp:controlType ?type ; bp:dataSource ?source .\n"
             +"      ?controlled bp:displayName ?controlledName .\n"
