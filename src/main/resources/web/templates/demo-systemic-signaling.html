@@ -8,5 +8,51 @@
 <p></p>
 <div class="row">
     <div class="col-xs-6">
+        <label for="inputGeneList">Your list of genes</label>
+        <div class="input-group">
+                <input type="text" class="form-control" id="inputSignalingGeneList" placeholder="EGFR,GRB2,SOS1,KRAS,BRAF,MAP2K1,MAPK3,ELK1,FOS,JUN" value="EGFR,GRB2,SOS1,KRAS,BRAF,MAP2K1,MAPK3,ELK1,FOS,JUN">
+                <span class="input-group-btn">
+                        <button class="btn btn-default" type="button" id="btnSearchSignalingNetwork">Go!</button>
+                </span>
+                
+        </div><!-- /input-group -->
+        <span class="label label-info" id="total-info-nodes"></span>
+        <span class="label label-info" id="total-info-edges"></span>
     </div>
+    <div class="col-xs-6">
+        <div></div>
+        <p class="sendingQuery" id="sendingQuery" style="display:none;">Your query is running...</p>
+        <p class="emptyQuery" id="emptyQuery" style="display:none;">Please write your query before sending.</p>
+        <p class="errorQuery" id="errorQuery" style="display:none;">It seems like an error occurred during your query. Please contact administrator.</p>
+    </div>
+</div>
+
+<div class="row">
+	<div class="col-xs-10">
+		<div id="cy" style="min-width: 400px; height:600px; display:block;"></div>
+	</div>
+        <div class="col-xs-2">
+            <div class="panel panel-default" id="next-level-signaling" style="min-width:220px;font-size:12px;display:none;">
+                <div class="panel-heading">
+                    <label>Select gene to add their signaling connexion</label>
+                    <div class="input-group" id="input-next-signaling"  style="max-height:310px;overflow: auto;display:block">
+                        
+                    </div>
+                    <button class="btn btn-default" type="button" id="btnRunNextSignaling">Run</button>
+                </div>
+            </div>
+            <div class="panel panel-default" id="graphe-legend" style="min-width:220px;font-size:12px;display:none;">
+                <div class="panel-heading">
+                    <label><i class="glyphicon glyphicon-info-sign"></i> Legend</label>
+                    <p>
+                        Blue arrows = TFs ACTIVATION <br />
+                        Grey arrows = TFs INHIBITION <br />
+                        Red circles = INPUT DATA
+                    </p>
+                </div>
+            </div>
+            <button type="button" class="btn btn-default" id="btn-download" style="margin-bottom:5px;display:none;">
+                <a id="a" target="_blank"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span></a>
+            </button>
+        </div>
 </div>
