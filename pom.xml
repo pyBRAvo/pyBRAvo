@@ -93,7 +93,7 @@
         
         <dependency>
             <groupId>fr.univ-nantes</groupId>
-            <artifactId>GalaxyLD</artifactId>
+            <artifactId>galaxy-PROV</artifactId>
             <version>1.0-SNAPSHOT</version>
             <exclusions>
                 <exclusion>
