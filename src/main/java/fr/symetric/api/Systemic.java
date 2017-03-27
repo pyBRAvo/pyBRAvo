@@ -125,6 +125,87 @@ public class Systemic {
     }
     
     /**
+     *  ?? Transcription of "+genesList.get(i) ??
+     *  ?? --> BioPAX doc ?? PathwayCommons ??
+     * @param genes
+     * @return
+     * @throws JSONException
+     */
+    @GET
+    @Path("/network-signaling")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response searchSignalingNetwork(@QueryParam("genes") String genes) throws JSONException {
+        
+        JSONArray genesList = new JSONArray(genes);
+        
+        Model transcriptorModel = ModelFactory.createDefaultModel();
+        Model finalModel = ModelFactory.createDefaultModel();
+        
+        try {
+            for(int i=0; i < genesList.length(); i++){
+                if (genesList.get(i) != "" && genesList.get(i) != " ") {
+                    StringBuilder result = new StringBuilder();
+//                    logger.info(genesList.get(i));
+                    // Construct new graphe
+                    // Filter on Trancription Factor and wihtout miRNA
+                    String filterQuery = "PREFIX bp: <http://www.biopax.org/release/biopax-level3.owl#>\n"
+                        +"PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n"
+                        +"CONSTRUCT {\n"
+                        +"?tempReac bp:displayName ?type ; bp:controlled ?controlledName ; bp:controller ?controllerName ; bp:dataSource ?source .\n"
+                        +"} WHERE{ \n"
+                        + "FILTER( ?classControl IN ( bp:Catalysis, bp:Modulation, bp:TemplateReactionRegulation ) ) .\n"
+                        + "FILTER( (?controlledName = 'Transcription of "+genesList.get(i).toString().toUpperCase()+"'^^<http://www.w3.org/2001/XMLSchema#string>) "
+                            + "and (?controllerName != '"+genesList.get(i).toString().toUpperCase()+"'^^<http://www.w3.org/2001/XMLSchema#string>) "
+                            + "and (?source != 'mirtarbase'^^<http://www.w3.org/2001/XMLSchema#string>) ) .\n"
+                        +"?tempReac a ?classControl .\n"
+                        +"?tempReac bp:displayName ?reacName ; bp:controlled ?controlled ; bp:controller ?controller ; bp:controlType ?type ; bp:dataSource ?source .\n"
+                        +"?controlled bp:displayName ?controlledName .\n"
+                        +"?controller bp:displayName ?controllerName .\n "
+                        +"}"
+                        +"GROUP BY ?controlledName ?controllerName";
+                    System.out.println("Query created");
+
+                    // Parsing json is more simple than XML
+                    String contentType = "application/json";
+                    // URI of the SPARQL Endpoint
+                    String accessUri = "http://rdf.pathwaycommons.org/sparql";
+
+                    URI requestURI = javax.ws.rs.core.UriBuilder.fromUri(accessUri)
+                               .queryParam("query", "{query}")
+                               .queryParam("format", "{format}")
+                               .build(filterQuery, contentType);
+                    URLConnection con = requestURI.toURL().openConnection();
+                    con.addRequestProperty("Accept", contentType);
+                    InputStream in = con.getInputStream();
+
+                    // Read result
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+                    
+                    String line;
+                    while((line = reader.readLine()) != null) {
+                        result.append(line);
+                    }
+                    // Prepare model
+                    ByteArrayInputStream bais = new ByteArrayInputStream(result.toString().getBytes());
+                    transcriptorModel.read(bais, null, "RDF/JSON");
+                }
+            } // End For Loop
+            
+            //System.out.println("Send second Query");
+            //Model mtemp = selectQuery(transcriptorModel);
+            finalModel.add(transcriptorModel);
+            //finalModel.add(mtemp);
+            //RDFDataMgr.write(System.out, mtemp, Lang.RDFJSON) ;
+            final StringWriter writer = new StringWriter(); 
+            finalModel.write(writer, "RDF/JSON");
+            return Response.status(200).header("Access-Control-Allow-Origin", "*").entity(writer.toString()).build(); 
+        } catch (Exception ex) {
+            logger.error(ex);
+            return Response.status(500).header(headerAccept, "*").entity("Error while querying PathwayCommons endpoint").build();
+        }
+    }
+    
+    /**
      * Next levels of regulation
      * @author Marie Lefebvre
      * @param constructModel : initial graphe
