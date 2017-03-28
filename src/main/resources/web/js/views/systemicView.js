@@ -27,7 +27,8 @@ var DemoSysbioView = Backbone.View.extend({
         "click #btnSearchRegulatoryNetwork": "querySearchNetwork",
         "click #btnRegulatoryNetwork": "renderRegulatoryNetwork",
         "click #btnSignalingNetwork": "renderSignalingNetwork",
-        "click #btnSearchSignalingNetwork": "querySearchSignalingNetwork"
+        "click #btnSearchSignalingNetwork": "querySearchSignalingNetwork",
+        "click #collapseOne": "showSPARQL"
     },
     renderRegulatoryNetwork: function () {
         var that = this;
@@ -102,6 +103,11 @@ var DemoSysbioView = Backbone.View.extend({
             document.getElementById("emptyQuery").style.display = 'block';
             document.getElementById("errorQuery").style.display = 'none';
         }
+    },
+    showSPARQL: function () {
+//        var query = $('#SPARQLquery').val();
+//        var theTemplate = Handlebars.compile(Handlebars.Utils.escapeExpression(query));
+//        $('#SPARQLquery').val(theTemplate);
     }
 });
 

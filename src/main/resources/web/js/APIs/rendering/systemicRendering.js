@@ -55,7 +55,8 @@ function graphLayout(cy, genesList, initial=false) {
     // On click remove node and redraw graph
     cy.nodes().on("click", function(e){
         var id = e.cyTarget.id();
-        cy.getElementById(id).remove();
+        console.log(cy.getElementById(id).orphans().nodes());
+        cy.getElementById(id).orphans().remove();
         cy.layout({name:'cola'});
     });
     displayQttInfo(cy);

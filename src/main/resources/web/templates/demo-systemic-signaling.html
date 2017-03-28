@@ -16,6 +16,9 @@
                 </span>
                 
         </div><!-- /input-group -->
+            <a class="label label-primary" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseSparql" style="margin-right:0.3em">
+                <i class="material-icons" style="font-size:11px;">visibility</i> show SPARQL query example
+            </a>
         <span class="label label-info" id="total-info-nodes"></span>
         <span class="label label-info" id="total-info-edges"></span>
     </div>
@@ -26,6 +29,51 @@
         <p class="errorQuery" id="errorQuery" style="display:none;">It seems like an error occurred during your query. Please contact administrator.</p>
     </div>
 </div>
+    
+<p></p>
+
+<div class="row">
+    <div class="col-xs-6">
+        <div id="collapseSparql" class="panel-collapse collapse" role="tabpanel" aria-labelledby="collapseSparql" style="font-size:10px;">
+            <div class="panel-body">
+                <p id="SPARQLquery">
+                    &#35; Initial query <br />
+                    PREFIX bp: &lt;http://www.biopax.org/release/biopax-level3.owl#&gt; <br />
+                    PREFIX rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt; <br />
+                    PREFIX xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt; <br />
+                    CONSTRUCT { <br />
+                    ?tempReac bp:displayName ?type ; bp:controlled ?controlledName ; bp:controller ?controllerName ; bp:dataSource ?source . <br />
+                    } WHERE{  <br />
+                    FILTER( (?controlledName = 'Transcription of "geneName"'^^xsd:string>)
+                        and (?controllerName != '"geneName"'^^xsd:string>)
+                        and (?source != "mirtarbase"^^xsd:string>) ) . <br />
+                    ?tempReac a bp:TemplateReactionRegulation . <br />
+                    ?tempReac bp:controlled ?controlled ; bp:controller ?controller ; bp:controlType ?type ; bp:dataSource ?source . <br />
+                    ?controlled bp:displayName ?controlledName . <br />
+                    ?controller bp:displayName ?controllerName . <br />
+                    } <br />
+                    GROUP BY ?controlledName ?controllerName
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--div class="form-group">
+    <div class="panel-group" id="accordion" role="tablist">
+        <div class="panel panel-default">
+            <div class="panel-heading" role="tab" id="headingOne">
+                <h4 class="panel-title">
+                    <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseSparql" style="font-size:10px;">
+                        <i class="material-icons" style="font-size:10px;">visibility</i> SPARQL query example
+                    </a>
+                </h4>
+            </div>
+        </div>
+    </div>
+</div-->
+
+<p></p>
 
 <div class="row">
 	<div class="col-xs-10">
@@ -57,3 +105,5 @@
             </button>
         </div>
 </div>
+
+<p></p>
