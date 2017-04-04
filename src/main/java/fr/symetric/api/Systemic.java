@@ -48,8 +48,8 @@ public class Systemic {
     private String headerAccept = "Access-Control-Allow-Origin";
     
     /**
-     *  ?? Transcription of "+genesList.get(i) ??
-     *  ?? --> BioPAX doc ?? PathwayCommons ??
+     *  Transcription of Gene names or IDs
+     *  See use of BioPAX for PathwayCommons
      * @param genes
      * @param queryType
      * @return
@@ -66,59 +66,16 @@ public class Systemic {
         Model finalModel = ModelFactory.createDefaultModel();
         List<String> idToNameList = new ArrayList<String>();
         
+        // Use of IDs 
         if ("id".equals(queryType)) {
             JSONArray idList = genesList;
-            for(int i=0; i < idList.length(); i++){
-                System.out.println(idList.get(i));
-                String idQuery = "PREFIX bp: <http://www.biopax.org/release/biopax-level3.owl#>\n" +
-                    "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n" +
-                    "PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> \n" +
-                    "SELECT DISTINCT ?name\n" +
-                    "WHERE{\n" +
-                    "  ?a bp:id ?b .\n" +
-                    "  FILTER ( ?b = '"+idList.get(i).toString().toUpperCase()+"'^^xsd:string )\n" +
-                    "  ?c ?d ?a .\n" +
-                    "  ?e ?f ?c .\n" +
-                    "  ?e bp:displayName ?name .\n" +
-                    "}\n";
-                System.out.println("Query ID created");
-                StringBuilder result = new StringBuilder();
-                // Parsing json is more simple than XML
-                String contentType = "application/json";
-                // URI of the SPARQL Endpoint
-                String accessUri = "http://rdf.pathwaycommons.org/sparql";
-
-                URI requestURI = javax.ws.rs.core.UriBuilder.fromUri(accessUri)
-                           .queryParam("query", "{query}")
-                           .queryParam("format", "{format}")
-                           .build(idQuery, contentType);
-                URLConnection con = requestURI.toURL().openConnection();
-                con.addRequestProperty("Accept", contentType);
-                InputStream in = con.getInputStream();
-
-                // Read result
-                BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-
-                String line;
-                while((line = reader.readLine()) != null) {
-                    result.append(line);
-                }
-                JSONObject jsonObj = new JSONObject(result.toString());
-                JSONArray jsonAr = jsonObj.getJSONObject("results").getJSONArray("bindings");
-                for (int j = 0 ; j < jsonAr.length(); j++) {
-                    JSONObject obj = jsonAr.getJSONObject(j).getJSONObject("name");
-                    System.out.println("obj"+obj.getString("value"));
-                    idToNameList.add(obj.getString("value"));
-                }
-            }
-            System.out.println("name list into JSON");
-            genesList = new JSONArray(idToNameList);
+            genesList = IdToNameQuery(idList);
         }
         try {
             for(int i=0; i < genesList.length(); i++){
                 if (genesList.get(i) != "" && genesList.get(i) != " ") {
                     StringBuilder result = new StringBuilder();
-//                    logger.info(genesList.get(i));
+
                     // Construct new graphe
                     // Filter on Trancription Factor and wihtout miRNA
                     String filterQuery = "PREFIX bp: <http://www.biopax.org/release/biopax-level3.owl#>\n"
@@ -180,8 +137,8 @@ public class Systemic {
     }
     
     /**
-     *  ?? Transcription of "+genesList.get(i) ??
-     *  ?? --> BioPAX doc ?? PathwayCommons ??
+     *  
+     *  
      * @param genes
      * @return
      * @throws JSONException
@@ -263,37 +220,56 @@ public class Systemic {
     /**
      * Next levels of regulation
      * @author Marie Lefebvre
-     * @param constructModel : initial graphe
+     * @param genesList
      * @return model
+     * @throws org.codehaus.jettison.json.JSONException
      */
-    public Model selectQuery(Model constructModel) {
-        // SPARQL Query to get controller of a model
-        String queryStringS = "PREFIX bp: <http://www.biopax.org/release/biopax-level3.owl#>\n" +
-            "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n" +
-            "SELECT DISTINCT ?controller\n" +
-            "WHERE{ ?x bp:controller ?controller }" ;
-        Model finalModel = ModelFactory.createDefaultModel();
-        finalModel.add(constructModel);
-        
-        // Create query
-        Query queryS = QueryFactory.create(queryStringS) ;
-        try (QueryExecution qex = QueryExecutionFactory.create(queryS, constructModel)) {
-            // Execute select
-            ResultSet results = qex.execSelect();
-            for ( ; results.hasNext() ; ){
-                QuerySolution soln = results.nextSolution() ;
-                RDFNode x = soln.get("controller") ;       // Get a result variable by name.
-                //System.out.println("Gene --------- "+x);
-                Model tempModel = ConstuctRecursiveQuery(x);
-                finalModel.add(tempModel);
+    public JSONArray IdToNameQuery(JSONArray genesList) throws JSONException, IOException {
+        List<String> idToNameList = new ArrayList<String>();
+        JSONArray idList = genesList;
+        for(int i=0; i < idList.length(); i++){
+            // Retrieve corresponding name with given ID
+            String idQuery = "PREFIX bp: <http://www.biopax.org/release/biopax-level3.owl#>\n" +
+                "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n" +
+                "PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> \n" +
+                "SELECT DISTINCT ?name\n" +
+                "WHERE{\n" +
+                "  ?a bp:id ?b .\n" +
+                "  FILTER ( ?b = '"+idList.get(i).toString().toUpperCase()+"'^^xsd:string )\n" +
+                "  ?c ?d ?a .\n" +
+                "  ?e ?f ?c .\n" +
+                "  ?e bp:displayName ?name .\n" +
+                "}\n";
+            System.out.println("Query ID created");
+            StringBuilder result = new StringBuilder();
+            // Parsing json is more simple than XML
+            String contentType = "application/json";
+            // URI of the SPARQL Endpoint
+            String accessUri = "http://rdf.pathwaycommons.org/sparql";
+
+            URI requestURI = javax.ws.rs.core.UriBuilder.fromUri(accessUri)
+                       .queryParam("query", "{query}")
+                       .queryParam("format", "{format}")
+                       .build(idQuery, contentType);
+            URLConnection con = requestURI.toURL().openConnection();
+            con.addRequestProperty("Accept", contentType);
+            InputStream in = con.getInputStream();
+
+            // Read result
+            BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+
+            String line;
+            while((line = reader.readLine()) != null) {
+                result.append(line);
             }
-            qex.close(); // close select query execution
-            
-            
-        } catch (Exception e) {
-            logger.error(e);
+            JSONObject jsonObj = new JSONObject(result.toString());
+            JSONArray jsonAr = jsonObj.getJSONObject("results").getJSONArray("bindings");
+            for (int j = 0 ; j < jsonAr.length(); j++) {
+                JSONObject obj = jsonAr.getJSONObject(j).getJSONObject("name");
+                idToNameList.add(obj.getString("value"));
+            }
         }
-        return finalModel;
+        return new JSONArray(idToNameList);
     }
     
     /**
