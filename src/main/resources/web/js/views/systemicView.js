@@ -28,7 +28,7 @@ var DemoSysbioView = Backbone.View.extend({
         "click #btnRegulatoryNetwork": "renderRegulatoryNetwork",
         "click #btnSignalingNetwork": "renderSignalingNetwork",
         "click #btnSearchSignalingNetwork": "querySearchSignalingNetwork",
-        "click #collapseOne": "showSPARQL"
+        "click #query-type": "queryType"
     },
     renderRegulatoryNetwork: function () {
         var that = this;
@@ -52,17 +52,26 @@ var DemoSysbioView = Backbone.View.extend({
     },
     querySearchNetwork: function () {
         console.log("querySearchNetworkEvt");
+        var queryType = $('input[name=query-type]:checked').val();
         // Initialize graphe visualization
         var cy = initialCy();
         var genesList = $('#inputGeneList').val().replace(/\s/g, '');
         if (genesList !== "") {
-            // Hide old message
+            /** 
+             * Hide / display messages
+             */
             document.getElementById("emptyQuery").style.display = 'none';
             document.getElementById("errorQuery").style.display = 'none';
-            // Display message
             document.getElementById("sendingQuery").style.display = 'block';
+            /**
+             * Initialize checkbox content
+             */
+            var container = document.getElementById("input-next-regulation");
+            while (container.hasChildNodes()){
+                container.removeChild(container.firstChild);
+            }
             // Make SPARQL initial query to PathwayCommons endpoint
-            sparqlSysBio(genesList, cy);
+            sparqlSysBio(genesList, queryType, cy);
             // Listen to event
             $( "#btnRunNextRegulation" ).click(function() {
                 // Get gene list
@@ -83,11 +92,19 @@ var DemoSysbioView = Backbone.View.extend({
         var cy = initialCy();
         var genesList = $('#inputSignalingGeneList').val().replace(/\s/g, '');
         if (genesList !== "") {
-            // Hide old message
+            /** 
+             * Hide / display messages
+             */
             document.getElementById("emptyQuery").style.display = 'none';
             document.getElementById("errorQuery").style.display = 'none';
-            // Display message
             document.getElementById("sendingQuery").style.display = 'block';
+            /**
+             * Initialize checkbox content
+             */
+            var container = document.getElementById("input-next-regulation");
+            while (container.hasChildNodes()){
+                container.removeChild(container.firstChild);
+            }
             // Make SPARQL initial query to PathwayCommons endpoint
             sparqlSignaling(genesList, cy);
             // Listen to event
@@ -103,11 +120,19 @@ var DemoSysbioView = Backbone.View.extend({
             document.getElementById("emptyQuery").style.display = 'block';
             document.getElementById("errorQuery").style.display = 'none';
         }
-    },
-    showSPARQL: function () {
-//        var query = $('#SPARQLquery').val();
-//        var theTemplate = Handlebars.compile(Handlebars.Utils.escapeExpression(query));
-//        $('#SPARQLquery').val(theTemplate);
+    },        
+    /**
+    * Listen to input type
+    */
+    queryType: function() {
+
+        // When 'id' checked, return 'name'
+        if ($('input[name=query-type]:checked').val() !== 'id'){
+            $('#inputGeneList').val('ENSG00000158669,ENSG00000213930,ENSG00000116133, ENSG00000084774');
+        }else {
+            $('#inputGeneList').val('AGPAT6,GALT,DHCR24,FTFD1,CAD');
+        }
+        
     }
 });
 

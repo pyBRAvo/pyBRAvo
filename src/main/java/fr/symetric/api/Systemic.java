@@ -11,8 +11,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.StringWriter;
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URLConnection;
+import java.util.ArrayList;
+import java.util.List;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -31,6 +34,7 @@ import org.apache.jena.rdf.model.RDFNode;
 import org.apache.log4j.Logger;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
 
 
 /**
@@ -47,19 +51,69 @@ public class Systemic {
      *  ?? Transcription of "+genesList.get(i) ??
      *  ?? --> BioPAX doc ?? PathwayCommons ??
      * @param genes
+     * @param queryType
      * @return
      * @throws JSONException
      */
     @GET
     @Path("/network")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response searchNetwork(@QueryParam("genes") String genes) throws JSONException {
+    public Response searchNetwork(@QueryParam("genes") String genes, 
+            @QueryParam("type") String queryType) throws JSONException, MalformedURLException, IOException {
         
         JSONArray genesList = new JSONArray(genes);
-        
         Model transcriptorModel = ModelFactory.createDefaultModel();
         Model finalModel = ModelFactory.createDefaultModel();
+        List<String> idToNameList = new ArrayList<String>();
         
+        if ("id".equals(queryType)) {
+            JSONArray idList = genesList;
+            for(int i=0; i < idList.length(); i++){
+                System.out.println(idList.get(i));
+                String idQuery = "PREFIX bp: <http://www.biopax.org/release/biopax-level3.owl#>\n" +
+                    "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n" +
+                    "PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> \n" +
+                    "SELECT DISTINCT ?name\n" +
+                    "WHERE{\n" +
+                    "  ?a bp:id ?b .\n" +
+                    "  FILTER ( ?b = '"+idList.get(i).toString().toUpperCase()+"'^^xsd:string )\n" +
+                    "  ?c ?d ?a .\n" +
+                    "  ?e ?f ?c .\n" +
+                    "  ?e bp:displayName ?name .\n" +
+                    "}\n";
+                System.out.println("Query ID created");
+                StringBuilder result = new StringBuilder();
+                // Parsing json is more simple than XML
+                String contentType = "application/json";
+                // URI of the SPARQL Endpoint
+                String accessUri = "http://rdf.pathwaycommons.org/sparql";
+
+                URI requestURI = javax.ws.rs.core.UriBuilder.fromUri(accessUri)
+                           .queryParam("query", "{query}")
+                           .queryParam("format", "{format}")
+                           .build(idQuery, contentType);
+                URLConnection con = requestURI.toURL().openConnection();
+                con.addRequestProperty("Accept", contentType);
+                InputStream in = con.getInputStream();
+
+                // Read result
+                BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+
+                String line;
+                while((line = reader.readLine()) != null) {
+                    result.append(line);
+                }
+                JSONObject jsonObj = new JSONObject(result.toString());
+                JSONArray jsonAr = jsonObj.getJSONObject("results").getJSONArray("bindings");
+                for (int j = 0 ; j < jsonAr.length(); j++) {
+                    JSONObject obj = jsonAr.getJSONObject(j).getJSONObject("name");
+                    System.out.println("obj"+obj.getString("value"));
+                    idToNameList.add(obj.getString("value"));
+                }
+            }
+            System.out.println("name list into JSON");
+            genesList = new JSONArray(idToNameList);
+        }
         try {
             for(int i=0; i < genesList.length(); i++){
                 if (genesList.get(i) != "" && genesList.get(i) != " ") {
@@ -69,13 +123,13 @@ public class Systemic {
                     // Filter on Trancription Factor and wihtout miRNA
                     String filterQuery = "PREFIX bp: <http://www.biopax.org/release/biopax-level3.owl#>\n"
                         +"PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n"
+                        +"PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> \n"
                         +"CONSTRUCT {\n"
                         +"?tempReac bp:displayName ?type ; bp:controlled ?controlledName ; bp:controller ?controllerName ; bp:dataSource ?source .\n"
                         +"} WHERE{ \n"
-                        + "FILTER( (?controlledName = 'Transcription of "+genesList.get(i).toString().toUpperCase()+"'^^<http://www.w3.org/2001/XMLSchema#string>) "
-                            + "and (?controllerName != '"+genesList.get(i).toString().toUpperCase()+"') "
-                            + "and (?source != \"mirtarbase\") ) .\n"
-                        //+"FILTER( ( regex(?controlledName, ' "+genesList.get(i)+"$', 'i') ) && !regex(?source, 'mirtar', 'i') ) .\n"
+                        + "FILTER( (?controlledName = 'Transcription of "+genesList.get(i).toString().toUpperCase()+"'^^xsd:string) "
+                            + "and (?controllerName != '"+genesList.get(i).toString().toUpperCase()+"'^^xsd:string) "
+                            + "and (?source != 'mirtarbase'^^xsd:string) ) .\n"
                         +"?tempReac a bp:TemplateReactionRegulation .\n"
                         +"?tempReac bp:displayName ?reacName ; bp:controlled ?controlled ; bp:controller ?controller ; bp:controlType ?type ; bp:dataSource ?source .\n"
                         +"?controlled bp:displayName ?controlledName .\n"
@@ -99,7 +153,7 @@ public class Systemic {
 
                     // Read result
                     BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-                    
+
                     String line;
                     while((line = reader.readLine()) != null) {
                         result.append(line);
@@ -107,6 +161,7 @@ public class Systemic {
                     // Prepare model
                     ByteArrayInputStream bais = new ByteArrayInputStream(result.toString().getBytes());
                     transcriptorModel.read(bais, null, "RDF/JSON");
+
                 }
             } // End For Loop
             
