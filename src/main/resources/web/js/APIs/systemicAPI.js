@@ -9,7 +9,7 @@
  * @param {array} genesList
  * @param {Cytoscape object} cy
  */
-function sparqlSysBio(genesList, cy) {
+function sparqlSysBio(genesList, queryType, cy) {
     endpointURL = rootURL + '/systemic/network';
     genesList = genesList.split(",");
     console.log(genesList);
@@ -21,7 +21,7 @@ function sparqlSysBio(genesList, cy) {
             Accept: "application/json"
         },
         url: endpointURL,
-        data: 'genes=' + genesJSON,
+        data: 'genes=' + genesJSON + '&type=' + queryType,
         dataType: "json",
         crossDomain: true,
         success: function (data, textStatus, jqXHR) {
@@ -31,16 +31,19 @@ function sparqlSysBio(genesList, cy) {
             var toUniq = graphContent(cy, items) ;
             // Apply layout on loaded data
             graphLayout(cy, genesList, true);
-            // Hide running query message        
+            /**
+             * Hide / show display
+             */        
             document.getElementById("sendingQuery").style.display = 'none';
-            // Show legend
             document.getElementById("graphe-legend").style.display = 'block';
             document.getElementById("next-level-regulation").style.display = 'block';
+            // Update checkbox content
             checkboxContent(toUniq, "regulation");
             // Listen to dbclick on graph to fit on network
             document.getElementById('cy').addEventListener("dblclick", function resetGraph() {
                 cy.fit();
             });
+            // Listen to checkbox option 'All'
             document.getElementById('toggle').addEventListener("click", function checklist() {
                 var checker = $('.toggle').is(':checked');
                 $('input:checkbox.next-regulation-checkbox').each(function() {
@@ -102,7 +105,7 @@ function nextLevelRegulation(genesList, cy) {
             graphLayout(cy, genesList);
             // Add item to checkbox
             checkboxContent(toUniq, "regulation");
-            // Event : check all checkbox
+            // Listen to checkbox option 'All'
             document.getElementById('toggle').addEventListener("click", function checklist() {
                 var checker = $('.toggle').is(':checked');
                 // When toggle click, check all
@@ -157,6 +160,7 @@ function sparqlSignaling(genesList, cy) {
             document.getElementById('cy').addEventListener("dblclick", function resetGraph() {
                 cy.fit();
             });
+            // Listen to checkbox option 'All'
             document.getElementById('toggle').addEventListener("click", function checklist() {
                 var checker = $('.toggle').is(':checked');
                 $('input:checkbox.next-signaling-checkbox').each(function() {

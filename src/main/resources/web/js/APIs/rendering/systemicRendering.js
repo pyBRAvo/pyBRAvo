@@ -11,7 +11,7 @@
  * @param {boolean} initial
  */
 function graphLayout(cy, genesList, initial=false) {
-    cy.layout({name:'cola', fit:true, nodeSpacing: 5, maxSimulationTime: 2000});                      
+    cy.layout({name:'cola', fit:true, nodeSpacing: 5, maxSimulationTime: 2000, grabbable: true});                      
     // Add class to edge of type ACTIVATION
     cy.filter(function(i, element){
         if( element.isEdge() && element.data("type") === 'ACTIVATION' ){
@@ -125,7 +125,9 @@ function checkboxContent(toUniq, className){
     var checklist = [];
     var inputClass = "#input-next-"+className;
     var checkboxClass = "next-"+className+"-checkbox";
-    // Add existing gene list in checkbox to the new gene list
+    /** 
+     * Add existing gene list in checkbox to the new gene list
+     */
     $((inputClass)).find('input').each(function(){
         if ($(this).attr('value') !== 'All') {
             toUniq.push({"controller" : $(this).attr('value')});
@@ -135,13 +137,17 @@ function checkboxContent(toUniq, className){
         }
     });
     
-    // Sort gene list
+    /** 
+     * Sort gene list
+     */
     toUniq.sort(function(a,b){
         return a.controller > b.controller;
     });
-    // Add 'All' selection
+    // Add 'All' option
     toUniq.unshift({"controller" : "All"});
-    // Remove checkbox content
+    /** 
+     * Remove checkbox content
+     */
     while (container.hasChildNodes()){
         container.removeChild(container.firstChild);
     }
