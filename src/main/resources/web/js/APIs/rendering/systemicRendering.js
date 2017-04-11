@@ -11,11 +11,18 @@
  * @param {boolean} initial
  */
 function graphLayout(cy, genesList, initial=false) {
-    cy.layout({name:'cola', fit:true, nodeSpacing: 5, maxSimulationTime: 2000, grabbable: true});                      
+    cy.layout({
+        name:'cola', 
+        fit:true
+    });                      
     // Add class to edge of type ACTIVATION
     cy.filter(function(i, element){
         if( element.isEdge() && element.data("type") === 'ACTIVATION' ){
             element.addClass('classActiv');
+        }
+        var complex = "http://www.biopax.org/release/biopax-level3.owl#ComplexAssembly";
+        if( element.isEdge() && element.data("entity") === complex ){
+            element.addClass('class-complex');
         }
     });
     // Color edge of type ACTIVATION
@@ -23,6 +30,12 @@ function graphLayout(cy, genesList, initial=false) {
         'mid-target-arrow-color' : '#3399ff', 
         'width': 2,
         'line-color' : '#3399ff' 
+    });
+    // Color edge of type COMPLEXE
+    cy.$('.class-complex').style({ 
+        'mid-target-arrow-color' : '#5FB404', 
+        'width': 2,
+        'line-color' : '#5FB404' 
     });
     // Style on input nodes
     for (var gene in genesList) {
@@ -57,7 +70,7 @@ function graphLayout(cy, genesList, initial=false) {
         var id = e.cyTarget.id();
         console.log(cy.getElementById(id).orphans().nodes());
         cy.getElementById(id).orphans().remove();
-        cy.layout({name:'cola'});
+        cy.layout({name:'cola', grabbable: true});
     });
     displayQttInfo(cy);
 };
@@ -77,7 +90,7 @@ function graphContent(cy, items) {
         if(typeof items[object]["http://www.biopax.org/release/biopax-level3.owl#controller"] !== 'undefined') {
             var pair = {
                 controller: items[object]["http://www.biopax.org/release/biopax-level3.owl#controller"][0]["value"],
-                controlled: items[object]["http://www.biopax.org/release/biopax-level3.owl#controlled"][0]["value"]
+                controlled: items[object]["http://www.biopax.org/release/biopax-level3.owl#controlled"][0]["value"].replace('Transcription of ','')
             };
 
             if (containsObject(pair, uniqEdge) === false){
@@ -103,7 +116,8 @@ function graphContent(cy, items) {
                             id: name,
                             source: items[object]["http://www.biopax.org/release/biopax-level3.owl#controller"][0]["value"], //controller
                             target: items[object]["http://www.biopax.org/release/biopax-level3.owl#controlled"][0]["value"].replace('Transcription of ',''), //controlled
-                            type: items[object]["http://www.biopax.org/release/biopax-level3.owl#displayName"][0]["value"]
+                            type: items[object]["http://www.biopax.org/release/biopax-level3.owl#controlType"][0]["value"] || "type",
+                            entity: items[object]["http://www.w3.org/1999/02/22-rdf-syntax-ns#type"][0]["value"]
                         }   
                     }
                 ]);

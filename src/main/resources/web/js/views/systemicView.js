@@ -101,7 +101,7 @@ var DemoSysbioView = Backbone.View.extend({
             /**
              * Initialize checkbox content
              */
-            var container = document.getElementById("input-next-regulation");
+            var container = document.getElementById("input-next-signaling");
             while (container.hasChildNodes()){
                 container.removeChild(container.firstChild);
             }
@@ -128,7 +128,7 @@ var DemoSysbioView = Backbone.View.extend({
 
         // When 'id' checked, return 'name'
         if ($('input[name=query-type]:checked').val() !== 'id'){
-            $('#inputGeneList').val('ENSG00000158669,ENSG00000213930,ENSG00000116133, ENSG00000084774');
+            $('#inputGeneList').val('ENSG00000158669,HGNC:4135,ENSG00000116133,ENSG00000084774');
         }else {
             $('#inputGeneList').val('AGPAT6,GALT,DHCR24,FTFD1,CAD');
         }
@@ -141,8 +141,8 @@ var myDemoSysbioView = new DemoSysbioView();
 function initialCy() {
     var cy = cytoscape({
         container: document.getElementById('cy'), // container to render in
-        boxSelectionEnabled: false,
-        autounselectify: true,
+        //boxSelectionEnabled: false,
+        //autounselectify: true,
         style: [ // the stylesheet for the graph
             {
                 selector: 'node',
@@ -166,6 +166,8 @@ function initialCy() {
             }
         ],
         grabbable: true,
+        selectable: true,
+        locked: false,
         zoom: 1,
         layout: {
             name: 'cola',
