@@ -82,13 +82,13 @@ public class Systemic {
                         +"PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n"
                         +"PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> \n"
                         +"CONSTRUCT {\n"
-                        +"?tempReac bp:displayName ?type ; bp:controlled ?controlledName ; bp:controller ?controllerName ; bp:dataSource ?source .\n"
+                        +"?tempReac rdf:type ?kind ; bp:controlled ?controlledName ; bp:controller ?controllerName ; bp:dataSource ?source ; bp:controlType ?type  .\n"
                         +"} WHERE{ \n"
                         + "FILTER( (?controlledName = 'Transcription of "+genesList.get(i).toString().toUpperCase()+"'^^xsd:string) "
                             + "and (?controllerName != '"+genesList.get(i).toString().toUpperCase()+"'^^xsd:string) "
                             + "and (?source != 'mirtarbase'^^xsd:string) ) .\n"
                         +"?tempReac a bp:TemplateReactionRegulation .\n"
-                        +"?tempReac bp:displayName ?reacName ; bp:controlled ?controlled ; bp:controller ?controller ; bp:controlType ?type ; bp:dataSource ?source .\n"
+                        +"?tempReac rdf:type ?kind ; bp:displayName ?reacName ; bp:controlled ?controlled ; bp:controller ?controller ; bp:controlType ?type ; bp:dataSource ?source .\n"
                         +"?controlled bp:displayName ?controlledName .\n"
                         +"?controller bp:displayName ?controllerName .\n "
                         +"}"
@@ -157,20 +157,21 @@ public class Systemic {
             for(int i=0; i < genesList.length(); i++){
                 if (genesList.get(i) != "" && genesList.get(i) != " ") {
                     StringBuilder result = new StringBuilder();
+                    StringBuilder result2 = new StringBuilder();
 //                    logger.info(genesList.get(i));
                     // Construct new graphe
                     // Filter on Trancription Factor and wihtout miRNA
                     String filterQuery = "PREFIX bp: <http://www.biopax.org/release/biopax-level3.owl#>\n"
                         +"PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n"
                         +"CONSTRUCT {\n"
-                        +"?tempReac bp:displayName ?type ; bp:controlled ?controlledName ; bp:controller ?controllerName ; bp:dataSource ?source .\n"
+                        +"?tempReac rdf:type ?kind ; bp:controlled ?controlledName ; bp:controller ?controllerName ; bp:dataSource ?source ; bp:controlType ?type  .\n"
                         +"} WHERE{ \n"
                         + "FILTER( ?classControl IN ( bp:Catalysis, bp:Modulation, bp:TemplateReactionRegulation ) ) .\n"
                         + "FILTER( (?controlledName = 'Transcription of "+genesList.get(i).toString().toUpperCase()+"'^^<http://www.w3.org/2001/XMLSchema#string>) "
                             + "and (?controllerName != '"+genesList.get(i).toString().toUpperCase()+"'^^<http://www.w3.org/2001/XMLSchema#string>) "
                             + "and (?source != 'mirtarbase'^^<http://www.w3.org/2001/XMLSchema#string>) ) .\n"
                         +"?tempReac a ?classControl .\n"
-                        +"?tempReac bp:displayName ?reacName ; bp:controlled ?controlled ; bp:controller ?controller ; bp:controlType ?type ; bp:dataSource ?source .\n"
+                        +"?tempReac rdf:type ?kind ; bp:displayName ?reacName ; bp:controlled ?controlled ; bp:controller ?controller ; bp:controlType ?type ; bp:dataSource ?source .\n"
                         +"?controlled bp:displayName ?controlledName .\n"
                         +"?controller bp:displayName ?controllerName .\n "
                         +"}"
@@ -200,14 +201,46 @@ public class Systemic {
                     // Prepare model
                     ByteArrayInputStream bais = new ByteArrayInputStream(result.toString().getBytes());
                     transcriptorModel.read(bais, null, "RDF/JSON");
+                    
+                    String conversionQuery = "PREFIX bp: <http://www.biopax.org/release/biopax-level3.owl#>\n"+
+                        "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n"+
+                        "PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> \n"+
+                        "CONSTRUCT {\n" +
+                        "      ?conversion rdf:type ?type ; bp:controlled ?Rname ; bp:controller ?Lname ; bp:controlType 'type' \n" +
+                        "} WHERE {\n" +
+                        "      FILTER( ?classConversion IN ( bp:BiochemicalReaction, bp:ComplexAssembly, bp:Degradation ) ) .\n" +
+                        "      FILTER( regex(?Rname, '"+genesList.get(i).toString().toUpperCase()+"', 'i') and " +
+                        "               ?Lname != '"+genesList.get(i).toString().toUpperCase()+"'^^xsd:string )\n" +
+                        "      ?conversion a ?classConversion .\n" +
+                        "      ?conversion bp:right ?right ; bp:left ?left ; rdf:type ?type.\n" +
+                        "      ?right bp:component ?Rcomponent .\n" +
+                        "      ?left bp:component ?Lcomponent .\n" +
+                        "      ?Rcomponent bp:displayName ?Rname .\n" +
+                        "      ?Lcomponent bp:displayName ?Lname .\n" +
+                        "} GROUP BY ?Rname ?Lname";
+
+                    URI requestURI2 = javax.ws.rs.core.UriBuilder.fromUri(accessUri)
+                               .queryParam("query", "{query}")
+                               .queryParam("format", "{format}")
+                               .build(conversionQuery, contentType);
+                    URLConnection con2 = requestURI2.toURL().openConnection();
+                    con2.addRequestProperty("Accept", contentType);
+                    InputStream in2 = con2.getInputStream();
+
+                    // Read result
+                    BufferedReader reader2 = new BufferedReader(new InputStreamReader(in2));
+                    
+                    String line2;
+                    while((line2 = reader2.readLine()) != null) {
+                        result2.append(line2);
+                    }
+                    // Prepare model
+                    ByteArrayInputStream bais2 = new ByteArrayInputStream(result2.toString().getBytes());
+                    transcriptorModel.read(bais2, null, "RDF/JSON");
                 }
             } // End For Loop
             
-            //System.out.println("Send second Query");
-            //Model mtemp = selectQuery(transcriptorModel);
             finalModel.add(transcriptorModel);
-            //finalModel.add(mtemp);
-            //RDFDataMgr.write(System.out, mtemp, Lang.RDFJSON) ;
             final StringWriter writer = new StringWriter(); 
             finalModel.write(writer, "RDF/JSON");
             return Response.status(200).header("Access-Control-Allow-Origin", "*").entity(writer.toString()).build(); 
