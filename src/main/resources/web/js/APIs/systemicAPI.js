@@ -7,6 +7,7 @@
 /**
  * Initial API to get initial regulatory graphe
  * @param {array} genesList
+ * @param {string} queryType 
  * @param {Cytoscape object} cy
  */
 function sparqlSysBio(genesList, queryType, cy) {
@@ -153,8 +154,8 @@ function sparqlSignaling(genesList, cy) {
             // Hide running query message        
             document.getElementById("sendingQuery").style.display = 'none';
             // Show legend
-            document.getElementById("graphe-legend").style.display = 'block';
-            document.getElementById("next-level-signaling").style.display = 'block';
+            //document.getElementById("graphe-legend").style.display = 'block';
+            document.getElementById("btn-collapse").style.display = 'block';
             checkboxContent(toUniq, "signaling");
             // Listen to dbclick on graph to fit on network
             document.getElementById('cy').addEventListener("dblclick", function resetGraph() {
