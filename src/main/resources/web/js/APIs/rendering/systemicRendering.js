@@ -20,9 +20,20 @@ function graphLayout(cy, genesList, initial=false) {
         if( element.isEdge() && element.data("type") === 'ACTIVATION' ){
             element.addClass('classActiv');
         }
-        var complex = "http://www.biopax.org/release/biopax-level3.owl#ComplexAssembly";
-        if( element.isEdge() && element.data("entity") === complex ){
-            element.addClass('class-complex');
+        var entityType = {
+            'complex': "http://www.biopax.org/release/biopax-level3.owl#ComplexAssembly",
+            'biochemical-reaction': "http://www.biopax.org/release/biopax-level3.owl#BiochemicalReaction",
+            'degradation': "http://www.biopax.org/release/biopax-level3.owl#Degradation",
+            'catalysis': "http://www.biopax.org/release/biopax-level3.owl#Catalysis"
+        };
+        if( element.isEdge() ) {
+            if ( element.data("entity") === entityType["complex"] ){
+                element.addClass('class-complex');
+            }else if( element.data("entity") === entityType["biochemical-reaction"] ){
+                element.addClass('class-biochemical');
+            }else if (element.data("entity") === entityType["degradation"]){
+                element.addClass('class-degradation');
+            }
         }
     });
     // Color edge of type ACTIVATION
@@ -37,9 +48,16 @@ function graphLayout(cy, genesList, initial=false) {
         'width': 2,
         'line-color' : '#5FB404' 
     });
+    // Color edge of type BIOCHEMICAL REACTION
+    cy.$('.class-biochemical').style({ 
+        'mid-target-arrow-color' : '#ff8080', 
+        'width': 2,
+        'line-color' : '#ff8080' 
+    });
     // Style on input nodes
     for (var gene in genesList) {
         var re = new RegExp(genesList[gene], "gi");
+        var reComplex = new RegExp("(.)*:(.)*$", "gi");
         // Add class to node of name as initial input
         cy.filter(function(i, element){
             if( element.isNode() && initial === true) {
@@ -50,6 +68,11 @@ function graphLayout(cy, genesList, initial=false) {
             if(  element.isNode() && initial === false ){
                 if ( element.data("id").match(re)) {
                     element.addClass('class-second-input');
+                }
+            }
+            if(  element.isNode() && initial === false ){
+                if ( element.data("id").match(reComplex)) {
+                    element.addClass('class-second-input-complex');
                 }
             }
         });
@@ -64,6 +87,15 @@ function graphLayout(cy, genesList, initial=false) {
         'background-color': '#FFBF00',
         'width':20,
         'height':20
+    });
+    cy.$('.class-second-input-complex').style({ 
+        'background-color': '#FFBF00',
+        'border-color': '#00264d',
+        'border-style': 'solid',
+        'border-width': 2,
+        'width':20,
+        'height':20,
+        'shape': 'hexagon'
     });
     // On click remove node and redraw graph
     cy.nodes().on("click", function(e){
@@ -92,7 +124,7 @@ function graphContent(cy, items) {
                 controller: items[object]["http://www.biopax.org/release/biopax-level3.owl#controller"][0]["value"],
                 controlled: items[object]["http://www.biopax.org/release/biopax-level3.owl#controlled"][0]["value"].replace('Transcription of ','')
             };
-
+            // Test pair already ont the graph
             if (containsObject(pair, uniqEdge) === false){
                 uniqEdge.push(pair);
                 cy.add([
@@ -133,6 +165,7 @@ function graphContent(cy, items) {
 /**
  * Add content to checkbox
  * @param {array of object} toUniq
+ * @param {string} className 
  */
 function checkboxContent(toUniq, className){
     var container = document.getElementById("input-next-"+className);
@@ -226,11 +259,12 @@ function containsObject(obj, list) {
 
 /**
  * 
+ * @param {string} classType 
  * @returns {Array|updateList.allVals}
  */
 function updateList(classType) {
     var allVals = [];
-    var className = '#input-next-'+classType+' :checked'
+    var className = '#input-next-'+classType+' :checked';
     $(className).each(function() {
         allVals.push($(this).val());
         $(this).attr('disabled', true);

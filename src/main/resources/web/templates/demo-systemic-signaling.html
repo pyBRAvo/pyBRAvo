@@ -77,34 +77,43 @@
 <p></p>
 
 <div class="row">
-	<div class="col-xs-10">
-		<div id="cy" style="min-width: 400px; height:600px; display:block;"></div>
-	</div>
-        <div class="col-xs-2">
-            <div class="panel panel-default" id="next-level-signaling" style="min-width:220px;font-size:12px;display:none;">
+    <div class="col-xs-10">
+            <div id="cy" style="min-width: 400px; height:600px; display:block;"></div>
+    </div>
+    <div class="col-xs-2">
+        <button type="button" class="btn btn-default" id="btn-collapse" data-toggle="collapse" data-target="#panel-signaling" style="display:none;">
+            <i class="glyphicon glyphicon-menu-hamburger"></i>
+        </button>
+    </div>
+    <div class="col-xs-2">
+        <div class="collapse" id="panel-signaling">        
+            <div class="panel panel-default" id="next-level-signaling" style="min-width:230px;font-size:12px;">
                 <div class="panel-heading">
                     <label>Select gene to add their signaling connexion</label>
-                    <div class="input-group" id="input-next-signaling"  style="max-height:310px;overflow: auto;display:block">
-                        
+                    <div class="input-group" id="input-next-signaling"  style="max-height:310px;overflow:auto;display:block;">
+
                     </div>
                     <button class="btn btn-default" type="button" id="btnRunNextSignaling">Run</button>
                 </div>
             </div>
-            <div class="panel panel-default" id="graphe-legend" style="min-width:220px;font-size:12px;display:none;">
+            <div class="panel panel-default" id="graphe-legend" style="min-width:230px;font-size:12px;">
                 <div class="panel-heading">
                     <label><i class="glyphicon glyphicon-info-sign"></i> Legend</label>
                     <p>
-                        Blue arrows = TFs ACTIVATION <br />
-                        Grey arrows = TFs INHIBITION <br />
-                        Red circles = INITAL INPUT <br />
-                        Orange circles = LAST INPUT
+                        Blue arrows = TFs activation <br />
+                        Green arrows = complex assembly <br />
+                        Pink arrows = biochemical reaction <br />
+                        Red circles = initial input <br />
+                        Orange circles = last input <br />
+                        Orange hexagonal = complex
                     </p>
                 </div>
             </div>
-            <button type="button" class="btn btn-default" id="btn-download" style="margin-bottom:5px;display:none;">
+            <button type="button" class="btn btn-default" id="btn-download" style="margin-bottom:5px;">
                 <a id="a" target="_blank"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span></a>
             </button>
         </div>
+    </div>
 </div>
 
 <p></p>
