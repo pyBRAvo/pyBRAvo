@@ -57,7 +57,7 @@ function graphLayout(cy, genesList, initial=false) {
     // Style on input nodes
     for (var gene in genesList) {
         var re = new RegExp(genesList[gene], "gi");
-        var reComplex = new RegExp("(.)*:(.)*$", "gi");
+        var reComplex = new RegExp("(.)*:(.)*$", "i");
         // Add class to node of name as initial input
         cy.filter(function(i, element){
             if( element.isNode() && initial === true) {
@@ -121,8 +121,8 @@ function graphContent(cy, items) {
         var name = object.toString(); // URI of interaction
         if(typeof items[object]["http://www.biopax.org/release/biopax-level3.owl#controller"] !== 'undefined') {
             var pair = {
-                controller: items[object]["http://www.biopax.org/release/biopax-level3.owl#controller"][0]["value"],
-                controlled: items[object]["http://www.biopax.org/release/biopax-level3.owl#controlled"][0]["value"].replace('Transcription of ','')
+                controller: items[object]["http://www.biopax.org/release/biopax-level3.owl#controller"][0]["value"].toUpperCase(),
+                controlled: items[object]["http://www.biopax.org/release/biopax-level3.owl#controlled"][0]["value"].replace('Transcription of ','').toUpperCase()
             };
             // Test pair already ont the graph
             if (containsObject(pair, uniqEdge) === false){
@@ -131,14 +131,14 @@ function graphContent(cy, items) {
                     {
                         // Controller/source name
                         data: {
-                           id: items[object]["http://www.biopax.org/release/biopax-level3.owl#controller"][0]["value"]
+                           id: items[object]["http://www.biopax.org/release/biopax-level3.owl#controller"][0]["value"].toUpperCase()
                            //position: { x: i, y: 1+i }
                         }
                     },
                     {
                         // Controlled/target name
                         data: {
-                           id: items[object]["http://www.biopax.org/release/biopax-level3.owl#controlled"][0]["value"].replace('Transcription of ','')
+                           id: items[object]["http://www.biopax.org/release/biopax-level3.owl#controlled"][0]["value"].replace('Transcription of ','').toUpperCase()
                            //position: { x: 3, y: 3 }
                         }
                     },                    
@@ -146,8 +146,8 @@ function graphContent(cy, items) {
                         // Directed edge
                         data: {
                             id: name,
-                            source: items[object]["http://www.biopax.org/release/biopax-level3.owl#controller"][0]["value"], //controller
-                            target: items[object]["http://www.biopax.org/release/biopax-level3.owl#controlled"][0]["value"].replace('Transcription of ',''), //controlled
+                            source: items[object]["http://www.biopax.org/release/biopax-level3.owl#controller"][0]["value"].toUpperCase(), //controller
+                            target: items[object]["http://www.biopax.org/release/biopax-level3.owl#controlled"][0]["value"].replace('Transcription of ','').toUpperCase(), //controlled
                             type: items[object]["http://www.biopax.org/release/biopax-level3.owl#controlType"][0]["value"] || "type",
                             entity: items[object]["http://www.w3.org/1999/02/22-rdf-syntax-ns#type"][0]["value"]
                         }   
@@ -250,7 +250,8 @@ function displayQttInfo(cy){
 function containsObject(obj, list) {
     var i;
     for (i = 0; i < list.length; i++) {
-        if (list[i]["controller"] === obj["controller"] && list[i]["controlled"] === obj["controlled"]) {
+        if (list[i]["controller"].toUpperCase() === obj["controller"].toUpperCase() 
+                && list[i]["controlled"].toUpperCase() === obj["controlled"].toUpperCase()) {
             return true;
         }
     }
@@ -258,7 +259,7 @@ function containsObject(obj, list) {
 };
 
 /**
- * 
+ * Manage check gene in checkbox 
  * @param {string} classType 
  * @returns {Array|updateList.allVals}
  */
