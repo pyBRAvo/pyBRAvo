@@ -272,3 +272,17 @@ function updateList(classType) {
     });
     return allVals;
 };
+
+/**
+ * Empty object
+ * @param {type} myObject
+ * @returns {Boolean}
+ */
+function isEmpty(myObject) {
+    for(var key in myObject) {
+        if (myObject.hasOwnProperty(key)) {
+            return false;
+        }
+    }
+    return true;
+}

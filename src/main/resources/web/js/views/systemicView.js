@@ -62,7 +62,9 @@ var DemoSysbioView = Backbone.View.extend({
              */
             document.getElementById("emptyQuery").style.display = 'none';
             document.getElementById("errorQuery").style.display = 'none';
+            document.getElementById("noResult").style.display = 'none';
             document.getElementById("sendingQuery").style.display = 'block';
+            document.getElementById("next-level-regulation").style.display = 'none';
             /**
              * Initialize checkbox content
              */
@@ -84,6 +86,7 @@ var DemoSysbioView = Backbone.View.extend({
         }else{
             document.getElementById("emptyQuery").style.display = 'block';
             document.getElementById("errorQuery").style.display = 'none';
+            document.getElementById("noResult").style.display = 'none';
         }
     },
     querySearchSignalingNetwork: function () {
@@ -98,6 +101,8 @@ var DemoSysbioView = Backbone.View.extend({
             document.getElementById("emptyQuery").style.display = 'none';
             document.getElementById("errorQuery").style.display = 'none';
             document.getElementById("sendingQuery").style.display = 'block';
+            document.getElementById("next-level-signaling").style.display = 'none';
+            document.getElementById("noResult").style.display = 'none';
             /**
              * Initialize checkbox content
              */
@@ -119,6 +124,7 @@ var DemoSysbioView = Backbone.View.extend({
         }else{
             document.getElementById("emptyQuery").style.display = 'block';
             document.getElementById("errorQuery").style.display = 'none';
+            document.getElementById("noResult").style.display = 'none';
         }
     },        
     /**
