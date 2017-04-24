@@ -27,7 +27,7 @@ function sparqlSysBio(genesList, queryType, cy) {
         crossDomain: true,
         success: function (data, textStatus, jqXHR) {
             // Get valid JSON format
-            items = JSON.parse(JSON.stringify(data));            
+            items = JSON.parse(JSON.stringify(data));  
             // Set content of graph and get list of uniq regulators
             var toUniq = graphContent(cy, items) ;
             // Apply layout on loaded data
@@ -36,6 +36,7 @@ function sparqlSysBio(genesList, queryType, cy) {
              * Hide / show display
              */        
             document.getElementById("sendingQuery").style.display = 'none';
+            document.getElementById("noResult").style.display = 'none';
             document.getElementById("graphe-legend").style.display = 'block';
             document.getElementById("next-level-regulation").style.display = 'block';
             // Update checkbox content
@@ -44,6 +45,10 @@ function sparqlSysBio(genesList, queryType, cy) {
             document.getElementById('cy').addEventListener("dblclick", function resetGraph() {
                 cy.fit();
             });
+            if ( isEmpty(items) === true ){
+                document.getElementById("noResult").style.display = 'block';
+                document.getElementById("next-level-regulation").style.display = 'none';
+            }
             // Listen to checkbox option 'All'
             document.getElementById('toggle').addEventListener("click", function checklist() {
                 var checker = $('.toggle').is(':checked');
@@ -106,6 +111,10 @@ function nextLevelRegulation(genesList, cy) {
             graphLayout(cy, genesList);
             // Add item to checkbox
             checkboxContent(toUniq, "regulation");
+            if ( isEmpty(items) === true ){
+                document.getElementById("noResult").style.display = 'block';
+                document.getElementById("next-level-regulation").style.display = 'none';
+            }
             // Listen to checkbox option 'All'
             document.getElementById('toggle').addEventListener("click", function checklist() {
                 var checker = $('.toggle').is(':checked');
@@ -161,6 +170,11 @@ function sparqlSignaling(genesList, cy) {
             document.getElementById('cy').addEventListener("dblclick", function resetGraph() {
                 cy.fit();
             });
+            document.getElementById("next-level-signaling").style.display = 'block';
+            if ( isEmpty(items) === true ){
+                document.getElementById("noResult").style.display = 'block';
+                document.getElementById("next-level-signaling").style.display = 'none';
+            }
             // Listen to checkbox option 'All'
             document.getElementById('toggle').addEventListener("click", function checklist() {
                 var checker = $('.toggle').is(':checked');

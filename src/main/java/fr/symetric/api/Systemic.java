@@ -99,7 +99,6 @@ public class Systemic {
                     String contentType = "application/json";
                     // URI of the SPARQL Endpoint
                     String accessUri = "http://rdf.pathwaycommons.org/sparql";
-
                     URI requestURI = javax.ws.rs.core.UriBuilder.fromUri(accessUri)
                                .queryParam("query", "{query}")
                                .queryParam("format", "{format}")
