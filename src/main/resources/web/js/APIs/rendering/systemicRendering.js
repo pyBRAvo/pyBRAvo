@@ -20,6 +20,9 @@ function graphLayout(cy, genesList, initial=false) {
         if( element.isEdge() && element.data("type") === 'INHIBITION' ){
             element.addClass('class-inhib');
         }
+        if( element.isEdge() && element.data("style") === 'controller' ){
+            element.addClass('class-edge-controller');
+        }
         if( element.isNode() && element.data("type") === 'controller' ){
             element.addClass('class-controller');
         } 
@@ -45,6 +48,11 @@ function graphLayout(cy, genesList, initial=false) {
         'mid-target-arrow-shape': 'tee',
         'width': 2,
         'line-color' : '#000000' 
+    });
+    // Color edge of type controller
+    cy.$('.class-edge-controller').style({ 
+        'style': 'curve-style',
+        'line-style': 'dashed'
     });
     // Style on input nodes
     for (var gene in genesList) {
@@ -76,6 +84,7 @@ function graphLayout(cy, genesList, initial=false) {
         'border-color': '#3399ff',
         'border-width': 2,
         'shape': 'rectangle',
+        'text-opacity': 0,
         'width':10,
         'height':10
     });
@@ -177,70 +186,100 @@ function graphContentSignaling(cy, items) {
         var name = object.toString(); // URI of interaction
         if(typeof items[object]["http://www.biopax.org/release/biopax-level3.owl#left"] !== 'undefined') {
             var lefts = items[object]["http://www.biopax.org/release/biopax-level3.owl#left"];
-            for (i=0; i<lefts.length; i++) {
+            for (var i=0; i<lefts.length; i++) {
                 var pair = {
                     controller: lefts[i]["value"].toUpperCase(),
                     controlled: items[object]["http://www.biopax.org/release/biopax-level3.owl#right"][0]["value"].toUpperCase()
                 };
-                if (containsObject(pair, uniqEdge) === false){
+                if (containsObject(pair, uniqEdge) === false && pair["controller"] !== pair["controlled"]){
                     uniqEdge.push(pair);
-                    var randomId = guidGenerator();
-                    cy.add({
-                        nodes :[
-                        {
-                            // Source name
-                            data: {
-                               'id': items[object]["http://www.biopax.org/release/biopax-level3.owl#left"][i]["value"].toUpperCase()
-                               //position: { x: i, y: 1+i }
-                            }
-                        },{
-                            // Controller name
-                            data: {
-                               'id': items[object]["http://www.biopax.org/release/biopax-level3.owl#controller"][0]["value"].toUpperCase(),
-                               'type': "controller"
-                               //position: { x: i, y: 1+i }
-                            }
-                        },{
-                            // Inter node
-                            data: {
-                               'id': randomId,
-                               'type': "random-node"
-                               //position: { x: i, y: 1+i }
-                            }
-                        },{
-                            // Target name
-                            data: {
-                               'id': items[object]["http://www.biopax.org/release/biopax-level3.owl#right"][0]["value"].toUpperCase()
-                               //position: { x: 3, y: 3 }
-                            }
-                        }],                    
-                        edges: [
-                        {
-                            // source to inter node
-                            data: {
-                                id: guidGenerator(),
-                                source: items[object]["http://www.biopax.org/release/biopax-level3.owl#left"][i]["value"].toUpperCase(), // source
-                                target: randomId, // arc
-                                type: items[object]["http://www.biopax.org/release/biopax-level3.owl#controlType"][0]["value"] || "type" // activation, inhibition
-                            }  
-                        },{
-                            // inter node to target
-                            data: {
-                                id: guidGenerator(),
-                                source: randomId, // inter nde
-                                target: items[object]["http://www.biopax.org/release/biopax-level3.owl#right"][0]["value"].toUpperCase(), // target
-                                type: items[object]["http://www.biopax.org/release/biopax-level3.owl#controlType"][0]["value"] || "type" // activation, inhibition
-                            }  
-                        },{
-                            // controller to inter node
-                            data: {
-                                id: name,
-                                source: items[object]["http://www.biopax.org/release/biopax-level3.owl#controller"][0]["value"].toUpperCase(), // inter nde
-                                target: randomId, // target
-                                type: items[object]["http://www.biopax.org/release/biopax-level3.owl#controlType"][0]["value"] || "type" // activation, inhibition
-                            }  
-                        }]
-                    });
+                    if (typeof items[object]["http://www.biopax.org/release/biopax-level3.owl#controller"] !== 'undefined') {
+                        for (var j=0; j < items[object]["http://www.biopax.org/release/biopax-level3.owl#controller"].length; j++) {
+                            cy.add({
+                                nodes :[
+                                {
+                                    // Source name
+                                    data: {
+                                       'id': items[object]["http://www.biopax.org/release/biopax-level3.owl#left"][i]["value"].toUpperCase()
+                                       //position: { x: i, y: 1+i }
+                                    }
+                                },{
+                                    // Controller name
+                                    data: {
+                                       'id': items[object]["http://www.biopax.org/release/biopax-level3.owl#controller"][j]["value"].toUpperCase(),
+                                       'type': "controller"
+                                       //position: { x: i, y: 1+i }
+                                    }
+                                },{
+                                    // Inter node
+                                    data: {
+                                       'id': name,
+                                       'type': "random-node"
+                                       //position: { x: i, y: 1+i }
+                                    }
+                                },{
+                                    // Target name
+                                    data: {
+                                       'id': items[object]["http://www.biopax.org/release/biopax-level3.owl#right"][0]["value"].toUpperCase()
+                                       //position: { x: 3, y: 3 }
+                                    }
+                                }],                    
+                                edges: [
+                                {
+                                    // source to inter node
+                                    data: {
+                                        id: name+"s",
+                                        source: items[object]["http://www.biopax.org/release/biopax-level3.owl#left"][i]["value"].toUpperCase(), // source
+                                        target: name, // arc
+                                        type: items[object]["http://www.biopax.org/release/biopax-level3.owl#controlType"][0]["value"] || "type" // activation, inhibition
+                                    }  
+                                },{
+                                    // inter node to target
+                                    data: {
+                                        id: name+"t",
+                                        source: name, // inter node
+                                        target: items[object]["http://www.biopax.org/release/biopax-level3.owl#right"][0]["value"].toUpperCase(), // target
+                                        type: items[object]["http://www.biopax.org/release/biopax-level3.owl#controlType"][0]["value"] || "type" // activation, inhibition
+                                    }  
+                                },{
+                                    // controller to inter node
+                                    data: {
+                                        id: guidGenerator(),
+                                        source: items[object]["http://www.biopax.org/release/biopax-level3.owl#controller"][j]["value"].toUpperCase(), // controller
+                                        target: name, // inter node
+                                        style: "controller",
+                                        type: items[object]["http://www.biopax.org/release/biopax-level3.owl#controlType"][0]["value"] || "type" // activation, inhibition
+                                    }  
+                                }]
+                            });
+                        }
+                    } else {
+                        cy.add({
+                            nodes :[
+                            {
+                                // Source name
+                                data: {
+                                   'id': items[object]["http://www.biopax.org/release/biopax-level3.owl#left"][i]["value"].toUpperCase()
+                                   //position: { x: i, y: 1+i }
+                                }
+                            },{
+                                // Target name
+                                data: {
+                                   'id': items[object]["http://www.biopax.org/release/biopax-level3.owl#right"][0]["value"].toUpperCase()
+                                   //position: { x: 3, y: 3 }
+                                }
+                            }],                    
+                            edges: [
+                            {
+                                // left to right without controller
+                                data: {
+                                    id: guidGenerator(),
+                                    source: items[object]["http://www.biopax.org/release/biopax-level3.owl#left"][i]["value"].toUpperCase(), // left
+                                    target: items[object]["http://www.biopax.org/release/biopax-level3.owl#right"][0]["value"].toUpperCase() // right
+                                }  
+                            }]
+                        });
+                    }
                 }
             }
         }
@@ -356,8 +395,10 @@ function updateList(classType) {
     var allVals = [];
     var className = '#input-next-'+classType+' :checked';
     $(className).each(function() {
-        allVals.push($(this).val());
-        $(this).attr('disabled', true);
+        if( $(this).context["disabled"] == false){
+            allVals.push($(this).val());
+            $(this).attr('disabled', true);
+        }
     });
     return allVals;
 };
