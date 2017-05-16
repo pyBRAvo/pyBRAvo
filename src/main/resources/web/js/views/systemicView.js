@@ -160,6 +160,19 @@ function initialCy() {
                 }
             },
             {
+                selector: '$node > node', // parent - meta node
+                css: {
+                    'padding-top': '10px',
+                    'padding-left': '10px',
+                    'padding-bottom': '10px',
+                    'padding-right': '10px',
+                    'text-valign': 'top',
+                    'text-halign': 'center',
+                    'background-color': '#bbb',
+                    'background-opacity': 0.3
+                }
+            },
+            {
                 selector: 'edge',
                 style: {
                     'width': 2,
@@ -171,15 +184,21 @@ function initialCy() {
                 }
             }
         ],
-        grabbable: true,
-        selectable: true,
-        locked: false,
-        zoom: 1,
+//        grabbable: true,
+//        selectable: true,
+//        locked: false,
+//        zoom: 1,
         layout: {
             name: 'cola',
-            directed: true,
-            fit: true,
-            padding: 50
+//            directed: true,
+            nodeSpacing: 5,
+            avoidOverlap: true,
+            maxSimulationTime: 4000,
+            flow: { axis: 'y'},
+            unconstrIter: 10,
+            handleDisconnected: true
+//            fit: true,
+//            padding: 50
         }
     });
     return cy;

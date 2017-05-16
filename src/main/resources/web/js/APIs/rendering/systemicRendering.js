@@ -11,53 +11,44 @@
  * @param {boolean} initial
  */
 function graphLayout(cy, genesList, initial=false) {
-    cy.layout({
-        name:'cola', 
-        fit:true
-    });                      
+    
     // Add class to edge of type ACTIVATION
     cy.filter(function(i, element){
         if( element.isEdge() && element.data("type") === 'ACTIVATION' ){
-            element.addClass('classActiv');
+            element.addClass('class-activ');
         }
-        var entityType = {
-            'complex': "http://www.biopax.org/release/biopax-level3.owl#ComplexAssembly",
-            'biochemical-reaction': "http://www.biopax.org/release/biopax-level3.owl#BiochemicalReaction",
-            'degradation': "http://www.biopax.org/release/biopax-level3.owl#Degradation",
-            'catalysis': "http://www.biopax.org/release/biopax-level3.owl#Catalysis"
-        };
-        if( element.isEdge() ) {
-            if ( element.data("entity") === entityType["complex"] ){
-                element.addClass('class-complex');
-            }else if( element.data("entity") === entityType["biochemical-reaction"] ){
-                element.addClass('class-biochemical');
-            }else if (element.data("entity") === entityType["degradation"]){
-                element.addClass('class-degradation');
-            }
+        if( element.isEdge() && element.data("type") === 'INHIBITION' ){
+            element.addClass('class-inhib');
         }
+        if( element.isNode() && element.data("type") === 'controller' ){
+            element.addClass('class-controller');
+        } 
+        if( element.isNode() && element.data("type") === 'random-node' ){
+            element.addClass('class-random');
+        } 
+    });
+    cy.layout({
+        name:'cola',
+        nodeSpacing: 5,
+        unconstrIter: 10
+//        fit:true
     });
     // Color edge of type ACTIVATION
-    cy.$('.classActiv').style({ 
+    cy.$('.class-activ').style({ 
         'mid-target-arrow-color' : '#3399ff', 
         'width': 2,
         'line-color' : '#3399ff' 
     });
-    // Color edge of type COMPLEXE
-    cy.$('.class-complex').style({ 
-        'mid-target-arrow-color' : '#5FB404', 
+    // Color edge of type INHIBITION
+    cy.$('.class-inhib').style({ 
+        'mid-target-arrow-color' : '#000000', 
+        'mid-target-arrow-shape': 'tee',
         'width': 2,
-        'line-color' : '#5FB404' 
-    });
-    // Color edge of type BIOCHEMICAL REACTION
-    cy.$('.class-biochemical').style({ 
-        'mid-target-arrow-color' : '#ff8080', 
-        'width': 2,
-        'line-color' : '#ff8080' 
+        'line-color' : '#000000' 
     });
     // Style on input nodes
     for (var gene in genesList) {
-        var re = new RegExp(genesList[gene], "gi");
-        var reComplex = new RegExp("(.)*:(.)*$", "i");
+        var re = new RegExp(genesList[gene], "i");
         // Add class to node of name as initial input
         cy.filter(function(i, element){
             if( element.isNode() && initial === true) {
@@ -66,17 +57,29 @@ function graphLayout(cy, genesList, initial=false) {
                 }
             }
             if(  element.isNode() && initial === false ){
-                if ( element.data("id").match(re)) {
+                if ( element.data("id")===  genesList[gene]) {
                     element.addClass('class-second-input');
-                }
-            }
-            if(  element.isNode() && initial === false ){
-                if ( element.data("id").match(reComplex)) {
-                    element.addClass('class-second-input-complex');
                 }
             }
         });
     }
+    
+    // Color node of type CONTROLLER
+    cy.$('.class-controller').style({ 
+        'background-color': '#8904B1', // violet
+        'width':15,
+        'height':15
+    });
+    // Color node of type INTER NODE
+    cy.$('.class-random').style({ 
+        'background-color': '#fff', // pink
+        'border-color': '#3399ff',
+        'border-width': 2,
+        'shape': 'rectangle',
+        'width':10,
+        'height':10
+    });
+    
     // Color node with input name
     cy.$('.class-input').style({ 
         'background-color': 'red',
@@ -84,25 +87,19 @@ function graphLayout(cy, genesList, initial=false) {
         'height':25
     });
     cy.$('.class-second-input').style({ 
-        'background-color': '#FFBF00',
+        'background-color': '#FFBF00', // yellow
         'width':20,
         'height':20
-    });
-    cy.$('.class-second-input-complex').style({ 
-        'background-color': '#FFBF00',
-        'border-color': '#00264d',
-        'border-style': 'solid',
-        'border-width': 2,
-        'width':20,
-        'height':20,
-        'shape': 'hexagon'
     });
     // On click remove node and redraw graph
     cy.nodes().on("click", function(e){
         var id = e.cyTarget.id();
-        console.log(cy.getElementById(id).orphans().nodes());
-        cy.getElementById(id).orphans().remove();
-        cy.layout({name:'cola', grabbable: true});
+        console.log(cy.getElementById(id));
+//        cy.getElementById(id).orphans().remove();
+//        cy.layout({
+//            name:'cola', 
+//            grabbable: true
+//        });
     });
     displayQttInfo(cy);
 };
@@ -120,39 +117,131 @@ function graphContent(cy, items) {
         // Tranform JSON format to Cytoscape JSON format 
         var name = object.toString(); // URI of interaction
         if(typeof items[object]["http://www.biopax.org/release/biopax-level3.owl#controller"] !== 'undefined') {
-            var pair = {
-                controller: items[object]["http://www.biopax.org/release/biopax-level3.owl#controller"][0]["value"].toUpperCase(),
-                controlled: items[object]["http://www.biopax.org/release/biopax-level3.owl#controlled"][0]["value"].replace('Transcription of ','').toUpperCase()
-            };
-            // Test pair already ont the graph
-            if (containsObject(pair, uniqEdge) === false){
-                uniqEdge.push(pair);
-                cy.add([
-                    {
-                        // Controller/source name
-                        data: {
-                           id: items[object]["http://www.biopax.org/release/biopax-level3.owl#controller"][0]["value"].toUpperCase()
-                           //position: { x: i, y: 1+i }
-                        }
-                    },
-                    {
-                        // Controlled/target name
-                        data: {
-                           id: items[object]["http://www.biopax.org/release/biopax-level3.owl#controlled"][0]["value"].replace('Transcription of ','').toUpperCase()
-                           //position: { x: 3, y: 3 }
-                        }
-                    },                    
-                    {
-                        // Directed edge
-                        data: {
-                            id: name,
-                            source: items[object]["http://www.biopax.org/release/biopax-level3.owl#controller"][0]["value"].toUpperCase(), //controller
-                            target: items[object]["http://www.biopax.org/release/biopax-level3.owl#controlled"][0]["value"].replace('Transcription of ','').toUpperCase(), //controlled
-                            type: items[object]["http://www.biopax.org/release/biopax-level3.owl#controlType"][0]["value"] || "type",
-                            entity: items[object]["http://www.w3.org/1999/02/22-rdf-syntax-ns#type"][0]["value"]
-                        }   
-                    }
-                ]);
+            var controllers = items[object]["http://www.biopax.org/release/biopax-level3.owl#controller"];
+            for (i=0; i<controllers.length; i++) {
+                var pair = {
+                    controller: controllers[i]["value"].toUpperCase().replace(' GENE',''),
+                    controlled: items[object]["http://www.biopax.org/release/biopax-level3.owl#controlled"][0]["value"].replace('Transcription of ','').toUpperCase()
+                };
+                if (containsObject(pair, uniqEdge) === false){
+                    uniqEdge.push(pair);
+                    cy.add({
+                        nodes :[
+                        {
+                            // Controller/source name
+                            data: {
+                               'id': controllers[i]["value"].toUpperCase().replace(' GENE',''),
+                               'type': items[object]["http://www.w3.org/1999/02/22-rdf-syntax-ns#controllerType"][0]["value"], // complex, rna, dna...
+                               'IDreac': name
+                               //position: { x: i, y: 1+i }
+                            }
+                        },
+                        {
+                            // Controlled/target name
+                            data: {
+                               id: items[object]["http://www.biopax.org/release/biopax-level3.owl#controlled"][0]["value"].replace('Transcription of ','').toUpperCase()
+                               //position: { x: 3, y: 3 }
+                            }
+                        }],                    
+                        edges: [{
+                            // Directed edge
+                            data: {
+                                id: name+i,
+                                source: controllers[i]["value"].toUpperCase().replace(' GENE',''), //controller
+                                target: items[object]["http://www.biopax.org/release/biopax-level3.owl#controlled"][0]["value"].replace('Transcription of ','').toUpperCase(), //controlled
+                                type: items[object]["http://www.biopax.org/release/biopax-level3.owl#controlType"][0]["value"] || "type", // activation, inhibition
+                            }   
+                        }]
+                    });
+                }
+            }
+        }
+    }
+    uniqEdge.sort(function(a,b){
+        return a.controller > b.controller;
+    });
+    return uniqEdge;
+};
+
+/**
+ * Add content to graphe
+ * @param {Cytoscape object} cy
+ * @param {array} items
+ * @returns {Array|graphContent.uniqEdge}
+ */
+function graphContentSignaling(cy, items) {
+    var uniqEdge = []; // array of uniq edge
+    // For each genes of the query
+    for (var object in items) {
+        // Tranform JSON format to Cytoscape JSON format 
+        var name = object.toString(); // URI of interaction
+        if(typeof items[object]["http://www.biopax.org/release/biopax-level3.owl#left"] !== 'undefined') {
+            var lefts = items[object]["http://www.biopax.org/release/biopax-level3.owl#left"];
+            for (i=0; i<lefts.length; i++) {
+                var pair = {
+                    controller: lefts[i]["value"].toUpperCase(),
+                    controlled: items[object]["http://www.biopax.org/release/biopax-level3.owl#right"][0]["value"].toUpperCase()
+                };
+                if (containsObject(pair, uniqEdge) === false){
+                    uniqEdge.push(pair);
+                    var randomId = guidGenerator();
+                    cy.add({
+                        nodes :[
+                        {
+                            // Source name
+                            data: {
+                               'id': items[object]["http://www.biopax.org/release/biopax-level3.owl#left"][i]["value"].toUpperCase()
+                               //position: { x: i, y: 1+i }
+                            }
+                        },{
+                            // Controller name
+                            data: {
+                               'id': items[object]["http://www.biopax.org/release/biopax-level3.owl#controller"][0]["value"].toUpperCase(),
+                               'type': "controller"
+                               //position: { x: i, y: 1+i }
+                            }
+                        },{
+                            // Inter node
+                            data: {
+                               'id': randomId,
+                               'type': "random-node"
+                               //position: { x: i, y: 1+i }
+                            }
+                        },{
+                            // Target name
+                            data: {
+                               'id': items[object]["http://www.biopax.org/release/biopax-level3.owl#right"][0]["value"].toUpperCase()
+                               //position: { x: 3, y: 3 }
+                            }
+                        }],                    
+                        edges: [
+                        {
+                            // source to inter node
+                            data: {
+                                id: guidGenerator(),
+                                source: items[object]["http://www.biopax.org/release/biopax-level3.owl#left"][i]["value"].toUpperCase(), // source
+                                target: randomId, // arc
+                                type: items[object]["http://www.biopax.org/release/biopax-level3.owl#controlType"][0]["value"] || "type" // activation, inhibition
+                            }  
+                        },{
+                            // inter node to target
+                            data: {
+                                id: guidGenerator(),
+                                source: randomId, // inter nde
+                                target: items[object]["http://www.biopax.org/release/biopax-level3.owl#right"][0]["value"].toUpperCase(), // target
+                                type: items[object]["http://www.biopax.org/release/biopax-level3.owl#controlType"][0]["value"] || "type" // activation, inhibition
+                            }  
+                        },{
+                            // controller to inter node
+                            data: {
+                                id: name,
+                                source: items[object]["http://www.biopax.org/release/biopax-level3.owl#controller"][0]["value"].toUpperCase(), // inter nde
+                                target: randomId, // target
+                                type: items[object]["http://www.biopax.org/release/biopax-level3.owl#controlType"][0]["value"] || "type" // activation, inhibition
+                            }  
+                        }]
+                    });
+                }
             }
         }
     }
@@ -285,4 +374,15 @@ function isEmpty(myObject) {
         }
     }
     return true;
+}
+
+/**
+ * 
+ * @returns {String}
+ */
+function guidGenerator() {
+    var S4 = function() {
+       return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
+    };
+    return (S4()+S4()+"-"+S4()+"-"+S4()+"-"+S4()+"-"+S4()+S4()+S4());
 }
