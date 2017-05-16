@@ -11,7 +11,7 @@
  * @param {Cytoscape object} cy
  */
 function sparqlSysBio(genesList, queryType, cy) {
-    endpointURL = rootURL + '/systemic/network';
+    var endpointURL = rootURL + '/systemic/network';
     genesList = genesList.split(",");
     console.log(genesList);
     var genesJSON = JSON.stringify(genesList);
@@ -139,7 +139,7 @@ function nextLevelRegulation(genesList, cy) {
  * @param {Cytoscape object} cy
  */
 function sparqlSignaling(genesList, cy) {
-    endpointURL = rootURL + '/systemic/network';
+    var endpointURL = rootURL + '/systemic/network';
     genesList = genesList.split(",");
     console.log(genesList);
     var genesJSON = JSON.stringify(genesList);
@@ -163,7 +163,6 @@ function sparqlSignaling(genesList, cy) {
             // Hide running query message        
             document.getElementById("sendingQuery").style.display = 'none';
             // Show legend
-            //document.getElementById("graphe-legend").style.display = 'block';
             document.getElementById("btn-collapse").style.display = 'block';
             checkboxContent(toUniq, "signaling");
             // Listen to dbclick on graph to fit on network
@@ -212,11 +211,11 @@ function sparqlSignaling(genesList, cy) {
  * 
  */
 function nextLevelSignaling(genesList, cy) {
-    endpointURL = rootURL + '/systemic/network-signaling';
+    var endpointURL = rootURL + '/systemic/network';
     var genesJSON = JSON.stringify(genesList);
     // Show 'query on run' message
     document.getElementById("sendingQuery").style.display = 'block';
-    
+    // Request on regulation part
     $.ajax({
         type: 'GET',
         headers: {
@@ -227,23 +226,49 @@ function nextLevelSignaling(genesList, cy) {
         dataType: "json",
         crossDomain: true,
         success: function (data, textStatus, jqXHR) {
-            // Hide message
-            document.getElementById("sendingQuery").style.display = 'none';
             // Get valid JSON format
-            var items = JSON.parse(JSON.stringify(data));
-            // Load new genes to graphe
-            var toUniq = graphContent(cy,items); 
-            // Apply layout
-            graphLayout(cy, genesList);
-            // Add item to checkbox
-            checkboxContent(toUniq, "signaling");
-            // Event : check all checkbox
-            document.getElementById('toggle').addEventListener("click", function checklist() {
-                var checker = $('.toggle').is(':checked');
-                // When toggle click, check all
-                $('input:checkbox.next-signaling-checkbox').each(function() {
-                    $(this).prop('checked',checker);
-                });
+            var itemsR = JSON.parse(JSON.stringify(data));
+            endpointURL = rootURL + '/systemic/network-signaling';
+            // Request on signaling part
+            $.ajax({
+                type: 'GET',
+                headers: {
+                    Accept: "application/json"
+                },
+                url: endpointURL,
+                data: 'genes=' + genesJSON,
+                dataType: "json",
+                crossDomain: true,
+                success: function (data, textStatus, jqXHR) {
+                    // Get valid JSON format
+                    var itemsS = JSON.parse(JSON.stringify(data));
+                    // Load new genes to graphe
+                    var toUniq_regulation = graphContent(cy,itemsR); 
+                    // Load new genes to graphe
+                    var toUniq_signaling = graphContentSignaling(cy,itemsS);
+                    // Apply layout
+                    graphLayout(cy, genesList);
+                    // Hide message
+                    document.getElementById("sendingQuery").style.display = 'none';
+                    // Add item to checkbox
+                    checkboxContent(toUniq_regulation, "signaling");
+                    // Add item to checkbox
+                    checkboxContent(toUniq_signaling, "signaling");
+                    // Event : check all checkbox
+                    document.getElementById('toggle').addEventListener("click", function checklist() {
+                        var checker = $('.toggle').is(':checked');
+                        // When toggle click, check all
+                        $('input:checkbox.next-signaling-checkbox').each(function() {
+                            $(this).prop('checked',checker);
+                        });
+                    });
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    document.getElementById("errorQuery").style.display = 'block';
+                    document.getElementById("sendingQuery").style.display = 'none';
+                    infoError("SPARQL querying failure: " + errorThrown);
+                    console.log(jqXHR.responseText);
+                }
             });
         },
         error: function (jqXHR, textStatus, errorThrown) {
