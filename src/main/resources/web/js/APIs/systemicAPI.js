@@ -88,6 +88,7 @@ function sparqlSysBio(genesList, queryType, cy) {
 function nextLevelRegulation(genesList, cy) {
     endpointURL = rootURL + '/systemic/network';
     var genesJSON = JSON.stringify(genesList);
+    console.log("send", genesList);
     // Show 'query on run' message
     document.getElementById("sendingQuery").style.display = 'block';
     
@@ -213,6 +214,7 @@ function sparqlSignaling(genesList, cy) {
 function nextLevelSignaling(genesList, cy) {
     var endpointURL = rootURL + '/systemic/network';
     var genesJSON = JSON.stringify(genesList);
+    console.log("send", genesList);
     // Show 'query on run' message
     document.getElementById("sendingQuery").style.display = 'block';
     // Request on regulation part
