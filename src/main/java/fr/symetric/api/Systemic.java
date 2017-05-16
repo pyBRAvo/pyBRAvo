@@ -82,7 +82,8 @@ public class Systemic {
                         +"PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n"
                         +"PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> \n"
                         +"CONSTRUCT {\n"
-                        +"?tempReac rdf:type ?kind ; bp:controlled ?controlledName ; bp:controller ?controllerName ; bp:dataSource ?source ; bp:controlType ?type  .\n"
+                        +"?tempReac rdf:type ?kind ; bp:controlled ?controlledName ; bp:controller ?controllerName ; "
+                            + "bp:dataSource ?source ; bp:controlType ?type ; rdf:controllerType ?controllerType  .\n"
                         +"} WHERE{ \n"
                         + "FILTER( (?controlledName = 'Transcription of "+genesList.get(i).toString().toUpperCase()+"'^^xsd:string) "
                             + "and (?controllerName != '"+genesList.get(i).toString().toUpperCase()+"'^^xsd:string) "
@@ -90,7 +91,7 @@ public class Systemic {
                         +"?tempReac a bp:TemplateReactionRegulation .\n"
                         +"?tempReac rdf:type ?kind ; bp:displayName ?reacName ; bp:controlled ?controlled ; bp:controller ?controller ; bp:controlType ?type ; bp:dataSource ?source .\n"
                         +"?controlled bp:displayName ?controlledName .\n"
-                        +"?controller bp:displayName ?controllerName .\n "
+                        +"?controller bp:displayName ?controllerName ; rdf:type ?controllerType .\n "
                         +"}"
                         +"GROUP BY ?controlledName ?controllerName";
                     System.out.println("Query created");
@@ -148,7 +149,6 @@ public class Systemic {
     public Response searchSignalingNetwork(@QueryParam("genes") String genes) throws JSONException {
         
         JSONArray genesList = new JSONArray(genes);
-        
         Model transcriptorModel = ModelFactory.createDefaultModel();
         Model finalModel = ModelFactory.createDefaultModel();
         
@@ -156,25 +156,40 @@ public class Systemic {
             for(int i=0; i < genesList.length(); i++){
                 if (genesList.get(i) != "" && genesList.get(i) != " ") {
                     StringBuilder result = new StringBuilder();
-                    StringBuilder result2 = new StringBuilder();
 //                    logger.info(genesList.get(i));
                     // Construct new graphe
                     // Filter on Trancription Factor and wihtout miRNA
-                    String filterQuery = "PREFIX bp: <http://www.biopax.org/release/biopax-level3.owl#>\n"
-                        +"PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n"
-                        +"CONSTRUCT {\n"
-                        +"?tempReac rdf:type ?kind ; bp:controlled ?controlledName ; bp:controller ?controllerName ; bp:dataSource ?source ; bp:controlType ?type  .\n"
-                        +"} WHERE{ \n"
-                        + "FILTER( ?classControl IN ( bp:Catalysis, bp:Modulation, bp:TemplateReactionRegulation ) ) .\n"
-                        + "FILTER( (?controlledName = 'Transcription of "+genesList.get(i).toString().toUpperCase()+"'^^<http://www.w3.org/2001/XMLSchema#string>) "
-                            + "and (?controllerName != '"+genesList.get(i).toString().toUpperCase()+"'^^<http://www.w3.org/2001/XMLSchema#string>) "
-                            + "and (?source != 'mirtarbase'^^<http://www.w3.org/2001/XMLSchema#string>) ) .\n"
-                        +"?tempReac a ?classControl .\n"
-                        +"?tempReac rdf:type ?kind ; bp:displayName ?reacName ; bp:controlled ?controlled ; bp:controller ?controller ; bp:controlType ?type ; bp:dataSource ?source .\n"
-                        +"?controlled bp:displayName ?controlledName .\n"
-                        +"?controller bp:displayName ?controllerName .\n "
-                        +"}"
-                        +"GROUP BY ?controlledName ?controllerName";
+                    String filterQuery = "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n" +
+                        "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n" +
+                        "PREFIX owl: <http://www.w3.org/2002/07/owl#>\n" +
+                        "PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n" +
+                        "PREFIX dc: <http://purl.org/dc/elements/1.1/>\n" +
+                        "PREFIX dcterms: <http://purl.org/dc/terms/>\n" +
+                        "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n" +
+                        "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>\n" +
+                        "PREFIX bp: <http://www.biopax.org/release/biopax-level3.owl#>\n" +
+                        "PREFIX reactome: <http://identifiers.org/reactome/>\n" +
+                        "PREFIX release: <http://www.reactome.org/biopax/49/48887#>\n" +
+                        "PREFIX up: <http://purl.uniprot.org/core/> \n" +
+                        "PREFIX uniprot: <http://purl.uniprot.org/uniprot/>\n" +
+                        "PREFIX chebi: <http://purl.obolibrary.org/obo/CHEBI_>\n" +
+                        "PREFIX obo2: <http://purl.obolibrary.org/obo#>\n" +
+                        "CONSTRUCT {\n" +
+                        "  ?reaction rdf:id ?reaction ; bp:right ?moleculeName ; bp:controller ?controllerName ; "+
+                            "bp:left ?participantName ; bp:participantType ?participantType ; bp:controlType ?controlType .\n" +
+                        "}WHERE{\n" +
+                        "  OPTIONAL { ?reaction bp:displayName ?reactionName . }\n" +
+                        "  OPTIONAL { \n" +
+                        "    ?catalysis bp:controller ?controller ; bp:controlType ?controlType .\n" +
+                        "    ?controller bp:displayName ?controllerName .\n" +
+                        "  }\n" +
+                        "  ?catalysis bp:controlled* ?reaction .\n" +
+                        "  ?reaction bp:right ?molecule .\n" +
+                        "  ?reaction bp:left|bp:right ?participant .\n" +
+                        "  ?participant bp:displayName ?participantName ; rdf:type ?participantType .\n" +
+                        "  ?molecule bp:displayName ?moleculeName .\n" +
+                        "  VALUES ?moleculeName { '"+genesList.get(i).toString().toUpperCase()+"'^^xsd:string }\n" +
+                        "}order by ?catalysis";
                     System.out.println("Query created");
 
                     // Parsing json is more simple than XML
@@ -200,42 +215,6 @@ public class Systemic {
                     // Prepare model
                     ByteArrayInputStream bais = new ByteArrayInputStream(result.toString().getBytes());
                     transcriptorModel.read(bais, null, "RDF/JSON");
-                    
-                    String conversionQuery = "PREFIX bp: <http://www.biopax.org/release/biopax-level3.owl#>\n"+
-                        "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n"+
-                        "PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> \n"+
-                        "CONSTRUCT {\n" +
-                        "      ?conversion rdf:type ?type ; bp:controlled ?Rname ; bp:controller ?Lname ; bp:controlType 'type' \n" +
-                        "} WHERE {\n" +
-                        "      FILTER( ?classConversion IN ( bp:BiochemicalReaction, bp:ComplexAssembly, bp:Degradation ) ) .\n" +
-                        "      FILTER( regex(?Rname, '"+genesList.get(i).toString().toUpperCase()+"', 'i') and " +
-                        "               ?Lname != '"+genesList.get(i).toString().toUpperCase()+"'^^xsd:string )\n" +
-                        "      ?conversion a ?classConversion .\n" +
-                        "      ?conversion bp:right ?right ; bp:left ?left ; rdf:type ?type.\n" +
-                        "      ?right bp:component ?Rcomponent .\n" +
-                        "      ?left bp:component ?Lcomponent .\n" +
-                        "      ?Rcomponent bp:displayName ?Rname .\n" +
-                        "      ?Lcomponent bp:displayName ?Lname .\n" +
-                        "} GROUP BY ?Rname ?Lname";
-
-                    URI requestURI2 = javax.ws.rs.core.UriBuilder.fromUri(accessUri)
-                               .queryParam("query", "{query}")
-                               .queryParam("format", "{format}")
-                               .build(conversionQuery, contentType);
-                    URLConnection con2 = requestURI2.toURL().openConnection();
-                    con2.addRequestProperty("Accept", contentType);
-                    InputStream in2 = con2.getInputStream();
-
-                    // Read result
-                    BufferedReader reader2 = new BufferedReader(new InputStreamReader(in2));
-                    
-                    String line2;
-                    while((line2 = reader2.readLine()) != null) {
-                        result2.append(line2);
-                    }
-                    // Prepare model
-                    ByteArrayInputStream bais2 = new ByteArrayInputStream(result2.toString().getBytes());
-                    transcriptorModel.read(bais2, null, "RDF/JSON");
                 }
             } // End For Loop
             
