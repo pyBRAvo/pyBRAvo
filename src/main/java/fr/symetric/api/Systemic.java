@@ -83,7 +83,7 @@ public class Systemic {
                         +"PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> \n"
                         +"CONSTRUCT {\n"
                         +"?tempReac rdf:type ?kind ; bp:controlled ?controlledName ; bp:controller ?controllerName ; "
-                            + "bp:dataSource ?source ; bp:controlType ?type ; rdf:controllerType ?controllerType  .\n"
+                            + "bp:dataSource ?source ; bp:controlType ?type ; rdf:participantType ?controllerType  .\n"
                         +"} WHERE{ \n"
                         + "FILTER( (?controlledName = 'Transcription of "+genesList.get(i).toString().toUpperCase()+"'^^xsd:string) "
                             + "and (?controllerName != '"+genesList.get(i).toString().toUpperCase()+"'^^xsd:string) "
