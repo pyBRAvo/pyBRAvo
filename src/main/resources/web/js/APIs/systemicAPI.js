@@ -13,7 +13,6 @@
 function sparqlSysBio(genesList, queryType, cy) {
     var endpointURL = rootURL + '/systemic/network';
     genesList = genesList.split(",");
-    console.log(genesList);
     var genesJSON = JSON.stringify(genesList);
     
     $.ajax({
@@ -142,7 +141,6 @@ function nextLevelRegulation(genesList, cy) {
 function sparqlSignaling(genesList, cy) {
     var endpointURL = rootURL + '/systemic/network';
     genesList = genesList.split(",");
-    console.log(genesList);
     var genesJSON = JSON.stringify(genesList);
     
     $.ajax({
@@ -214,7 +212,6 @@ function sparqlSignaling(genesList, cy) {
 function nextLevelSignaling(genesList, cy) {
     var endpointURL = rootURL + '/systemic/network';
     var genesJSON = JSON.stringify(genesList);
-    console.log("send", genesList);
     // Show 'query on run' message
     document.getElementById("sendingQuery").style.display = 'block';
     // Request on regulation part
