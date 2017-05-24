@@ -38,7 +38,6 @@ var WelcomeView = Backbone.View.extend({
         return this;
     }
 });
-
 var myWelcomeView = new WelcomeView();
 
 //*************************************
