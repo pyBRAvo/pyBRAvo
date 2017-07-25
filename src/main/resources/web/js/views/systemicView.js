@@ -184,21 +184,14 @@ function initialCy() {
                 }
             }
         ],
-//        grabbable: true,
-//        selectable: true,
-//        locked: false,
-//        zoom: 1,
         layout: {
             name: 'cola',
-//            directed: true,
             nodeSpacing: 5,
             avoidOverlap: true,
             maxSimulationTime: 4000,
             flow: { axis: 'y'},
             unconstrIter: 10,
             handleDisconnected: true
-//            fit: true,
-//            padding: 50
         }
     });
     return cy;
