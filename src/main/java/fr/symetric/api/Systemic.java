@@ -23,11 +23,7 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import org.apache.jena.query.Query;
-import org.apache.jena.query.QueryExecution;
-import org.apache.jena.query.QueryExecutionFactory;
 import org.apache.jena.query.QueryFactory;
-import org.apache.jena.query.QuerySolution;
-import org.apache.jena.query.ResultSet;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.RDFNode;
@@ -53,7 +49,8 @@ public class Systemic {
      * @param genes
      * @param queryType
      * @return
-     * @throws JSONException
+     * @throws JSONException, IOException
+     * @throws java.net.MalformedURLException
      */
     @GET
     @Path("/network")
@@ -122,22 +119,19 @@ public class Systemic {
                 }
             } // End For Loop
             
-            //System.out.println("Send second Query");
-            //Model mtemp = selectQuery(transcriptorModel);
             finalModel.add(transcriptorModel);
-            //finalModel.add(mtemp);
-            //RDFDataMgr.write(System.out, mtemp, Lang.RDFJSON) ;
             final StringWriter writer = new StringWriter(); 
+            // Write model in JSON format to render as data
             finalModel.write(writer, "RDF/JSON");
             return Response.status(200).header("Access-Control-Allow-Origin", "*").entity(writer.toString()).build(); 
-        } catch (Exception ex) {
+        } catch (IOException ex) {
             logger.error(ex);
             return Response.status(500).header(headerAccept, "*").entity("Error while querying PathwayCommons endpoint").build();
         }
     }
     
     /**
-     *  
+     *  Signaling network of Gene names or IDs
      *  
      * @param genes
      * @return
@@ -153,12 +147,12 @@ public class Systemic {
         Model finalModel = ModelFactory.createDefaultModel();
         
         try {
+            // Iterate over biological entites (input)
             for(int i=0; i < genesList.length(); i++){
                 if (genesList.get(i) != "" && genesList.get(i) != " ") {
                     StringBuilder result = new StringBuilder();
-//                    logger.info(genesList.get(i));
+                    
                     // Construct new graphe
-                    // Filter on Trancription Factor and wihtout miRNA
                     String filterQuery = "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n" +
                         "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n" +
                         "PREFIX owl: <http://www.w3.org/2002/07/owl#>\n" +
@@ -168,17 +162,10 @@ public class Systemic {
                         "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n" +
                         "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>\n" +
                         "PREFIX bp: <http://www.biopax.org/release/biopax-level3.owl#>\n" +
-                        "PREFIX reactome: <http://identifiers.org/reactome/>\n" +
-                        "PREFIX release: <http://www.reactome.org/biopax/49/48887#>\n" +
-                        "PREFIX up: <http://purl.uniprot.org/core/> \n" +
-                        "PREFIX uniprot: <http://purl.uniprot.org/uniprot/>\n" +
-                        "PREFIX chebi: <http://purl.obolibrary.org/obo/CHEBI_>\n" +
-                        "PREFIX obo2: <http://purl.obolibrary.org/obo#>\n" +
                         "CONSTRUCT {\n" +
                         "  ?reaction rdf:id ?reaction ; bp:right ?moleculeName ; bp:controller ?controllerName ; "+
                             "bp:left ?participantName ; bp:participantType ?participantType ; bp:controlType ?controlType .\n" +
                         "}WHERE{\n" +
-                        "  OPTIONAL { ?reaction bp:displayName ?reactionName . }\n" +
                         "  OPTIONAL { \n" +
                         "    ?catalysis bp:controller ?controller ; bp:controlType ?controlType .\n" +
                         "    ?controller bp:displayName ?controllerName .\n" +
@@ -229,11 +216,12 @@ public class Systemic {
     }
     
     /**
-     * Next levels of regulation
+     * Id to Name Query
      * @author Marie Lefebvre
      * @param genesList
      * @return model
      * @throws org.codehaus.jettison.json.JSONException
+     * @throws java.io.IOException
      */
     public JSONArray IdToNameQuery(JSONArray genesList) throws JSONException, IOException {
         List<String> idToNameList = new ArrayList<String>();
@@ -252,12 +240,12 @@ public class Systemic {
                 "  ?e bp:displayName ?name .\n" +
                 "}\n";
             System.out.println("Query ID created");
+            
             StringBuilder result = new StringBuilder();
             // Parsing json is more simple than XML
             String contentType = "application/json";
             // URI of the SPARQL Endpoint
             String accessUri = "http://rdf.pathwaycommons.org/sparql";
-
             URI requestURI = javax.ws.rs.core.UriBuilder.fromUri(accessUri)
                        .queryParam("query", "{query}")
                        .queryParam("format", "{format}")
@@ -281,60 +269,6 @@ public class Systemic {
             }
         }
         return new JSONArray(idToNameList);
-    }
-    
-    /**
-     * Next levels of regulation
-     * @author Marie Lefebvre
-     * @param gene : String - controller of initial network regulation
-     * @return finalModel : Model - network regulation of the gene
-     */
-    public Model ConstuctRecursiveQuery(RDFNode gene) throws IOException {
-        // SPARQL Query to get controller of a model
-        String queryString = "PREFIX bp: <http://www.biopax.org/release/biopax-level3.owl#>\n"
-            +"  PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n"
-            +"  CONSTRUCT {\n"
-            +"      ?tempReac bp:displayName ?type ; bp:controlled ?controlledName ; bp:controller ?controllerName ; bp:dataSource ?source .\n"
-            +"  } WHERE { \n"
-            +"      FILTER( ( regex(?controlledName, ' "+gene.toString().toUpperCase()+"$', 'i') ) && !regex(?source, 'mirtar', 'i') ) .\n"
-            +"      ?tempReac a bp:TemplateReactionRegulation .\n"
-            +"      ?tempReac bp:displayName ?reacName ; bp:controlled ?controlled ; bp:controller ?controller ; bp:controlType ?type ; bp:dataSource ?source .\n"
-            +"      ?controlled bp:displayName ?controlledName .\n"
-            +"      ?controller bp:displayName ?controllerName .\n "
-            +"  }";
-        Model finalModel = ModelFactory.createDefaultModel();
-        // Create query
-        Query query = QueryFactory.create(queryString) ;
-        String contentType = "application/json";
-        // URI of the SPARQL Endpoint
-        String accessUri = "http://rdf.pathwaycommons.org/sparql";
-        StringBuilder result = new StringBuilder();
-
-        URI requestURI = javax.ws.rs.core.UriBuilder.fromUri(accessUri)
-                   .queryParam("query", "{query}")
-                   .queryParam("format", "{format}")
-                   .build(query, contentType);
-        URLConnection con;
-        try {
-            con = requestURI.toURL().openConnection();
-            con.addRequestProperty("Accept", contentType);
-            InputStream in = con.getInputStream();
-            
-            // Read result
-            BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-            
-            String line;
-            while((line = reader.readLine()) != null) {
-                result.append(line);
-            }
-            // Prepare model
-            ByteArrayInputStream bais = new ByteArrayInputStream(result.toString().getBytes());
-            finalModel.read(bais, null, "RDF/JSON");
-        } catch (Exception ex) {
-            logger.error(ex);
-        }
-        System.out.println("Final Model en cours");
-        return finalModel;
     }
 }
 
