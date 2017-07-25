@@ -219,6 +219,8 @@ function graphContent(cy, items) {
  */
 function graphContentSignaling(cy, items) {
     var uniqEdge = []; // array of uniq edge
+    var catalysers = []; // array of unique catalysers
+    var catalyserId = guidGenerator();
     // For each genes of the query
     for (var object in items) {
         // Tranform JSON format to Cytoscape JSON format 
@@ -234,12 +236,17 @@ function graphContentSignaling(cy, items) {
                     uniqEdge.push(pair);
                     if (typeof items[object]["http://www.biopax.org/release/biopax-level3.owl#controller"] !== 'undefined') {
                         for (var j=0; j < items[object]["http://www.biopax.org/release/biopax-level3.owl#controller"].length; j++) {
+                            
+                            if ($.inArray(items[object]["http://www.biopax.org/release/biopax-level3.owl#controller"][j]["value"].toUpperCase(), catalysers) === -1) {
+                                catalyserId = guidGenerator();
+                                catalysers.push(items[object]["http://www.biopax.org/release/biopax-level3.owl#controller"][j]["value"].toUpperCase());
+                            }
                             cy.add({
                                 nodes :[
                                 {
                                     // Source name
                                     data: {
-                                       'id': items[object]["http://www.biopax.org/release/biopax-level3.owl#left"][i]["value"].toUpperCase(),
+                                       'id': lefts[i]["value"].toUpperCase(),
                                        'category': items[object]["http://www.biopax.org/release/biopax-level3.owl#participantType"][i]["value"] // complex, rna, dna...
                                        //position: { x: i, y: 1+i }
                                     }
@@ -269,7 +276,7 @@ function graphContentSignaling(cy, items) {
                                     // source to inter node
                                     data: {
                                         id: name+"s",
-                                        source: items[object]["http://www.biopax.org/release/biopax-level3.owl#left"][i]["value"].toUpperCase(), // source
+                                        source: lefts[i]["value"].toUpperCase(), // source
                                         target: name, // arc
                                         type: items[object]["http://www.biopax.org/release/biopax-level3.owl#controlType"][0]["value"] || "type" // activation, inhibition
                                     }  
@@ -284,7 +291,7 @@ function graphContentSignaling(cy, items) {
                                 },{
                                     // controller to inter node
                                     data: {
-                                        id: guidGenerator(),
+                                        id: catalyserId,
                                         source: items[object]["http://www.biopax.org/release/biopax-level3.owl#controller"][j]["value"].toUpperCase(), // controller
                                         target: name, // inter node
                                         style: "controller",
@@ -294,13 +301,15 @@ function graphContentSignaling(cy, items) {
                             });
                         }
                     } else {
+                        // bp:participantType are not redondant : if 3 bp:left with same bp:participantType, only one bp:paticipantType in array
+                        var category = (typeof items[object]["http://www.biopax.org/release/biopax-level3.owl#participantType"][i] === 'undefined') ? items[object]["http://www.biopax.org/release/biopax-level3.owl#participantType"][0]["value"] : items[object]["http://www.biopax.org/release/biopax-level3.owl#participantType"][i]["value"];
                         cy.add({
                             nodes :[
                             {
                                 // Source name
                                 data: {
                                    'id': items[object]["http://www.biopax.org/release/biopax-level3.owl#left"][i]["value"].toUpperCase(),
-                                   'category': items[object]["http://www.biopax.org/release/biopax-level3.owl#participantType"][i]["value"]
+                                   'category': category
                                    //position: { x: i, y: 1+i }
                                 }
                             },{
