@@ -81,14 +81,10 @@
     <div class="col-xs-10">
             <div id="cy" style="min-width: 400px; height:600px; display:block;"></div>
     </div>
-    <div class="col-xs-2">
-         <button type="button" class="btn btn-default" id="btn-collapse" data-toggle="collapse" data-target="#panel-signaling" style="display:none;">
-            <i class="glyphicon glyphicon-menu-hamburger"></i>
-        </button>
-        <div class="collapse" id="panel-signaling">        
-            <div class="panel panel-default" id="next-level-signaling" style="min-width:230px;font-size:12px;">
+    <div class="col-xs-2">    
+            <div class="panel panel-default" id="next-level-signaling" style="min-width:230px;font-size:12px;display:none;">
                 <div class="panel-heading">
-                    <label>Select gene to add their signaling connexion</label>
+                    <label>Select entities to add their signaling connexion</label>
                 </div>
                 <div class="panel-body">
                     <div class="input-group" id="input-next-signaling"  style="max-height:310px;overflow:auto;display:block;">
@@ -99,7 +95,7 @@
                     <button class="btn btn-default" type="button" id="btnRunNextSignaling">Run</button>
                 </div>
             </div>
-            <div class="panel panel-default" id="graphe-legend" style="min-width:230px;font-size:12px;">
+            <div class="panel panel-default" id="graphe-legend" style="min-width:230px;font-size:12px;display:none;">
                 <div class="panel-heading">
                     <label><i class="glyphicon glyphicon-info-sign"></i> Legend</label>
                 </div>
@@ -120,10 +116,9 @@
                         </div>
                 </div>
             </div>
-            <button type="button" class="btn btn-default" id="btn-download" style="margin-bottom:5px;">
+            <button type="button" class="btn btn-default" id="btn-download" style="margin-bottom:5px;display:none;">
                 <a id="a" target="_blank"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span></a>
             </button>
-        </div>
     </div>
 </div>
 

@@ -57,9 +57,9 @@ function sparqlSysBio(genesList, queryType, cy) {
             }); 
             document.getElementById('btn-download').addEventListener("click", function exportGraph() {
                 // var graphJson = cy.json();
-                var CSV = [["source","target","\n"]];
+                var CSV = [["source","target","controlType","\n"]];
                 cy.edges().forEach(function( ele ){
-                    CSV.push([ele["_private"]["data"]["source"], ele["_private"]["data"]["target"],"\n"]);
+                    CSV.push([ele["_private"]["data"]["source"], ele["_private"]["data"]["target"],ele["_private"]["data"]["type"],"\n"]);
                 });
                 var a = document.getElementById('a');
                 // var blob = new Blob([JSON.stringify(graphJson)], {'type':'application/json'});
@@ -159,10 +159,13 @@ function sparqlSignaling(genesList, cy) {
             var toUniq = graphContent(cy, items) ;
             // Apply layout on loaded data
             graphLayout(cy, genesList, true);
-            // Hide running query message        
+            /**
+             * Hide / show display
+             */        
             document.getElementById("sendingQuery").style.display = 'none';
-            // Show legend
-            document.getElementById("btn-collapse").style.display = 'block';
+            document.getElementById("noResult").style.display = 'none';
+            document.getElementById("graphe-legend").style.display = 'block';
+            document.getElementById("next-level-signaling").style.display = 'block';
             checkboxContent(toUniq, "signaling");
             // Listen to dbclick on graph to fit on network
             document.getElementById('cy').addEventListener("dblclick", function resetGraph() {
@@ -182,12 +185,14 @@ function sparqlSignaling(genesList, cy) {
             }); 
             document.getElementById('btn-download').addEventListener("click", function exportGraph() {
                 // var graphJson = cy.json();
-                var CSV = [["source","target","\n"]];
+                var CSV = [["source","target","source is","\n"]];
                 cy.edges().forEach(function( ele ){
-                    CSV.push([ele["_private"]["data"]["source"], ele["_private"]["data"]["target"],"\n"]);
+                    var source = cy.getElementById(ele["_private"]["data"]["source"]);
+                    var controller = (typeof source.data("type") === 'undefined') ? "": source.data("type");
+                    if (controller === "random-node"){controller = ""}
+                    CSV.push([ele["_private"]["data"]["source"], ele["_private"]["data"]["target"],controller,"\n"]);
                 });
                 var a = document.getElementById('a');
-                // var blob = new Blob([JSON.stringify(graphJson)], {'type':'application/json'});
                 var blob = new Blob(CSV, {'type':'text/csv'});
                 a.href = window.URL.createObjectURL(blob);
                 a.download = 'graph.csv';
