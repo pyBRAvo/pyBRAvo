@@ -14,6 +14,7 @@ function sparqlSysBio(genesList, queryType, cy) {
     var endpointURL = rootURL + '/systemic/network';
     genesList = genesList.split(",");
     var genesJSON = JSON.stringify(genesList);
+    document.getElementById("noResult").style.display = 'none';
     
     $.ajax({
         type: 'GET',
@@ -26,7 +27,7 @@ function sparqlSysBio(genesList, queryType, cy) {
         crossDomain: true,
         success: function (data, textStatus, jqXHR) {
             // Get valid JSON format
-            items = JSON.parse(JSON.stringify(data));  
+            var items = JSON.parse(JSON.stringify(data));  
             // Set content of graph and get list of uniq regulators
             var toUniq = graphContent(cy, items) ;
             // Apply layout on loaded data
@@ -68,6 +69,7 @@ function sparqlSysBio(genesList, queryType, cy) {
                 a.download = 'graph.csv';
                 a.click();
             }); 
+            return cy;
         },
         error: function (jqXHR, textStatus, errorThrown) {
             document.getElementById("errorQuery").style.display = 'block';
@@ -87,7 +89,6 @@ function sparqlSysBio(genesList, queryType, cy) {
 function nextLevelRegulation(genesList, cy) {
     endpointURL = rootURL + '/systemic/network';
     var genesJSON = JSON.stringify(genesList);
-    console.log("send", genesList);
     // Show 'query on run' message
     document.getElementById("sendingQuery").style.display = 'block';
     
@@ -104,16 +105,15 @@ function nextLevelRegulation(genesList, cy) {
             // Hide message
             document.getElementById("sendingQuery").style.display = 'none';
             // Get valid JSON format
-            var items = JSON.parse(JSON.stringify(data));
+            var enrichItems = JSON.parse(JSON.stringify(data));
             // Load new genes to graphe
-            var toUniq = graphContent(cy,items); 
+            var toUniq = graphContent(cy,enrichItems); 
             // Apply layout
             graphLayout(cy, genesList);
             // Add item to checkbox
             checkboxContent(toUniq, "regulation");
-            if ( isEmpty(items) === true ){
+            if ( isEmpty(enrichItems) === true ){
                 document.getElementById("noResult").style.display = 'block';
-                document.getElementById("next-level-regulation").style.display = 'none';
             }
             // Listen to checkbox option 'All'
             document.getElementById('toggle').addEventListener("click", function checklist() {
@@ -189,7 +189,7 @@ function sparqlSignaling(genesList, cy) {
                 cy.edges().forEach(function( ele ){
                     var source = cy.getElementById(ele["_private"]["data"]["source"]);
                     var controller = (typeof source.data("type") === 'undefined') ? "": source.data("type");
-                    if (controller === "random-node"){controller = ""}
+                    if (controller === "random-node"){controller = "";}
                     CSV.push([ele["_private"]["data"]["source"], ele["_private"]["data"]["target"],controller,"\n"]);
                 });
                 var a = document.getElementById('a');
