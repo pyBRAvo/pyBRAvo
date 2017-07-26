@@ -54,7 +54,14 @@ var DemoSysbioView = Backbone.View.extend({
         console.log("querySearchNetworkEvt");
         var queryType = $('input[name=query-type]:checked').val();
         // Initialize graphe visualization
-        var cy = initialCy();
+        // !!! var cy is a global variable !!!
+        if(typeof cy === 'undefined'){
+            cy = initialCy();
+        }else {
+            cy = null;
+            cy = initialCy();
+        }
+        //var cy = initialCy();
         var genesList = $('#inputGeneList').val().replace(/\s/g, '');
         if (genesList !== "") {
             /** 
@@ -92,7 +99,13 @@ var DemoSysbioView = Backbone.View.extend({
     querySearchSignalingNetwork: function () {
         console.log("querySearchSignalingNetworkEvt");
         // Initialize graphe visualization
-        var cy = initialCy();
+        // !!! var cy is a global variable !!!
+        if(typeof cy === 'undefined'){
+            cy = initialCy();
+        }else {
+            cy = null;
+            cy = initialCy();
+        }
         var genesList = $('#inputSignalingGeneList').val().replace(/\s/g, '');
         if (genesList !== "") {
             /** 
@@ -145,7 +158,7 @@ var DemoSysbioView = Backbone.View.extend({
 var myDemoSysbioView = new DemoSysbioView();
 
 function initialCy() {
-    var cy = cytoscape({
+    var initial = cytoscape({
         container: document.getElementById('cy'), // container to render in
         //boxSelectionEnabled: false,
         //autounselectify: true,
@@ -194,5 +207,5 @@ function initialCy() {
             handleDisconnected: true
         }
     });
-    return cy;
+    return initial;
 }

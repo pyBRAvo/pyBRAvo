@@ -11,7 +11,6 @@
  * @param {boolean} initial
  */
 function graphLayout(cy, genesList, initial=false) {
-    
     var nodeCategory = {
         "protein": "http://www.biopax.org/release/biopax-level3.owl#Protein",
         "dna": "http://www.biopax.org/release/biopax-level3.owl#Dna",
@@ -90,7 +89,7 @@ function graphLayout(cy, genesList, initial=false) {
                 }
             }
             if(  element.isNode() && initial === false ){
-                if ( element.data("id")===  genesList[gene]) {
+                if ( element.data("id").match(re)) {
                     element.addClass('class-second-input');
                 }
             }
