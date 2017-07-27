@@ -214,11 +214,12 @@ function sparqlSignaling(genesList, cy) {
  * @param {Cytoscape object} cy
  * 
  */
-function nextLevelSignaling(genesList, cy) {
+function nextLevelSignaling(genesList, cy, firststep) {
     var endpointURL = rootURL + '/systemic/network';
     var genesJSON = JSON.stringify(genesList);
     // Show 'query on run' message
     document.getElementById("sendingQuery").style.display = 'block';
+    document.getElementById("noResult").style.display = 'none';
     // Request on regulation part
     $.ajax({
         type: 'GET',
@@ -251,13 +252,19 @@ function nextLevelSignaling(genesList, cy) {
                     // Load new genes to graphe
                     var toUniq_signaling = graphContentSignaling(cy,itemsS);
                     // Apply layout
-                    graphLayout(cy, genesList);
+                    graphLayout(cy, genesList, firststep);
                     // Hide message
                     document.getElementById("sendingQuery").style.display = 'none';
+                    document.getElementById("graphe-legend").style.display = 'block';
+                    document.getElementById("noResult").style.display = 'none';
                     // Add item to checkbox
                     checkboxContent(toUniq_regulation, "signaling");
                     // Add item to checkbox
                     checkboxContent(toUniq_signaling, "signaling");
+                    document.getElementById("next-level-signaling").style.display = 'block';
+                    if ( isEmpty(itemsS) === true ){
+                        document.getElementById("noResult").style.display = 'block';
+                    }
                     // Event : check all checkbox
                     document.getElementById('toggle').addEventListener("click", function checklist() {
                         var checker = $('.toggle').is(':checked');
