@@ -84,12 +84,12 @@ function graphLayout(cy, genesList, initial=false) {
         // Add class to node of name as initial input
         cy.filter(function(i, element){
             if( element.isNode() && initial === true) {
-                if ( element.data("id").match(re)) {
+                if ( element.data("id") === genesList[gene]) {
                     element.addClass('class-input');
                 }
             }
             if(  element.isNode() && initial === false ){
-                if ( element.data("id").match(re)) {
+                if ( element.data("id") === genesList[gene]) {
                     element.addClass('class-second-input');
                 }
             }
@@ -240,13 +240,14 @@ function graphContentSignaling(cy, items) {
                                 catalyserId = guidGenerator();
                                 catalysers.push(items[object]["http://www.biopax.org/release/biopax-level3.owl#controller"][j]["value"].toUpperCase());
                             }
+                            var category = (typeof items[object]["http://www.biopax.org/release/biopax-level3.owl#participantType"][i] === 'undefined') ? items[object]["http://www.biopax.org/release/biopax-level3.owl#participantType"][0]["value"] : items[object]["http://www.biopax.org/release/biopax-level3.owl#participantType"][i]["value"];
                             cy.add({
                                 nodes :[
                                 {
                                     // Source name
                                     data: {
                                        'id': lefts[i]["value"].toUpperCase(),
-                                       'category': items[object]["http://www.biopax.org/release/biopax-level3.owl#participantType"][i]["value"] // complex, rna, dna...
+                                       'category': category // complex, rna, dna...
                                        //position: { x: i, y: 1+i }
                                     }
                                 },{
@@ -333,6 +334,11 @@ function graphContentSignaling(cy, items) {
             }
         }
     }
+    if(isEmpty(catalysers) === 'false'){
+        for (var catalyser in catalysers){
+            uniqEdge.push({controller: catalysers[catalyser]});
+        }
+    }
     uniqEdge.sort(function(a,b){
         return a.controller > b.controller;
     });
@@ -345,6 +351,7 @@ function graphContentSignaling(cy, items) {
  * @param {string} className 
  */
 function checkboxContent(toUniq, className){
+    
     var container = document.getElementById("input-next-"+className);
     var checklist = [];
     var inputClass = "#input-next-"+className;
@@ -359,7 +366,7 @@ function checkboxContent(toUniq, className){
                 checklist.push($(this).attr('value'));
             }
         }
-    });
+    });        
     
     /** 
      * Sort gene list

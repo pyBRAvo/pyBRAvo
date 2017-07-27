@@ -124,14 +124,16 @@ var DemoSysbioView = Backbone.View.extend({
                 container.removeChild(container.firstChild);
             }
             // Make SPARQL initial query to PathwayCommons endpoint
-            sparqlSignaling(genesList, cy);
+            //sparqlSignaling(genesList, cy);
+            genesList = genesList.split(",");
+            nextLevelSignaling(genesList, cy, true);
             // Listen to event
             $( "#btnRunNextSignaling" ).click(function() {
                 // Get gene list
                 var regulatorList = updateList("signaling");
                 if (regulatorList.length > 0){
                     // Make SPARQL queries to PathwayCommons endpoint
-                    nextLevelSignaling(regulatorList, cy);
+                    nextLevelSignaling(regulatorList, cy, false);
                 }
             });
         }else{
