@@ -58,6 +58,7 @@ var DemoSysbioView = Backbone.View.extend({
         if(typeof cy === 'undefined'){
             cy = initialCy();
         }else {
+            console.log("reinitialize");
             cy = null;
             cy = initialCy();
         }

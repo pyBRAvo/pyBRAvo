@@ -148,6 +148,20 @@ function graphLayout(cy, genesList, initial=false) {
 //            grabbable: true
 //        });
     });
+    // Tooltip
+    cy.on('mouseover', 'node', function(event) {
+        var node = event.cyTarget;
+        node.qtip({
+             content: function(){ return 'ID: ' + this.id() },
+             show: {
+                event: event.type,
+                ready: true
+             },
+             hide: {
+                event: 'mouseout unfocus'
+             }
+        }, event);
+    });
     displayQttInfo(cy);
 };
 
@@ -334,7 +348,7 @@ function graphContentSignaling(cy, items) {
             }
         }
     }
-    if(isEmpty(catalysers) === 'false'){
+    if(isEmpty(catalysers) === false){
         for (var catalyser in catalysers){
             uniqEdge.push({controller: catalysers[catalyser]});
         }
@@ -386,7 +400,10 @@ function checkboxContent(toUniq, className){
     var controller = [];
     // Add list of new gene in panel for next run
     for (i=0; i< toUniq.length; i++) {
-        if( $.inArray(toUniq[i]["controller"], controller) === -1){
+        // Strange fix
+        var fix = toUniq[i]["controller"].toString().startsWith("function");
+        // Check if not redundant
+        if( $.inArray(toUniq[i]["controller"], controller) === -1 && fix === false){
             controller.push(toUniq[i]["controller"]);
             // Label of checkbox
             var label = document.createElement('label');
