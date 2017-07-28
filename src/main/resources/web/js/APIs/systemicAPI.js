@@ -212,6 +212,7 @@ function sparqlSignaling(genesList, cy) {
  * API to add signalization 
  * @param {array} genesList
  * @param {Cytoscape object} cy
+ * @param {boolean} firststep 
  * 
  */
 function nextLevelSignaling(genesList, cy, firststep) {
@@ -273,6 +274,22 @@ function nextLevelSignaling(genesList, cy, firststep) {
                             $(this).prop('checked',checker);
                         });
                     });
+                    
+                    document.getElementById('btn-download').addEventListener("click", function exportGraph() {
+                        // var graphJson = cy.json();
+                        var CSV = [["source","target","source is","\n"]];
+                        cy.edges().forEach(function( ele ){
+                            var source = cy.getElementById(ele["_private"]["data"]["source"]);
+                            var controller = (typeof source.data("type") === 'undefined') ? "": source.data("type");
+                            if (controller === "random-node"){controller = "";}
+                            CSV.push([ele["_private"]["data"]["source"], ele["_private"]["data"]["target"],controller,"\n"]);
+                        });
+                        var a = document.getElementById('a');
+                        var blob = new Blob(CSV, {'type':'text/csv'});
+                        a.href = window.URL.createObjectURL(blob);
+                        a.download = 'graph.csv';
+                        a.click();
+                    }); 
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
                     document.getElementById("errorQuery").style.display = 'block';

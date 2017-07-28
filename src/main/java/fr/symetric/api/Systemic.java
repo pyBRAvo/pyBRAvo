@@ -22,11 +22,8 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import org.apache.jena.query.Query;
-import org.apache.jena.query.QueryFactory;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
-import org.apache.jena.rdf.model.RDFNode;
 import org.apache.log4j.Logger;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
@@ -170,8 +167,9 @@ public class Systemic {
                         "    ?catalysis bp:controller ?controller ; bp:controlType ?controlType .\n" +
                         "    ?controller bp:displayName ?controllerName .\n" +
                         "  }\n" +
+                        "  FILTER (?source != 'mirtarbase'^^xsd:string)" +
                         "  ?catalysis bp:controlled* ?reaction .\n" +
-                        "  ?reaction bp:right ?molecule .\n" +
+                        "  ?reaction bp:right ?molecule ; bp:dataSource ?source .\n" +
                         "  ?reaction bp:left|bp:right ?participant .\n" +
                         "  ?participant bp:displayName ?participantName ; rdf:type ?participantType .\n" +
                         "  ?molecule bp:displayName ?moleculeName .\n" +
