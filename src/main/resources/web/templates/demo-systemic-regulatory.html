@@ -93,12 +93,15 @@
             <div class="panel panel-default" id="graphe-legend" style="min-width:220px;font-size:12px;display:none;">
                 <div class="panel-heading">
                     <label><i class="glyphicon glyphicon-info-sign"></i> Legend</label>
-                    <p>
-                        Blue arrows = TFs ACTIVATION <br />
-                        Grey arrows = TFs INHIBITION <br />
-                        Red circles = INITAL INPUT <br />
-                        Orange circles = LAST INPUT
-                    </p>
+                </div>
+                <div class="panel-body">
+                    <div class="legend">
+                        <i class="glyphicon glyphicon-arrow-right" style="color:#3399ff;"></i>= TFs activation <br />
+                        <i class="glyphicon glyphicon-arrow-right" style="color:#000;"></i>= TFs inhibition <br />
+                        <div class="circle" style="border-radius: 50%;width:10px;height:10px;background:red;display:inline-block;"></div> = initial input <br />
+                        <div class="circle" style="border-radius: 50%;width:10px;height:10px;background:#FFBF00;display:inline-block;"></div> = last input <br />
+                        <div class="circle" style="border-radius: 50%;width:10px;height:10px;background:#fff;border:3px solid #00b33c;display:inline-block;"></div> = RNA <br />
+                    </div>
                 </div>
             </div>
             <button type="button" class="btn btn-default" id="btn-download" style="margin-bottom:5px;display:none;">
