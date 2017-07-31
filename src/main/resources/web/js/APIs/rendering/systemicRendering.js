@@ -138,30 +138,35 @@ function graphLayout(cy, genesList, initial=false) {
     cy.$('.class-node-molecule').style({
         'shape': 'diamond'
     });
-    // On click remove node and redraw graph
-    cy.nodes().on("click", function(e){
-        var id = e.cyTarget.id();
-        console.log(cy.getElementById(id));
-//        cy.getElementById(id).orphans().remove();
-//        cy.layout({
-//            name:'cola', 
-//            grabbable: true
-//        });
-    });
-    // Tooltip
+    // Tooltip on mouse over display node informations
     cy.on('mouseover', 'node', function(event) {
         var node = event.cyTarget;
         node.qtip({
-             content: function(){ return 'ID: ' + this.id() },
+             content: {
+                title: {
+                    text: "Node"
+                },
+                text: function(){ 
+                    var category = this.data('category') || '-';
+                    var provenance = this.data('provenance')|| '-';
+                    return '<b>ID</b>: ' + this.id() + 
+                           "<br /><b>Provenance:</b> " + provenance.replace('http://pathwaycommons.org/pc2/','') +
+                           "<br /><b>Type:</b> " + category.replace('http://www.biopax.org/release/biopax-level3.owl#','')
+                }
+             },
              show: {
                 event: event.type,
                 ready: true
              },
              hide: {
                 event: 'mouseout unfocus'
-             }
+             },
+             style: {
+                classes: 'qtip-bootstrap'
+            }
         }, event);
     });
+    // Update quantity of nodes and edges
     displayQttInfo(cy);
 };
 
@@ -193,14 +198,16 @@ function graphContent(cy, items) {
                             data: {
                                'id': controllers[i]["value"].toUpperCase().replace(' GENE',''),
                                'category': items[object]["http://www.w3.org/1999/02/22-rdf-syntax-ns#participantType"][0]["value"], // complex, rna, dna...
-                               'IDreac': name
+                               'IDreac': name,
+                               'provenance': items[object]["http://www.biopax.org/release/biopax-level3.owl#dataSource"][0]["value"]
                                //position: { x: i, y: 1+i }
                             }
                         },
                         {
                             // Controlled/target name
                             data: {
-                               id: items[object]["http://www.biopax.org/release/biopax-level3.owl#controlled"][0]["value"].replace('Transcription of ','').toUpperCase()
+                               id: items[object]["http://www.biopax.org/release/biopax-level3.owl#controlled"][0]["value"].replace('Transcription of ','').toUpperCase(),
+                               provenance: items[object]["http://www.biopax.org/release/biopax-level3.owl#dataSource"][0]["value"]
                                //position: { x: 3, y: 3 }
                             }
                         }],                    
@@ -234,10 +241,11 @@ function graphContentSignaling(cy, items) {
     var uniqEdge = []; // array of uniq edge
     var catalysers = []; // array of unique catalysers
     var catalyserId = guidGenerator();
-    // For each genes of the query
+    // For each object of the query (~reaction)
     for (var object in items) {
         // Tranform JSON format to Cytoscape JSON format 
         var name = object.toString(); // URI of interaction
+        // Source is defined
         if(typeof items[object]["http://www.biopax.org/release/biopax-level3.owl#left"] !== 'undefined') {
             var lefts = items[object]["http://www.biopax.org/release/biopax-level3.owl#left"];
             for (var i=0; i<lefts.length; i++) {
@@ -245,6 +253,7 @@ function graphContentSignaling(cy, items) {
                     controller: lefts[i]["value"].toUpperCase(),
                     controlled: items[object]["http://www.biopax.org/release/biopax-level3.owl#right"][0]["value"].toUpperCase()
                 };
+                // Do not do the same pair of source/target twice
                 if (containsObject(pair, uniqEdge) === false && pair["controller"] !== pair["controlled"]){
                     uniqEdge.push(pair);
                     if (typeof items[object]["http://www.biopax.org/release/biopax-level3.owl#controller"] !== 'undefined') {
