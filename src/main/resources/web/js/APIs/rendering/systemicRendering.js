@@ -389,7 +389,7 @@ function graphContentSignaling(cy, items) {
                             {
                                 // left to right without controller
                                 data: {
-                                    id: guidGenerator(),
+                                    id: name,
                                     source: leftName.toUpperCase(), // left
                                     target: rightName.toUpperCase() // right
                                 }  
