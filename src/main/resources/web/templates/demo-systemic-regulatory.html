@@ -56,18 +56,25 @@
                     PREFIX bp: &lt;http://www.biopax.org/release/biopax-level3.owl#&gt; <br />
                     PREFIX rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt; <br />
                     PREFIX xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt; <br />
-                    CONSTRUCT { <br />
-                    ?tempReac bp:displayName ?type ; bp:controlled ?controlledName ; bp:controller ?controllerName ; bp:dataSource ?source . <br />
-                    } WHERE{  <br />
-                    FILTER( (?controlledName = 'Transcription of "geneName"'^^xsd:string>)
-                        and (?controllerName != '"geneName"'^^xsd:string>)
-                        and (?source != "mirtarbase"^^xsd:string>) ) . <br />
-                    ?tempReac a bp:TemplateReactionRegulation . <br />
-                    ?tempReac bp:controlled ?controlled ; bp:controller ?controller ; bp:controlType ?type ; bp:dataSource ?source . <br />
-                    ?controlled bp:displayName ?controlledName . <br />
-                    ?controller bp:displayName ?controllerName . <br />
-                    } <br />
-                    GROUP BY ?controlledName ?controllerName
+                    CONSTRUCT {
+                    <div style="margin-left: 10px">
+                      ?tempReac rdf:type ?type ; bp:controlled ?controlled ; bp:controller ?controller ; bp:dataSource ?source ; bp:controlType ?controlType .<br />
+                      ?controlled a ?controlledType ; bp:displayName ?controlledName ; bp:dataSource ?controlledsource .<br />
+                      ?controller a ?controllerType ; bp:displayName ?controllerName ; bp:dataSource ?controllersource .<br />
+                    </div>
+                    } WHERE{ <br />
+                    <div style="margin-left: 10px">
+                      FILTER( (?controlledName = 'GENENAME'^^xsd:string) <br />
+                            and (?controllerName != 'GENENAME'^^xsd:string)<br />
+                            and (str(?source) != 'http://pathwaycommons.org/pc2/mirtarbase') ) .<br />
+                      ?tempReac a bp:TemplateReactionRegulation .<br />
+                      ?tempReac rdf:type ?type ; bp:controlled ?controlled ; bp:controller ?controller ; bp:controlType ?controlType ; bp:dataSource ?source .<br />
+                      ?controlled bp:participant ?participant ; bp:dataSource ?controlledsource .<br />
+                      ?participant bp:displayName ?controlledName; rdf:type ?controlledType .<br />
+                      ?controller bp:displayName ?controllerName ; rdf:type ?controllerType ; bp:dataSource ?controllersource .<br />
+                    </div>
+                      }<br />
+                    GROUP BY ?controlledName ?controllerName<br />
                 </p>
             </div>
         </div>
@@ -112,3 +119,5 @@
             </button>
         </div>
 </div>
+
+<br />

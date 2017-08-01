@@ -40,21 +40,33 @@
             <div class="panel-body">
                 <p id="SPARQLquery">
                     &#35; Initial query <br />
-                    PREFIX bp: &lt;http://www.biopax.org/release/biopax-level3.owl#&gt; <br />
                     PREFIX rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt; <br />
+                    PREFIX rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt; <br />
+                    PREFIX owl: &lt;http://www.w3.org/2002/07/owl#&gt; <br />
                     PREFIX xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt; <br />
+                    PREFIX bp: &lt;http://www.biopax.org/release/biopax-level3.owl#&gt; <br />
+
                     CONSTRUCT { <br />
-                    ?tempReac bp:displayName ?type ; bp:controlled ?controlledName ; bp:controller ?controllerName ; bp:dataSource ?source . <br />
-                    } WHERE{  <br />
-                    FILTER( (?controlledName = 'Transcription of "geneName"'^^xsd:string>)
-                        and (?controllerName != '"geneName"'^^xsd:string>)
-                        and (?source != "mirtarbase"^^xsd:string>) ) . <br />
-                    ?tempReac a bp:TemplateReactionRegulation . <br />
-                    ?tempReac bp:controlled ?controlled ; bp:controller ?controller ; bp:controlType ?type ; bp:dataSource ?source . <br />
-                    ?controlled bp:displayName ?controlledName . <br />
-                    ?controller bp:displayName ?controllerName . <br />
-                    } <br />
-                    GROUP BY ?controlledName ?controllerName
+                      ?reaction rdf:type ?type ; bp:right ?right ; bp:controller ?controller ; bp:left ?participant ; bp:dataSource ?source ; bp:controlType ?controlType .<br />
+                      ?right a ?rightType ; bp:displayName ?rightName ; bp:dataSource ?rightSource .<br />
+                      ?participant a ?participantType ; bp:displayName ?participantName ; bp:dataSource ?participantSource .<br />
+                      ?controller a ?controllerType ; bp:displayName ?controllerName ; bp:dataSource ?controllerSource .<br />
+                    }WHERE{<br />
+                      OPTIONAL { <br />
+                        ?catalysis bp:controller ?controller ; bp:controlType ?controlType .<br />
+                        ?controller bp:displayName ?controllerName ; rdf:type ?controllerType ; bp:dataSource ?controllerSource .<br />
+                      }<br />
+                      FILTER (str(?source) != 'http://pathwaycommons.org/pc2/mirtarbase') <br />
+
+                      ?catalysis bp:controlled* ?reaction .<br />
+                      ?reaction bp:right ?right ; bp:dataSource ?source ; rdf:type ?type .<br />
+                      ?reaction bp:left|bp:right ?participant .<br />
+                      ?participant bp:displayName ?participantName ; rdf:type ?participantType ; bp:dataSource ?participantSource .<br />
+                      ?right bp:displayName ?rightName ; rdf:type ?rightType ; bp:dataSource ?rightSource .<br />
+
+                      VALUES ?rightName { 'GENENAME'^^xsd:string }<br />
+                    }<br />
+                    order by ?catalysis
                 </p>
             </div>
         </div>
@@ -101,8 +113,9 @@
                 </div>
                 <div class="panel-body">
                         <div class="legend">
-                        <i class="glyphicon glyphicon-arrow-right" style="color:#3399ff;"></i> = TFs activation <br />
-                        <i class="glyphicon glyphicon-arrow-right" style="color:#000000;"></i> = TFs inhibition <br />
+                        <i class="glyphicon glyphicon-arrow-right" style="color:#3399ff;"></i> = Activation <br />
+                        <i class="glyphicon glyphicon-arrow-right" style="color:#000000;opacity:100;"></i> = Inhibition <br />
+                        <i class="glyphicon glyphicon-arrow-right" style="color:#000000;"></i> = NC <br />
                         <div class="circle" style="border-radius: 50%;width:10px;height:10px;background:red;display:inline-block;"></div> = initial input <br />
                         <div class="circle" style="border-radius: 50%;width:10px;height:10px;background:#FFBF00;display:inline-block;"></div> = last input <br />
                         <div class="circle" style="border-radius: 50%;width:10px;height:10px;background:#8904B1;display:inline-block;"></div> = controller <br />
@@ -121,4 +134,4 @@
     </div>
 </div>
 
-<p></p>
+<br />
