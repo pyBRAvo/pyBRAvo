@@ -124,6 +124,10 @@ function graphLayout(cy, genesList, initial=false) {
         'width':20,
         'height':20
     });
+    cy.$('.class-node-protein').style({
+        'border-color': '#0A0A0A', // black
+        'border-width': 2
+    });
     cy.$('.class-node-dna').style({
         'border-color': '#3366ff', // blue
         'border-width': 2
@@ -133,7 +137,8 @@ function graphLayout(cy, genesList, initial=false) {
         'border-width': 2 
     });
     cy.$('.class-node-complex').style({
-        'shape': 'hexagon'
+        'border-color': '#9E1E9E', // purple
+        'border-width': 3 
     });
     cy.$('.class-node-molecule').style({
         'shape': 'diamond'
@@ -149,7 +154,7 @@ function graphLayout(cy, genesList, initial=false) {
                 text: function(){ 
                     var category = this.data('category') || '-';
                     var provenance = this.data('provenance')|| '-';
-                    return '<b>ID</b>: ' + this.id() + 
+                    return '<b>Name</b>: ' + this.id() + 
                            "<br /><b>Provenance:</b> " + provenance.replace('http://pathwaycommons.org/pc2/','') +
                            "<br /><b>Type:</b> " + category.replace('http://www.biopax.org/release/biopax-level3.owl#','')
                 }
@@ -230,45 +235,6 @@ function graphContent(cy, items) {
                     }]
                 });
             }
-//            for (i=0; i<controllerId.length; i++) {
-//                var pair = {
-//                    controller: controllers[i]["value"].toUpperCase().replace(' GENE',''),
-//                    controlled: items[object]["http://www.biopax.org/release/biopax-level3.owl#controlled"][0]["value"].replace('Transcription of ','').toUpperCase()
-//                };
-//                if (containsObject(pair, uniqEdge) === false){
-//                    uniqEdge.push(pair);
-//                    cy.add({
-//                        nodes :[
-//                        {
-//                            // Controller/source name
-//                            data: {
-//                               'id': controllers[i]["value"].toUpperCase().replace(' GENE',''),
-//                               'category': items[object]["http://www.w3.org/1999/02/22-rdf-syntax-ns#participantType"][0]["value"], // complex, rna, dna...
-//                               'IDreac': name,
-//                               'provenance': items[object]["http://www.biopax.org/release/biopax-level3.owl#dataSource"][0]["value"]
-//                               //position: { x: i, y: 1+i }
-//                            }
-//                        },
-//                        {
-//                            // Controlled/target name
-//                            data: {
-//                               id: items[object]["http://www.biopax.org/release/biopax-level3.owl#controlled"][0]["value"].replace('Transcription of ','').toUpperCase(),
-//                               provenance: items[object]["http://www.biopax.org/release/biopax-level3.owl#dataSource"][0]["value"]
-//                               //position: { x: 3, y: 3 }
-//                            }
-//                        }],                    
-//                        edges: [{
-//                            // Directed edge
-//                            data: {
-//                                id: name+i,
-//                                source: controllers[i]["value"].toUpperCase().replace(' GENE',''), //controller
-//                                target: items[object]["http://www.biopax.org/release/biopax-level3.owl#controlled"][0]["value"].replace('Transcription of ','').toUpperCase(), //controlled
-//                                type: items[object]["http://www.biopax.org/release/biopax-level3.owl#controlType"][0]["value"] || "type", // activation, inhibition
-//                            }   
-//                        }]
-//                    });
-//                }
-//            }
         }
     }
     uniqEdge.sort(function(a,b){
