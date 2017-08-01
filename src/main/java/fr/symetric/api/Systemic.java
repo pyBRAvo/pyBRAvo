@@ -156,26 +156,25 @@ public class Systemic {
                         "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n" +
                         "PREFIX owl: <http://www.w3.org/2002/07/owl#>\n" +
                         "PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n" +
-                        "PREFIX dc: <http://purl.org/dc/elements/1.1/>\n" +
-                        "PREFIX dcterms: <http://purl.org/dc/terms/>\n" +
-                        "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n" +
-                        "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>\n" +
-                        "PREFIX bp: <http://www.biopax.org/release/biopax-level3.owl#>\n" +
+                        "PREFIX bp: <http://www.biopax.org/release/biopax-level3.owl#>" +
                         "CONSTRUCT {\n" +
-                        "  ?reaction rdf:id ?reaction ; bp:right ?moleculeName ; bp:controller ?controllerName ; "+
-                            "bp:left ?participantName ; bp:participantType ?participantType ; bp:controlType ?controlType .\n" +
+                        "  ?reaction rdf:type ?type ; bp:right ?right ; bp:controller ?controller ; " +
+                            "bp:left ?participant ; bp:dataSource ?source ; bp:controlType ?controlType .\n" +
+                        "  ?right a ?rightType ; bp:displayName ?rightName ; bp:dataSource ?rightSource .\n" +
+                        "  ?participant a ?participantType ; bp:displayName ?participantName ; bp:dataSource ?participantSource .\n" +
+                        "  ?controller a ?controllerType ; bp:displayName ?controllerName ; bp:dataSource ?controllerSource ." +
                         "}WHERE{\n" +
                         "  OPTIONAL { \n" +
                         "    ?catalysis bp:controller ?controller ; bp:controlType ?controlType .\n" +
-                        "    ?controller bp:displayName ?controllerName .\n" +
+                        "    ?controller bp:displayName ?controllerName ; rdf:type ?controllerType ; bp:dataSource ?controllerSource ." +
                         "  }\n" +
-                        "  FILTER (?source != 'mirtarbase'^^xsd:string)" +
+                        "  FILTER (str(?source) != 'http://pathwaycommons.org/pc2/mirtarbase')" +
                         "  ?catalysis bp:controlled* ?reaction .\n" +
-                        "  ?reaction bp:right ?molecule ; bp:dataSource ?source .\n" +
+                        "  ?reaction bp:right ?right ; bp:dataSource ?source ; rdf:type ?type .\n" +
                         "  ?reaction bp:left|bp:right ?participant .\n" +
-                        "  ?participant bp:displayName ?participantName ; rdf:type ?participantType .\n" +
-                        "  ?molecule bp:displayName ?moleculeName .\n" +
-                        "  VALUES ?moleculeName { '"+genesList.get(i).toString().toUpperCase()+"'^^xsd:string }\n" +
+                        "  ?participant bp:displayName ?participantName ; rdf:type ?participantType ; bp:dataSource ?participantSource .\n" +
+                        "  ?right bp:displayName ?rightName ; rdf:type ?rightType ; bp:dataSource ?rightSource ." +
+                        "  VALUES ?rightName { '"+genesList.get(i).toString().toUpperCase()+"'^^xsd:string }\n" +
                         "}order by ?catalysis";
                     System.out.println("Query created");
 
