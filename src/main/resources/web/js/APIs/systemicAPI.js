@@ -90,6 +90,7 @@ function nextLevelRegulation(genesList, cy) {
     endpointURL = rootURL + '/systemic/network';
     var genesJSON = JSON.stringify(genesList);
     // Show 'query on run' message
+    document.getElementById("noResult").style.display = 'none';
     document.getElementById("sendingQuery").style.display = 'block';
     
     $.ajax({
@@ -219,8 +220,8 @@ function nextLevelSignaling(genesList, cy, firststep) {
     var endpointURL = rootURL + '/systemic/network';
     var genesJSON = JSON.stringify(genesList);
     // Show 'query on run' message
-    document.getElementById("sendingQuery").style.display = 'block';
     document.getElementById("noResult").style.display = 'none';
+    document.getElementById("sendingQuery").style.display = 'block';
     // Request on regulation part
     $.ajax({
         type: 'GET',
