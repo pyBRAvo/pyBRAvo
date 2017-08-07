@@ -1,7 +1,7 @@
 # DataHUB
 
 ## Synopsis
-The SyMeTRIC Data Hub, is a web application for biomedical data integration and reuse.
+The SyMeTRIC Data Hub is a web application for biomedical data integration and reuse.
 
 ## Requirements
 - git
@@ -10,11 +10,19 @@ The SyMeTRIC Data Hub, is a web application for biomedical data integration and 
 - mongodb
 
 ## Installation
-Clone the repository
+1/ Clone and Install dependency 
 
+    cd workspace/
+    git clone https://github.com/albangaignard/galaxy-ld.git
+    cd galaxy-ld/galaxy-PROV
+    mvn clean install -Dmaven.test.skip=true
+
+2/ Clone the repository
+
+    cd workspace/
     git clone https://gitlab.univ-nantes.fr/gaignard-a/symetric-api-server.git
 
-Install [https://docs.mongodb.com/manual/tutorial/install-mongodb-on-ubuntu/] and Run mondogb 
+Install [see](https://docs.mongodb.com/manual/tutorial/install-mongodb-on-ubuntu/) and Run mondogb 
 
     sudo service mongod start
     
