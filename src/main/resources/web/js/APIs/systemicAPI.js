@@ -246,9 +246,9 @@ function nextLevelSignaling(genesList, cy, firststep) {
                 data: 'genes=' + genesJSON,
                 dataType: "json",
                 crossDomain: true,
-                success: function (data, textStatus, jqXHR) {
+                success: function (datas, textStatus, jqXHR) {
                     // Get valid JSON format
-                    var itemsS = JSON.parse(JSON.stringify(data));
+                    var itemsS = JSON.parse(JSON.stringify(datas));
                     // Load new genes to graphe
                     var toUniq_regulation = graphContent(cy,itemsR); 
                     // Load new genes to graphe
