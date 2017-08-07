@@ -22,7 +22,7 @@ The SyMeTRIC Data Hub is a web application for biomedical data integration and r
     cd workspace/
     git clone https://gitlab.univ-nantes.fr/gaignard-a/symetric-api-server.git
 
-Install [see](https://docs.mongodb.com/manual/tutorial/install-mongodb-on-ubuntu/) and Run mondogb 
+Install [[see](https://docs.mongodb.com/manual/tutorial/install-mongodb-on-ubuntu/)] and Run mondogb 
 
     sudo service mongod start
     
