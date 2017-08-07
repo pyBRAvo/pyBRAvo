@@ -339,27 +339,27 @@ function graphContentSignaling(cy, items) {
                                     {
                                         // source to inter node
                                         data: {
-                                            id: name+"s",
+                                            id: guidGenerator(), //name+"s",
                                             source: leftName.toUpperCase(), // source
-                                            target: name, // arc
-                                            type: items[object]["http://www.biopax.org/release/biopax-level3.owl#controlType"][0]["value"] || "type" // activation, inhibition
+                                            target: name // arc
+                                            //type: items[controllerId]["http://www.biopax.org/release/biopax-level3.owl#controlType"][0]["value"] || "type" // activation, inhibition
                                         }  
                                     },{
                                         // inter node to target
                                         data: {
-                                            id: name+"t",
+                                            id: guidGenerator(),//name+"t",
                                             source: name, // inter node
-                                            target: rightName.toUpperCase(), // target
-                                            type: items[object]["http://www.biopax.org/release/biopax-level3.owl#controlType"][0]["value"] || "type" // activation, inhibition
+                                            target: rightName.toUpperCase() // target
+                                            //type: items[controllerId]["http://www.biopax.org/release/biopax-level3.owl#controlType"][0]["value"] || "type" // activation, inhibition
                                         }  
                                     },{
                                         // controller to inter node
                                         data: {
-                                            id: controllerId,
+                                            id: guidGenerator(),//controllerId+"c",
                                             source: controllerName.toUpperCase(), // controller
                                             target: name, // inter node
                                             style: "controller",
-                                            type: items[object]["http://www.biopax.org/release/biopax-level3.owl#controlType"][0]["value"] || "type" // activation, inhibition
+                                            type: items[controllerId]["http://www.biopax.org/release/biopax-level3.owl#controlType"][0]["value"] || "type" // activation, inhibition
                                         }  
                                     }]
                                 });
@@ -389,7 +389,7 @@ function graphContentSignaling(cy, items) {
                             {
                                 // left to right without controller
                                 data: {
-                                    id: name,
+                                    id: guidGenerator(),
                                     source: leftName.toUpperCase(), // left
                                     target: rightName.toUpperCase() // right
                                 }  

@@ -158,11 +158,11 @@ public class Systemic {
                         "PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n" +
                         "PREFIX bp: <http://www.biopax.org/release/biopax-level3.owl#>" +
                         "CONSTRUCT {\n" +
-                        "  ?reaction rdf:type ?type ; bp:right ?right ; bp:controller ?controller ; " +
-                            "bp:left ?participant ; bp:dataSource ?source ; bp:controlType ?controlType .\n" +
+                        "  ?reaction rdf:type ?type ; bp:right ?right ; bp:controller ?controller ; bp:left ?participant ; " +
+                            "bp:dataSource ?source .\n" +
                         "  ?right a ?rightType ; bp:displayName ?rightName ; bp:dataSource ?rightSource .\n" +
                         "  ?participant a ?participantType ; bp:displayName ?participantName ; bp:dataSource ?participantSource .\n" +
-                        "  ?controller a ?controllerType ; bp:displayName ?controllerName ; bp:dataSource ?controllerSource ." +
+                        "  ?controller a ?controllerType ; bp:displayName ?controllerName ; bp:dataSource ?controllerSource ; bp:controlType ?controlType ." +
                         "}WHERE{\n" +
                         "  OPTIONAL { \n" +
                         "    ?catalysis bp:controller ?controller ; bp:controlType ?controlType .\n" +
