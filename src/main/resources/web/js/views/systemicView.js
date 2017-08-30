@@ -28,6 +28,7 @@ var DemoSysbioView = Backbone.View.extend({
         "click #btnRegulatoryNetwork": "renderRegulatoryNetwork",
         "click #btnSignalingNetwork": "renderSignalingNetwork",
         "click #btnSearchSignalingNetwork": "querySearchSignalingNetwork",
+        "click #btnBatchNetwork": "renderBatchNetwork",
         "click #query-type": "queryType"
     },
     renderRegulatoryNetwork: function () {
@@ -44,6 +45,16 @@ var DemoSysbioView = Backbone.View.extend({
         var that = this;
         //Fetching the template contents
         $.get('templates/demo-systemic-signaling.html', function (data) {
+            template = _.template(data, {});//Option to pass any dynamic values to template
+            that.$el.html(template());//adding the template content to the main template.
+            
+        }, 'html');
+        return this;
+    },
+    renderBatchNetwork: function () {
+        var that = this;
+        //Fetching the template contents
+        $.get('templates/demo-systemic-batch.html', function (data) {
             template = _.template(data, {});//Option to pass any dynamic values to template
             that.$el.html(template());//adding the template content to the main template.
             
