@@ -169,7 +169,7 @@ function initialCy() {
             {
                 selector: 'node',
                 style: {
-                    'background-color': '#666',
+                    'background-color': '#898484', // grey
                     'width' : 12,
                     'height' : 12,
                     'label': 'data(id)'
@@ -196,7 +196,6 @@ function initialCy() {
                     'mid-target-arrow-color': '#ccc',
                     'mid-target-arrow-shape': 'triangle',
                     'curve-style': 'bezier'
-                    //'label': 'data(type)'
                 }
             }
         ],
