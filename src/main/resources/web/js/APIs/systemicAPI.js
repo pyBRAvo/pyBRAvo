@@ -308,3 +308,57 @@ function nextLevelSignaling(genesList, cy, firststep) {
         }
     });
 };
+
+/**
+ * API Run batch algo
+ * @param {array} genesList
+ * @param {string} queryType
+ * 
+ */
+function upstreamJob(genesList, queryType) {
+    var endpointURL = rootURL + '/automatic/upstream';
+    // display info
+    document.getElementById("auto-sendingQuery").style.display = 'block';
+    document.getElementById("auto-noResult").style.display = 'none';
+    // gene list format
+    genesList = genesList.split(",");
+    var genesJSON = JSON.stringify(genesList);
+    // Request on automatic assembly
+    $.ajax({
+        type: 'POST',
+        contentType: 'application/json',
+        url: endpointURL,
+        data: 'genes=' + genesJSON + '&type=' + queryType,
+        crossDomain: true,
+        success: function (results, textStatus, jqXHR) {
+            document.getElementById("auto-sendingQuery").style.display = 'none';
+            var features = JSON.stringify(results["json"]);
+            if ( isEmpty(features) === true ){
+                document.getElementById("auto-noResult").style.display = 'block';
+            }else{
+                document.getElementById('panel-download-success').style.display = 'block';
+                document.getElementById('btn-download-json').addEventListener("click", function exportAsJSON() {
+                    var JSON = features.replace('\\','').replace('\n','');
+                    var c = document.getElementById('c');
+                    var blob = new Blob([JSON], {'type':'application/json'});
+                    c.href = window.URL.createObjectURL(blob);
+                    c.download = 'graph.json';
+                    c.click();
+                });
+                document.getElementById('btn-download-rdf').addEventListener("click", function exportAsRDF() {
+                    var b = document.getElementById('b');
+                    var blob = new Blob([results["rdf"]], {'type':'xml/rdf'});
+                    b.href = window.URL.createObjectURL(blob);
+                    b.download = 'graph.rdf';
+                    b.click();
+                });
+            }
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            document.getElementById("auto-errorQuery").style.display = 'block';
+            document.getElementById("auto-sendingQuery").style.display = 'none';
+            infoError(" Failure: " + errorThrown);
+            console.log(jqXHR.responseText);
+        }
+    });
+};
