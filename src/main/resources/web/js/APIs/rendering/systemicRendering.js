@@ -169,12 +169,30 @@ function graphLayout(cy, genesList, initial=false) {
                 ready: true
              },
              hide: {
-                event: 'mouseout unfocus'
+                event: 'mouseout unfocus',
+                inactive: 2000
              },
              style: {
                 classes: 'qtip-bootstrap'
             }
         }, event);
+    });
+    cy.on('mouseover', 'edge', function(e) {
+        var edge = e.cyTarget;
+        var category = edge.data('category') || "-";
+        if ( category === "http://www.biopax.org/release/biopax-level3.owl#TemplateReactionRegulation"){
+            document.getElementById("edge-tooltip").textContent = "Transcriptional Factor";
+            document.getElementById("edge-tooltip").style.backgroundColor = '#666';
+            document.getElementById("edge-tooltip").style.width = '150px';
+        }else{
+            document.getElementById("edge-tooltip").textContent = category.replace("http://www.biopax.org/release/biopax-level3.owl#", "");
+            document.getElementById("edge-tooltip").style.backgroundColor = '#666';
+            document.getElementById("edge-tooltip").style.width = '150px';
+        }
+    });
+    cy.on('mouseout', 'edge', function(event) {
+        document.getElementById("edge-tooltip").style.backgroundColor = '#fff';
+        document.getElementById("edge-tooltip").textContent = "";
     });
     // Update quantity of nodes and edges
     displayQttInfo(cy);
