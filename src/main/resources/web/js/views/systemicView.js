@@ -30,7 +30,9 @@ var DemoSysbioView = Backbone.View.extend({
         "click #btnSearchSignalingNetwork": "querySearchSignalingNetwork",
         "click #btnBatchNetwork": "renderBatchNetwork",
         "click #btnRunBatchUp": "runBatchUp",
-        "click #query-type": "queryType"
+        "click #query-type": "queryType",
+        "click #btnTFs": "queryTFs"
+        
     },
     renderRegulatoryNetwork: function () {
         var that = this;
@@ -139,7 +141,11 @@ var DemoSysbioView = Backbone.View.extend({
             // Make SPARQL initial query to PathwayCommons endpoint
             //sparqlSignaling(genesList, cy);
             genesList = genesList.split(",");
-            nextLevelSignaling(genesList, cy, true);
+            if (document.getElementById("btnTFs").value === 'true'){
+                sparqlSignaling(genesList, cy);
+            }else {
+                nextLevelSignaling(genesList, cy, true);                
+            }
             // Listen to event
             $( "#btnRunNextSignaling" ).click(function() {
                 // Get gene list
@@ -176,6 +182,21 @@ var DemoSysbioView = Backbone.View.extend({
         }else {
             $('#inputGeneList').val('AGPAT6,GALT,DHCR24,FTFD1,CAD');
         }
+        
+    },        
+    /**
+    * Listen to button 
+    * Only TFs for first level of signaling
+    */
+    queryTFs: function() {
+
+        if ( document.getElementById("btnTFs").className === "btn btn-success btn-sm" ) {
+            document.getElementById("btnTFs").className = "btn btn-default btn-sm";
+            document.getElementById("btnTFs").value = false;
+        }else{
+            document.getElementById("btnTFs").className = "btn btn-success btn-sm";
+            document.getElementById("btnTFs").value = true;
+        };
         
     }
 });

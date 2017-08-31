@@ -8,14 +8,20 @@
 
 <p></p>
 <div class="row">
-    <div class="col-xs-6">
-        <label for="inputGeneList">Your list of genes</label>
+    <div class="col-xs-6">        
+        <div>
+            <button class="btn btn-default btn-sm" type="button" id="btnTFs" value="false"><i class="glyphicon glyphicon-ok"></i></button>
+            <label> Use only transcription factors for the first level of reconstruction</label>
+        </div>
+        
+        <p><br /></p>
+        
+        <label for="inputSignalingGeneList">Your list of genes</label>
         <div class="input-group">
-                <input type="text" class="form-control" id="inputSignalingGeneList" placeholder="EGFR,GRB2,SOS1,KRAS,BRAF" value="EGFR,GRB2,SOS1,KRAS,BRAF">
-                <span class="input-group-btn">
-                        <button class="btn btn-default" type="button" id="btnSearchSignalingNetwork">Go!</button>
-                </span>
-                
+            <input type="text" class="form-control" id="inputSignalingGeneList" placeholder="EGFR,GRB2,SOS1,KRAS,BRAF" value="EGFR,GRB2,SOS1,KRAS,BRAF">
+            <span class="input-group-btn">
+                    <button class="btn btn-default" type="button" id="btnSearchSignalingNetwork">Go!</button>
+            </span>
         </div><!-- /input-group -->
         <a class="label label-primary" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseSparql" style="margin-right:0.3em">
             <i class="material-icons" style="font-size:11px;">visibility</i> show SPARQL query example
@@ -24,7 +30,7 @@
         <span class="label label-info" id="total-info-edges"></span>
     </div>
     <div class="col-xs-6">
-        <div></div>
+        <div><br /><br /><br /></div>
         <span class="label label-info" id="sendingQuery" style="display:none;">Your query is running...</span>
         <span class="label label-warning" id="emptyQuery" style="display:none;">Please write your query before sending.</span>
         <span class="label label-danger" id="errorQuery" style="display:none;">It seems like an error occurred during your query. Please contact administrator.</span>
