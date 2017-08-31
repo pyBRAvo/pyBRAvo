@@ -141,7 +141,6 @@ function nextLevelRegulation(genesList, cy) {
  */
 function sparqlSignaling(genesList, cy) {
     var endpointURL = rootURL + '/systemic/network';
-    genesList = genesList.split(",");
     var genesJSON = JSON.stringify(genesList);
     
     $.ajax({
