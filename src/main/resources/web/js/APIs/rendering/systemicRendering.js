@@ -222,8 +222,8 @@ function graphContent(cy, items) {
                 var controllerName = items[controllerId]["http://www.biopax.org/release/biopax-level3.owl#displayName"][0]["value"];
                 var controlledName = items[controlledId]["http://www.biopax.org/release/biopax-level3.owl#displayName"][0]["value"];
                 var pair = {
-                    controller: controllerName.toUpperCase().replace(' GENE',''),
-                    controlled: controlledName.replace('Transcription of ','').toUpperCase()
+                    controller: controllerName.replace(' GENE',''),
+                    controlled: controlledName.replace('Transcription of ','')
                 };
                 if (containsObject(pair, uniqEdge) === false){
                     uniqEdge.push(pair);
@@ -232,7 +232,7 @@ function graphContent(cy, items) {
                         {
                             // Controller/source name
                             data: {
-                               id: controllerName.toUpperCase().replace(' GENE',''),
+                               id: controllerName.replace(' GENE',''),
                                category: items[controllerId]["http://www.w3.org/1999/02/22-rdf-syntax-ns#type"][0]["value"], // complex, rna, dna...
                                IDreac: name,
                                provenance: items[controllerId]["http://www.biopax.org/release/biopax-level3.owl#dataSource"][0]["value"]
@@ -242,7 +242,7 @@ function graphContent(cy, items) {
                         {
                             // Controlled/target name
                             data: {
-                               id: controlledName.toUpperCase(),
+                               id: controlledName,
                                category: items[controlledId]["http://www.w3.org/1999/02/22-rdf-syntax-ns#type"][0]["value"],
                                IDreac: name,
                                provenance: items[object]["http://www.biopax.org/release/biopax-level3.owl#dataSource"][0]["value"]
@@ -253,8 +253,8 @@ function graphContent(cy, items) {
                             // Directed edge
                             data: {
                                 id: name,
-                                source: controllerName.toUpperCase().replace(' GENE',''), //controller
-                                target: controlledName.toUpperCase(), // controlled
+                                source: controllerName.replace(' GENE',''), //controller
+                                target: controlledName, // controlled
                                 category: items[object]["http://www.w3.org/1999/02/22-rdf-syntax-ns#type"][0]["value"],
                                 type: items[object]["http://www.biopax.org/release/biopax-level3.owl#controlType"][0]["value"] || "type" // activation, inhibition
                             }   
@@ -311,8 +311,8 @@ function graphContentSignaling(cy, items) {
                 var leftName = items[leftId]["http://www.biopax.org/release/biopax-level3.owl#displayName"][0]["value"];
                 var rightName = items[rightId]["http://www.biopax.org/release/biopax-level3.owl#displayName"][0]["value"];
                 var pair = {
-                    controller: leftName.toUpperCase(),
-                    controlled: rightName.toUpperCase()
+                    controller: leftName,
+                    controlled: rightName
                 };
                 // Do not do the same pair of source/target twice
                 if ( containsObject(pair, uniqEdge) === false && pair["controller"] !== pair["controlled"] ){
@@ -322,14 +322,14 @@ function graphContentSignaling(cy, items) {
                         for (var j=0; j < controllers.length; j++) {
                             var controllerId = items[object]["http://www.biopax.org/release/biopax-level3.owl#controller"][j]["value"];
                             var controllerName = items[controllerId]["http://www.biopax.org/release/biopax-level3.owl#displayName"][0]["value"];
-                            if ($.inArray(controllerName.toUpperCase(), catalysers) === -1) {
-                                catalysers.push(controllerName.toUpperCase());
+                            if ($.inArray(controllerName, catalysers) === -1) {
+                                catalysers.push(controllerName);
                                 cy.add({
                                     nodes :[
                                     {
                                         // Source name
                                         data: {
-                                           id: leftName.toUpperCase(),
+                                           id: leftName,
                                            category: items[leftId]["http://www.w3.org/1999/02/22-rdf-syntax-ns#type"][0]["value"], // complex, rna, dna...
                                            provenance: items[leftId]["http://www.biopax.org/release/biopax-level3.owl#dataSource"][0]["value"]
                                                 //position: { x: i, y: 1+i }
@@ -337,7 +337,7 @@ function graphContentSignaling(cy, items) {
                                     },{
                                         // Controller name
                                         data: {
-                                           id: controllerName.toUpperCase(),
+                                           id: controllerName,
                                            type: "controller",
                                            category: items[controllerId]["http://www.w3.org/1999/02/22-rdf-syntax-ns#type"][0]["value"], // complex, rna, dna...
                                            provenance: items[controllerId]["http://www.biopax.org/release/biopax-level3.owl#dataSource"][0]["value"]
@@ -353,7 +353,7 @@ function graphContentSignaling(cy, items) {
                                     },{
                                         // Target name
                                         data: {
-                                           id: rightName.toUpperCase(),
+                                           id: rightName,
                                            category: items[rightId]["http://www.w3.org/1999/02/22-rdf-syntax-ns#type"][0]["value"], // complex, rna, dna...
                                            provenance: items[rightId]["http://www.biopax.org/release/biopax-level3.owl#dataSource"][0]["value"]
                                            //position: { x: 3, y: 3 }
@@ -364,7 +364,7 @@ function graphContentSignaling(cy, items) {
                                         // source to inter node
                                         data: {
                                             id: guidGenerator(), //name+"s",
-                                            source: leftName.toUpperCase(), // source
+                                            source: leftName, // source
                                             target: name, // arc
                                             category: items[object]["http://www.w3.org/1999/02/22-rdf-syntax-ns#type"][0]["value"]
                                         }  
@@ -373,14 +373,14 @@ function graphContentSignaling(cy, items) {
                                         data: {
                                             id: guidGenerator(),//name+"t",
                                             source: name, // inter node
-                                            target: rightName.toUpperCase(), // target
+                                            target: rightName, // target
                                             category: items[object]["http://www.w3.org/1999/02/22-rdf-syntax-ns#type"][0]["value"]
                                         }  
                                     },{
                                         // controller to inter node
                                         data: {
                                             id: guidGenerator(),//controllerId+"c",
-                                            source: controllerName.toUpperCase(), // controller
+                                            source: controllerName, // controller
                                             target: name, // inter node
                                             style: "controller",
                                             type: items[controllerId]["http://www.biopax.org/release/biopax-level3.owl#controlType"][0]["value"] || "type" // activation, inhibition
@@ -395,7 +395,7 @@ function graphContentSignaling(cy, items) {
                             {
                                 // Source name
                                 data: {
-                                   id: leftName.toUpperCase(),
+                                   id: leftName,
                                    category: items[leftId]["http://www.w3.org/1999/02/22-rdf-syntax-ns#type"][0]["value"], // complex, rna, dna...
                                    provenance: items[leftId]["http://www.biopax.org/release/biopax-level3.owl#dataSource"][0]["value"]
                                    //position: { x: i, y: 1+i }
@@ -403,7 +403,7 @@ function graphContentSignaling(cy, items) {
                             },{
                                 // Target name
                                 data: {
-                                   id: rightName.toUpperCase(),
+                                   id: rightName,
                                    category: items[rightId]["http://www.w3.org/1999/02/22-rdf-syntax-ns#type"][0]["value"], // complex, rna, dna...
                                    provenance: items[rightId]["http://www.biopax.org/release/biopax-level3.owl#dataSource"][0]["value"]
                                    //position: { x: 3, y: 3 }
@@ -414,8 +414,8 @@ function graphContentSignaling(cy, items) {
                                 // left to right without controller
                                 data: {
                                     id: guidGenerator(),
-                                    source: leftName.toUpperCase(), // left
-                                    target: rightName.toUpperCase(), // right
+                                    source: leftName, // left
+                                    target: rightName, // right
                                     category: items[object]["http://www.w3.org/1999/02/22-rdf-syntax-ns#type"][0]["value"]
                                 }  
                             }]
@@ -529,8 +529,8 @@ function displayQttInfo(cy){
 function containsObject(obj, list) {
     var i;
     for (i = 0; i < list.length; i++) {
-        if (list[i]["controller"].toUpperCase() === obj["controller"].toUpperCase() 
-                && list[i]["controlled"].toUpperCase() === obj["controlled"].toUpperCase()) {
+        if (list[i]["controller"] === obj["controller"] 
+                && list[i]["controlled"] === obj["controlled"]) {
             return true;
         }
     }
