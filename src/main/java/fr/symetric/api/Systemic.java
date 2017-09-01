@@ -80,8 +80,8 @@ public class Systemic {
                         +"  ?controlled a ?controlledType ; bp:displayName ?controlledName ; bp:dataSource ?controlledsource .\n"
                         +"  ?controller a ?controllerType ; bp:displayName ?controllerName ; bp:dataSource ?controllersource ."
                         +"} WHERE{ \n"
-                        + "FILTER( (?controlledName = '"+genesList.get(i).toString().toUpperCase()+"'^^xsd:string) "
-                            + "and (?controllerName != '"+genesList.get(i).toString().toUpperCase()+"'^^xsd:string)"
+                        + "FILTER( (?controlledName = '"+genesList.get(i).toString()+"'^^xsd:string) "
+                            + "and (?controllerName != '"+genesList.get(i).toString()+"'^^xsd:string)"
                             + "and (str(?source) != 'http://pathwaycommons.org/pc2/mirtarbase') ) .\n"
                         +"?tempReac a bp:TemplateReactionRegulation .\n"
                         +"?tempReac rdf:type ?type ; bp:controlled ?controlled ; bp:controller ?controller ; bp:controlType ?controlType ; bp:dataSource ?source .\n"
@@ -174,7 +174,7 @@ public class Systemic {
                         "  ?reaction bp:left|bp:right ?participant .\n" +
                         "  ?participant bp:displayName ?participantName ; rdf:type ?participantType ; bp:dataSource ?participantSource .\n" +
                         "  ?right bp:displayName ?rightName ; rdf:type ?rightType ; bp:dataSource ?rightSource ." +
-                        "  VALUES ?rightName { '"+genesList.get(i).toString().toUpperCase()+"'^^xsd:string }\n" +
+                        "  VALUES ?rightName { '"+genesList.get(i).toString()+"'^^xsd:string }\n" +
                         "}order by ?catalysis";
                     System.out.println("Query created");
 
@@ -233,7 +233,7 @@ public class Systemic {
                 "SELECT DISTINCT ?name\n" +
                 "WHERE{\n" +
                 "  ?a bp:id ?b .\n" +
-                "  FILTER ( ?b = '"+idList.get(i).toString().toUpperCase()+"'^^xsd:string )\n" +
+                "  FILTER ( ?b = '"+idList.get(i).toString()+"'^^xsd:string )\n" +
                 "  ?c ?d ?a .\n" +
                 "  ?e ?f ?c .\n" +
                 "  ?e bp:displayName ?name .\n" +
