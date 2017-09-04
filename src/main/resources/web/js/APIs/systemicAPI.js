@@ -315,10 +315,15 @@ function nextLevelSignaling(genesList, cy, firststep) {
  * 
  */
 function upstreamJob(genesList, queryType) {
+    checkCytoscape();
+    
     var endpointURL = rootURL + '/automatic/upstream';
     // display info
     document.getElementById("auto-sendingQuery").style.display = 'block';
     document.getElementById("auto-noResult").style.display = 'none';
+    document.getElementById("panel-download-success").style.display = 'none';
+    $("#btnRunBatchUp").text('Running ...');
+    $("#btnRunBatchUp").attr("disabled", true);
     // gene list format
     genesList = genesList.split(",");
     var genesJSON = JSON.stringify(genesList);
@@ -330,34 +335,199 @@ function upstreamJob(genesList, queryType) {
         data: 'genes=' + genesJSON + '&type=' + queryType,
         crossDomain: true,
         success: function (results, textStatus, jqXHR) {
-            document.getElementById("auto-sendingQuery").style.display = 'none';
-            var features = JSON.stringify(results["json"]);
-            if ( isEmpty(features) === true ){
+            var featuresAsJson = JSON.parse(results["json"]);
+            if ( isEmpty(featuresAsJson) === true ){
                 document.getElementById("auto-noResult").style.display = 'block';
             }else{
                 document.getElementById('panel-download-success').style.display = 'block';
                 document.getElementById('btn-download-json').addEventListener("click", function exportAsJSON() {
-                    var JSON = features.replace('\\','').replace('\n','');
                     var c = document.getElementById('c');
-                    var blob = new Blob([JSON], {'type':'application/json'});
+                    var blob = new Blob([results["json"]], {'type': 'application/json'});
                     c.href = window.URL.createObjectURL(blob);
                     c.download = 'graph.json';
-                    c.click();
+//                     b.click();
                 });
                 document.getElementById('btn-download-rdf').addEventListener("click", function exportAsRDF() {
                     var b = document.getElementById('b');
                     var blob = new Blob([results["rdf"]], {'type':'xml/rdf'});
                     b.href = window.URL.createObjectURL(blob);
                     b.download = 'graph.rdf';
-                    b.click();
+//                    b.click();
+                });
+                document.getElementById('btn-cytoscape').addEventListener("click", function exportToCytoscape() {
+                    var cyJSON = getCytoscapeJSON(featuresAsJson) ;
+                    var networkSUID = sendToCytoscape(cyJSON);
                 });
             }
+            $("#btnRunBatchUp").text('Run');
+            $("#btnRunBatchUp").prop("disabled", false);
         },
         error: function (jqXHR, textStatus, errorThrown) {
             document.getElementById("auto-errorQuery").style.display = 'block';
             document.getElementById("auto-sendingQuery").style.display = 'none';
             infoError(" Failure: " + errorThrown);
             console.log(jqXHR.responseText);
+            $("#btnRunBatchUp").text('Run');
+            $("#btnRunBatchUp").prop("disabled", false);
         }
     });
 };
+/**
+ * Checks if Cytoscape is running, i.e. answering to HTTP GET requests. 
+ * If so, the corresponding export button is activated. 
+ */
+function checkCytoscape() {
+    var endpointURL = 'http://localhost:1234/v1';
+    $.ajax({
+        type: 'GET',
+        contentType: 'application/json',
+        url: endpointURL,
+        crossDomain: true,
+        success: function (results, textStatus, jqXHR) {
+            console.log("Cytoscape up");
+            $("#btn-cytoscape").attr("disabled", false);
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            console.log("Cytoscape down");
+            $("#btn-cytoscape").attr("disabled", true);
+        }
+    });
+}
+
+/**
+ * Send a network to Cytoscape. 
+ * @param {JSON} jsonData, the Cytoscape JSON data to be imported into Cytoscape. 
+ * @returns {int} the id of the created Cytoscape network, -1 when failed. 
+ */
+function sendToCytoscape(jsonData) {
+    console.log("sending graph to cytoscape");
+    var endpointURL = 'http://localhost:1234/v1/networks';
+    $.ajax({
+        type: 'POST',
+        contentType: 'application/json',
+        url: endpointURL,
+        datatype: 'json',
+        data:JSON.stringify(jsonData),
+        crossDomain: true,
+        success: function (results, textStatus, jqXHR) {
+            console.log(results);
+            var networkSUID = results["networkSUID"];
+            setCytoscapeLayoutAndStyle(networkSUID);
+            return networkSUID;
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            console.error("Cytoscape data import failed with ");
+            console.error(jsonData);
+            return -1;
+        }
+    });
+}
+
+/**
+ * Set the layout and style of a Cytoscape network
+ * @param {int} uid the id of the cytoscape network
+ */
+function setCytoscapeLayoutAndStyle(uid) {
+    var styleURL = 'http://localhost:1234/v1/apply/styles/Directed/'+uid;
+    var layoutURL = 'http://localhost:1234/v1/apply/layouts/force-directed-cl/'+uid;
+    
+    $.ajax({
+        type: 'GET',
+        contentType: 'application/json',
+        url: layoutURL,
+        crossDomain: true,
+        success: function (results, textStatus, jqXHR) {
+            console.log("cytoscape layout");
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            console.error("Error while setting the cytoscape layout");
+        }
+    });
+    
+    $.ajax({
+        type: 'GET',
+        contentType: 'application/json',
+        url: styleURL,
+        crossDomain: true,
+        success: function (results, textStatus, jqXHR) {
+            console.log("cytoscape style");
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            console.error("Error while setting the cytoscape style");
+        }
+    });
+}
+
+/**
+ * Transforms an RDF representation of a regulation graph into a Cytoscape JSON representation
+ * @param {JSON} inputData the input JSON
+ * @returns {getCytoscapeJSON.outputGraph} the transformed JSON data to be sent to Cytoscape
+ */
+function getCytoscapeJSON(inputData) {
+    
+    var outputGraph = {
+        elements: {
+            nodes: [],
+            edges: []
+        }};
+
+    var uniqEdge = [];
+//    var items = JSON.parse(inputData);
+    var items = inputData;
+
+    for (var object in items) {
+        // Tranform JSON format to Cytoscape JSON format
+        var name = object.toString(); // URI of interaction
+        // Check if it is a TemplateReactionRegulation
+        if (items[object]["http://www.w3.org/1999/02/22-rdf-syntax-ns#type"][0]["value"] === 'http://www.biopax.org/release/biopax-level3.owl#TemplateReactionRegulation') {
+            // PC id of controllers of the reaction
+            var controllerIds = items[object]["http://www.biopax.org/release/biopax-level3.owl#controller"];
+            // PC id of controlled of the reaction
+            var controlledId = items[object]["http://www.biopax.org/release/biopax-level3.owl#controlled"][0]["value"];
+            for (var i = 0; i < controllerIds.length; i++) {
+                // Get information of the controller and controlled
+                var controllerId = items[object]["http://www.biopax.org/release/biopax-level3.owl#controller"][i]["value"];
+                var controllerName = items[controllerId]["http://www.biopax.org/release/biopax-level3.owl#displayName"][0]["value"];
+                var controlledName = items[controlledId]["http://www.biopax.org/release/biopax-level3.owl#displayName"][0]["value"];
+                var pair = {
+                    controller: controllerName.toUpperCase().replace(' GENE', ''),
+                    controlled: controlledName.replace('Transcription of ', '').toUpperCase()
+                };
+                if (containsObject(pair, uniqEdge) === false) {
+                    uniqEdge.push(pair);
+                    outputGraph["elements"]["nodes"].push(
+                        // Controller/source name
+                        {data: {
+                            //id: controllerName.toUpperCase().replace(' GENE',''),
+                            id: controllerName,
+                            category: items[controllerId]["http://www.w3.org/1999/02/22-rdf-syntax-ns#type"][0]["value"], // complex, rna, dna...
+                            IDreac: name,
+                            provenance: items[controllerId]["http://www.biopax.org/release/biopax-level3.owl#dataSource"][0]["value"]
+                            //position: { x: i, y: 1+i }
+                        }});
+                    outputGraph["elements"]["nodes"].push(
+                        // Controlled/target name
+                        {data: {
+                            //id: controlledName.replace('Transcription of ','').toUpperCase(),
+                            id: controlledName,
+                            category: items[controlledId]["http://www.w3.org/1999/02/22-rdf-syntax-ns#type"][0]["value"],
+                            IDreac: name,
+                            provenance: items[object]["http://www.biopax.org/release/biopax-level3.owl#dataSource"][0]["value"]
+                            //position: { x: 3, y: 3 }
+                        }});
+                        outputGraph["elements"]["edges"].push(
+                        // Directed edge
+                        {data: {
+                            id: name,
+                            //source: controllerName.toUpperCase().replace(' GENE',''), //controller
+                            source: controllerName, //controller
+                            //target: controlledName.replace('Transcription of ','').toUpperCase(), // controlled
+                            target: controlledName, // controlled
+                            type: items[object]["http://www.biopax.org/release/biopax-level3.owl#controlType"][0]["value"] || "type" // activation, inhibition
+                        }});
+                }
+            }
+        }
+    }
+    return outputGraph;
+}
