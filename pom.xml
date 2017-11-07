@@ -311,7 +311,7 @@
                 <configuration>
                     <createDependencyReducedPom>true</createDependencyReducedPom>
                     <shadedArtifactAttached>true</shadedArtifactAttached>
-                    <shadedClassifierName>datahub-launcher</shadedClassifierName>
+                    <shadedClassifierName>bin</shadedClassifierName>
                     <filters>
                         <filter>
                             <artifact>*:*</artifact>
