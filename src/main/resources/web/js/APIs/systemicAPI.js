@@ -478,6 +478,7 @@ function getCytoscapeJSON(inputData) {
     for (var object in items) {
         // Tranform JSON format to Cytoscape JSON format
         var name = object.toString(); // URI of interaction
+        //console.log(name)
         // Check if it is a TemplateReactionRegulation
         if (items[object]["http://www.w3.org/1999/02/22-rdf-syntax-ns#type"][0]["value"] === 'http://www.biopax.org/release/biopax-level3.owl#TemplateReactionRegulation') {
             // PC id of controllers of the reaction
