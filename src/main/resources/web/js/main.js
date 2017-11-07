@@ -96,6 +96,8 @@ $(document).ready(function () {
             myDemoSysbioView.render();
         }
     });
+    
+    $('[data-toggle="tooltip"]').tooltip(); 
 
 });
 
