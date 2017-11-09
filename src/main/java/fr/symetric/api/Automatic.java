@@ -23,16 +23,8 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriBuilderException;
-import org.apache.jena.query.Query;
-import org.apache.jena.query.QueryExecution;
-import org.apache.jena.query.QueryExecutionFactory;
-import org.apache.jena.query.QueryFactory;
-import org.apache.jena.query.QuerySolution;
-import org.apache.jena.query.ResultSet;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
-import org.apache.jena.rdf.model.RDFNode;
 import org.apache.log4j.Logger;
 import org.codehaus.jettison.json.JSONArray;
 
@@ -77,7 +69,7 @@ public class Automatic {
             List geneDone = (List)initialResults[1];
             Model network = ModelFactory.createDefaultModel();
             // Final model
-            network = upstreamRegulationConstruct(initialModel, initialModel, geneDone);
+            network = fr.symetric.cli.Main.regulationConstruct(initialModel, initialModel, geneDone, "Up");
             HashMap<String, String> scopes = new HashMap<>();
             // Render JSON and RDF format
             if(format.equals("all")){
@@ -166,108 +158,23 @@ public class Automatic {
     }
     
     /**
-     * Stoping criterion : list of transcription factors empty
-     * 
-     * if listModel is empty { return tempModel; STOP }
-     * listController = SelectQuery(on listModel);
-     * for each controller in listController {
-     *      if (controller not in geneDone) {
-     *          geneDone.add(controller)
-     *          Model m = Construct(controller);
-     *          resultTemp.add(m);
-     *      }
-     * }
-     * tempModel.add(resultTemp);
-     * modelFinal = regulationConstruct(resultTemp, tempModel, geneDone);
-     * return modelFinal
-     * 
-     * -> update ? to navigate in the local Jena Model, use API "navigation" instead of SPARQL querying (e.g. m.listObjectOfProperty(p))
-     * https://jena.apache.org/documentation/javadoc/jena/org/apache/jena/rdf/model/Model.html
      * 
      * @param listModel {Model} 
      * @param tempModel {Model}
      * @param genesDone {ArrayList}
+     * @param direction {String}
      * @return {Model}
      * @throws java.io.IOException
      */
-    public static Model upstreamRegulationConstruct(Model listModel, Model tempModel, List genesDone) throws IOException {
+    public static Model upstreamRegulationConstruct(Model listModel, Model tempModel, List genesDone, String direction) throws IOException {
         
         // No next regulators
         if(listModel.isEmpty()){
             return tempModel;
         }
-        // SPARQL Query to get controller of a model (e.g. gene)
-        String queryStringS = "PREFIX bp: <http://www.biopax.org/release/biopax-level3.owl#>\n" +
-            "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n" +
-            "SELECT DISTINCT ?name\n" +
-            "WHERE{ " +
-                "?x bp:controller ?controller .\n" +
-                "?controller bp:displayName ?name" +
-            " }" ;
-        Model resultTemp = ModelFactory.createDefaultModel();
-        // Create query
-        Query queryS = QueryFactory.create(queryStringS) ;
-        QueryExecution qex = QueryExecutionFactory.create(queryS, listModel);
-        // Execute select
-        ResultSet TFs = qex.execSelect();
-        try {
-            // For each regulators
-            for ( ; TFs.hasNext() ; ){
-                QuerySolution soln = TFs.nextSolution() ;
-                StringBuilder result = new StringBuilder();
-                RDFNode TF = soln.get("name") ;       // Get a result variable by name (e.g. gene)
-                // Research not done yet
-                if( !genesDone.contains(TF) ){
-                    genesDone.add(TF);
-                    // SPARQL Query to get all transcription factors for a gene
-                    // An error will be sent if TF contains an apostrophe 
-                    String queryStringC = "PREFIX bp: <http://www.biopax.org/release/biopax-level3.owl#>\n"
-                            +"PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n"
-                            +"PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> \n"
-                            +"CONSTRUCT {\n"
-                            +"  ?tempReac rdf:type ?type ; bp:controlled ?controlled ; bp:controller ?controller ; bp:dataSource ?source ; bp:controlType ?controlType .\n"
-                            +"  ?controlled a ?controlledType ; bp:displayName ?controlledName ; bp:dataSource ?controlledsource .\n"
-                            +"  ?controller a ?controllerType ; bp:displayName ?controllerName ; bp:dataSource ?controllersource ."
-                            +"} WHERE{ \n"
-                            + "FILTER( (?controlledName = '"+TF+"'^^xsd:string) "
-                                + "and (?controllerName != '"+TF+"'^^xsd:string)"
-                                + "and (str(?source) != 'http://pathwaycommons.org/pc2/mirtarbase') ) .\n"
-                            +"?tempReac a bp:TemplateReactionRegulation .\n"
-                            +"?tempReac rdf:type ?type ; bp:controlled ?controlled ; bp:controller ?controller ; bp:controlType ?controlType ; bp:dataSource ?source .\n"
-                            +"?controlled bp:participant ?participant ; bp:dataSource ?controlledsource .\n"
-                            +"?participant bp:displayName ?controlledName; rdf:type ?controlledType ."
-                            +"?controller bp:displayName ?controllerName ; rdf:type ?controllerType ; bp:dataSource ?controllersource .\n "
-                            +"}";
-                    String contentType = "application/json";
-                    // URI of the SPARQL Endpoint
-                    String accessUri = "http://rdf.pathwaycommons.org/sparql";
-
-                    URI requestURI = javax.ws.rs.core.UriBuilder.fromUri(accessUri)
-                               .queryParam("query", "{query}")
-                               .queryParam("format", "{format}")
-                               .build(queryStringC, contentType);
-                    URLConnection con = requestURI.toURL().openConnection();
-                    con.addRequestProperty("Accept", contentType);
-                    InputStream in = con.getInputStream();
-
-                    // Read result
-                    BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-
-                    String lineResult;
-                    while((lineResult = reader.readLine()) != null) {
-                        result.append(lineResult);
-                    }
-                    // Prepare model
-                    ByteArrayInputStream bais = new ByteArrayInputStream(result.toString().getBytes());
-                    resultTemp.read(bais, null, "RDF/JSON");
-                }
-            } // End for loop
-        }catch(IOException | IllegalArgumentException | UriBuilderException e){
-            System.err.println(e.getMessage());
-        }
-        //qex.close(); // Close select query execution
+        Model resultTemp = fr.symetric.api.SparqlQuery.upstreamRegulationConstructQuery(listModel, tempModel, genesDone, direction);
         tempModel.add(resultTemp);
-        Model finalModel= upstreamRegulationConstruct(resultTemp, tempModel, genesDone);
+        Model finalModel= fr.symetric.cli.Main.regulationConstruct(resultTemp, tempModel, genesDone, direction);
         return finalModel;
     }
 }
