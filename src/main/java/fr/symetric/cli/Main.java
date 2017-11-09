@@ -162,7 +162,7 @@ public class Main {
             geneDone = (List) initialResults[1];
             // Next level of regulation network
             System.out.println("Run regulation network construction");
-            network = regulationConstruct(initialModel, initialModel, geneDone, way);
+            network = fr.symetric.api.Automatic.upstreamRegulationConstruct(initialModel, initialModel, geneDone, way);
         } else {
             logger.error("Wrong type of network");
             System.exit(1);
@@ -250,39 +250,6 @@ public class Main {
     }
 
     /**
-     * Stoping criterion : list of transcription factors empty
-     *
-     * if listModel is empty { return tempModel; STOP } listController =
-     * SelectQuery(on listModel); for each controller in listController { if
-     * (controller not in geneDone) { geneDone.add(controller) Model m =
-     * Construct(controller); resultTemp.add(m); } } tempModel.add(resultTemp);
-     * modelFinal = regulationConstruct(resultTemp, tempModel, geneDone); return
-     * modelFinal
-     *
-     * -> update ? to navigate in the local Jena Model, use API "navigation"
-     * instead of SPARQL querying (e.g. m.listObjectOfProperty(p))
-     * https://jena.apache.org/documentation/javadoc/jena/org/apache/jena/rdf/model/Model.html
-     *
-     * @param listModel {Model}
-     * @param tempModel {Model}
-     * @param genesDone {ArrayList}
-     * @param direction {String}
-     * @return {Model}
-     * @throws java.io.IOException
-     */
-    public static Model regulationConstruct(Model listModel, Model tempModel, List genesDone, String direction) throws IOException {
-
-        // No next regulators
-        if (listModel.isEmpty()) {
-            return tempModel;
-        }
-        Model resultTemp = fr.symetric.api.SparqlQuery.upstreamRegulationConstructQuery(listModel, tempModel, genesDone, direction);
-        tempModel.add(resultTemp);
-        Model finalModel = regulationConstruct(resultTemp, tempModel, genesDone, direction);
-        return finalModel;
-    }
-
-    /**
      * Build signaling graph
      *
      * @param listModel
@@ -325,30 +292,7 @@ public class Main {
                 // URI of the SPARQL Endpoint
                 String accessUri = "http://rdf.pathwaycommons.org/sparql";
 
-                String conversionQuery = "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n"
-                        + "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n"
-                        + "PREFIX owl: <http://www.w3.org/2002/07/owl#>\n"
-                        + "PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n"
-                        + "PREFIX bp: <http://www.biopax.org/release/biopax-level3.owl#>"
-                        + "CONSTRUCT {\n"
-                        + "  ?reaction rdf:type ?type ; bp:right ?right ; bp:controller ?controller ; "
-                        + "bp:left ?participant ; bp:dataSource ?source .\n"
-                        + "  ?right a ?rightType ; bp:displayName ?rightName ; bp:dataSource ?rightSource .\n"
-                        + "  ?participant a ?participantType ; bp:displayName ?participantName ; bp:dataSource ?participantSource .\n"
-                        + "  ?controller a ?controllerType ; bp:displayName ?controllerName ; bp:dataSource ?controllerSource ; bp:controlType ?controlType ."
-                        + "}WHERE{\n"
-                        + "  OPTIONAL { \n"
-                        + "    ?catalysis bp:controller ?controller ; bp:controlType ?controlType .\n"
-                        + "    ?controller bp:displayName ?controllerName ; rdf:type ?controllerType ; bp:dataSource ?controllerSource ."
-                        + "  }\n"
-                        + "  FILTER (str(?source) != 'http://pathwaycommons.org/pc2/mirtarbase')"
-                        + "  ?catalysis bp:controlled* ?reaction .\n"
-                        + "  ?reaction bp:right ?right ; bp:dataSource ?source ; rdf:type ?type .\n"
-                        + "  ?reaction bp:left|bp:right ?participant .\n"
-                        + "  ?participant bp:displayName ?participantName ; rdf:type ?participantType ; bp:dataSource ?participantSource .\n"
-                        + "  ?right bp:displayName ?rightName ; rdf:type ?rightType ; bp:dataSource ?rightSource ."
-                        + "  VALUES ?rightName { '" + TF.toString().toUpperCase() + "'^^xsd:string }\n"
-                        + "}order by ?catalysis";
+                String conversionQuery = fr.symetric.api.SparqlQuery.initialSignalingQuery(TF.toString().toUpperCase());
 
                 URI requestURI = javax.ws.rs.core.UriBuilder.fromUri(accessUri)
                         .queryParam("query", "{query}")
@@ -400,19 +344,6 @@ public class Main {
             } else {
                 RDFDataMgr.write(new FileOutputStream(fileName), constructModel, Lang.JSONLD);
             }
-// SPARQL Query to get controller of a model
-            //        String queryStringS = "PREFIX bp: <http://www.biopax.org/release/biopax-level3.owl#>\n" +
-            //            "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n" +
-            //            "SELECT DISTINCT ?controller ?controlled \n" +
-            //            "WHERE{ ?x bp:controlled ?controlled ; bp:controller ?controller }" ;
-            //        
-            //        // Create query
-            //        Query queryS = QueryFactory.create(queryStringS) ;
-            //        try (QueryExecution qex = QueryExecutionFactory.create(queryS, constructModel)) {
-            //            // Execute select
-            //            ResultSet results = qex.execSelect();
-            //            OutputStream out = new FileOutputStream(fileName);
-            //            ResultSetFormatter.outputAsCSV(out, results);
         } catch (FileNotFoundException e) {
             System.out.println("Save as file error");
             logger.error(e);
