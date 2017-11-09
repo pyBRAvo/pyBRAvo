@@ -187,8 +187,6 @@ public class Main {
      * @throws java.io.IOException
      */
     public static Object[] initialConstruct(String filename, String direction, String type) throws IOException {
-        //String[] genes = {"GALT","CAD"}
-//        BufferedReader br = new BufferedReader(new InputStreamReader(Main.class.getClass().getResourceAsStream("/sym-demo-data/"+filename)));
         String line;
         String splitBy = ";";  
         
@@ -324,7 +322,7 @@ public class Main {
      * @param listModel {Model} 
      * @param tempModel {Model}
      * @param genesDone {ArrayList}
-     * @param direction
+     * @param direction {String}
      * @return {Model}
      * @throws java.io.IOException
      */
@@ -334,96 +332,7 @@ public class Main {
         if(listModel.isEmpty()){
             return tempModel;
         }
-        // SPARQL Query to get controller of a model (e.g. gene)
-        String queryStringS = "PREFIX bp: <http://www.biopax.org/release/biopax-level3.owl#>\n" +
-            "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n" +
-            "SELECT DISTINCT ?name\n" +
-            "WHERE{ ?x bp:controller ?controller ." +
-            "    ?controller bp:displayName ?name" +
-            "}" ;
-        Model resultTemp = ModelFactory.createDefaultModel();
-        // Create query
-        Query queryS = QueryFactory.create(queryStringS) ;
-        QueryExecution qex = QueryExecutionFactory.create(queryS, listModel);
-        // Execute select
-        ResultSet TFs = qex.execSelect();
-        try {
-        // For each regulators
-        for ( ; TFs.hasNext() ; ){
-            QuerySolution soln = TFs.nextSolution() ;
-            StringBuilder result = new StringBuilder();
-            RDFNode TF = soln.get("name") ;       // Get a result variable by name (e.g. gene)
-            // Research not done yet
-            if( !genesDone.contains(TF) ){
-                genesDone.add(TF);
-                String queryStringC = "";
-                if( direction.equals("Up") ) {
-                    // SPARQL Query to get all transcription factors for a gene
-                    queryStringC = "PREFIX bp: <http://www.biopax.org/release/biopax-level3.owl#>\n"
-                            +"PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n"
-                            +"PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> \n"
-                            +"CONSTRUCT {\n"
-                            +"  ?tempReac rdf:type ?type ; bp:controlled ?controlled ; bp:controller ?controller ; bp:dataSource ?source ; bp:controlType ?controlType .\n"
-                            +"  ?controlled a ?controlledType ; bp:displayName ?controlledName ; bp:dataSource ?controlledsource .\n"
-                            +"  ?controller a ?controllerType ; bp:displayName ?controllerName ; bp:dataSource ?controllersource ."
-                            +"} WHERE{ \n"
-                            + "FILTER( (?controlledName = '"+TF.toString()+"'^^xsd:string) "
-                                + "and (?controllerName != '"+TF.toString()+"'^^xsd:string)"
-                                + "and (str(?source) != 'http://pathwaycommons.org/pc2/mirtarbase') ) .\n"
-                            +"?tempReac a bp:TemplateReactionRegulation .\n"
-                            +"?tempReac rdf:type ?type ; bp:controlled ?controlled ; bp:controller ?controller ; bp:controlType ?controlType ; bp:dataSource ?source .\n"
-                            +"?controlled bp:participant ?participant ; bp:dataSource ?controlledsource .\n"
-                            +"?participant bp:displayName ?controlledName; rdf:type ?controlledType ."
-                            +"?controller bp:displayName ?controllerName ; rdf:type ?controllerType ; bp:dataSource ?controllersource .\n "
-                            +"}";
-                }else if(direction.equals("Down")) {
-                    // SPARQL Query to get all genes regulated by the given genes
-                    queryStringC = "PREFIX bp: <http://www.biopax.org/release/biopax-level3.owl#>\n"
-                        +"PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n"
-                        +"PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> \n"
-                        +"CONSTRUCT {\n"
-                        +"  ?tempReac rdf:type ?type ; bp:controlled ?controlled ; bp:controller ?controller ; bp:dataSource ?source ; bp:controlType ?controlType .\n"
-                        +"  ?controlled a ?controlledType ; bp:displayName ?controlledName ; bp:dataSource ?controlledsource .\n"
-                        +"  ?controller a ?controllerType ; bp:displayName ?controllerName ; bp:dataSource ?controllersource ."
-                        +"} WHERE{ \n"
-                        + "FILTER( (?controlledName != '"+TF.toString()+"'^^xsd:string) "
-                            + "and (?controllerName = '"+TF.toString()+"'^^xsd:string)"
-                            + "and (str(?source) != 'http://pathwaycommons.org/pc2/mirtarbase') ) .\n"
-                        +"?tempReac a bp:TemplateReactionRegulation .\n"
-                        +"?tempReac rdf:type ?type ; bp:controlled ?controlled ; bp:controller ?controller ; bp:controlType ?controlType ; bp:dataSource ?source .\n"
-                        +"?controlled bp:participant ?participant ; bp:dataSource ?controlledsource .\n"
-                        +"?participant bp:displayName ?controlledName; rdf:type ?controlledType ."
-                        +"?controller bp:displayName ?controllerName ; rdf:type ?controllerType ; bp:dataSource ?controllersource .\n "
-                        +"}";
-                }
-                String contentType = "application/json";
-                // URI of the SPARQL Endpoint
-                String accessUri = "http://rdf.pathwaycommons.org/sparql";
-
-                URI requestURI = javax.ws.rs.core.UriBuilder.fromUri(accessUri)
-                           .queryParam("query", "{query}")
-                           .queryParam("format", "{format}")
-                           .build(queryStringC, contentType);
-                URLConnection con = requestURI.toURL().openConnection();
-                con.addRequestProperty("Accept", contentType);
-                InputStream in = con.getInputStream();
-
-                // Read result
-                BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-
-                String lineResult;
-                while((lineResult = reader.readLine()) != null) {
-                    result.append(lineResult);
-                }
-                // Prepare model
-                ByteArrayInputStream bais = new ByteArrayInputStream(result.toString().getBytes());
-                resultTemp.read(bais, null, "RDF/JSON");
-            }
-        } // End for loop
-        }catch(IOException | IllegalArgumentException | UriBuilderException e){
-            logger.error(e);
-        }
-        //qex.close(); // Close select query execution
+        Model resultTemp = fr.symetric.api.SparqlQuery.upstreamRegulationConstructQuery(listModel, tempModel, genesDone, direction);
         tempModel.add(resultTemp);
         Model finalModel= regulationConstruct(resultTemp, tempModel, genesDone, direction);
         return finalModel;
@@ -540,19 +449,6 @@ public class Main {
             // Write model in JSON format to render as data
             RDFDataMgr.write(new FileOutputStream(fileName), constructModel, Lang.RDFXML);
         }
-        // SPARQL Query to get controller of a model
-//        String queryStringS = "PREFIX bp: <http://www.biopax.org/release/biopax-level3.owl#>\n" +
-//            "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n" +
-//            "SELECT DISTINCT ?controller ?controlled \n" +
-//            "WHERE{ ?x bp:controlled ?controlled ; bp:controller ?controller }" ;
-//        
-//        // Create query
-//        Query queryS = QueryFactory.create(queryStringS) ;
-//        try (QueryExecution qex = QueryExecutionFactory.create(queryS, constructModel)) {
-//            // Execute select
-//            ResultSet results = qex.execSelect();
-//            OutputStream out = new FileOutputStream(fileName);
-//            ResultSetFormatter.outputAsCSV(out, results);
         } catch (FileNotFoundException e) {
             System.out.println("Save as file error");
             logger.error(e);
