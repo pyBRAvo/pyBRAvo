@@ -191,8 +191,6 @@ public class Main {
      * @throws java.io.IOException
      */
     public static Object[] initialConstruct(String filename, String direction, String type) throws IOException {
-        //String[] genes = {"GALT","CAD"}
-//        BufferedReader br = new BufferedReader(new InputStreamReader(Main.class.getClass().getResourceAsStream("/sym-demo-data/"+filename)));
         String line;
         String splitBy = ";";
 
@@ -209,69 +207,14 @@ public class Main {
                 if (type.equals("regulation")) {
                     if (direction.equals("Up")) {
                         // SPARQL Query to get all transcription factors for a gene
-                        queryStringC = "PREFIX bp: <http://www.biopax.org/release/biopax-level3.owl#>\n"
-                                + "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n"
-                                + "PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> \n"
-                                + "CONSTRUCT {\n"
-                                + "  ?tempReac rdf:type ?type ; bp:controlled ?controlled ; bp:controller ?controller ; bp:dataSource ?source ; bp:controlType ?controlType .\n"
-                                + "  ?controlled a ?controlledType ; bp:displayName ?controlledName ; bp:dataSource ?controlledsource .\n"
-                                + "  ?controller a ?controllerType ; bp:displayName ?controllerName ; bp:dataSource ?controllersource ."
-                                + "} WHERE{ \n"
-                                + "FILTER( (?controlledName = '" + b[0] + "'^^xsd:string) "
-                                + "and (?controllerName != '" + b[0] + "'^^xsd:string)"
-                                + "and (str(?source) != 'http://pathwaycommons.org/pc2/mirtarbase') ) .\n"
-                                + "?tempReac a bp:TemplateReactionRegulation .\n"
-                                + "?tempReac rdf:type ?type ; bp:controlled ?controlled ; bp:controller ?controller ; bp:controlType ?controlType ; bp:dataSource ?source .\n"
-                                + "?controlled bp:participant ?participant ; bp:dataSource ?controlledsource .\n"
-                                + "?participant bp:displayName ?controlledName; rdf:type ?controlledType ."
-                                + "?controller bp:displayName ?controllerName ; rdf:type ?controllerType ; bp:dataSource ?controllersource .\n "
-                                + "}";
-                    } else if (direction.equals("Down")) {
+                        queryStringC = fr.symetric.api.SparqlQuery.initialUpRegulationQuery(b[0]);
+                    }else if(direction.equals("Down")) {
                         // SPARQL Query to get all genes regulated by the given genes
-                        queryStringC = "PREFIX bp: <http://www.biopax.org/release/biopax-level3.owl#>\n"
-                                + "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n"
-                                + "PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> \n"
-                                + "CONSTRUCT {\n"
-                                + "  ?tempReac rdf:type ?type ; bp:controlled ?controlled ; bp:controller ?controller ; bp:dataSource ?source ; bp:controlType ?controlType .\n"
-                                + "  ?controlled a ?controlledType ; bp:displayName ?controlledName ; bp:dataSource ?controlledsource .\n"
-                                + "  ?controller a ?controllerType ; bp:displayName ?controllerName ; bp:dataSource ?controllersource ."
-                                + "} WHERE{ \n"
-                                + "FILTER( (?controlledName != '" + b[0] + "'^^xsd:string) "
-                                + "and (?controllerName = '" + b[0] + "'^^xsd:string)"
-                                + "and (str(?source) != 'http://pathwaycommons.org/pc2/mirtarbase') ) .\n"
-                                + "?tempReac a bp:TemplateReactionRegulation .\n"
-                                + "?tempReac rdf:type ?type ; bp:controlled ?controlled ; bp:controller ?controller ; bp:controlType ?controlType ; bp:dataSource ?source .\n"
-                                + "?controlled bp:participant ?participant ; bp:dataSource ?controlledsource .\n"
-                                + "?participant bp:displayName ?controlledName; rdf:type ?controlledType ."
-                                + "?controller bp:displayName ?controllerName ; rdf:type ?controllerType ; bp:dataSource ?controllersource .\n "
-                                + "}";
+                        queryStringC = fr.symetric.api.SparqlQuery.initialDownRegulationQuery(b[0]);
                     }
-                } else {
-                    // SPARQL Query to get all entities that have reaction link with the given genes
-                    queryStringC = "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n"
-                            + "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n"
-                            + "PREFIX owl: <http://www.w3.org/2002/07/owl#>\n"
-                            + "PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n"
-                            + "PREFIX bp: <http://www.biopax.org/release/biopax-level3.owl#>"
-                            + "CONSTRUCT {\n"
-                            + "  ?reaction rdf:type ?type ; bp:right ?right ; bp:controller ?controller ; "
-                            + "bp:left ?participant ; bp:dataSource ?source .\n"
-                            + "  ?right a ?rightType ; bp:displayName ?rightName ; bp:dataSource ?rightSource .\n"
-                            + "  ?participant a ?participantType ; bp:displayName ?participantName ; bp:dataSource ?participantSource .\n"
-                            + "  ?controller a ?controllerType ; bp:displayName ?controllerName ; bp:dataSource ?controllerSource; bp:controlType ?controlType  ."
-                            + "}WHERE{\n"
-                            + "  OPTIONAL { \n"
-                            + "    ?catalysis bp:controller ?controller ; bp:controlType ?controlType .\n"
-                            + "    ?controller bp:displayName ?controllerName ; rdf:type ?controllerType ; bp:dataSource ?controllerSource ."
-                            + "  }\n"
-                            + "  FILTER (str(?source) != 'http://pathwaycommons.org/pc2/mirtarbase')"
-                            + "  ?catalysis bp:controlled* ?reaction .\n"
-                            + "  ?reaction bp:right ?right ; bp:dataSource ?source ; rdf:type ?type .\n"
-                            + "  ?reaction bp:left|bp:right ?participant .\n"
-                            + "  ?participant bp:displayName ?participantName ; rdf:type ?participantType ; bp:dataSource ?participantSource .\n"
-                            + "  ?right bp:displayName ?rightName ; rdf:type ?rightType ; bp:dataSource ?rightSource ."
-                            + "  VALUES ?rightName { '" + b[0] + "'^^xsd:string }\n"
-                            + "}order by ?catalysis";
+                }else{
+                    // SPARQL Query to get all entities that have reaction link with the given genes (i.e. signaling)
+                    queryStringC = fr.symetric.api.SparqlQuery.initialSignalingQuery(b[0]);
                 }
 
                 //+"GROUP BY ?controlledName ?controllerName";
@@ -323,7 +266,7 @@ public class Main {
      * @param listModel {Model}
      * @param tempModel {Model}
      * @param genesDone {ArrayList}
-     * @param direction
+     * @param direction {String}
      * @return {Model}
      * @throws java.io.IOException
      */
@@ -333,96 +276,7 @@ public class Main {
         if (listModel.isEmpty()) {
             return tempModel;
         }
-        // SPARQL Query to get controller of a model (e.g. gene)
-        String queryStringS = "PREFIX bp: <http://www.biopax.org/release/biopax-level3.owl#>\n"
-                + "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n"
-                + "SELECT DISTINCT ?name\n"
-                + "WHERE{ ?x bp:controller ?controller ."
-                + "    ?controller bp:displayName ?name"
-                + "}";
-        Model resultTemp = ModelFactory.createDefaultModel();
-        // Create query
-        Query queryS = QueryFactory.create(queryStringS);
-        QueryExecution qex = QueryExecutionFactory.create(queryS, listModel);
-        // Execute select
-        ResultSet TFs = qex.execSelect();
-        try {
-            // For each regulators
-            for (; TFs.hasNext();) {
-                QuerySolution soln = TFs.nextSolution();
-                StringBuilder result = new StringBuilder();
-                RDFNode TF = soln.get("name");       // Get a result variable by name (e.g. gene)
-                // Research not done yet
-                if (!genesDone.contains(TF)) {
-                    genesDone.add(TF);
-                    String queryStringC = "";
-                    if (direction.equals("Up")) {
-                        // SPARQL Query to get all transcription factors for a gene
-                        queryStringC = "PREFIX bp: <http://www.biopax.org/release/biopax-level3.owl#>\n"
-                                + "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n"
-                                + "PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> \n"
-                                + "CONSTRUCT {\n"
-                                + "  ?tempReac rdf:type ?type ; bp:controlled ?controlled ; bp:controller ?controller ; bp:dataSource ?source ; bp:controlType ?controlType .\n"
-                                + "  ?controlled a ?controlledType ; bp:displayName ?controlledName ; bp:dataSource ?controlledsource .\n"
-                                + "  ?controller a ?controllerType ; bp:displayName ?controllerName ; bp:dataSource ?controllersource ."
-                                + "} WHERE{ \n"
-                                + "FILTER( (?controlledName = '" + TF.toString() + "'^^xsd:string) "
-                                + "and (?controllerName != '" + TF.toString() + "'^^xsd:string)"
-                                + "and (str(?source) != 'http://pathwaycommons.org/pc2/mirtarbase') ) .\n"
-                                + "?tempReac a bp:TemplateReactionRegulation .\n"
-                                + "?tempReac rdf:type ?type ; bp:controlled ?controlled ; bp:controller ?controller ; bp:controlType ?controlType ; bp:dataSource ?source .\n"
-                                + "?controlled bp:participant ?participant ; bp:dataSource ?controlledsource .\n"
-                                + "?participant bp:displayName ?controlledName; rdf:type ?controlledType ."
-                                + "?controller bp:displayName ?controllerName ; rdf:type ?controllerType ; bp:dataSource ?controllersource .\n "
-                                + "}";
-                    } else if (direction.equals("Down")) {
-                        // SPARQL Query to get all genes regulated by the given genes
-                        queryStringC = "PREFIX bp: <http://www.biopax.org/release/biopax-level3.owl#>\n"
-                                + "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n"
-                                + "PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> \n"
-                                + "CONSTRUCT {\n"
-                                + "  ?tempReac rdf:type ?type ; bp:controlled ?controlled ; bp:controller ?controller ; bp:dataSource ?source ; bp:controlType ?controlType .\n"
-                                + "  ?controlled a ?controlledType ; bp:displayName ?controlledName ; bp:dataSource ?controlledsource .\n"
-                                + "  ?controller a ?controllerType ; bp:displayName ?controllerName ; bp:dataSource ?controllersource ."
-                                + "} WHERE{ \n"
-                                + "FILTER( (?controlledName != '" + TF.toString() + "'^^xsd:string) "
-                                + "and (?controllerName = '" + TF.toString() + "'^^xsd:string)"
-                                + "and (str(?source) != 'http://pathwaycommons.org/pc2/mirtarbase') ) .\n"
-                                + "?tempReac a bp:TemplateReactionRegulation .\n"
-                                + "?tempReac rdf:type ?type ; bp:controlled ?controlled ; bp:controller ?controller ; bp:controlType ?controlType ; bp:dataSource ?source .\n"
-                                + "?controlled bp:participant ?participant ; bp:dataSource ?controlledsource .\n"
-                                + "?participant bp:displayName ?controlledName; rdf:type ?controlledType ."
-                                + "?controller bp:displayName ?controllerName ; rdf:type ?controllerType ; bp:dataSource ?controllersource .\n "
-                                + "}";
-                    }
-                    String contentType = "application/json";
-                    // URI of the SPARQL Endpoint
-                    String accessUri = "http://rdf.pathwaycommons.org/sparql";
-
-                    URI requestURI = javax.ws.rs.core.UriBuilder.fromUri(accessUri)
-                            .queryParam("query", "{query}")
-                            .queryParam("format", "{format}")
-                            .build(queryStringC, contentType);
-                    URLConnection con = requestURI.toURL().openConnection();
-                    con.addRequestProperty("Accept", contentType);
-                    InputStream in = con.getInputStream();
-
-                    // Read result
-                    BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-
-                    String lineResult;
-                    while ((lineResult = reader.readLine()) != null) {
-                        result.append(lineResult);
-                    }
-                    // Prepare model
-                    ByteArrayInputStream bais = new ByteArrayInputStream(result.toString().getBytes());
-                    resultTemp.read(bais, null, "RDF/JSON");
-                }
-            } // End for loop
-        } catch (IOException | IllegalArgumentException | UriBuilderException e) {
-            logger.error(e);
-        }
-        //qex.close(); // Close select query execution
+        Model resultTemp = fr.symetric.api.SparqlQuery.upstreamRegulationConstructQuery(listModel, tempModel, genesDone, direction);
         tempModel.add(resultTemp);
         Model finalModel = regulationConstruct(resultTemp, tempModel, genesDone, direction);
         return finalModel;
