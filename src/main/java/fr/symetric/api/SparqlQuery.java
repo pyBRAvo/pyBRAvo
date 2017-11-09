@@ -12,6 +12,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URI;
 import java.net.URLConnection;
+import java.util.ArrayList;
 import java.util.List;
 import javax.ws.rs.core.UriBuilderException;
 import org.apache.jena.query.Query;
@@ -23,6 +24,9 @@ import org.apache.jena.query.ResultSet;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.RDFNode;
+import org.codehaus.jettison.json.JSONArray;
+import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
 
 /**
  *
@@ -134,7 +138,8 @@ public class SparqlQuery {
             +"?controlled bp:participant ?participant ; bp:dataSource ?controlledsource .\n"
             +"?participant bp:displayName ?controlledName; rdf:type ?controlledType ."
             +"?controller bp:displayName ?controllerName ; rdf:type ?controllerType ; bp:dataSource ?controllersource .\n "
-            +"}";
+            +"}"
+            +"GROUP BY ?controlledName ?controllerName";
         return IURquery;
     }
     
@@ -195,5 +200,61 @@ public class SparqlQuery {
             "  VALUES ?rightName { '"+b+"'^^xsd:string }\n" +
             "}order by ?catalysis";
         return ISquery;
+    }
+    
+    /**
+     * Id to Name Query
+     * @author Marie Lefebvre
+     * @param genesList
+     * @return model
+     * @throws org.codehaus.jettison.json.JSONException
+     * @throws java.io.IOException
+     */
+    public static JSONArray IdToNameQuery(JSONArray genesList) throws JSONException, IOException {
+        List<String> idToNameList = new ArrayList<String>();
+        JSONArray idList = genesList;
+        for(int i=0; i < idList.length(); i++){
+            // Retrieve corresponding name with given ID
+            String idQuery = "PREFIX bp: <http://www.biopax.org/release/biopax-level3.owl#>\n" +
+                "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n" +
+                "PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> \n" +
+                "SELECT DISTINCT ?name\n" +
+                "WHERE{\n" +
+                "  ?a bp:id ?b .\n" +
+                "  FILTER ( ?b = '"+idList.get(i).toString()+"'^^xsd:string )\n" +
+                "  ?c ?d ?a .\n" +
+                "  ?e ?f ?c .\n" +
+                "  ?e bp:displayName ?name .\n" +
+                "}\n";
+            System.out.println("Query ID created");
+            
+            StringBuilder result = new StringBuilder();
+            // Parsing json is more simple than XML
+            String contentType = "application/json";
+            // URI of the SPARQL Endpoint
+            String accessUri = "http://rdf.pathwaycommons.org/sparql";
+            URI requestURI = javax.ws.rs.core.UriBuilder.fromUri(accessUri)
+                       .queryParam("query", "{query}")
+                       .queryParam("format", "{format}")
+                       .build(idQuery, contentType);
+            URLConnection con = requestURI.toURL().openConnection();
+            con.addRequestProperty("Accept", contentType);
+            InputStream in = con.getInputStream();
+
+            // Read result
+            BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+
+            String line;
+            while((line = reader.readLine()) != null) {
+                result.append(line);
+            }
+            JSONObject jsonObj = new JSONObject(result.toString());
+            JSONArray jsonAr = jsonObj.getJSONObject("results").getJSONArray("bindings");
+            for (int j = 0 ; j < jsonAr.length(); j++) {
+                JSONObject obj = jsonAr.getJSONObject(j).getJSONObject("name");
+                idToNameList.add(obj.getString("value"));
+            }
+        }
+        return new JSONArray(idToNameList);
     }
 }

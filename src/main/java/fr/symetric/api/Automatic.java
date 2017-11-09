@@ -58,7 +58,7 @@ public class Automatic {
             // Use of IDs 
             if ("id".equals(queryType)) {
                 JSONArray idList = genesList;
-                genesList = fr.symetric.api.Systemic.IdToNameQuery(idList);
+                genesList = fr.symetric.api.SparqlQuery.IdToNameQuery(idList);
             }
             
             // initial model with direct interaction, first level of regulation
@@ -69,7 +69,7 @@ public class Automatic {
             List geneDone = (List)initialResults[1];
             Model network = ModelFactory.createDefaultModel();
             // Final model
-            network = fr.symetric.cli.Main.regulationConstruct(initialModel, initialModel, geneDone, "Up");
+            network = upstreamRegulationConstruct(initialModel, initialModel, geneDone, "Up");
             HashMap<String, String> scopes = new HashMap<>();
             // Render JSON and RDF format
             if(format.equals("all")){
@@ -109,23 +109,7 @@ public class Automatic {
                 String gene = genes.get(i).toString().toUpperCase();
                 geneDone.add(gene);
                 // SPARQL Query to get all transcription factors for a gene
-                String queryString = "PREFIX bp: <http://www.biopax.org/release/biopax-level3.owl#>\n"
-                        +"PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n"
-                        +"PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> \n"
-                        +"CONSTRUCT {\n"
-                        +"  ?tempReac rdf:type ?type ; bp:controlled ?controlled ; bp:controller ?controller ; bp:dataSource ?source ; bp:controlType ?controlType .\n"
-                        +"  ?controlled a ?controlledType ; bp:displayName ?controlledName ; bp:dataSource ?controlledsource .\n"
-                        +"  ?controller a ?controllerType ; bp:displayName ?controllerName ; bp:dataSource ?controllersource ."
-                        +"} WHERE{ \n"
-                        + "FILTER( (?controlledName = '"+gene+"'^^xsd:string) "
-                            + "and (?controllerName != '"+gene+"'^^xsd:string)"
-                            + "and (str(?source) != 'http://pathwaycommons.org/pc2/mirtarbase') ) .\n"
-                        +"?tempReac a bp:TemplateReactionRegulation .\n"
-                        +"?tempReac rdf:type ?type ; bp:controlled ?controlled ; bp:controller ?controller ; bp:controlType ?controlType ; bp:dataSource ?source .\n"
-                        +"?controlled bp:participant ?participant ; bp:dataSource ?controlledsource .\n"
-                        +"?participant bp:displayName ?controlledName; rdf:type ?controlledType ."
-                        +"?controller bp:displayName ?controllerName ; rdf:type ?controllerType ; bp:dataSource ?controllersource .\n "
-                        +"}";
+                String queryString = fr.symetric.api.SparqlQuery.initialUpRegulationQuery(gene);
                             //+"GROUP BY ?controlledName ?controllerName";
                 String contentType = "application/json";
                 // URI of the SPARQL Endpoint
@@ -174,7 +158,7 @@ public class Automatic {
         }
         Model resultTemp = fr.symetric.api.SparqlQuery.upstreamRegulationConstructQuery(listModel, tempModel, genesDone, direction);
         tempModel.add(resultTemp);
-        Model finalModel= fr.symetric.cli.Main.regulationConstruct(resultTemp, tempModel, genesDone, direction);
+        Model finalModel= upstreamRegulationConstruct(resultTemp, tempModel, genesDone, direction);
         return finalModel;
     }
 }
