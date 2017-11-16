@@ -83,9 +83,10 @@ public class SparqlQuery {
                             +"?tempReac a bp:TemplateReactionRegulation .\n"
                             +"?tempReac rdf:type ?type ; bp:controlled ?controlled ; bp:controller ?controller ; bp:controlType ?controlType ; bp:dataSource ?source .\n"
                             +"?controlled bp:participant ?participant ; bp:dataSource ?controlledsource .\n"
-                            +"?participant bp:displayName ?controlledName; rdf:type ?controlledType ."
+                            +"?participant bp:displayName ?controlledName; rdf:type ?controlledType .\n"
                             +"?controller bp:displayName ?controllerName ; rdf:type ?controllerType ; bp:dataSource ?controllersource .\n "
-                            +"}";
+                            +"}"
+                            + "GROUP BY ?controlledName ?controllerName";
                     String contentType = "application/json";
                     // URI of the SPARQL Endpoint
                     String accessUri = "http://rdf.pathwaycommons.org/sparql";
@@ -138,8 +139,7 @@ public class SparqlQuery {
             +"?controlled bp:participant ?participant ; bp:dataSource ?controlledsource .\n"
             +"?participant bp:displayName ?controlledName; rdf:type ?controlledType ."
             +"?controller bp:displayName ?controllerName ; rdf:type ?controllerType ; bp:dataSource ?controllersource .\n "
-            +"}"
-            +"GROUP BY ?controlledName ?controllerName";
+            +"}";
         return IURquery;
     }
     
