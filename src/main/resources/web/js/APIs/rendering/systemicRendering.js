@@ -199,7 +199,7 @@ function graphLayout(cy, genesList, initial=false) {
 };
 
 /**
- * Add content to graphe
+ * Add content to regulatory graphe
  * @param {Cytoscape object} cy
  * @param {array} items
  * @returns {Array|graphContent.uniqEdge}
@@ -210,56 +210,72 @@ function graphContent(cy, items) {
     for (var object in items) {
         // Tranform JSON format to Cytoscape JSON format 
         var name = object.toString(); // URI of interaction
+        if( name === "http://pathwaycommons.org/pc2/TemplateReactionRegulation_197a03bd5676253834ad63004ebba258"){
+            console.log(items[name]);
+            console.log(items[items[object]["http://www.biopax.org/release/biopax-level3.owl#controlled"][0]["value"]]["http://www.biopax.org/release/biopax-level3.owl#displayName"][0]["value"]);
+            console.log(items[items[object]["http://www.biopax.org/release/biopax-level3.owl#controlled"][1]["value"]]["http://www.biopax.org/release/biopax-level3.owl#displayName"][0]["value"]);
+        }
         // Check if it is a TemplateReactionRegulation
         if( items[object]["http://www.w3.org/1999/02/22-rdf-syntax-ns#type"][0]["value"] === 'http://www.biopax.org/release/biopax-level3.owl#TemplateReactionRegulation') {
-            // PC id of controllers of the reaction
+            // PC ids of controllers of the reaction
             var controllerIds = items[object]["http://www.biopax.org/release/biopax-level3.owl#controller"];
-            // PC id of controlled of the reaction
-            var controlledId = items[object]["http://www.biopax.org/release/biopax-level3.owl#controlled"][0]["value"];
+            // PC ids of controlled of the reaction
+            var controlledIds = items[object]["http://www.biopax.org/release/biopax-level3.owl#controlled"];
+            
             for (var i=0; i<controllerIds.length; i++) {
-                // Get information of the controller and controlled
-                var controllerId = items[object]["http://www.biopax.org/release/biopax-level3.owl#controller"][i]["value"];
-                var controllerName = items[controllerId]["http://www.biopax.org/release/biopax-level3.owl#displayName"][0]["value"];
-                var controlledName = items[controlledId]["http://www.biopax.org/release/biopax-level3.owl#displayName"][0]["value"];
-                var pair = {
-                    controller: controllerName.replace(' GENE',''),
-                    controlled: controlledName.replace('Transcription of ','')
-                };
-                if (containsObject(pair, uniqEdge) === false){
-                    uniqEdge.push(pair);
-                    cy.add({
-                        nodes :[
-                        {
-                            // Controller/source name
-                            data: {
-                               id: controllerName.replace(' GENE',''),
-                               category: items[controllerId]["http://www.w3.org/1999/02/22-rdf-syntax-ns#type"][0]["value"], // complex, rna, dna...
-                               IDreac: name,
-                               provenance: items[controllerId]["http://www.biopax.org/release/biopax-level3.owl#dataSource"][0]["value"]
-                               //position: { x: i, y: 1+i }
-                            }
-                        },
-                        {
-                            // Controlled/target name
-                            data: {
-                               id: controlledName,
-                               category: items[controlledId]["http://www.w3.org/1999/02/22-rdf-syntax-ns#type"][0]["value"],
-                               IDreac: name,
-                               provenance: items[object]["http://www.biopax.org/release/biopax-level3.owl#dataSource"][0]["value"]
-                               //position: { x: 3, y: 3 }
-                            }
-                        }],                    
-                        edges: [{
-                            // Directed edge
-                            data: {
-                                id: name,
-                                source: controllerName.replace(' GENE',''), //controller
-                                target: controlledName, // controlled
-                                category: items[object]["http://www.w3.org/1999/02/22-rdf-syntax-ns#type"][0]["value"],
-                                type: items[object]["http://www.biopax.org/release/biopax-level3.owl#controlType"][0]["value"] || "type" // activation, inhibition
-                            }   
-                        }]
-                    });
+                for (var w=0; w<controlledIds.length;w++){
+                    // Get information of the controller and controlled
+                    var controllerId = items[object]["http://www.biopax.org/release/biopax-level3.owl#controller"][i]["value"];
+                    var controlledId = controlledIds[w]["value"];
+                    var controllerName = items[controllerId]["http://www.biopax.org/release/biopax-level3.owl#displayName"][0]["value"];
+                    var controlledName = items[controlledId]["http://www.biopax.org/release/biopax-level3.owl#displayName"][0]["value"];
+//                    console.log(controllerName, '-', controlledName);
+                    var pair = {
+                        controller: controllerName,
+                        controlled: controlledName
+                    };
+                    if(name === "http://pathwaycommons.org/pc2/TemplateReactionRegulation_197a03bd5676253834ad63004ebba258"){
+                        console.log(controlledName,controllerName);
+                    }
+                    if (containsObject(pair, uniqEdge) === false){
+                        uniqEdge.push(pair);
+                        if(name === "http://pathwaycommons.org/pc2/TemplateReactionRegulation_197a03bd5676253834ad63004ebba258"){
+                            console.log(controlledName,controllerName);
+                        }
+                        cy.add({
+                            nodes :[
+                            {
+                                // Controller/source name
+                                data: {
+                                   id: controllerName,
+                                   category: items[controllerId]["http://www.w3.org/1999/02/22-rdf-syntax-ns#type"][0]["value"], // complex, rna, dna...
+                                   IDreac: name,
+                                   provenance: items[controllerId]["http://www.biopax.org/release/biopax-level3.owl#dataSource"][0]["value"]
+                                   //position: { x: i, y: 1+i }
+                                }
+                            },
+                            {
+                                // Controlled/target name
+                                data: {
+                                   id: controlledName,
+                                   category: items[controlledId]["http://www.w3.org/1999/02/22-rdf-syntax-ns#type"][0]["value"],
+                                   IDreac: name,
+                                   provenance: items[object]["http://www.biopax.org/release/biopax-level3.owl#dataSource"][0]["value"]
+                                   //position: { x: 3, y: 3 }
+                                }
+                            }],                    
+                            edges: [{
+                                // Directed edge
+                                data: {
+                                    id: name+"-"+w,
+                                    source: controllerName, //controller
+                                    target: controlledName, // controlled
+                                    category: items[object]["http://www.w3.org/1999/02/22-rdf-syntax-ns#type"][0]["value"],
+                                    type: items[object]["http://www.biopax.org/release/biopax-level3.owl#controlType"][0]["value"] || "type" // activation, inhibition
+                                }   
+                            }]
+                        });
+                    }
                 }
             }
         }
@@ -271,7 +287,7 @@ function graphContent(cy, items) {
 };
 
 /**
- * Add content to graphe
+ * Add content to signaling graphe
  * @param {Cytoscape object} cy
  * @param {array} items
  * @returns {Array|graphContent.uniqEdge}
