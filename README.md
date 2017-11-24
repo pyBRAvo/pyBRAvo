@@ -22,21 +22,53 @@ The SyMeTRIC Data Hub is a web application for biomedical data integration and r
     cd workspace/
     git clone https://gitlab.univ-nantes.fr/gaignard-a/symetric-api-server.git
 
-Install [[see](https://docs.mongodb.com/manual/tutorial/install-mongodb-on-ubuntu/)] and Run mondogb 
+3/ Install [[see](https://docs.mongodb.com/manual/tutorial/install-mongodb-on-ubuntu/)] and Run mondogb 
 
     sudo service mongod start
     
-Build package with maven :
+4/ Build package with maven :
 
     cd symetric-api-server/
     mvn install -Dmaven.test.skip=true
     
+5/ Choose web app or command line :
+
 Run the web appliation 
 
-    java -jar target/datahub-api-1.0-SNAPSHOT-datahub-launcher.jar
+    java -jar target/datahub-api-1.0-SNAPSHOT-bin.jar
 
 If behind a proxy 
 
     java -Dhttp.proxyHost=<proxy> -Dhttp.proxyPort=<port> -jar target/datahub-api-1.0-SNAPSHOT-datahub-launcher.jar
    
 See on http://localhost:8091/
+
+Use it as command line
+
+    java -cp target/datahub-api-1.0-SNAPSHOT-bin.jar fr.symetric.cli.Main -i <input_file> -o <output_file> -f ("rdf" | "turtle") (-n | -d) (-r | -s) -w ('Up' | 'Down')
+         
+         -d,--id             input data are ids COMING SOON
+         -f, --format        output file format: turtle, ttl, rdfxml, rdfjson, jsonld
+         -i,--input <arg>    input csv file name
+         -n,--name           input data are names
+         -o,--output <arg>   output file name
+         -r,--regulation     build regulation network
+         -s,--signaling      build signaling network
+         -w,--way            way of reconstruction {'Up' | 'Down'} - default is set to 'Up'
+
+
+It can be used to build **upstream gene regulation network** with gene names : 
+
+    java -cp target/datahub-api-1.0-SNAPSHOT-bin.jar fr.symetric.cli.Main -i input-name.csv -o output.rdf -f "rdf" -r -n -w 'Up'
+    
+Or it can be used to build upstream gene regulation network with gene IDs : 
+
+    java -cp target/datahub-api-1.0-SNAPSHOT-bin.jar fr.symetric.cli.Main -i input-id.csv -o output.ttl -f "turtle" -r -d
+
+Or it can be used to build **downstream** gene regulation network with gene names : 
+
+    java -cp target/datahub-api-1.0-SNAPSHOT-bin.jar fr.symetric.cli.Main -i input-id.csv -o output.ttl -f "turtle" -r -n -w 'Down'
+    
+It can also be used to build **signaling network** with gene **names** (default upstream): 
+
+    java -cp target/datahub-api-1.0-SNAPSHOT-bin.jar fr.symetric.cli.Main -i input-name.csv -o output.rdf -f "rdf" -s -n -w 'Up'
