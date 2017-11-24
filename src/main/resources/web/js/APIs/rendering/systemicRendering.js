@@ -210,11 +210,6 @@ function graphContent(cy, items) {
     for (var object in items) {
         // Tranform JSON format to Cytoscape JSON format 
         var name = object.toString(); // URI of interaction
-        if( name === "http://pathwaycommons.org/pc2/TemplateReactionRegulation_197a03bd5676253834ad63004ebba258"){
-            console.log(items[name]);
-            console.log(items[items[object]["http://www.biopax.org/release/biopax-level3.owl#controlled"][0]["value"]]["http://www.biopax.org/release/biopax-level3.owl#displayName"][0]["value"]);
-            console.log(items[items[object]["http://www.biopax.org/release/biopax-level3.owl#controlled"][1]["value"]]["http://www.biopax.org/release/biopax-level3.owl#displayName"][0]["value"]);
-        }
         // Check if it is a TemplateReactionRegulation
         if( items[object]["http://www.w3.org/1999/02/22-rdf-syntax-ns#type"][0]["value"] === 'http://www.biopax.org/release/biopax-level3.owl#TemplateReactionRegulation') {
             // PC ids of controllers of the reaction
@@ -234,14 +229,8 @@ function graphContent(cy, items) {
                         controller: controllerName,
                         controlled: controlledName
                     };
-                    if(name === "http://pathwaycommons.org/pc2/TemplateReactionRegulation_197a03bd5676253834ad63004ebba258"){
-                        console.log(controlledName,controllerName);
-                    }
                     if (containsObject(pair, uniqEdge) === false){
                         uniqEdge.push(pair);
-                        if(name === "http://pathwaycommons.org/pc2/TemplateReactionRegulation_197a03bd5676253834ad63004ebba258"){
-                            console.log(controlledName,controllerName);
-                        }
                         cy.add({
                             nodes :[
                             {
