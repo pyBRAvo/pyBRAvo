@@ -145,6 +145,7 @@ function nextLevelRegulation(genesList, cy) {
 function sparqlSignaling(genesList, cy) {
     var endpointURL = rootURL + '/systemic/network';
     var genesJSON = JSON.stringify(genesList);
+    document.getElementById("noResult").style.display = 'none';
     
     $.ajax({
         type: 'GET',
@@ -156,6 +157,11 @@ function sparqlSignaling(genesList, cy) {
         dataType: "json",
         crossDomain: true,
         success: function (data, textStatus, jqXHR) {
+            /**
+             * Hide display
+             */        
+            document.getElementById("sendingQuery").style.display = 'none';
+            document.getElementById("noResult").style.display = 'none';
             // Get valid JSON format
             items = JSON.parse(JSON.stringify(data));            
             // Set content of graph and get list of uniq regulators
@@ -163,10 +169,8 @@ function sparqlSignaling(genesList, cy) {
             // Apply layout on loaded data
             graphLayout(cy, genesList, true);
             /**
-             * Hide / show display
-             */        
-            document.getElementById("sendingQuery").style.display = 'none';
-            document.getElementById("noResult").style.display = 'none';
+             * Show display
+             */ 
             document.getElementById("graphe-legend").style.display = 'block';
             document.getElementById("next-level-signaling").style.display = 'block';
             checkboxContent(toUniq, "signaling");
@@ -249,6 +253,11 @@ function nextLevelSignaling(genesList, cy, firststep) {
                 dataType: "json",
                 crossDomain: true,
                 success: function (datas, textStatus, jqXHR) {
+                    /**
+                    * Hide display
+                    */        
+                    document.getElementById("sendingQuery").style.display = 'none';
+                    document.getElementById("noResult").style.display = 'none';
                     // Get valid JSON format
                     var itemsS = JSON.parse(JSON.stringify(datas));
                     // Load new genes to graphe
@@ -257,10 +266,10 @@ function nextLevelSignaling(genesList, cy, firststep) {
                     var toUniq_signaling = graphContentSignaling(cy,itemsS);
                     // Apply layout
                     graphLayout(cy, genesList, firststep);
-                    // Hide message
-                    document.getElementById("sendingQuery").style.display = 'none';
+                    /**
+                    * Show display
+                    */
                     document.getElementById("graphe-legend").style.display = 'block';
-                    document.getElementById("noResult").style.display = 'none';
                     // Add item to checkbox
                     checkboxContent(toUniq_regulation, "signaling");
                     // Add item to checkbox
@@ -339,6 +348,7 @@ function upstreamJob(genesList, queryType) {
         crossDomain: true,
         success: function (results, textStatus, jqXHR) {
             var featuresAsJson = JSON.parse(results["json"]);
+            document.getElementById("auto-sendingQuery").style.display = 'none';
             if ( isEmpty(featuresAsJson) === true ){
                 document.getElementById("auto-noResult").style.display = 'block';
             }else{
