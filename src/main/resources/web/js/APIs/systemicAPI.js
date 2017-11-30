@@ -26,6 +26,11 @@ function sparqlSysBio(genesList, queryType, cy) {
         dataType: "json",
         crossDomain: true,
         success: function (data, textStatus, jqXHR) {
+            /**
+             * Hide display
+             */        
+            document.getElementById("sendingQuery").style.display = 'none';
+            document.getElementById("noResult").style.display = 'none';
             // Get valid JSON format
             var items = JSON.parse(JSON.stringify(data));  
             // Set content of graph and get list of uniq regulators
@@ -33,10 +38,8 @@ function sparqlSysBio(genesList, queryType, cy) {
             // Apply layout on loaded data
             graphLayout(cy, genesList, true);
             /**
-             * Hide / show display
+             * Show display
              */        
-            document.getElementById("sendingQuery").style.display = 'none';
-            document.getElementById("noResult").style.display = 'none';
             document.getElementById("graphe-legend").style.display = 'block';
             document.getElementById("next-level-regulation").style.display = 'block';
             // Update checkbox content
