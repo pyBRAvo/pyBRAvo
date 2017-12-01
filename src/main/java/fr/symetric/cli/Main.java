@@ -66,11 +66,11 @@ public class Main {
         format.setRequired(true);
         options.addOption(format);
 
-        Option regulation = new Option("r", "regulation", false, "build regulation network");
+        Option regulation = new Option("r", "regulation", false, "build regulatory network");
         regulation.setRequired(false);
         options.addOption(regulation);
 
-        Option signaling = new Option("s", "signaling", false, "build signaling network");
+        Option signaling = new Option("s", "signaling", false, "build signaling network (Downstreaming reconstruction soon available)");
         signaling.setRequired(false);
         options.addOption(signaling);
 
@@ -82,7 +82,7 @@ public class Main {
         name.setRequired(false);
         options.addOption(name);
 
-        Option direction = new Option("w", "way", false, "way of reconstruction {'Up' | 'Down'} - default is set to 'Up'");
+        Option direction = new Option("w", "way", true, "way of reconstruction {'Up' | 'Down'} - default is set to 'Up'");
         direction.setRequired(false);
         options.addOption(direction);
 
@@ -115,31 +115,31 @@ public class Main {
             return;
         }
         if (cmd.hasOption("regulation") && cmd.hasOption("signaling")) {
-            logger.error("Set regulation (-r) OR signaling (-s) network assembly option");
+            logger.error("Set regulatory (-r) OR signaling (-s) network assembly option");
             formatter.printHelp("utility-name", options);
             System.exit(1);
             return;
         } else if (!cmd.hasOption("regulation") && !cmd.hasOption("signaling")) {
-            logger.error("Set regulation (-r) OR signaling (-s) network assembly option");
+            logger.error("Set regulatory (-r) OR signaling (-s) network assembly option");
             formatter.printHelp("utility-name", options);
             System.exit(1);
             return;
         }
         if (!cmd.hasOption("format")) {
-            logger.error("Set output file format (-f) : turtle or rdfxml");
+            logger.error("Set output file format (-f)");
             formatter.printHelp("utility-name", options);
             System.exit(1);
             return;
         }
         String way = "";
-        if (!cmd.hasOption("direction")) {
+        if (!cmd.hasOption("way")) {
             // Default value
             way = "Up";
-        } else if (cmd.hasOption("direction") && cmd.hasOption("signaling")) {
+        } else if (cmd.hasOption("way") && cmd.hasOption("signaling")) {
             // Direction sets to Up when signaling reconstruction
             way = "Up";
         } else {
-            way = cmd.getOptionValue("direction");
+            way = cmd.getOptionValue("way");
         }
         StopWatch sw = new StopWatch();
         sw.start();
@@ -148,7 +148,7 @@ public class Main {
         if (cmd.hasOption("signaling")) {
             // Initial graph with Transcription Factors (TFs)
             Object[] initialResults = initialConstruct(inputFilePath, way, "signaling");
-            System.out.println("Initial graph : DONE");
+            System.out.println("Initial signaling graph : DONE");
             Model initialModel = (Model) initialResults[0];
             geneDone = (List) initialResults[1];
             // Next level of signaling network
@@ -157,11 +157,11 @@ public class Main {
         } else if (cmd.hasOption("regulation")) {
             // Initial graph with Transcription Factors (TFs)
             Object[] initialResults = initialConstruct(inputFilePath, way, "regulation");
-            System.out.println("Initial graph : DONE");
+            System.out.println("Initial regulatory graph : DONE");
             Model initialModel = (Model) initialResults[0];
             geneDone = (List) initialResults[1];
             // Next level of regulation network
-            System.out.println("Run regulation network construction");
+            System.out.println("Run regulatory network construction");
             network = fr.symetric.api.Automatic.upstreamRegulationConstruct(initialModel, initialModel, geneDone, way);
         } else {
             logger.error("Wrong type of network");
@@ -173,8 +173,8 @@ public class Main {
         saveRegulationGraph(network, outputFilePath, formatOut);
         System.out.println("With file " + inputFilePath
                 + "\nResults file written :"
-                + "\n------Reconstruction :" + way
-                + "\n------Nodes :" + geneDone.size());
+                + "\n------Reconstruction : " + way
+                + "\n------Nodes : " + geneDone.size());
         sw.stop();
         System.out.println("------Execution time " + sw.getTime() + " ms");
     }
