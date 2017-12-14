@@ -89,15 +89,15 @@ public class SparqlQuery {
                             +"  ?controller a ?controllerType ; bp:displayName ?controllerName ; bp:dataSource ?controllersource ."
                             +"} WHERE{ \n"
                             + "FILTER( (?controlledName = \""+TF+"\"^^xsd:string) "
-                                + "and (?controllerName != \""+TF+"\"^^xsd:string)"
-                            + "and (str(?source) != \"http://pathwaycommons.org/pc2/mirtarbase\") ) .\n"
+                                + "&& (?controllerName != \""+TF+"\"^^xsd:string) "
+                            + "&& (str(?source) != \"http://pathwaycommons.org/pc2/mirtarbase\") ) .\n"
                             +"?tempReac a bp:TemplateReactionRegulation .\n"
                             +"?tempReac rdf:type ?type ; bp:controlled ?controlled ; bp:controller ?controller ; bp:controlType ?controlType ; bp:dataSource ?source .\n"
                             +"?controlled bp:participant ?participant ; bp:dataSource ?controlledsource .\n"
                             +"?participant bp:displayName ?controlledName; rdf:type ?controlledType .\n"
                             +"?controller bp:displayName ?controllerName ; rdf:type ?controllerType ; bp:dataSource ?controllersource .\n "
-                            +"}"
-                            + "GROUP BY ?controlledName ?controllerName";
+                            +"}";
+//                            + "GROUP BY ?controlledName ?controllerName";
                     String contentType = "application/json";
                     // URI of the SPARQL Endpoint
                     String accessUri = "http://rdf.pathwaycommons.org/sparql";
@@ -279,8 +279,8 @@ public class SparqlQuery {
             +"  ?controller a ?controllerType ; bp:displayName ?controllerName ; bp:dataSource ?controllersource ."
             +"} WHERE{ \n"
             + "FILTER( (?controlledName = \""+b+"\"^^xsd:string) "
-                + "and (?controllerName != \""+b+"\"^^xsd:string)"
-                + "and (str(?source) != \"http://pathwaycommons.org/pc2/mirtarbase\") ) .\n"
+                + "&& (?controllerName != \""+b+"\"^^xsd:string) "
+                + "&& (str(?source) != \"http://pathwaycommons.org/pc2/mirtarbase\") ) .\n"
             +"?tempReac a bp:TemplateReactionRegulation .\n"
             +"?tempReac rdf:type ?type ; bp:controlled ?controlled ; bp:controller ?controller ; bp:controlType ?controlType ; bp:dataSource ?source .\n"
             +"?controlled bp:participant ?participant ; bp:dataSource ?controlledsource .\n"
@@ -305,8 +305,8 @@ public class SparqlQuery {
             +"  ?controller a ?controllerType ; bp:displayName ?controllerName ; bp:dataSource ?controllersource ."
             +"} WHERE{ \n"
             + "FILTER( (?controlledName != \""+b+"\"^^xsd:string) "
-                + "and (?controllerName = \""+b+"\"^^xsd:string)"
-                + "and (str(?source) != \"http://pathwaycommons.org/pc2/mirtarbase\") ) .\n"
+                + "&& (?controllerName = \""+b+"\"^^xsd:string) "
+                + "&& (str(?source) != \"http://pathwaycommons.org/pc2/mirtarbase\") ) .\n"
             +"?tempReac a bp:TemplateReactionRegulation .\n"
             +"?tempReac rdf:type ?type ; bp:controlled ?controlled ; bp:controller ?controller ; bp:controlType ?controlType ; bp:dataSource ?source .\n"
             +"?controlled bp:participant ?participant ; bp:dataSource ?controlledsource .\n"
@@ -345,7 +345,7 @@ public class SparqlQuery {
             "  ?participant bp:displayName ?participantName ; rdf:type ?participantType ; bp:dataSource ?participantSource .\n" +
             "  ?right bp:displayName ?rightName ; rdf:type ?rightType ; bp:dataSource ?rightSource ." +
             "  VALUES ?rightName { \""+b+"\"^^xsd:string }\n" +
-            "}order by ?catalysis";
+            "} order by ?catalysis";
         return ISquery;
     }
 
