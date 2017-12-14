@@ -10,11 +10,13 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
 import javax.ws.rs.core.UriBuilderException;
+import org.apache.commons.lang3.time.StopWatch;
 import org.apache.jena.query.Query;
 import org.apache.jena.query.QueryExecution;
 import org.apache.jena.query.QueryExecutionFactory;
@@ -24,6 +26,7 @@ import org.apache.jena.query.ResultSet;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.RDFNode;
+import org.apache.log4j.Logger;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
@@ -31,10 +34,12 @@ import org.codehaus.jettison.json.JSONObject;
 /**
  *
  * @author mlefebvre
- * 
+ *
  */
 public class SparqlQuery {
-    
+
+    public static Logger logger = Logger.getLogger(SparqlQuery.class);
+
     /**
      *
      * @param listModel
@@ -44,6 +49,11 @@ public class SparqlQuery {
      * @return
      */
     public static Model upstreamRegulationConstructQuery(Model listModel, Model tempModel, List genesDone, String direction) {
+
+        StopWatch sw = new StopWatch();
+        sw.start();
+        int alreadyExplored = genesDone.size();
+
         // SPARQL Query to get controller of a model (e.g. gene)
         String queryStringS = "PREFIX bp: <http://www.biopax.org/release/biopax-level3.owl#>\n" +
             "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n" +
@@ -67,6 +77,7 @@ public class SparqlQuery {
                 // Research not done yet
                 if( !genesDone.contains(TF) ){
                     genesDone.add(TF);
+                    logger.info("exploring " + TF);
                     // SPARQL Query to get all transcription factors for a gene
                     // An error will be sent if TF contains an apostrophe 
                     String queryStringC = "PREFIX bp: <http://www.biopax.org/release/biopax-level3.owl#>\n"
@@ -77,9 +88,9 @@ public class SparqlQuery {
                             +"  ?controlled a ?controlledType ; bp:displayName ?controlledName ; bp:dataSource ?controlledsource .\n"
                             +"  ?controller a ?controllerType ; bp:displayName ?controllerName ; bp:dataSource ?controllersource ."
                             +"} WHERE{ \n"
-                            + "FILTER( (?controlledName = '"+TF+"'^^xsd:string) "
-                                + "and (?controllerName != '"+TF+"'^^xsd:string)"
-                                + "and (str(?source) != 'http://pathwaycommons.org/pc2/mirtarbase') ) .\n"
+                            + "FILTER( (?controlledName = \""+TF+"\"^^xsd:string) "
+                                + "and (?controllerName != \""+TF+"\"^^xsd:string)"
+                            + "and (str(?source) != \"http://pathwaycommons.org/pc2/mirtarbase\") ) .\n"
                             +"?tempReac a bp:TemplateReactionRegulation .\n"
                             +"?tempReac rdf:type ?type ; bp:controlled ?controlled ; bp:controller ?controller ; bp:controlType ?controlType ; bp:dataSource ?source .\n"
                             +"?controlled bp:participant ?participant ; bp:dataSource ?controlledsource .\n"
@@ -92,8 +103,8 @@ public class SparqlQuery {
                     String accessUri = "http://rdf.pathwaycommons.org/sparql";
 
                     URI requestURI = javax.ws.rs.core.UriBuilder.fromUri(accessUri)
-                               .queryParam("query", "{query}")
-                               .queryParam("format", "{format}")
+                            .queryParam("query", "{query}")
+                            .queryParam("format", "{format}")
                                .build(queryStringC, contentType);
                     URLConnection con = requestURI.toURL().openConnection();
                     con.addRequestProperty("Accept", contentType);
@@ -114,9 +125,145 @@ public class SparqlQuery {
         }catch(IOException | IllegalArgumentException | UriBuilderException e){
             System.err.println(e.getMessage());
         }
+        logger.info("explored " + genesDone.size() + " biological controllers (BC)");
+        int newlyExplored = genesDone.size() - alreadyExplored;
+        float throughput = newlyExplored * 1000 / sw.getTime();
+        logger.info("exploration throughput: " + throughput + " BC per second");
+        return resultTemp;
+    }
+
+    /**
+     *
+     * @param listModel
+     * @param tempModel
+     * @param genesDone
+     * @param direction ; way of reconstruction
+     * @return
+     */
+    public static Model upstreamRegulationConstructQueryOptimized(Model listModel, Model tempModel, List genesDone, String direction) {
+        StopWatch sw = new StopWatch();
+        sw.start();
+        int alreadyExplored = genesDone.size();
+
+        // SPARQL Query to get controller of a model (e.g. gene)
+        String queryStringS = "PREFIX bp: <http://www.biopax.org/release/biopax-level3.owl#>\n"
+                + "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n"
+                + "SELECT DISTINCT ?name\n"
+                + "WHERE{ "
+                + "?x bp:controller ?controller .\n"
+                + "?controller bp:displayName ?name"
+                + " }";
+        Model resultTemp = ModelFactory.createDefaultModel();
+        // Create query
+        Query queryS = QueryFactory.create(queryStringS);
+        QueryExecution qex = QueryExecutionFactory.create(queryS, listModel);
+        // Execute select
+        ResultSet TFs = qex.execSelect();
+        try {
+            // For each regulators
+            int sliceSize = 50 ;
+            int ctrlersCnt = 0 ;
+            String ctrlers = "";
+            String valuesConstraint = "";
+            
+            for (; TFs.hasNext();) {
+                QuerySolution soln = TFs.nextSolution();
+                StringBuilder result = new StringBuilder();
+                RDFNode TF = soln.get("name");       // Get a result variable by name (e.g. gene)
+                // Research not done yet
+
+                if (!genesDone.contains(TF)) {
+                    genesDone.add(TF);
+                    ctrlers += " \"" + TF.toString() + "\"^^xsd:string ";
+                    ctrlersCnt++;
+                    if (ctrlersCnt % sliceSize == 0) {
+                        resultTemp = exploreController(ctrlers);
+                        ctrlersCnt = 0;
+                        ctrlers = "";
+                    }
+                }
+            } // End for loop
+            
+            if (ctrlersCnt > 0) {
+                resultTemp = exploreController(ctrlers);
+            }
+            
+        } catch (IOException | IllegalArgumentException | UriBuilderException e) {
+            System.err.println(e.getMessage());
+        }
+        logger.info("explored " + genesDone.size() + " biological controllers (BC)");
+        int newlyExplored = genesDone.size() - alreadyExplored;
+        float throughput = newlyExplored * 1000 / sw.getTime();
+        logger.info("exploration throughput: " + throughput + " BC per second");
         return resultTemp;
     }
     
+    /**
+     * 
+     * @param ctrlers
+     * @return
+     * @throws MalformedURLException
+     * @throws IOException 
+     */
+    public static Model exploreController(String ctrlers) throws MalformedURLException, IOException {
+        logger.info("exploring " + ctrlers);
+        Model resultTemp = ModelFactory.createDefaultModel();
+        StringBuilder result = new StringBuilder();
+        String valuesConstraint = "VALUES ?controlledName {" + ctrlers + "} . \n";
+
+        String queryStringC = "PREFIX bp: <http://www.biopax.org/release/biopax-level3.owl#>\n"
+                + "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n"
+                + "PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> \n"
+                + "CONSTRUCT {\n"
+                + "  ?tempReac rdf:type ?type ; bp:controlled ?controlled ; bp:controller ?controller ; bp:dataSource ?source ; bp:controlType ?controlType .\n"
+                + "  ?controlled a ?controlledType ; bp:displayName ?controlledName ; bp:dataSource ?controlledsource .\n"
+                + "  ?controller a ?controllerType ; bp:displayName ?controllerName ; bp:dataSource ?controllersource ."
+                + "} WHERE{ \n"
+                + valuesConstraint 
+                + " FILTER ( (str(?source) != \"http://pathwaycommons.org/pc2/mirtarbase\") ) . \n"
+                + "?tempReac a bp:TemplateReactionRegulation .\n"
+                + "?tempReac rdf:type ?type ; "
+                + "          bp:controlled ?controlled ; "
+                + "          bp:controller ?controller ; "
+                + "          bp:controlType ?controlType ; "
+                + "          bp:dataSource ?source .\n"
+                + "?controlled bp:participant ?participant ; "
+                + "            bp:dataSource ?controlledsource .\n"
+                + "?participant bp:displayName ?controlledName ; "
+                + "             rdf:type ?controlledType .\n"
+                + "?controller bp:displayName ?controllerName ; "
+                + "            rdf:type ?controllerType ; "
+                + "            bp:dataSource ?controllersource .\n "
+                + "}";
+//                + "GROUP BY ?controlledName ?controllerName";
+        String contentType = "application/json";
+        // URI of the SPARQL Endpoint
+        String accessUri = "http://rdf.pathwaycommons.org/sparql";
+        
+//        logger.info("with query : ");
+//        System.out.println(queryStringC);
+
+        URI requestURI = javax.ws.rs.core.UriBuilder.fromUri(accessUri)
+                .queryParam("query", "{query}")
+                .queryParam("format", "{format}")
+                .build(queryStringC, contentType);
+        URLConnection con = requestURI.toURL().openConnection();
+        con.addRequestProperty("Accept", contentType);
+        InputStream in = con.getInputStream();
+
+        // Read result
+        BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+
+        String lineResult;
+        while ((lineResult = reader.readLine()) != null) {
+            result.append(lineResult);
+        }
+        // Prepare model
+        ByteArrayInputStream bais = new ByteArrayInputStream(result.toString().getBytes());
+        resultTemp.read(bais, null, "RDF/JSON");
+        return resultTemp;
+    }
+
     /**
      *
      * @param b {String} Entity name
@@ -131,9 +278,9 @@ public class SparqlQuery {
             +"  ?controlled a ?controlledType ; bp:displayName ?controlledName ; bp:dataSource ?controlledsource .\n"
             +"  ?controller a ?controllerType ; bp:displayName ?controllerName ; bp:dataSource ?controllersource ."
             +"} WHERE{ \n"
-            + "FILTER( (?controlledName = '"+b+"'^^xsd:string) "
-                + "and (?controllerName != '"+b+"'^^xsd:string)"
-                + "and (str(?source) != 'http://pathwaycommons.org/pc2/mirtarbase') ) .\n"
+            + "FILTER( (?controlledName = \""+b+"\"^^xsd:string) "
+                + "and (?controllerName != \""+b+"\"^^xsd:string)"
+                + "and (str(?source) != \"http://pathwaycommons.org/pc2/mirtarbase\") ) .\n"
             +"?tempReac a bp:TemplateReactionRegulation .\n"
             +"?tempReac rdf:type ?type ; bp:controlled ?controlled ; bp:controller ?controller ; bp:controlType ?controlType ; bp:dataSource ?source .\n"
             +"?controlled bp:participant ?participant ; bp:dataSource ?controlledsource .\n"
@@ -142,7 +289,7 @@ public class SparqlQuery {
             +"}";
         return IURquery;
     }
-    
+
     /**
      *
      * @param b {String} Entity name
@@ -157,9 +304,9 @@ public class SparqlQuery {
             +"  ?controlled a ?controlledType ; bp:displayName ?controlledName ; bp:dataSource ?controlledsource .\n"
             +"  ?controller a ?controllerType ; bp:displayName ?controllerName ; bp:dataSource ?controllersource ."
             +"} WHERE{ \n"
-            + "FILTER( (?controlledName != '"+b+"'^^xsd:string) "
-                + "and (?controllerName = '"+b+"'^^xsd:string)"
-                + "and (str(?source) != 'http://pathwaycommons.org/pc2/mirtarbase') ) .\n"
+            + "FILTER( (?controlledName != \""+b+"\"^^xsd:string) "
+                + "and (?controllerName = \""+b+"\"^^xsd:string)"
+                + "and (str(?source) != \"http://pathwaycommons.org/pc2/mirtarbase\") ) .\n"
             +"?tempReac a bp:TemplateReactionRegulation .\n"
             +"?tempReac rdf:type ?type ; bp:controlled ?controlled ; bp:controller ?controller ; bp:controlType ?controlType ; bp:dataSource ?source .\n"
             +"?controlled bp:participant ?participant ; bp:dataSource ?controlledsource .\n"
@@ -168,7 +315,7 @@ public class SparqlQuery {
             +"}";
         return IDRquery;
     }
-    
+
     /**
      *
      * @param b {String} Entity name
@@ -191,17 +338,17 @@ public class SparqlQuery {
             "    ?catalysis bp:controller ?controller ; bp:controlType ?controlType .\n" +
             "    ?controller bp:displayName ?controllerName ; rdf:type ?controllerType ; bp:dataSource ?controllerSource ." +
             "  }\n" +
-            "  FILTER (str(?source) != 'http://pathwaycommons.org/pc2/mirtarbase')" +
+            "  FILTER (str(?source) != \"http://pathwaycommons.org/pc2/mirtarbase\")" +
             "  ?catalysis bp:controlled* ?reaction .\n" +
             "  ?reaction bp:right ?right ; bp:dataSource ?source ; rdf:type ?type .\n" +
             "  ?reaction bp:left|bp:right ?participant .\n" +
             "  ?participant bp:displayName ?participantName ; rdf:type ?participantType ; bp:dataSource ?participantSource .\n" +
             "  ?right bp:displayName ?rightName ; rdf:type ?rightType ; bp:dataSource ?rightSource ." +
-            "  VALUES ?rightName { '"+b+"'^^xsd:string }\n" +
+            "  VALUES ?rightName { \""+b+"\"^^xsd:string }\n" +
             "}order by ?catalysis";
         return ISquery;
     }
-    
+
     /**
      * Id to Name Query
      * @author Marie Lefebvre
@@ -221,22 +368,22 @@ public class SparqlQuery {
                 "SELECT DISTINCT ?name\n" +
                 "WHERE{\n" +
                 "  ?a bp:id ?b .\n" +
-                "  FILTER ( ?b = '"+idList.get(i).toString()+"'^^xsd:string )\n" +
+                "  FILTER ( ?b = \""+idList.get(i).toString()+"\"^^xsd:string )\n" +
                 "  ?c ?d ?a .\n" +
                 "  ?e ?f ?c .\n" +
                 "  ?e bp:displayName ?name .\n" +
                 "}\n";
             System.out.println("Query ID created");
-            
+
             StringBuilder result = new StringBuilder();
             // Parsing json is more simple than XML
             String contentType = "application/json";
             // URI of the SPARQL Endpoint
             String accessUri = "http://rdf.pathwaycommons.org/sparql";
             URI requestURI = javax.ws.rs.core.UriBuilder.fromUri(accessUri)
-                       .queryParam("query", "{query}")
-                       .queryParam("format", "{format}")
-                       .build(idQuery, contentType);
+                    .queryParam("query", "{query}")
+                    .queryParam("format", "{format}")
+                    .build(idQuery, contentType);
             URLConnection con = requestURI.toURL().openConnection();
             con.addRequestProperty("Accept", contentType);
             InputStream in = con.getInputStream();
