@@ -15,6 +15,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URI;
 import java.net.URLConnection;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import javax.ws.rs.core.UriBuilderException;
@@ -173,10 +176,10 @@ public class Main {
         saveRegulationGraph(network, outputFilePath, formatOut);
         System.out.println("With file " + inputFilePath
                 + "\nResults file written :"
-                + "\n------Reconstruction : " + way
-                + "\n------Nodes : " + geneDone.size());
+                + "\n------ Reconstruction : " + way
+                + "\n------ Nodes : " + geneDone.size());
         sw.stop();
-        System.out.println("------Execution time " + sw.getTime() + " ms");
+        System.out.println("------ Execution time " + sw.getTime() + " ms");
     }
 
     /**
@@ -208,11 +211,11 @@ public class Main {
                     if (direction.equals("Up")) {
                         // SPARQL Query to get all transcription factors for a gene
                         queryStringC = fr.symetric.api.SparqlQuery.initialUpRegulationQuery(b[0]);
-                    }else if(direction.equals("Down")) {
+                    } else if (direction.equals("Down")) {
                         // SPARQL Query to get all genes regulated by the given genes
                         queryStringC = fr.symetric.api.SparqlQuery.initialDownRegulationQuery(b[0]);
                     }
-                }else{
+                } else {
                     // SPARQL Query to get all entities that have reaction link with the given genes (i.e. signaling)
                     queryStringC = fr.symetric.api.SparqlQuery.initialSignalingQuery(b[0]);
                 }
@@ -341,11 +344,50 @@ public class Main {
                 RDFDataMgr.write(new FileOutputStream(fileName), constructModel, Lang.RDFJSON);
             } else if (format.equals("jsonld")) {
                 RDFDataMgr.write(new FileOutputStream(fileName), constructModel, Lang.JSONLD);
+            } else if (format.equals("sif")) {
+                convertToSIF(constructModel, outputFilePath);
             } else {
                 RDFDataMgr.write(new FileOutputStream(fileName), constructModel, Lang.JSONLD);
             }
         } catch (FileNotFoundException e) {
             System.out.println("Save as file error");
+            logger.error(e);
+        }
+    }
+
+    public static void convertToSIF(Model constructModel, String outputFilePath) {
+        Path path = Paths.get(outputFilePath);
+
+        String querySIF = "PREFIX bp: <http://www.biopax.org/release/biopax-level3.owl#>\n"
+                + "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n"
+                + "SELECT DISTINCT ?left_name ?type ?right_name "
+                + "WHERE{ "
+                + "     ?reac bp:controller ?left .\n"
+                + "     ?reac bp:controlled ?right .\n"
+                + "     ?reac bp:controlType ?type .\n"
+                + "     ?left bp:displayName ?left_name .\n"
+                + "     ?right bp:displayName ?right_name .\n"
+                + "}";
+        // Create query
+        Query queryS = QueryFactory.create(querySIF);
+        QueryExecution qex = QueryExecutionFactory.create(queryS, constructModel);
+        // Execute select
+        ResultSet SIF = qex.execSelect();
+
+        Model resultTemp = ModelFactory.createDefaultModel();
+        // For each regulators
+        StringBuilder lines = new StringBuilder();
+        for (; SIF.hasNext();) {
+            QuerySolution soln = SIF.nextSolution();
+            lines.append(soln.get("left_name").toString() + "\t");
+            lines.append(soln.get("type").toString() + "\t");
+            lines.append(soln.get("right_name").toString());
+            lines.append("\n");
+        }
+        try {
+            Files.write(path, lines.toString().getBytes());
+        } catch (IOException e) {
+            System.out.println("error while saving file");
             logger.error(e);
         }
     }
