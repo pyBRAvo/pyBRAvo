@@ -156,6 +156,7 @@ public class Automatic {
         if(listModel.isEmpty()){
             return tempModel;
         }
+//        Model resultTemp = fr.symetric.api.SparqlQuery.upstreamRegulationConstructQueryOptimized(listModel, tempModel, genesDone, direction);
         Model resultTemp = fr.symetric.api.SparqlQuery.upstreamRegulationConstructQuery(listModel, tempModel, genesDone, direction);
         tempModel.add(resultTemp);
         Model finalModel= upstreamRegulationConstruct(resultTemp, tempModel, genesDone, direction);
