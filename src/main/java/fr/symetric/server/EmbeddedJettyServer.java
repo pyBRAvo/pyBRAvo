@@ -30,7 +30,6 @@ import org.mortbay.jetty.Server;
 import org.mortbay.jetty.handler.ContextHandler;
 import org.mortbay.jetty.handler.HandlerList;
 import org.mortbay.jetty.handler.ResourceHandler;
-import org.mortbay.jetty.security.SslSelectChannelConnector;
 import org.mortbay.jetty.servlet.Context;
 import org.mortbay.jetty.servlet.ServletHolder;
 
@@ -43,6 +42,7 @@ public class EmbeddedJettyServer {
 
     private static Logger logger = Logger.getLogger(EmbeddedJettyServer.class);
     private static String dataPath = null;
+    private static int serverPort = 8091;
 //    private static ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(5);
 
     public static void main(String args[]) throws Exception {
@@ -68,7 +68,7 @@ public class EmbeddedJettyServer {
         options.addOption(versionOpt);
 
         String header = "Once launched, the server can be managed through a web user interface, available at http://localhost:<PortNumber>\n\n";
-        String footer = "\nPlease report any issue to alban.gaignard@cnrs.fr";
+        String footer = "\nPlease report any issue to alban.gaignard@univ-nantes.fr";
 
         try {
             CommandLineParser parser = new BasicParser();
@@ -79,7 +79,7 @@ public class EmbeddedJettyServer {
                 System.exit(0);
             }
             if (cmd.hasOption("p")) {
-                DatahubUtils.setServerPort(Integer.parseInt(cmd.getOptionValue("p")));
+                serverPort = Integer.parseInt(cmd.getOptionValue("p"));
             }
             if (cmd.hasOption("v")) {
                 logger.info("version 0.0.1");
@@ -92,7 +92,7 @@ public class EmbeddedJettyServer {
             }
 
             URI webappUri = EmbeddedJettyServer.extractResourceDir("web", true);
-            Server server = new Server(DatahubUtils.getServerPort());
+            Server server = new Server(serverPort);
 
 //            SslSelectChannelConnector connector = new SslSelectChannelConnector();
 //            connector.setReuseAddress(false);
@@ -104,7 +104,6 @@ public class EmbeddedJettyServer {
 //            connector.setPassword("symetric");
 //            connector.setPort(DatahubUtils.getServerPort());
 //            server.addConnector(connector);
-
             ServletHolder jerseyServletHolder = new ServletHolder(ServletContainer.class);
             jerseyServletHolder.setInitParameter("com.sun.jersey.config.property.resourceConfigClass", "com.sun.jersey.api.core.PackagesResourceConfig");
             jerseyServletHolder.setInitParameter("com.sun.jersey.config.property.packages", "fr.symetric.api");
@@ -119,7 +118,6 @@ public class EmbeddedJettyServer {
 //            logger.info("SyMeTRIC sandbox API started on http://localhost:" + DatahubUtils.getServerPort() + "/sandbox");
 //            logger.info("SyMeTRIC queryAPI started on http://localhost:" + DatahubUtils.getServerPort() + "/query");
 //            logger.info("----------------------------------------------");
-
             ResourceHandler resource_handler = new ResourceHandler();
             resource_handler.setWelcomeFiles(new String[]{"index.html"});
             resource_handler.setResourceBase(webappUri.getRawPath());
@@ -128,7 +126,7 @@ public class EmbeddedJettyServer {
             staticContextHandler.setContextPath("/");
             staticContextHandler.setHandler(resource_handler);
             logger.info("----------------------------------------------");
-            logger.info("SyMeTRIC sandbox webapp UI started on http://"+InetAddress.getLocalHost().getHostAddress()+":" + DatahubUtils.getServerPort());
+            logger.info("SyMeTRIC sandbox webapp UI started on http://" + InetAddress.getLocalHost().getHostAddress() + ":" + serverPort);
             logger.info("----------------------------------------------");
 
             HandlerList handlers = new HandlerList();
