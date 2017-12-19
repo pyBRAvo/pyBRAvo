@@ -8,15 +8,6 @@
 var rootURL = "http://" + window.location.host;
 console.log("Connecting to the SyMeTRIC Data API " + rootURL);
 
-var EventBus = _.extend({}, Backbone.Events);
-var EVT_INIT = 'init';
-var EVT_LOGIN = 'login';
-var EVT_LOGOUT = 'logout';
-var EVT_LOADING = 'loading';
-var EVT_FINNISHED = 'finnished';
-var EVT_PROV_WORKING = 'prov working';
-var EVT_PROV_DONE = 'prov done';
-
 
 ////////////////////////////////////////////
 // Web app views
@@ -45,59 +36,27 @@ var myWelcomeView = new WelcomeView();
 //*************************************
 
 $(document).ready(function () {
-
-    EventBus.trigger(EVT_INIT);
-
-    (function checkSessionValidity() {
-        var sid = readCookie("sid");
-        console.log("Checking session " + sid + " validity for auto logout.");
-
-        $.ajax({
-            url: rootURL + "/sandbox/isactive",
-            type: "GET",
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                'session-id': sid
-            },
-            dataType: "text",
-            complete: setTimeout(function () {
-                checkSessionValidity();
-            }, 180000), 
-            timeout: 2000,
-            success: function (data) {
-                if (data.indexOf("true") > -1) {
-                    EventBus.trigger(EVT_LOGIN, sid);
-                } else {
-//                    infoWarning("You have been disconnedted due to inactive session.")
-                    EventBus.trigger(EVT_LOGOUT);
-                }
-            },
-            error: function (jqXHR, textStatus, errorThrown) {
-                console.log(textStatus);
-            }
-        })
-    })();
-
-    $('#demo-ld-menu').click(function () {
-        if (! $("#demo-ld-menu").hasClass("disabled")) {
-            myDemoEpidemioView.render();
-        }
-    });
-
-    $('#demo-wf-menu').click(function () {
-        if (! $("#demo-wf-menu").hasClass("disabled")) {
-            myDemoProvView.render();
-        }
-    });
-
-    $('#demo-sb-menu').click(function () {
-        if (! $("#demo-sb-menu").hasClass("disabled")) {
-            myDemoSysbioView.render();
-        }
-    });
-    
-    $('[data-toggle="tooltip"]').tooltip(); 
+//
+//    $('#demo-ld-menu').click(function () {
+//        if (! $("#demo-ld-menu").hasClass("disabled")) {
+//            myDemoEpidemioView.render();
+//        }
+//    });
+//
+//    $('#demo-wf-menu').click(function () {
+//        if (! $("#demo-wf-menu").hasClass("disabled")) {
+//            myDemoProvView.render();
+//        }
+//    });
+//
+//    $('#demo-sb-menu').click(function () {
+//        if (! $("#demo-sb-menu").hasClass("disabled")) {
+//            myDemoSysbioView.render();
+//        }
+//    });
+//    
+//    $('[data-toggle="tooltip"]').tooltip(); 
+    myWelcomeView.render();
 
 });
 
@@ -106,113 +65,113 @@ $(document).ready(function () {
 // Web app util functions
 ////////////////////////////////////////////
 
-EventBus.on(EVT_INIT, function () {
-    console.log("EVT_INIT");
-
-    var myLoginMenu = '<li class="dropdown" id="menuLogin"> \n\
-                                <a class="dropdown-toggle" href="#" data-toggle="dropdown" id="navLogin">Login</a> \n\
-                                <!--<div class="dropdown-menu" style="padding:17px; width: 300px; ">--> \n\
-                                <div class="dropdown-menu" style="padding:17px; "> \n\
-                                    <div class="container-fluid"> \n\
-                                        <form class="form" role="form" id="formLogin"> \n\
-                                            <div class="form-group-sm"> \n\
-                                                <input name="username" id="emailField" type="text" placeholder="Username" size="30">  \n\
-                                            </div> \n\
-                                            <br> \n\
-                                            <div class="form-group-sm"> \n\
-                                                <input name="password" id="passwordField" type="password" placeholder="Password" size="30"><br> \n\
-                                            </div> \n\
-                                            <br> \n\
-                                            <div class="form-group-sm"> \n\
-                                                <p class="valign">Don\'t have an account yet ? <a class="waves-effect waves-light" id="registerBtn">register</a></p> \n\
-                                                <span id="loginInfo" class="red-text text-darken-2"></span> \n\
-                                            </div> \n\
-                                            <br> \n\
-                                            <div class="form-group-sm"> \n\
-                                                <button type="button" id="loginBtn" class="btn btn-sm">Login</button> \n\
-                                            </div> \n\
-                                        </form> \n\
-                                    </div> \n\
-                                </div> \n\
-                            </li>';
-
-    $('#userMenu').html(myLoginMenu);
-
-    $('#loginInfo').html('');
-    $('#emailField').val('');
-    $('#passwordField').val('');
-
-    $('#loginBtn').click(function () {
-        e = $('#emailField').val();
-        p = $('#passwordField').val();
-        if ((e.length === 0) || (p.length === 0)) {
-            loginInfo("Please fill the login and password fields.");
-        } else {
-            login(e, p);
-        }
-    });
-
-    $('#registerBtn').click(function () {
-        e = $('#emailField').val();
-        p = $('#passwordField').val();
-        if ((e.length === 0) || (p.length === 0)) {
-            loginInfo("Please fill the login and password fields.");
-        } else {
-            register(e, p);
-        }
-    });
-
-    //desactivate the demos
-    $("#demo-ld-menu").addClass("disabled");
-    $("#demo-sb-menu").addClass("disabled");
-    $("#demo-om-menu").addClass("disabled");
-    $("#demo-wf-menu").addClass("disabled");
-
-    //render the welcome panel
-    myWelcomeView.render();    
-});
-
-EventBus.on(EVT_LOGIN, function (sessionId) {
-    console.log("EVT_LOGIN");
-    if (!sessionId) {
-        console.log("DELETING COOKIE !!");
-    }
-    createCookie("sid", sessionId, 7);
-
-
-    var myMenu = '<li class="dropdown"> <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-user"></span></a> \n\
-                        <ul class="dropdown-menu"> \n\
-                            <li><a href="#!">Profile</a></li> \n\
-                            <li class="divider"></li> \n\
-                            <li><a id="logoutBtn">Logout</a></li> \n\
-                        </ul>\n\
-                    </li>';
-
-    $('#userMenu').html(myMenu);
-
-//    $('.dropdown-toggle').dropdown();
-
-    $('#logoutBtn').click(function () {
-        logout();
-    });
-
-    $('#loginInfo').html('');
-    $('#emailField').val('');
-    $('#passwordField').val('');
-
-    //activate the demos
-    $("#demo-ld-menu").removeClass("disabled");
-    $("#demo-sb-menu").removeClass("disabled");
-//    $("#demo-om-menu").removeClass("disabled");
-    $("#demo-wf-menu").removeClass("disabled");
-});
-
-EventBus.on(EVT_LOGOUT, function () {
-    console.log("EVT_LOGOUT");
-    eraseCookie("sid");
-
-    EventBus.trigger(EVT_INIT);
-});
+//EventBus.on(EVT_INIT, function () {
+//    console.log("EVT_INIT");
+//
+//    var myLoginMenu = '<li class="dropdown" id="menuLogin"> \n\
+//                                <a class="dropdown-toggle" href="#" data-toggle="dropdown" id="navLogin">Login</a> \n\
+//                                <!--<div class="dropdown-menu" style="padding:17px; width: 300px; ">--> \n\
+//                                <div class="dropdown-menu" style="padding:17px; "> \n\
+//                                    <div class="container-fluid"> \n\
+//                                        <form class="form" role="form" id="formLogin"> \n\
+//                                            <div class="form-group-sm"> \n\
+//                                                <input name="username" id="emailField" type="text" placeholder="Username" size="30">  \n\
+//                                            </div> \n\
+//                                            <br> \n\
+//                                            <div class="form-group-sm"> \n\
+//                                                <input name="password" id="passwordField" type="password" placeholder="Password" size="30"><br> \n\
+//                                            </div> \n\
+//                                            <br> \n\
+//                                            <div class="form-group-sm"> \n\
+//                                                <p class="valign">Don\'t have an account yet ? <a class="waves-effect waves-light" id="registerBtn">register</a></p> \n\
+//                                                <span id="loginInfo" class="red-text text-darken-2"></span> \n\
+//                                            </div> \n\
+//                                            <br> \n\
+//                                            <div class="form-group-sm"> \n\
+//                                                <button type="button" id="loginBtn" class="btn btn-sm">Login</button> \n\
+//                                            </div> \n\
+//                                        </form> \n\
+//                                    </div> \n\
+//                                </div> \n\
+//                            </li>';
+//
+//    $('#userMenu').html(myLoginMenu);
+//
+//    $('#loginInfo').html('');
+//    $('#emailField').val('');
+//    $('#passwordField').val('');
+//
+//    $('#loginBtn').click(function () {
+//        e = $('#emailField').val();
+//        p = $('#passwordField').val();
+//        if ((e.length === 0) || (p.length === 0)) {
+//            loginInfo("Please fill the login and password fields.");
+//        } else {
+//            login(e, p);
+//        }
+//    });
+//
+//    $('#registerBtn').click(function () {
+//        e = $('#emailField').val();
+//        p = $('#passwordField').val();
+//        if ((e.length === 0) || (p.length === 0)) {
+//            loginInfo("Please fill the login and password fields.");
+//        } else {
+//            register(e, p);
+//        }
+//    });
+//
+//    //desactivate the demos
+//    $("#demo-ld-menu").addClass("disabled");
+//    $("#demo-sb-menu").addClass("disabled");
+//    $("#demo-om-menu").addClass("disabled");
+//    $("#demo-wf-menu").addClass("disabled");
+//
+//    //render the welcome panel
+//    myWelcomeView.render();    
+//});
+//
+//EventBus.on(EVT_LOGIN, function (sessionId) {
+//    console.log("EVT_LOGIN");
+//    if (!sessionId) {
+//        console.log("DELETING COOKIE !!");
+//    }
+//    createCookie("sid", sessionId, 7);
+//
+//
+//    var myMenu = '<li class="dropdown"> <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-user"></span></a> \n\
+//                        <ul class="dropdown-menu"> \n\
+//                            <li><a href="#!">Profile</a></li> \n\
+//                            <li class="divider"></li> \n\
+//                            <li><a id="logoutBtn">Logout</a></li> \n\
+//                        </ul>\n\
+//                    </li>';
+//
+//    $('#userMenu').html(myMenu);
+//
+////    $('.dropdown-toggle').dropdown();
+//
+//    $('#logoutBtn').click(function () {
+//        logout();
+//    });
+//
+//    $('#loginInfo').html('');
+//    $('#emailField').val('');
+//    $('#passwordField').val('');
+//
+//    //activate the demos
+//    $("#demo-ld-menu").removeClass("disabled");
+//    $("#demo-sb-menu").removeClass("disabled");
+////    $("#demo-om-menu").removeClass("disabled");
+//    $("#demo-wf-menu").removeClass("disabled");
+//});
+//
+//EventBus.on(EVT_LOGOUT, function () {
+//    console.log("EVT_LOGOUT");
+//    eraseCookie("sid");
+//
+//    EventBus.trigger(EVT_INIT);
+//});
 
 // Useful functions for array handling
 Array.prototype.contains = function (a) {
@@ -258,44 +217,44 @@ function htmlDecode(value) {
     return $('<div/>').html(value).text();
 }
 
-function createCookie(name, value, days) {
-    if (days) {
-        var date = new Date();
-        date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
-        var expires = "; expires=" + date.toGMTString();
-    }
-    else
-        var expires = "";
-    document.cookie = name + "=" + value + expires + "; path=/";
-}
-
-function readCookie(name) {
-    var nameEQ = name + "=";
-    var ca = document.cookie.split(';');
-    for (var i = 0; i < ca.length; i++) {
-        var c = ca[i];
-        while (c.charAt(0) == ' ')
-            c = c.substring(1, c.length);
-        if (c.indexOf(nameEQ) == 0)
-            return c.substring(nameEQ.length, c.length);
-    }
-    return null;
-}
-
-function eraseCookie(name) {
-    createCookie(name, "", -1);
-}
+//function createCookie(name, value, days) {
+//    if (days) {
+//        var date = new Date();
+//        date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+//        var expires = "; expires=" + date.toGMTString();
+//    }
+//    else
+//        var expires = "";
+//    document.cookie = name + "=" + value + expires + "; path=/";
+//}
+//
+//function readCookie(name) {
+//    var nameEQ = name + "=";
+//    var ca = document.cookie.split(';');
+//    for (var i = 0; i < ca.length; i++) {
+//        var c = ca[i];
+//        while (c.charAt(0) == ' ')
+//            c = c.substring(1, c.length);
+//        if (c.indexOf(nameEQ) == 0)
+//            return c.substring(nameEQ.length, c.length);
+//    }
+//    return null;
+//}
+//
+//function eraseCookie(name) {
+//    createCookie(name, "", -1);
+//}
 
 ////////////////////////////////
 // HTML rendering
 ////////////////////////////////
 
-function loginInfo(message) {
-    $('#loginInfo').text(message);
-}
-function loginInfoReset() {
-    $('#loginInfo').text();
-}
+//function loginInfo(message) {
+//    $('#loginInfo').text(message);
+//}
+//function loginInfoReset() {
+//    $('#loginInfo').text();
+//}
 
 //
 // TO REMOVE ?

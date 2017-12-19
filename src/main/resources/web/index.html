@@ -8,7 +8,7 @@ and open the template in the editor.
     <head>
         <!--Import materialize.css-->
 
-        <title>SyMeTRIC Data Hub</title>
+        <title>BRAvo portal</title>
         <meta charset="UTF-8">
         <!--Let browser know website is optimized for mobile-->
         <meta name="viewport" content="width=device-width, initial-scale=1"/>
@@ -86,7 +86,56 @@ and open the template in the editor.
             .diamond:after {
                 content: ''; position: absolute; left: -8px; top: 4px; width: 0; height: 0; border: 8px solid transparent; border-top: 10px solid #666;
             }
+            
+            .tools-list-group {
+                border-style: solid;
+                border-width: 1px;
+                border-color: #95a5a6;
+                margin-top: 1.5em;
+                position: relative;
+                padding: 0;
+                width: 40%;
+            }
 
+            .tools-list-group .tools-list-group-text {
+              color: rgb(37, 52, 67);
+              background: #f5f5f5;
+              z-index: 1;
+              top: 0;
+              bottom: 0;
+              left: 0;
+              right: 0;
+              padding: 1em;
+              overflow: hidden;
+              padding: 1.5em;
+              border-right-style: double;
+            }
+            .tools-list-group .tools-list-group-text .tools-list-group-title {
+              margin-bottom: 1.375rem;
+            }
+            .tools-list-group .tools-list-group-item .tools-list-group-item-text .tools-list-group-item-description {
+              text-align: left;
+            }
+            .tools-list-group .tools-list-group-text .tools-list-group-description-footer {
+              position: absolute;
+              margin: 0.5em;
+              right: 1em;
+            }
+            .tools-list-group .tools-list-group-item-meta {
+              display: inline;
+              position: absolute;
+              z-index: 1;
+              top: -5%;
+              right: 60%;
+              bottom: auto;
+              left: auto;
+              padding: 1em;
+            }
+            .item-title {
+                font-weight: bold;
+                font-size: 20px;
+            }
+            
         </style>
 
         <style>
@@ -131,55 +180,12 @@ and open the template in the editor.
                             <span class="icon-bar"></span>
                             <span class="icon-bar"></span>
                         </button>
-                        <a class="navbar-brand">SyMeTRIC data hub</a>
+                        <a class="navbar-brand">BRAvo portal</a>
                     </div>
                     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                         <ul class="nav navbar-nav">
                             <li class="active"><a href="/"><i class="icon-home icon-white"></i> Home</a></li>
-                            <!--                        <li><a href="#">Link</a></li>
-                                                    <li><a href="#">Link</a></li>
-                                                    <li><a href="#">Link</a></li>-->
-                            <li id="demoMenu" class="dropdown">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Demos <b class="caret"></b></a>
-                                <ul class="dropdown-menu">
-                                    <li id="demo-ld-menu"><a href="#">Linked Emidemiology</a></li>
-                                    <li id="demo-sb-menu"><a href="#">Systems Biology</a></li>
-                                    <li id="demo-om-menu"><a href="#">Linked *Omics Data</a></li>
-                                    <li class="divider"></li>
-                                    <!--<li class="navbar-header">Nav header</li>-->
-                                    <li id="demo-wf-menu"><a href="#">Linked Galaxy histories</a></li>
-                                    <!--<li><a href="#">One more separated link</a></li>-->
-                                </ul>
-                            </li>
-                        </ul>
-                        <ul id="userMenu" class="nav navbar-nav navbar-right">
-                            <li class="dropdown" id="menuLogin">
-                                <a class="dropdown-toggle" href="#" data-toggle="dropdown" id="navLogin">Login</a>
-                                <!--<div class="dropdown-menu" style="padding:17px; width: 300px; ">-->
-                                <!--<div class="dropdown-menu" style="padding:17px; ">-->
-                                    <div class="dropdown-menu">
-                                    <div class="container-fluid">
-                                        <form class="form" role="form" id="formLogin"> 
-                                            <div class="form-group-sm">
-                                                <input name="username" id="emailField" type="text" placeholder="Username" size="30"> 
-                                            </div>
-                                            <br>
-                                            <div class="form-group-sm">
-                                                <input name="password" id="passwordField" type="password" placeholder="Password" size="30"><br>
-                                            </div>
-                                            <br>
-                                            <div class="form-group-sm">
-                                                <p class="valign">Don't have an account yet ? <a class="waves-effect waves-light" id="registerBtn">register</a></p>
-                                                <span id="loginInfo" class="red-text text-darken-2"></span>
-                                            </div>
-                                            <br>
-                                            <div class="form-group-sm">
-                                                <button type="button" id="loginBtn" class="btn btn-sm">Login</button>
-                                            </div>
-                                        </form>
-                                    </div>
-                                </div>
-                            </li>
+                            <li><a href="/contact">Contact</a></li>
                         </ul>
                     </div><!-- /.nav-collapse -->
                 </div><!-- /.container -->
@@ -198,32 +204,6 @@ and open the template in the editor.
 
             </div>
         </main>
-
-<!--                <footer class="footer">
-                    <div class="container-fluid" >
-                        <div class="row">
-                            <div class="col-sm-6">
-                                <h5 class="white-text">SyMeTRIC</h5>
-                                <p class="grey-text text-lighten-4">is a Systems Medicine project funded by the Pays de la Loire french region...<p>
-                            </div>
-                            <div class="col-sm-4 col-sm-offset-2">
-                                <h5 class="white-text">Main partners</h5>
-                                <ul>
-                                    <li><a class="grey-text text-lighten-3" href="#!">Nantes academic hospital</a></li>
-                                    <li><a class="grey-text text-lighten-3" href="#!">Nantes University</a></li>
-                                    <li><a class="grey-text text-lighten-3" href="#!">Angers academic hospital</a></li>
-                                    <li><a class="grey-text text-lighten-3" href="#!">Angers University</a></li>
-                                    <li><a class="grey-text text-lighten-3" href="#!">Institut de Cancérologie de l'Ouest</a></li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-sm-12">
-                                © 2015 Copyright Text
-                            </div>
-                        </div>
-                    </div>
-                </footer>-->
 
         <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
         <script type="text/javascript" src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
@@ -257,21 +237,12 @@ and open the template in the editor.
         <script type="text/javascript" src="js/lib/turtle.js"></script>
 
         <script type="text/javascript" src="js/config.js"></script>
-        <script type="text/javascript" src="js/departements.js"></script>
         <script type="text/javascript" src="js/main.js"></script>
-        <script type="text/javascript" src="js/APIs/userAPI.js"></script>
         <!-- VIEWS -->
-        <script type="text/javascript" src="js/views/epidemioView.js"></script>
-        <script type="text/javascript" src="js/views/provenanceView.js"></script>
         <script type="text/javascript" src="js/views/systemicView.js"></script>
         <!-- APIs -->
-        <script type="text/javascript" src="js/APIs/provenanceAPI.js"></script>
-        <script type="text/javascript" src="js/APIs/epidemioAPI.js"></script>
         <script type="text/javascript" src="js/APIs/systemicAPI.js"></script>
         <!-- RENDERING -->
-        <script type="text/javascript" src="js/APIs/rendering/mapFranceRendering.js"></script>
-        <script type="text/javascript" src="js/APIs/rendering/provenanceRendering.js"></script>
-        <script type="text/javascript" src="js/APIs/rendering/epidemioRendering.js"></script>
         <script type="text/javascript" src="js/APIs/rendering/systemicRendering.js"></script>
         
         <!--<script src="js/testView.js"></script>-->
