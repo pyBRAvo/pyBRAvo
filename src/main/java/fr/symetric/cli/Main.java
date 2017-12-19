@@ -65,7 +65,7 @@ public class Main {
         output.setRequired(true);
         options.addOption(output);
 
-        Option format = new Option("f", "format", true, "supported output file format: turtle, ttl, rdfxml, rdfjson, jsonld");
+        Option format = new Option("f", "format", true, "supported output file format: sif, turtle, ttl, rdfxml, rdfjson, jsonld");
         format.setRequired(true);
         options.addOption(format);
 
@@ -133,6 +133,13 @@ public class Main {
             formatter.printHelp("utility-name", options);
             System.exit(1);
             return;
+        }else{
+            if ( cmd.getOptionValue("format").equals("sif") && cmd.hasOption("signaling") ){
+                logger.error("SIF format is not available for signaling reconstruction yet. Please, use another format.");
+                formatter.printHelp("utility-name", options);
+                System.exit(1);
+                return;
+            }
         }
         String way = "";
         if (!cmd.hasOption("way")) {
