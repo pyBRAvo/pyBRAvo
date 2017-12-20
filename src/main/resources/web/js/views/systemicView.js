@@ -9,8 +9,6 @@ var DemoSysbioView = Backbone.View.extend({
     initialize: function () {
         _.bindAll(this, "render");
         console.log('DemoSysBio View Initialized');
-        EventBus.on(EVT_LOADING, this.disableButton);
-        EventBus.on(EVT_FINNISHED, this.enableButton);
     },
     render: function () {
         var that = this;
