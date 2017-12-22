@@ -23,6 +23,10 @@ body{
     padding-top: 20px;
     padding-bottom: 20px;
 }
+.center{
+    text-align: center;
+    margin: auto;
+}
 .not-active {
     pointer-events: none;
     cursor: default;
@@ -33,6 +37,9 @@ body{
 }
 .btn-toolbar{
     text-align: center;
+}
+.btn .btn-default{
+    float: none;
 }
 .feature-title{
     text-align: center;

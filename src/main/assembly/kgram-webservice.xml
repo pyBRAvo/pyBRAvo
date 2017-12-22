@@ -1,5 +1,5 @@
 <assembly>
-  <id>symetric-datahub-api</id>
+  <id>bravo-portal-api</id>
   <formats>
     <format>war</format>
   </formats>

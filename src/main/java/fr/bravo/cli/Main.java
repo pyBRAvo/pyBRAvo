@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package fr.symetric.cli;
+package fr.bravo.cli;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
@@ -172,7 +172,7 @@ public class Main {
             geneDone = (List) initialResults[1];
             // Next level of regulation network
             System.out.println("Run regulatory network construction");
-            network = fr.symetric.api.Automatic.upstreamRegulationConstruct(initialModel, initialModel, geneDone, way);
+            network = fr.bravo.api.Automatic.upstreamRegulationConstruct(initialModel, initialModel, geneDone, way);
         } else {
             logger.error("Wrong type of network");
             System.exit(1);
@@ -217,14 +217,14 @@ public class Main {
                 if (type.equals("regulation")) {
                     if (direction.equals("Up")) {
                         // SPARQL Query to get all transcription factors for a gene
-                        queryStringC = fr.symetric.api.SparqlQuery.initialUpRegulationQuery(b[0]);
+                        queryStringC = fr.bravo.api.SparqlQuery.initialUpRegulationQuery(b[0]);
                     } else if (direction.equals("Down")) {
                         // SPARQL Query to get all genes regulated by the given genes
-                        queryStringC = fr.symetric.api.SparqlQuery.initialDownRegulationQuery(b[0]);
+                        queryStringC = fr.bravo.api.SparqlQuery.initialDownRegulationQuery(b[0]);
                     }
                 } else {
                     // SPARQL Query to get all entities that have reaction link with the given genes (i.e. signaling)
-                    queryStringC = fr.symetric.api.SparqlQuery.initialSignalingQuery(b[0]);
+                    queryStringC = fr.bravo.api.SparqlQuery.initialSignalingQuery(b[0]);
                 }
 
                 //+"GROUP BY ?controlledName ?controllerName";
@@ -302,7 +302,7 @@ public class Main {
                 // URI of the SPARQL Endpoint
                 String accessUri = "http://rdf.pathwaycommons.org/sparql";
 
-                String conversionQuery = fr.symetric.api.SparqlQuery.initialSignalingQuery(TF.toString().toUpperCase());
+                String conversionQuery = fr.bravo.api.SparqlQuery.initialSignalingQuery(TF.toString().toUpperCase());
 
                 URI requestURI = javax.ws.rs.core.UriBuilder.fromUri(accessUri)
                         .queryParam("query", "{query}")
