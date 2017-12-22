@@ -358,14 +358,18 @@ function upstreamJob(genesList, queryType) {
                     var blob = new Blob([results["json"]], {'type': 'application/json'});
                     c.href = window.URL.createObjectURL(blob);
                     c.download = 'graph.json';
-//                     b.click();
+                    if(navigator.userAgent.toLowerCase().indexOf('firefox') > -1){
+                        c.click();
+                    }
                 });
                 document.getElementById('btn-download-rdf').addEventListener("click", function exportAsRDF() {
                     var b = document.getElementById('b');
                     var blob = new Blob([results["rdf"]], {'type':'xml/rdf'});
                     b.href = window.URL.createObjectURL(blob);
                     b.download = 'graph.rdf';
-//                    b.click();
+                    if(navigator.userAgent.toLowerCase().indexOf('firefox') > -1){
+                        b.click();
+                    }
                 });
                 document.getElementById('btn-cytoscape').addEventListener("click", function exportToCytoscape() {
                     var cyJSON = getCytoscapeJSON(featuresAsJson) ;
