@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package fr.symetric.server;
+package fr.bravo.server;
 
 import com.sun.jersey.spi.container.servlet.ServletContainer;
 import java.io.File;
@@ -94,23 +94,13 @@ public class EmbeddedJettyServer {
             URI webappUri = EmbeddedJettyServer.extractResourceDir("web", true);
             Server server = new Server(serverPort);
 
-//            SslSelectChannelConnector connector = new SslSelectChannelConnector();
-//            connector.setReuseAddress(false);
-//            URL keystoreUrl = EmbeddedJettyServer.class.getClassLoader().getResource("keystore.jks");
-////            connector.setKeystore("/Users/gaignard-a/Documents/Dev/symetric-api-server/keystore.jks");
-//            connector.setKeystore(keystoreUrl.toString());
-//            connector.setKeystoreType("JKS");
-//            connector.setKeyPassword("symetric");
-//            connector.setPassword("symetric");
-//            connector.setPort(DatahubUtils.getServerPort());
-//            server.addConnector(connector);
             ServletHolder jerseyServletHolder = new ServletHolder(ServletContainer.class);
             jerseyServletHolder.setInitParameter("com.sun.jersey.config.property.resourceConfigClass", "com.sun.jersey.api.core.PackagesResourceConfig");
-            jerseyServletHolder.setInitParameter("com.sun.jersey.config.property.packages", "fr.symetric.api");
+            jerseyServletHolder.setInitParameter("com.sun.jersey.config.property.packages", "fr.bravo.api");
             jerseyServletHolder.setInitParameter("requestBufferSize", "8192");
             jerseyServletHolder.setInitParameter("headerBufferSize", "8192");
             jerseyServletHolder.setInitParameter("com.sun.jersey.api.json.POJOMappingFeature", "true");
-            jerseyServletHolder.setInitParameter("com.sun.jersey.spi.container.ResourceFilters", "fr.symetric.server.ResourceFilterFactory");
+//            jerseyServletHolder.setInitParameter("com.sun.jersey.spi.container.ResourceFilters", "fr.bravo.server.ResourceFilterFactory");
             Context servletCtx = new Context(server, "/", Context.SESSIONS);
             servletCtx.addServlet(jerseyServletHolder, "/*");
 

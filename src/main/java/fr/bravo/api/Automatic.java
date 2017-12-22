@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package fr.symetric.api;
+package fr.bravo.api;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
@@ -58,7 +58,7 @@ public class Automatic {
             // Use of IDs 
             if ("id".equals(queryType)) {
                 JSONArray idList = genesList;
-                genesList = fr.symetric.api.SparqlQuery.IdToNameQuery(idList);
+                genesList = fr.bravo.api.SparqlQuery.IdToNameQuery(idList);
             }
             
             // initial model with direct interaction, first level of regulation
@@ -109,7 +109,7 @@ public class Automatic {
                 String gene = genes.get(i).toString().toUpperCase();
                 geneDone.add(gene);
                 // SPARQL Query to get all transcription factors for a gene
-                String queryString = fr.symetric.api.SparqlQuery.initialUpRegulationQuery(gene);
+                String queryString = fr.bravo.api.SparqlQuery.initialUpRegulationQuery(gene);
                             //+"GROUP BY ?controlledName ?controllerName";
                 String contentType = "application/json";
                 // URI of the SPARQL Endpoint
@@ -156,8 +156,8 @@ public class Automatic {
         if(listModel.isEmpty()){
             return tempModel;
         }
-//        Model resultTemp = fr.symetric.api.SparqlQuery.upstreamRegulationConstructQueryOptimized(listModel, tempModel, genesDone, direction);
-        Model resultTemp = fr.symetric.api.SparqlQuery.upstreamRegulationConstructQuery(listModel, tempModel, genesDone, direction);
+//        Model resultTemp = fr.bravo.api.SparqlQuery.upstreamRegulationConstructQueryOptimized(listModel, tempModel, genesDone, direction);
+        Model resultTemp = fr.bravo.api.SparqlQuery.upstreamRegulationConstructQuery(listModel, tempModel, genesDone, direction);
         tempModel.add(resultTemp);
         Model finalModel= upstreamRegulationConstruct(resultTemp, tempModel, genesDone, direction);
         return finalModel;

@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package fr.symetric.api;
+package fr.bravo.api;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
@@ -63,7 +63,7 @@ public class Systemic {
         // Use of IDs 
         if ("id".equals(queryType)) {
             JSONArray idList = genesList;
-            genesList = fr.symetric.api.SparqlQuery.IdToNameQuery(idList);
+            genesList = fr.bravo.api.SparqlQuery.IdToNameQuery(idList);
         }
         try {
             for(int i=0; i < genesList.length(); i++){
@@ -72,7 +72,7 @@ public class Systemic {
 
                     // Construct new graphe
                     // Filter on Trancription Factor and wihtout miRNA
-                    String filterQuery = fr.symetric.api.SparqlQuery.initialUpRegulationQuery(genesList.get(i).toString());
+                    String filterQuery = fr.bravo.api.SparqlQuery.initialUpRegulationQuery(genesList.get(i).toString());
                     System.out.println("Query created");
 
                     // Parsing json is more simple than XML
@@ -135,7 +135,7 @@ public class Systemic {
                     StringBuilder result = new StringBuilder();
                     
                     // Construct new graphe
-                    String filterQuery = fr.symetric.api.SparqlQuery.initialSignalingQuery(genesList.get(i).toString());
+                    String filterQuery = fr.bravo.api.SparqlQuery.initialSignalingQuery(genesList.get(i).toString());
 
                     // Parsing json is more simple than XML
                     String contentType = "application/json";
