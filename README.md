@@ -45,7 +45,7 @@ See on http://localhost:8091/
 
 Use it as command line
 
-    java -cp target/BRAvo-1.0-SNAPSHOT-bin.jar fr.symetric.cli.Main -i <input_file> -o <output_file> -f ("rdf" | "turtle") (-n | -d) (-r | -s) -w ('Up' | 'Down')
+    java -cp target/BRAvo-1.0-SNAPSHOT-bin.jar fr.bravo.cli.Main -i <input_file> -o <output_file> -f ("rdf" | "turtle") (-n | -d) (-r | -s) -w ('Up' | 'Down')
          
          -d,--id             input data are ids COMING SOON
          -f, --format        output file format: turtle, ttl, rdfxml, rdfjson, jsonld
@@ -59,16 +59,16 @@ Use it as command line
 
 It can be used to build **upstream gene regulation network** with gene names : 
 
-    java -cp target/BRAvo-1.0-SNAPSHOT-bin.jar fr.symetric.cli.Main -i input-name.csv -o output.rdf -f "rdf" -r -n -w 'Up'
+    java -cp target/BRAvo-1.0-SNAPSHOT-bin.jar fr.bravo.cli.Main -i input-name.csv -o output.rdf -f "rdf" -r -n -w 'Up'
     
 Or it can be used to build upstream gene regulation network with gene IDs : 
 
-    java -cp target/BRAvo-1.0-SNAPSHOT-bin.jar fr.symetric.cli.Main -i input-id.csv -o output.ttl -f "turtle" -r -d
+    java -cp target/BRAvo-1.0-SNAPSHOT-bin.jar fr.bravo.cli.Main -i input-id.csv -o output.ttl -f "turtle" -r -d
 
 Or it can be used to build **downstream** gene regulation network with gene names : 
 
-    java -cp target/BRAvo-1.0-SNAPSHOT-bin.jar fr.symetric.cli.Main -i input-id.csv -o output.ttl -f "turtle" -r -n -w 'Down'
+    java -cp target/BRAvo-1.0-SNAPSHOT-bin.jar fr.bravo.cli.Main -i input-id.csv -o output.ttl -f "turtle" -r -n -w 'Down'
     
-It can also be used to build **signaling network** with gene **names** (default upstream): 
+It can also be used to build **signaling network** with gene **names** (only upstream available): 
 
-    java -cp target/BRAvo-1.0-SNAPSHOT-bin.jar fr.symetric.cli.Main -i input-name.csv -o output.rdf -f "rdf" -s -n -w 'Up'
+    java -cp target/BRAvo-1.0-SNAPSHOT-bin.jar fr.bravo.cli.Main -i input-name.csv -o output.rdf -f "rdf" -s -n -w 'Up'
