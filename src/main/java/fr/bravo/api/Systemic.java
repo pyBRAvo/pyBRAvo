@@ -27,7 +27,6 @@ import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.log4j.Logger;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
-import org.codehaus.jettison.json.JSONObject;
 
 
 /**
