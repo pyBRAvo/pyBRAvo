@@ -139,6 +139,7 @@ var DemoSysbioView = Backbone.View.extend({
             // Make SPARQL initial query to PathwayCommons endpoint
             //sparqlSignaling(genesList, cy);
             genesList = genesList.split(",");
+            // Include transcriptional factors
             if (document.getElementById("btnTFs").value === 'true'){
                 sparqlSignaling(genesList, cy);
             }else {

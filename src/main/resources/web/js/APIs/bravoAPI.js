@@ -15,6 +15,7 @@ function sparqlSysBio(genesList, queryType, cy) {
     genesList = genesList.split(",");
     var genesJSON = JSON.stringify(genesList);
     document.getElementById("noResult").style.display = 'none';
+    console.log("Query regulatory network");
     
     $.ajax({
         type: 'GET',
@@ -95,6 +96,7 @@ function nextLevelRegulation(genesList, cy) {
     // Show 'query on run' message
     document.getElementById("noResult").style.display = 'none';
     document.getElementById("sendingQuery").style.display = 'block';
+    console.log("Query regulatory network");
     
     $.ajax({
         type: 'GET',
@@ -146,6 +148,7 @@ function sparqlSignaling(genesList, cy) {
     var endpointURL = rootURL + '/systemic/network';
     var genesJSON = JSON.stringify(genesList);
     document.getElementById("noResult").style.display = 'none';
+    console.log("Query signaling network with only TFs");
     
     $.ajax({
         type: 'GET',
@@ -163,9 +166,9 @@ function sparqlSignaling(genesList, cy) {
             document.getElementById("sendingQuery").style.display = 'none';
             document.getElementById("noResult").style.display = 'none';
             // Get valid JSON format
-            items = JSON.parse(JSON.stringify(data));            
+            var items = JSON.parse(JSON.stringify(data));            
             // Set content of graph and get list of uniq regulators
-            var toUniq = graphContent(cy, items) ;
+            var toUniq = graphContentSignaling(cy, items) ;
             // Apply layout on loaded data
             graphLayout(cy, genesList, true);
             /**
@@ -228,6 +231,7 @@ function nextLevelSignaling(genesList, cy, firststep) {
     // Show 'query on run' message
     document.getElementById("noResult").style.display = 'none';
     document.getElementById("sendingQuery").style.display = 'block';
+    console.log("Query signaling network");
     // Request on regulation part
     $.ajax({
         type: 'GET',
