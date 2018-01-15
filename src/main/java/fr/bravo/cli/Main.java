@@ -49,7 +49,7 @@ import org.apache.log4j.Logger;
  */
 public class Main {
 
-    static ogger logger = Logger.getLogger(Main.class); // initialize log
+    static Logger logger = Logger.getLogger(Main.class); // initialize log
 
     public static void main(String[] args) throws IOException {;
 
