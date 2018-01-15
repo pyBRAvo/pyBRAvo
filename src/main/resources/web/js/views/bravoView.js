@@ -177,7 +177,7 @@ var DemoSysbioView = Backbone.View.extend({
 
         // When 'id' checked, return 'name'
         if ($('input[name=query-type]:checked').val() !== 'id'){
-            $('#inputGeneList').val('ENSG00000158669,HGNC:4135,ENSG00000116133,ENSG00000084774');
+            $('#inputGeneList').val('137964,HGNC:4135,HGNC:2859,P27708');
         }else {
             $('#inputGeneList').val('AGPAT6,GALT,DHCR24,FTFD1,CAD');
         }
