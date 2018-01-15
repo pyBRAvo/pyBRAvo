@@ -148,6 +148,40 @@ body{
 #sendingQuery, #errorQuery, #emptyQuery, #noResult {
     margin-top: 30px;
 }
-.diamond:after {
-    content: ''; position: absolute; left: -8px; top: 4px; width: 0; height: 0; border: 8px solid transparent; border-top: 10px solid #666;
+
+.hexagon {
+  position: relative;
+  width: 14px; 
+  height: 8.08px;
+  background-color: #ffffff;
+  margin: 4.04px 0;
+  border-left: solid 3px #bbbbbb;
+  border-right: solid 3px #bbbbbb;
 }
+
+.hexagon:before,
+.hexagon:after {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  width: 9.90px;
+  height: 9.90px;
+  -webkit-transform: scaleY(0.5774) rotate(-45deg);
+  -ms-transform: scaleY(0.5774) rotate(-45deg);
+  transform: scaleY(0.5774) rotate(-45deg);
+  background-color: inherit;
+  left: -0.9497px;
+}
+
+.hexagon:before {
+  top: -4.9497px;
+  border-top: solid 4.2426px #bbbbbb;
+  border-right: solid 4.2426px #bbbbbb;
+}
+
+.hexagon:after {
+  bottom: -4.9497px;
+  border-bottom: solid 4.2426px #bbbbbb;
+  border-left: solid 4.2426px #bbbbbb;
+}
+

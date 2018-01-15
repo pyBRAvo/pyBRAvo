@@ -56,6 +56,24 @@ function graphLayout(cy, genesList, initial=false) {
             }
         } 
     });
+    
+    // Style on input nodes
+    for (var gene in genesList) {
+        var re = new RegExp(genesList[gene], "i");
+        // Add class to node of name as initial input
+        cy.filter(function(i, element){
+            if( element.isNode() && initial === true) {
+                if ( element.data("id") === genesList[gene]) {
+                    element.addClass('class-input');
+                }
+            }
+            if(  element.isNode() && initial === false ){
+                if ( element.data("id") === genesList[gene]) {
+                    element.addClass('class-second-input');
+                }
+            }
+        });
+    }
     cy.layout({
         name:'cola',
         nodeSpacing: 5,
@@ -84,52 +102,6 @@ function graphLayout(cy, genesList, initial=false) {
     cy.$('.class-edge-TFs').style({ 
         'line-style': 'dashed'
     });
-    // Style on input nodes
-    for (var gene in genesList) {
-        var re = new RegExp(genesList[gene], "i");
-        // Add class to node of name as initial input
-        cy.filter(function(i, element){
-            if( element.isNode() && initial === true) {
-                if ( element.data("id") === genesList[gene]) {
-                    element.addClass('class-input');
-                }
-            }
-            if(  element.isNode() && initial === false ){
-                if ( element.data("id") === genesList[gene]) {
-                    element.addClass('class-second-input');
-                }
-            }
-        });
-    }
-    
-    // Color node of type CONTROLLER
-    cy.$('.class-controller').style({ 
-        'background-color': '#8904B1', // violet
-        'width':15,
-        'height':15
-    });
-    // Color node of type INTER NODE
-    cy.$('.class-random').style({ 
-        'background-color': '#fff', // pink
-        'border-color': '#3399ff',
-        'border-width': 2,
-        'shape': 'rectangle',
-        'text-opacity': 0,
-        'width':10,
-        'height':10
-    });
-    
-    // Color node with input name
-    cy.$('.class-input').style({ 
-        'background-color': 'red',
-        'width':25,
-        'height':25
-    });
-    cy.$('.class-second-input').style({ 
-        'background-color': '#FFBF00', // yellow
-        'width':20,
-        'height':20
-    });
     cy.$('.class-node-protein').style({
         'border-color': '#0A0A0A', // black
         'border-width': 3
@@ -147,7 +119,37 @@ function graphLayout(cy, genesList, initial=false) {
         'border-width': 4 
     });
     cy.$('.class-node-molecule').style({
-        'shape': 'diamond'
+        'shape': 'heptagon',
+        'border-color': '#bbb',
+        'border-width': 2,
+        'background-color': '#fff'
+    });    
+    // Color node of type CONTROLLER
+    cy.$('.class-controller').style({ 
+        'background-color': '#8904B1', // violet
+        'width':15,
+        'height':15
+    });
+    // Color node of type INTER NODE
+    cy.$('.class-random').style({ 
+        'background-color': '#fff', // pink
+        'border-color': '#3399ff',
+        'border-width': 2,
+        'shape': 'rectangle',
+        'text-opacity': 0,
+        'width':10,
+        'height':10
+    });    
+    // Color node with input name
+    cy.$('.class-input').style({ 
+        'background-color': 'red',
+        'width':25,
+        'height':25
+    });
+    cy.$('.class-second-input').style({ 
+        'background-color': '#FFBF00', // yellow
+        'width':20,
+        'height':20
     });
     // Tooltip on mouse over display node informations
     cy.on('mouseover', 'node', function(event) {
@@ -257,7 +259,7 @@ function graphContent(cy, items) {
                                 edges: [{
                                     // Directed edge
                                     data: {
-                                        id: name+"-"+w,
+                                        id: guidGenerator(),
                                         source: controllerName, //controller
                                         target: controlledName, // controlled
                                         category: items[object]["http://www.w3.org/1999/02/22-rdf-syntax-ns#type"][0]["value"],
@@ -311,123 +313,128 @@ function graphContentSignaling(cy, items) {
             if( $.inArray(items[object]["http://www.w3.org/1999/02/22-rdf-syntax-ns#type"][0]["value"], interactions) !== -1 ) {
                 var lefts = items[object]["http://www.biopax.org/release/biopax-level3.owl#left"];
                 var controllers = items[object]["http://www.biopax.org/release/biopax-level3.owl#controller"];
-                var right = items[object]["http://www.biopax.org/release/biopax-level3.owl#right"];
+                var rights = items[object]["http://www.biopax.org/release/biopax-level3.owl#right"];
                 // For each left entities
                 for (var i=0; i<lefts.length; i++) {
-                    var leftId = items[object]["http://www.biopax.org/release/biopax-level3.owl#left"][i]["value"];
-                    var rightId = right[0]["value"];
-                    var leftName = items[leftId]["http://www.biopax.org/release/biopax-level3.owl#displayName"][0]["value"];
-                    var rightName = items[rightId]["http://www.biopax.org/release/biopax-level3.owl#displayName"][0]["value"];
-                    var pair = {
-                        controller: leftName,
-                        controlled: rightName
-                    };
-                    // Do not do the same pair of source/target twice
-                    if ( containsObject(pair, uniqEdge) === false && pair["controller"] !== pair["controlled"] ){
-                        uniqEdge.push(pair);
-                        // Presence of controller(s)
-                        if (typeof controllers !== 'undefined') {
-                            for (var j=0; j < controllers.length; j++) {
-                                var controllerId = items[object]["http://www.biopax.org/release/biopax-level3.owl#controller"][j]["value"];
-                                var controllerName = items[controllerId]["http://www.biopax.org/release/biopax-level3.owl#displayName"][0]["value"];
-                                if ($.inArray(controllerName, catalysers) === -1) {
-                                    catalysers.push(controllerName);
-                                    cy.add({
-                                        nodes :[
-                                        {
-                                            // Source name
-                                            data: {
-                                               id: leftName,
-                                               category: items[leftId]["http://www.w3.org/1999/02/22-rdf-syntax-ns#type"][0]["value"], // complex, rna, dna...
-                                               provenance: items[leftId]["http://www.biopax.org/release/biopax-level3.owl#dataSource"][0]["value"]
-                                                    //position: { x: i, y: 1+i }
-                                            }
-                                        },{
-                                            // Controller name
-                                            data: {
-                                               id: controllerName,
-                                               type: "controller",
-                                               category: items[controllerId]["http://www.w3.org/1999/02/22-rdf-syntax-ns#type"][0]["value"], // complex, rna, dna...
-                                               provenance: items[controllerId]["http://www.biopax.org/release/biopax-level3.owl#dataSource"][0]["value"]
-                                               //position: { x: i, y: 1+i }
-                                            }
-                                        },{
-                                            // Inter node
-                                            data: {
-                                               id: name,
-                                               type: "random-node"
-                                               //position: { x: i, y: 1+i }
-                                            }
-                                        },{
-                                            // Target name
-                                            data: {
-                                               id: rightName,
-                                               category: items[rightId]["http://www.w3.org/1999/02/22-rdf-syntax-ns#type"][0]["value"], // complex, rna, dna...
-                                               provenance: items[rightId]["http://www.biopax.org/release/biopax-level3.owl#dataSource"][0]["value"]
-                                               //position: { x: 3, y: 3 }
-                                            }
-                                        }],                    
-                                        edges: [
-                                        {
-                                            // source to inter node
-                                            data: {
-                                                id: guidGenerator(), //name+"s",
-                                                source: leftName, // source
-                                                target: name, // arc
-                                                category: items[object]["http://www.w3.org/1999/02/22-rdf-syntax-ns#type"][0]["value"]
-                                            }  
-                                        },{
-                                            // inter node to target
-                                            data: {
-                                                id: guidGenerator(),//name+"t",
-                                                source: name, // inter node
-                                                target: rightName, // target
-                                                category: items[object]["http://www.w3.org/1999/02/22-rdf-syntax-ns#type"][0]["value"]
-                                            }  
-                                        },{
-                                            // controller to inter node
-                                            data: {
-                                                id: guidGenerator(),//controllerId+"c",
-                                                source: controllerName, // controller
-                                                target: name, // inter node
-                                                style: "controller",
-                                                type: items[controllerId]["http://www.biopax.org/release/biopax-level3.owl#controlType"][0]["value"] || "type" // activation, inhibition
-                                            }  
-                                        }]
-                                    });
+                    for (var r=0; r<rights.length; r++) {
+                        var leftId = items[object]["http://www.biopax.org/release/biopax-level3.owl#left"][i]["value"];
+                        var rightId = rights[r]["value"];
+                        var leftName = items[leftId]["http://www.biopax.org/release/biopax-level3.owl#displayName"][0]["value"];
+                        var rightName = items[rightId]["http://www.biopax.org/release/biopax-level3.owl#displayName"][0]["value"];
+                        var pair = {
+                            controller: leftName,
+                            controlled: rightName
+                        };
+                        console.log('left ', leftName, ' right ', rightName);
+                        // Do not do the same pair of source/target twice
+                        if ( containsObject(pair, uniqEdge) === false && pair["controller"] !== pair["controlled"] ){
+                            uniqEdge.push(pair);
+                            // Presence of controller(s)
+                            if (typeof controllers !== 'undefined') {
+                                for (var j=0; j < controllers.length; j++) {
+                                    var controllerId = items[object]["http://www.biopax.org/release/biopax-level3.owl#controller"][j]["value"];
+                                    var controllerName = items[controllerId]["http://www.biopax.org/release/biopax-level3.owl#displayName"][0]["value"];
+                                    console.log('controller ', controllerName)
+                                    if ($.inArray(controllerName, catalysers) === -1) {
+                                        catalysers.push(controllerName);
+                                        cy.add({
+                                            nodes :[
+                                            {
+                                                // Source name
+                                                data: {
+                                                   id: leftName,
+                                                   category: items[leftId]["http://www.w3.org/1999/02/22-rdf-syntax-ns#type"][0]["value"], // complex, rna, dna...
+                                                   provenance: items[leftId]["http://www.biopax.org/release/biopax-level3.owl#dataSource"][0]["value"]
+                                                        //position: { x: i, y: 1+i }
+                                                }
+                                            },{
+                                                // Controller name
+                                                data: {
+                                                   id: controllerName,
+                                                   type: "controller",
+                                                   category: items[controllerId]["http://www.w3.org/1999/02/22-rdf-syntax-ns#type"][0]["value"], // complex, rna, dna...
+                                                   provenance: items[controllerId]["http://www.biopax.org/release/biopax-level3.owl#dataSource"][0]["value"]
+                                                   //position: { x: i, y: 1+i }
+                                                }
+                                            },{
+                                                // Inter node
+                                                data: {
+                                                   id: name,
+                                                   type: "random-node"
+                                                   //position: { x: i, y: 1+i }
+                                                }
+                                            },{
+                                                // Target name
+                                                data: {
+                                                   id: rightName,
+                                                   category: items[rightId]["http://www.w3.org/1999/02/22-rdf-syntax-ns#type"][0]["value"], // complex, rna, dna...
+                                                   provenance: items[rightId]["http://www.biopax.org/release/biopax-level3.owl#dataSource"][0]["value"]
+                                                   //position: { x: 3, y: 3 }
+                                                }
+                                            }],                    
+                                            edges: [
+                                            {
+                                                // source to inter node
+                                                data: {
+                                                    id: guidGenerator(), //name+"s",
+                                                    source: leftName, // source
+                                                    target: name, // arc
+                                                    category: items[object]["http://www.w3.org/1999/02/22-rdf-syntax-ns#type"][0]["value"]
+                                                }  
+                                            },{
+                                                // inter node to target
+                                                data: {
+                                                    id: guidGenerator(),//name+"t",
+                                                    source: name, // inter node
+                                                    target: rightName, // target
+                                                    category: items[object]["http://www.w3.org/1999/02/22-rdf-syntax-ns#type"][0]["value"]
+                                                }  
+                                            },{
+                                                // controller to inter node
+                                                data: {
+                                                    id: guidGenerator(),//controllerId+"c",
+                                                    source: controllerName, // controller
+                                                    target: name, // inter node
+                                                    style: "controller",
+                                                    type: items[controllerId]["http://www.biopax.org/release/biopax-level3.owl#controlType"][0]["value"] || "type" // activation, inhibition
+                                                }  
+                                            }]
+                                        });
+                                    }
                                 }
+                            }else { // Absence of controller
+                                console.log('signaling',leftName, rightName );
+                                cy.add({
+                                    nodes :[
+                                    {
+                                        // Source name
+                                        data: {
+                                           id: leftName,
+                                           category: items[leftId]["http://www.w3.org/1999/02/22-rdf-syntax-ns#type"][0]["value"], // complex, rna, dna...
+                                           provenance: items[leftId]["http://www.biopax.org/release/biopax-level3.owl#dataSource"][0]["value"]
+                                           //position: { x: i, y: 1+i }
+                                        }
+                                    },{
+                                        // Target name
+                                        data: {
+                                           id: rightName,
+                                           category: items[rightId]["http://www.w3.org/1999/02/22-rdf-syntax-ns#type"][0]["value"], // complex, rna, dna...
+                                           provenance: items[rightId]["http://www.biopax.org/release/biopax-level3.owl#dataSource"][0]["value"]
+                                           //position: { x: 3, y: 3 }
+                                        }
+                                    }],                    
+                                    edges: [
+                                    {
+                                        // left to right without controller
+                                        data: {
+                                            id: guidGenerator(),
+                                            source: leftName, // left
+                                            target: rightName, // right
+                                            category: items[object]["http://www.w3.org/1999/02/22-rdf-syntax-ns#type"][0]["value"]
+                                        }  
+                                    }]
+                                });
                             }
-                        }else { // Absence of controller
-                            cy.add({
-                                nodes :[
-                                {
-                                    // Source name
-                                    data: {
-                                       id: leftName,
-                                       category: items[leftId]["http://www.w3.org/1999/02/22-rdf-syntax-ns#type"][0]["value"], // complex, rna, dna...
-                                       provenance: items[leftId]["http://www.biopax.org/release/biopax-level3.owl#dataSource"][0]["value"]
-                                       //position: { x: i, y: 1+i }
-                                    }
-                                },{
-                                    // Target name
-                                    data: {
-                                       id: rightName,
-                                       category: items[rightId]["http://www.w3.org/1999/02/22-rdf-syntax-ns#type"][0]["value"], // complex, rna, dna...
-                                       provenance: items[rightId]["http://www.biopax.org/release/biopax-level3.owl#dataSource"][0]["value"]
-                                       //position: { x: 3, y: 3 }
-                                    }
-                                }],                    
-                                edges: [
-                                {
-                                    // left to right without controller
-                                    data: {
-                                        id: guidGenerator(),
-                                        source: leftName, // left
-                                        target: rightName, // right
-                                        category: items[object]["http://www.w3.org/1999/02/22-rdf-syntax-ns#type"][0]["value"]
-                                    }  
-                                }]
-                            });
                         }
                     }
                 }
