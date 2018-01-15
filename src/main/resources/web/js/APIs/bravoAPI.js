@@ -275,7 +275,7 @@ function nextLevelSignaling(genesList, cy, firststep) {
                     // Add item to checkbox
                     checkboxContent(toUniq_signaling, "signaling");
                     document.getElementById("next-level-signaling").style.display = 'block';
-                    if ( isEmpty(itemsS) === true ){
+                    if ( isEmpty(itemsS) === true && isEmpty(itemsR) ){
                         document.getElementById("noResult").style.display = 'block';
                     }
                     // Event : check all checkbox

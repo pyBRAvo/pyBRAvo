@@ -225,7 +225,7 @@ function graphContent(cy, items) {
                         var controlledId = controlledIds[w]["value"];
                         var controllerName = items[controllerId]["http://www.biopax.org/release/biopax-level3.owl#displayName"][0]["value"];
                         var controlledName = items[controlledId]["http://www.biopax.org/release/biopax-level3.owl#displayName"][0]["value"];
-    //                    console.log(controllerName, '-', controlledName);
+                        console.log(controllerName, '-', controlledName);
                         var pair = {
                             controller: controllerName,
                             controlled: controlledName
