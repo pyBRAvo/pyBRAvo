@@ -71,7 +71,9 @@ function sparqlSysBio(genesList, queryType, cy) {
                 var blob = new Blob(CSV, {'type':'text/csv'});
                 a.href = window.URL.createObjectURL(blob);
                 a.download = 'graph.csv';
-                a.click();
+                if(navigator.userAgent.toLowerCase().indexOf('firefox') > -1){
+                    a.click();
+                }
             }); 
             return cy;
         },
@@ -195,7 +197,7 @@ function sparqlSignaling(genesList, cy) {
             }); 
             document.getElementById('btn-download').addEventListener("click", function exportGraph() {
                 // var graphJson = cy.json();
-                var CSV = [["source","target","source is","\n"]];
+                var CSV = [["source","target","controller","\n"]];
                 cy.edges().forEach(function( ele ){
                     var source = cy.getElementById(ele["_private"]["data"]["source"]);
                     var controller = (typeof source.data("type") === 'undefined') ? "": source.data("type");
@@ -206,7 +208,9 @@ function sparqlSignaling(genesList, cy) {
                 var blob = new Blob(CSV, {'type':'text/csv'});
                 a.href = window.URL.createObjectURL(blob);
                 a.download = 'graph.csv';
-                a.click();
+                if(navigator.userAgent.toLowerCase().indexOf('firefox') > -1){
+                    a.click();
+                }
             }); 
         },
         error: function (jqXHR, textStatus, errorThrown) {
@@ -293,7 +297,7 @@ function nextLevelSignaling(genesList, cy, firststep) {
                     
                     document.getElementById('btn-download').addEventListener("click", function exportGraph() {
                         // var graphJson = cy.json();
-                        var CSV = [["source","target","source is","\n"]];
+                        var CSV = [["source","target","controller","\n"]];
                         cy.edges().forEach(function( ele ){
                             var source = cy.getElementById(ele["_private"]["data"]["source"]);
                             var controller = (typeof source.data("type") === 'undefined') ? "": source.data("type");
@@ -304,7 +308,9 @@ function nextLevelSignaling(genesList, cy, firststep) {
                         var blob = new Blob(CSV, {'type':'text/csv'});
                         a.href = window.URL.createObjectURL(blob);
                         a.download = 'graph.csv';
-                        a.click();
+                        if(navigator.userAgent.toLowerCase().indexOf('firefox') > -1){
+                            a.click();
+                        }
                     }); 
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
