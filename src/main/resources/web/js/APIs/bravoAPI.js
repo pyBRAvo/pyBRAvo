@@ -170,7 +170,7 @@ function sparqlSignaling(genesList, cy) {
             // Get valid JSON format
             var items = JSON.parse(JSON.stringify(data));            
             // Set content of graph and get list of uniq regulators
-            var toUniq = graphContentSignaling(cy, items) ;
+            var toUniq = graphContent(cy, items) ;
             // Apply layout on loaded data
             graphLayout(cy, genesList, true);
             /**

@@ -12,9 +12,9 @@ var myRouter = Backbone.Router.extend({
     
     container: null,
     homeView: null,
-    view1: null,
-    view2: null,
-    view3: null,
+    regulatoryNetwork: null,
+    signalingNetwork: null,
+    batchReconstruction: null,
     
     initialize: function() {
         this.container = new ContainerView({ el: $("#mainContainer") });
@@ -22,9 +22,9 @@ var myRouter = Backbone.Router.extend({
 
     routes: {
         "": "home",
-        "view1": "regulatoryRoute",
-        "view2": "signalingRoute",
-        "view3": "batchRoute"
+        "regulatory-network": "regulatoryRoute",
+        "signaling-network": "signalingRoute",
+        "batch-reconstruction": "batchRoute"
     },
 
     home: function () {
@@ -37,29 +37,29 @@ var myRouter = Backbone.Router.extend({
     },
     
     regulatoryRoute: function () {
-        if (this.view1 == null) {
-            this.view1 = new RegulatoryView();
+        if (this.regulatoryNetwork == null) {
+            this.regulatoryNetwork = new RegulatoryView();
         }
 
-        this.container.myChildView = this.view1;
+        this.container.myChildView = this.regulatoryNetwork;
         this.container.render();
     },
 
     signalingRoute: function () {
-        if (this.view2 == null) {
-            this.view2 = new SignalingView();
+        if (this.signalingNetwork == null) {
+            this.signalingNetwork = new SignalingView();
         }
 
-        this.container.myChildView = this.view2;
+        this.container.myChildView = this.signalingNetwork;
         this.container.render();
     },
 
     batchRoute: function () {
-        if (this.view3 == null) {
-            this.view3 = new BatchView();
+        if (this.batchReconstruction == null) {
+            this.batchReconstruction = new BatchView();
         }
 
-        this.container.myChildView = this.view3;
+        this.container.myChildView = this.batchReconstruction;
         this.container.render();
     }
 });
@@ -95,34 +95,12 @@ var WelcomeView = Backbone.View.extend({
         return this;
     }
 });
-//var myWelcomeView = new WelcomeView();
 
 //*************************************
 //*************************************
 //*************************************
 
 $(document).ready(function () {
-//
-//    $('#demo-ld-menu').click(function () {
-//        if (! $("#demo-ld-menu").hasClass("disabled")) {
-//            myDemoEpidemioView.render();
-//        }
-//    });
-//
-//    $('#demo-wf-menu').click(function () {
-//        if (! $("#demo-wf-menu").hasClass("disabled")) {
-//            myDemoProvView.render();
-//        }
-//    });
-//
-//    $('#demo-sb-menu').click(function () {
-//        if (! $("#demo-sb-menu").hasClass("disabled")) {
-//            myDemoSysbioView.render();
-//        }
-//    });
-//    
-//    $('[data-toggle="tooltip"]').tooltip(); 
-//    myWelcomeView.render();
     router = new myRouter();
     Backbone.history.start();
 });
@@ -169,4 +147,56 @@ function htmlEncode(value) {
 
 function htmlDecode(value) {
     return $('<div/>').html(value).text();
+}
+
+function initialCy() {
+    var initial = cytoscape({
+        container: document.getElementById('cy'), // container to render in
+        //boxSelectionEnabled: false,
+        //autounselectify: true,
+        style: [ // the stylesheet for the graph
+            {
+                selector: 'node',
+                style: {
+                    'background-color': '#898484', // grey
+                    'width' : 12,
+                    'height' : 12,
+                    'label': 'data(id)'
+                }
+            },
+            {
+                selector: '$node > node', // parent - meta node
+                css: {
+                    'padding-top': '10px',
+                    'padding-left': '10px',
+                    'padding-bottom': '10px',
+                    'padding-right': '10px',
+                    'text-valign': 'top',
+                    'text-halign': 'center',
+                    'background-color': '#bbb',
+                    'background-opacity': 0.3
+                }
+            },
+            {
+                selector: 'edge',
+                style: {
+                    'width': 2,
+                    'line-color': '#ccc',
+                    'mid-target-arrow-color': '#ccc',
+                    'mid-target-arrow-shape': 'triangle',
+                    'curve-style': 'bezier'
+                }
+            }
+        ],
+        layout: {
+            name: 'cola',
+            nodeSpacing: 5,
+            avoidOverlap: true,
+            maxSimulationTime: 4000,
+            flow: { axis: 'y'},
+            unconstrIter: 10,
+            handleDisconnected: true
+        }
+    });
+    return initial;
 }
