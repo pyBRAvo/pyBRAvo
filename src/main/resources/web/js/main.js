@@ -41,19 +41,14 @@ var myRouter = Backbone.Router.extend({
     },
     
     regulatoryRoute: function () {
-        if (this.regulatoryNetwork == null) {
-            this.regulatoryNetwork = new RegulatoryView();
-        }
-
+        this.regulatoryNetwork = new RegulatoryView();
         this.container.myChildView = this.regulatoryNetwork;
         this.container.render();
     },
 
     signalingRoute: function () {
-        if (this.signalingNetwork == null) {
-            this.signalingNetwork = new SignalingView();
-        }
 
+        this.signalingNetwork = new SignalingView();
         this.container.myChildView = this.signalingNetwork;
         this.container.render();
     },
