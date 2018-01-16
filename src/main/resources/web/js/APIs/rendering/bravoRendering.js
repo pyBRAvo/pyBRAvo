@@ -227,7 +227,7 @@ function graphContent(cy, items) {
                         var controlledId = controlledIds[w]["value"];
                         var controllerName = items[controllerId]["http://www.biopax.org/release/biopax-level3.owl#displayName"][0]["value"];
                         var controlledName = items[controlledId]["http://www.biopax.org/release/biopax-level3.owl#displayName"][0]["value"];
-                        console.log(controllerName, '-', controlledName);
+                        
                         var pair = {
                             controller: controllerName,
                             controlled: controlledName
@@ -325,7 +325,6 @@ function graphContentSignaling(cy, items) {
                             controller: leftName,
                             controlled: rightName
                         };
-                        console.log('left ', leftName, ' right ', rightName);
                         // Do not do the same pair of source/target twice
                         if ( containsObject(pair, uniqEdge) === false && pair["controller"] !== pair["controlled"] ){
                             uniqEdge.push(pair);
@@ -334,7 +333,7 @@ function graphContentSignaling(cy, items) {
                                 for (var j=0; j < controllers.length; j++) {
                                     var controllerId = items[object]["http://www.biopax.org/release/biopax-level3.owl#controller"][j]["value"];
                                     var controllerName = items[controllerId]["http://www.biopax.org/release/biopax-level3.owl#displayName"][0]["value"];
-                                    console.log('controller ', controllerName)
+                                    
                                     if ($.inArray(controllerName, catalysers) === -1) {
                                         catalysers.push(controllerName);
                                         cy.add({
@@ -403,7 +402,6 @@ function graphContentSignaling(cy, items) {
                                     }
                                 }
                             }else { // Absence of controller
-                                console.log('signaling',leftName, rightName );
                                 cy.add({
                                     nodes :[
                                     {

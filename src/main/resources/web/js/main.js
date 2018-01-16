@@ -15,6 +15,8 @@ var myRouter = Backbone.Router.extend({
     regulatoryNetwork: null,
     signalingNetwork: null,
     batchReconstruction: null,
+    aboutView: null,
+    docView: null,
     
     initialize: function() {
         this.container = new ContainerView({ el: $("#mainContainer") });
@@ -24,7 +26,9 @@ var myRouter = Backbone.Router.extend({
         "": "home",
         "regulatory-network": "regulatoryRoute",
         "signaling-network": "signalingRoute",
-        "batch-reconstruction": "batchRoute"
+        "batch-reconstruction": "batchRoute",
+        "about": "aboutRoute",
+        "documentation": "docRoute"
     },
 
     home: function () {
@@ -60,6 +64,24 @@ var myRouter = Backbone.Router.extend({
         }
 
         this.container.myChildView = this.batchReconstruction;
+        this.container.render();
+    },
+    
+    aboutRoute: function () {
+        if (this.aboutView == null) {
+            this.aboutView = new AboutView();
+        }
+
+        this.container.myChildView = this.aboutView;
+        this.container.render();
+    },
+    
+    docRoute: function () {
+        if (this.docView == null) {
+            this.docView = new DocView();
+        }
+
+        this.container.myChildView = this.docView;
         this.container.render();
     }
 });
