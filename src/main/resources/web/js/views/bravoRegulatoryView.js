@@ -4,17 +4,18 @@
  * @author : Marie Lefebvre
  */
 
-var DemoSysbioView = Backbone.View.extend({
-    el: "#mainContainer", //Container div inside which we would be dynamically loading the templates
+var RegulatoryView = Backbone.View.extend({
+//    el: "#mainContainer", //Container div inside which we would be dynamically loading the templates
     initialize: function () {
-        _.bindAll(this, "render");
-        console.log('DemoSysBio View Initialized');
+//        _.bindAll(this, "render");
+        this.render();
+        console.log('Regulatory View Initialized');
     },
     render: function () {
         var that = this;
         
         //Fetching the template contents
-        $.get('templates/demo-systemic-home.html', function (data) {
+        $.get('templates/demo-systemic-regulatory.html', function (data) {
             template = _.template(data, {});//Option to pass any dynamic values to template
             that.$el.html(template());//adding the template content to the main template.
             
@@ -200,7 +201,7 @@ var DemoSysbioView = Backbone.View.extend({
     }
 });
 
-var myDemoSysbioView = new DemoSysbioView();
+//var myDemoSysbioView = new DemoSysbioView();
 
 function initialCy() {
     var initial = cytoscape({
