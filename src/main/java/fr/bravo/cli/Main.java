@@ -19,6 +19,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import javax.ws.rs.core.UriBuilderException;
 import org.apache.commons.cli.CommandLine;
@@ -71,7 +72,7 @@ public class Main {
         format.setRequired(true);
         options.addOption(format);
         
-        Option smolecule = new Option("m", "molecule", true, "do not take into account small moleculed");
+        Option smolecule = new Option("m", "molecule", false, "do not take into account small moleculed");
         smolecule.setRequired(false);
         options.addOption(smolecule);
 
@@ -186,7 +187,7 @@ public class Main {
                 geneDone = (List) initialResults[1];
                 // Next level of regulation network
                 System.out.println("Run regulatory network construction");
-                network = fr.bravo.api.Automatic.upstreamRegulationConstruct(initialModel, initialModel, geneDone, way, molecule);
+                network = fr.bravo.api.Automatic.upstreamRegulationConstruct(initialModel, initialModel, geneDone, way, molecule, Arrays.asList("KEGG", "PID", "reactome"));
             }else{
                 // Initial graph with Transcription Factors (TFs)
                 Object[] initialResults = initialConstruct(inputFilePath, way, "regulation", "name", molecule);
@@ -195,7 +196,7 @@ public class Main {
                 geneDone = (List) initialResults[1];
                 // Next level of regulation network
                 System.out.println("Run regulatory network construction");
-                network = fr.bravo.api.Automatic.upstreamRegulationConstruct(initialModel, initialModel, geneDone, way, molecule);
+                network = fr.bravo.api.Automatic.upstreamRegulationConstruct(initialModel, initialModel, geneDone, way, molecule, Arrays.asList("KEGG", "PID", "reactome"));
             }
             
         } else {
