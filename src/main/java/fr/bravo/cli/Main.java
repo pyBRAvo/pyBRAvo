@@ -177,8 +177,6 @@ public class Main {
         if (cmd.hasOption("ssm")) {
             molecule = false;
             System.out.println("Do not consider small molecules");
-        }else{
-            molecule = true;
         }
         int maxDepth = -1;
         if (cmd.hasOption("md")) {
@@ -199,7 +197,7 @@ public class Main {
             geneDone = (List) initialResults[1];
             // Next level of signaling network
             System.out.println("Run signaling network construction");
-            network = signalingConstruct(initialModel, initialModel, geneDone);
+            network = signalingConstruct(initialModel, initialModel, geneDone, molecule);
         } else if (cmd.hasOption("regulation")) {
             if (cmd.hasOption("id")){
                 // Initial graph with Transcription Factors (TFs)
@@ -284,7 +282,7 @@ public class Main {
                         }
                     } else {
                         // SPARQL Query to get all entities that have reaction link with the given genes (i.e. signaling)
-                        queryStringC = fr.bravo.api.SparqlQuery.initialSignalingQuery(genesList.get(i).toString());
+                        queryStringC = fr.bravo.api.SparqlQuery.initialSignalingQuery(genesList.get(i).toString(), smolecule);
                     }
 
                     //+"GROUP BY ?controlledName ?controllerName";
@@ -327,7 +325,7 @@ public class Main {
                         }
                     } else {
                         // SPARQL Query to get all entities that have reaction link with the given genes (i.e. signaling)
-                        queryStringC = fr.bravo.api.SparqlQuery.initialSignalingQuery(b[0]);
+                        queryStringC = fr.bravo.api.SparqlQuery.initialSignalingQuery(b[0], smolecule);
                     }
 
                     //+"GROUP BY ?controlledName ?controllerName";
@@ -372,7 +370,7 @@ public class Main {
      * @return
      * @throws IOException
      */
-    public static Model signalingConstruct(Model listModel, Model tempModel, List genesDone) throws IOException {
+    public static Model signalingConstruct(Model listModel, Model tempModel, List genesDone, Boolean smolecule) throws IOException {
 
         // No next regulators
         if (listModel.isEmpty()) {
@@ -406,7 +404,7 @@ public class Main {
                 // URI of the SPARQL Endpoint
                 String accessUri = "http://rdf.pathwaycommons.org/sparql";
 
-                String conversionQuery = fr.bravo.api.SparqlQuery.initialSignalingQuery(TF.toString().toUpperCase());
+                String conversionQuery = fr.bravo.api.SparqlQuery.initialSignalingQuery(TF.toString().toUpperCase(), smolecule);
 
                 URI requestURI = javax.ws.rs.core.UriBuilder.fromUri(accessUri)
                         .queryParam("query", "{query}")
@@ -431,7 +429,7 @@ public class Main {
         //qex.close(); // Close select query execution
         System.out.println("Add to temp model");
         tempModel.add(resultTemp);
-        Model finalModel = signalingConstruct(resultTemp, tempModel, genesDone);
+        Model finalModel = signalingConstruct(resultTemp, tempModel, genesDone, smolecule);
         return finalModel;
     }
 
