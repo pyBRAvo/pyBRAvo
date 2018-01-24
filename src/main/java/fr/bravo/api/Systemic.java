@@ -134,7 +134,7 @@ public class Systemic {
                     StringBuilder result = new StringBuilder();
                     
                     // Construct new graphe
-                    String filterQuery = fr.bravo.api.SparqlQuery.initialSignalingQuery(genesList.get(i).toString());
+                    String filterQuery = fr.bravo.api.SparqlQuery.initialSignalingQuery(genesList.get(i).toString(), true);
 
                     // Parsing json is more simple than XML
                     String contentType = "application/json";
