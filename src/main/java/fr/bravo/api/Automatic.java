@@ -14,6 +14,7 @@ import java.io.StringWriter;
 import java.net.URI;
 import java.net.URLConnection;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import javax.ws.rs.DefaultValue;
@@ -69,7 +70,7 @@ public class Automatic {
             List geneDone = (List)initialResults[1];
             Model network = ModelFactory.createDefaultModel();
             // Final model
-            network = upstreamRegulationConstruct(initialModel, initialModel, geneDone, "Up", true);
+            network = upstreamRegulationConstruct(initialModel, initialModel, geneDone, "Up", true, Arrays.asList("KEGG", "PID"));
             HashMap<String, String> scopes = new HashMap<>();
             // Render JSON and RDF format
             if(format.equals("all")){
@@ -151,16 +152,16 @@ public class Automatic {
      * @return {Model}
      * @throws java.io.IOException
      */
-    public static Model upstreamRegulationConstruct(Model listModel, Model tempModel, List genesDone, String direction, Boolean smolecule) throws IOException {
+    public static Model upstreamRegulationConstruct(Model listModel, Model tempModel, List genesDone, String direction, Boolean smolecule, List<String> dataSources) throws IOException {
         
         // No next regulators
         if(listModel.isEmpty()){
             return tempModel;
         }
 //        Model resultTemp = fr.bravo.api.SparqlQuery.upstreamRegulationConstructQueryOptimized(listModel, tempModel, genesDone, direction);
-        Model resultTemp = fr.bravo.api.SparqlQuery.upstreamRegulationConstructQuery(listModel, tempModel, genesDone, direction, smolecule);
+        Model resultTemp = fr.bravo.api.SparqlQuery.upstreamRegulationConstructQuery(listModel, tempModel, genesDone, direction, smolecule, dataSources);
         tempModel.add(resultTemp);
-        Model finalModel= upstreamRegulationConstruct(resultTemp, tempModel, genesDone, direction, smolecule);
+        Model finalModel= upstreamRegulationConstruct(resultTemp, tempModel, genesDone, direction, smolecule, dataSources);
         return finalModel;
     }
 }
