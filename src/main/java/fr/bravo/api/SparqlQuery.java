@@ -58,8 +58,8 @@ public class SparqlQuery {
         int alreadyExplored = genesDone.size();
 
         StringBuilder filterDataSources = new StringBuilder();
-        filterDataSources.append("FILTER (?source IN (");
         if (dataSources.size() > 0) {
+            filterDataSources.append("FILTER (?source IN (");
             for (String ds : dataSources) {
                 String dsUri = "<http://pathwaycommons.org/pc2/"+ds.toLowerCase()+">";
                 filterDataSources.append(dsUri + ", ");
@@ -67,7 +67,8 @@ public class SparqlQuery {
             int i = filterDataSources.lastIndexOf(", ");
             filterDataSources.deleteCharAt(i);
             filterDataSources.append(")) . \n");
-        }
+//            System.out.println(filterDataSources);
+        } 
         
         // SPARQL Query to get controller of a model (e.g. gene)
         String queryStringS = "PREFIX bp: <http://www.biopax.org/release/biopax-level3.owl#>\n" +
@@ -106,7 +107,7 @@ public class SparqlQuery {
                                 +"  ?controller a ?controllerType ; bp:displayName ?controllerName ; bp:dataSource ?controllersource ."
                                 +"} WHERE{ \n"
                                 + "FILTER( (?controlledName = \""+TF+"\"^^xsd:string) "
-                                    + "&& (?controllerName != \""+TF+"\"^^xsd:string) .\n"
+                                    + "&& (?controllerName != \""+TF+"\"^^xsd:string) ).\n"
                                 + filterDataSources 
                                 +"?tempReac a bp:TemplateReactionRegulation .\n"
                                 +"?tempReac rdf:type ?type ; bp:controlled ?controlled ; bp:controller ?controller ; bp:controlType ?controlType ; bp:dataSource ?source .\n"
@@ -164,9 +165,10 @@ public class SparqlQuery {
             System.err.println(e.getMessage());
         }
         logger.info("explored " + genesDone.size() + " biological controllers (BC)");
-        int newlyExplored = genesDone.size() - alreadyExplored;
-        float throughput = newlyExplored * 1000 / sw.getTime();
-        logger.info("exploration throughput: " + throughput + " BC per second");
+        
+//        int newlyExplored = genesDone.size() - alreadyExplored;
+//        float throughput = newlyExplored * 1000 / sw.getTime();
+//        logger.info("exploration throughput: " + throughput + " BC per second");
         return resultTemp;
     }
 
