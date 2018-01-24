@@ -69,7 +69,7 @@ public class Automatic {
             List geneDone = (List)initialResults[1];
             Model network = ModelFactory.createDefaultModel();
             // Final model
-            network = upstreamRegulationConstruct(initialModel, initialModel, geneDone, "Up");
+            network = upstreamRegulationConstruct(initialModel, initialModel, geneDone, "Up", true);
             HashMap<String, String> scopes = new HashMap<>();
             // Render JSON and RDF format
             if(format.equals("all")){
@@ -109,7 +109,7 @@ public class Automatic {
                 String gene = genes.get(i).toString().toUpperCase();
                 geneDone.add(gene);
                 // SPARQL Query to get all transcription factors for a gene
-                String queryString = fr.bravo.api.SparqlQuery.initialUpRegulationQuery(gene);
+                String queryString = fr.bravo.api.SparqlQuery.initialUpRegulationQuery(gene, true);
                             //+"GROUP BY ?controlledName ?controllerName";
                 String contentType = "application/json";
                 // URI of the SPARQL Endpoint
@@ -147,19 +147,20 @@ public class Automatic {
      * @param tempModel {Model}
      * @param genesDone {ArrayList}
      * @param direction {String}
+     * @param smolecule
      * @return {Model}
      * @throws java.io.IOException
      */
-    public static Model upstreamRegulationConstruct(Model listModel, Model tempModel, List genesDone, String direction) throws IOException {
+    public static Model upstreamRegulationConstruct(Model listModel, Model tempModel, List genesDone, String direction, Boolean smolecule) throws IOException {
         
         // No next regulators
         if(listModel.isEmpty()){
             return tempModel;
         }
 //        Model resultTemp = fr.bravo.api.SparqlQuery.upstreamRegulationConstructQueryOptimized(listModel, tempModel, genesDone, direction);
-        Model resultTemp = fr.bravo.api.SparqlQuery.upstreamRegulationConstructQuery(listModel, tempModel, genesDone, direction);
+        Model resultTemp = fr.bravo.api.SparqlQuery.upstreamRegulationConstructQuery(listModel, tempModel, genesDone, direction, smolecule);
         tempModel.add(resultTemp);
-        Model finalModel= upstreamRegulationConstruct(resultTemp, tempModel, genesDone, direction);
+        Model finalModel= upstreamRegulationConstruct(resultTemp, tempModel, genesDone, direction, smolecule);
         return finalModel;
     }
 }

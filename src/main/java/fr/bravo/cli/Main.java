@@ -70,6 +70,10 @@ public class Main {
         Option format = new Option("f", "format", true, "supported output file format: sif, turtle, ttl, rdfxml, rdfjson, jsonld");
         format.setRequired(true);
         options.addOption(format);
+        
+        Option smolecule = new Option("m", "molecule", true, "do not take into account small moleculed");
+        smolecule.setRequired(false);
+        options.addOption(smolecule);
 
         Option regulation = new Option("r", "regulation", false, "build regulatory network");
         regulation.setRequired(false);
@@ -157,9 +161,16 @@ public class Main {
         sw.start();
         Model network = ModelFactory.createDefaultModel();
         List geneDone = new ArrayList<String>();
+        Boolean molecule = true;
+        if (cmd.hasOption("molecule")) {
+            molecule = false;
+            System.out.println("Do not consider small molecules");
+        }else{
+            molecule = true;
+        }
         if (cmd.hasOption("signaling")) {
             // Initial graph with Transcription Factors (TFs)
-            Object[] initialResults = initialConstruct(inputFilePath, way, "signaling", "name");
+            Object[] initialResults = initialConstruct(inputFilePath, way, "signaling", "name", molecule);
             System.out.println("Initial signaling graph : DONE");
             Model initialModel = (Model) initialResults[0];
             geneDone = (List) initialResults[1];
@@ -169,22 +180,22 @@ public class Main {
         } else if (cmd.hasOption("regulation")) {
             if (cmd.hasOption("id")){
                 // Initial graph with Transcription Factors (TFs)
-                Object[] initialResults = initialConstruct(inputFilePath, way, "regulation", "id");
+                Object[] initialResults = initialConstruct(inputFilePath, way, "regulation", "id", molecule);
                 System.out.println("Initial regulatory graph : DONE");
                 Model initialModel = (Model) initialResults[0];
                 geneDone = (List) initialResults[1];
                 // Next level of regulation network
                 System.out.println("Run regulatory network construction");
-                network = fr.bravo.api.Automatic.upstreamRegulationConstruct(initialModel, initialModel, geneDone, way);
+                network = fr.bravo.api.Automatic.upstreamRegulationConstruct(initialModel, initialModel, geneDone, way, molecule);
             }else{
                 // Initial graph with Transcription Factors (TFs)
-                Object[] initialResults = initialConstruct(inputFilePath, way, "regulation", "name");
+                Object[] initialResults = initialConstruct(inputFilePath, way, "regulation", "name", molecule);
                 System.out.println("Initial regulatory graph : DONE");
                 Model initialModel = (Model) initialResults[0];
                 geneDone = (List) initialResults[1];
                 // Next level of regulation network
                 System.out.println("Run regulatory network construction");
-                network = fr.bravo.api.Automatic.upstreamRegulationConstruct(initialModel, initialModel, geneDone, way);
+                network = fr.bravo.api.Automatic.upstreamRegulationConstruct(initialModel, initialModel, geneDone, way, molecule);
             }
             
         } else {
@@ -211,10 +222,13 @@ public class Main {
      * @param filename input file
      * @param direction set direction of reconstruction {Up, Down}
      * @param type
+     * @param queryType
+     * @param smolecule
      * @return Object with JENA Model and List of genes
      * @throws java.io.IOException
+     * @throws org.codehaus.jettison.json.JSONException
      */
-    public static Object[] initialConstruct(String filename, String direction, String type, String queryType) throws IOException, JSONException {
+    public static Object[] initialConstruct(String filename, String direction, String type, String queryType, Boolean smolecule) throws IOException, JSONException {
         String line;
         String splitBy = ";";
 
@@ -240,10 +254,10 @@ public class Main {
                     if (type.equals("regulation")) {
                         if (direction.equals("Up")) {
                             // SPARQL Query to get all transcription factors for a gene
-                            queryStringC = fr.bravo.api.SparqlQuery.initialUpRegulationQuery(genesList.get(i).toString());
+                            queryStringC = fr.bravo.api.SparqlQuery.initialUpRegulationQuery(genesList.get(i).toString(), smolecule);
                         } else if (direction.equals("Down")) {
                             // SPARQL Query to get all genes regulated by the given genes
-                            queryStringC = fr.bravo.api.SparqlQuery.initialDownRegulationQuery(genesList.get(i).toString());
+                            queryStringC = fr.bravo.api.SparqlQuery.initialDownRegulationQuery(genesList.get(i).toString(), smolecule);
                         }
                     } else {
                         // SPARQL Query to get all entities that have reaction link with the given genes (i.e. signaling)
@@ -283,10 +297,10 @@ public class Main {
                     if (type.equals("regulation")) {
                         if (direction.equals("Up")) {
                             // SPARQL Query to get all transcription factors for a gene
-                            queryStringC = fr.bravo.api.SparqlQuery.initialUpRegulationQuery(b[0]);
+                            queryStringC = fr.bravo.api.SparqlQuery.initialUpRegulationQuery(b[0], smolecule);
                         } else if (direction.equals("Down")) {
                             // SPARQL Query to get all genes regulated by the given genes
-                            queryStringC = fr.bravo.api.SparqlQuery.initialDownRegulationQuery(b[0]);
+                            queryStringC = fr.bravo.api.SparqlQuery.initialDownRegulationQuery(b[0], smolecule);
                         }
                     } else {
                         // SPARQL Query to get all entities that have reaction link with the given genes (i.e. signaling)

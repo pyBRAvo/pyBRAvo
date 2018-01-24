@@ -71,7 +71,7 @@ public class Systemic {
 
                     // Construct new graphe
                     // Filter on Trancription Factor and wihtout miRNA
-                    String filterQuery = fr.bravo.api.SparqlQuery.initialUpRegulationQuery(genesList.get(i).toString());
+                    String filterQuery = fr.bravo.api.SparqlQuery.initialUpRegulationQuery(genesList.get(i).toString(), true);
                     System.out.println("Query created");
 
                     // Parsing json is more simple than XML
