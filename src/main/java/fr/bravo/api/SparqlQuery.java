@@ -46,14 +46,29 @@ public class SparqlQuery {
      * @param tempModel
      * @param genesDone
      * @param direction ; way of reconstruction
+     * @param smolecule
+     * @param dataSources
      * @return
      */
-    public static Model upstreamRegulationConstructQuery(Model listModel, Model tempModel, List genesDone, String direction, Boolean smolecule) {
+    public static Model upstreamRegulationConstructQuery(Model listModel, Model tempModel, List genesDone, String direction, Boolean smolecule, List<String> dataSources) {
+//    public static Model upstreamRegulationConstructQuery(Model listModel, Model tempModel, List genesDone, String direction, Boolean smolecule) {
 
         StopWatch sw = new StopWatch();
         sw.start();
         int alreadyExplored = genesDone.size();
 
+        StringBuilder filterDataSources = new StringBuilder();
+        filterDataSources.append("FILTER (?source IN (");
+        if (dataSources.size() > 0) {
+            for (String ds : dataSources) {
+                String dsUri = "<http://pathwaycommons.org/pc2/"+ds.toLowerCase()+">";
+                filterDataSources.append(dsUri + ", ");
+            }
+            int i = filterDataSources.lastIndexOf(", ");
+            filterDataSources.deleteCharAt(i);
+            filterDataSources.append(")) . \n");
+        }
+        
         // SPARQL Query to get controller of a model (e.g. gene)
         String queryStringS = "PREFIX bp: <http://www.biopax.org/release/biopax-level3.owl#>\n" +
             "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n" +
@@ -91,8 +106,8 @@ public class SparqlQuery {
                                 +"  ?controller a ?controllerType ; bp:displayName ?controllerName ; bp:dataSource ?controllersource ."
                                 +"} WHERE{ \n"
                                 + "FILTER( (?controlledName = \""+TF+"\"^^xsd:string) "
-                                    + "&& (?controllerName != \""+TF+"\"^^xsd:string) "
-                                + "&& (str(?source) != \"http://pathwaycommons.org/pc2/mirtarbase\") ) .\n"
+                                    + "&& (?controllerName != \""+TF+"\"^^xsd:string) .\n"
+                                + filterDataSources 
                                 +"?tempReac a bp:TemplateReactionRegulation .\n"
                                 +"?tempReac rdf:type ?type ; bp:controlled ?controlled ; bp:controller ?controller ; bp:controlType ?controlType ; bp:dataSource ?source .\n"
                                 +"?controlled bp:participant ?participant ; bp:dataSource ?controlledsource .\n"
@@ -100,6 +115,7 @@ public class SparqlQuery {
                                 +"?controller bp:displayName ?controllerName ; rdf:type ?controllerType ; bp:dataSource ?controllersource .\n "
                                 +"}";
                     }else{
+                        // skip small molecules
                         queryStringC = "PREFIX bp: <http://www.biopax.org/release/biopax-level3.owl#>\n"
                                 +"PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n"
                                 +"PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> \n"
@@ -110,8 +126,8 @@ public class SparqlQuery {
                                 +"} WHERE{ \n"
                                 + "FILTER( (?controlledName = \""+TF+"\"^^xsd:string) "
                                     + "&& (?controllerName != \""+TF+"\"^^xsd:string) "
-                                + "&& (str(?source) != \"http://pathwaycommons.org/pc2/mirtarbase\")"
-                                + "&& (str(?controllerType) != \"http://www.biopax.org/release/biopax-level3.owl#SmallMolecule\") ) .\n"
+                                + "&& (?controllerType != bp:SmallMolecule) ) .\n"
+                                + filterDataSources
                                 +"?tempReac a bp:TemplateReactionRegulation .\n"
                                 +"?tempReac rdf:type ?type ; bp:controlled ?controlled ; bp:controller ?controller ; bp:controlType ?controlType ; bp:dataSource ?source .\n"
                                 +"?controlled bp:participant ?participant ; bp:dataSource ?controlledsource .\n"
