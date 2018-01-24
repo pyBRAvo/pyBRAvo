@@ -72,9 +72,19 @@ public class Main {
         format.setRequired(true);
         options.addOption(format);
         
-        Option smolecule = new Option("m", "molecule", false, "do not take into account small moleculed");
+        Option smolecule = new Option("ssm", "skip_small_molecules", false, "skip small molecules");
         smolecule.setRequired(false);
         options.addOption(smolecule);
+        
+        Option mDepth = new Option("md", "max_depth", true, "maximum exploration depth");
+        mDepth.setRequired(false);
+        options.addOption(mDepth);
+        
+        Option datasources = new Option("ds", "data_sources", true, "a data sources among {bind, "
+                + "biogrid, corum, ctd, dip, drugbank, hprd, humancyc, inoh, intact, kegg, mirtarbase, netpath, "
+                + "panther, pid, psp, reactome, reconx, smpdb, wp, intact_complex, msigdb}. Multiple -ds parameters can be used.");
+        datasources.setRequired(false);
+        options.addOption(datasources);
 
         Option regulation = new Option("r", "regulation", false, "build regulatory network");
         regulation.setRequired(false);
@@ -124,6 +134,7 @@ public class Main {
             System.exit(1);
             return;
         }
+        
         if (cmd.hasOption("regulation") && cmd.hasOption("signaling")) {
             logger.error("Set regulatory (-r) OR signaling (-s) network assembly option");
             formatter.printHelp("utility-name", options);
@@ -163,12 +174,23 @@ public class Main {
         Model network = ModelFactory.createDefaultModel();
         List geneDone = new ArrayList<String>();
         Boolean molecule = true;
-        if (cmd.hasOption("molecule")) {
+        if (cmd.hasOption("ssm")) {
             molecule = false;
             System.out.println("Do not consider small molecules");
         }else{
             molecule = true;
         }
+        int maxDepth = -1;
+        if (cmd.hasOption("md")) {
+            maxDepth = Integer.parseInt(cmd.getOptionValue("md"));
+            System.out.println("Max depth fixed to "+maxDepth);
+        }
+        List<String> dsList = new ArrayList<>();
+        if (cmd.hasOption("data_sources")) {
+            String [] ds = cmd.getOptionValues("data_sources"); 
+            dsList = Arrays.asList(ds);
+            System.out.println(dsList);
+        } 
         if (cmd.hasOption("signaling")) {
             // Initial graph with Transcription Factors (TFs)
             Object[] initialResults = initialConstruct(inputFilePath, way, "signaling", "name", molecule);
@@ -187,7 +209,7 @@ public class Main {
                 geneDone = (List) initialResults[1];
                 // Next level of regulation network
                 System.out.println("Run regulatory network construction");
-                network = fr.bravo.api.Automatic.upstreamRegulationConstruct(initialModel, initialModel, geneDone, way, molecule, Arrays.asList("KEGG", "PID", "reactome"));
+                network = fr.bravo.api.Automatic.upstreamRegulationConstruct(initialModel, initialModel, geneDone, way, molecule, dsList, maxDepth, 0);
             }else{
                 // Initial graph with Transcription Factors (TFs)
                 Object[] initialResults = initialConstruct(inputFilePath, way, "regulation", "name", molecule);
@@ -196,7 +218,7 @@ public class Main {
                 geneDone = (List) initialResults[1];
                 // Next level of regulation network
                 System.out.println("Run regulatory network construction");
-                network = fr.bravo.api.Automatic.upstreamRegulationConstruct(initialModel, initialModel, geneDone, way, molecule, Arrays.asList("KEGG", "PID", "reactome"));
+                network = fr.bravo.api.Automatic.upstreamRegulationConstruct(initialModel, initialModel, geneDone, way, molecule, dsList, maxDepth, 0);
             }
             
         } else {
