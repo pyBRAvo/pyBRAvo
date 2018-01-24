@@ -406,31 +406,60 @@ public class SparqlQuery {
      * @param b {String} Entity name
      * @return
      */
-    public static String initialSignalingQuery(String b){
-        String ISquery = "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n" +
-            "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n" +
-            "PREFIX owl: <http://www.w3.org/2002/07/owl#>\n" +
-            "PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n" +
-            "PREFIX bp: <http://www.biopax.org/release/biopax-level3.owl#>" +
-            "CONSTRUCT {\n" +
-            "  ?reaction rdf:type ?type ; bp:right ?right ; bp:controller ?controller ; " +
-                "bp:left ?participant ; bp:dataSource ?source .\n" +
-            "  ?right a ?rightType ; bp:displayName ?rightName ; bp:dataSource ?rightSource .\n" +
-            "  ?participant a ?participantType ; bp:displayName ?participantName ; bp:dataSource ?participantSource .\n" +
-            "  ?controller a ?controllerType ; bp:displayName ?controllerName ; bp:dataSource ?controllerSource; bp:controlType ?controlType  ." +
-            "}WHERE{\n" +
-            "  OPTIONAL { \n" +
-            "    ?catalysis bp:controller ?controller ; bp:controlType ?controlType .\n" +
-            "    ?controller bp:displayName ?controllerName ; rdf:type ?controllerType ; bp:dataSource ?controllerSource ." +
-            "  }\n" +
-            "  FILTER (str(?source) != \"http://pathwaycommons.org/pc2/mirtarbase\")" +
-            "  ?catalysis bp:controlled* ?reaction .\n" +
-            "  ?reaction bp:right ?right ; bp:dataSource ?source ; rdf:type ?type .\n" +
-            "  ?reaction bp:left|bp:right ?participant .\n" +
-            "  ?participant bp:displayName ?participantName ; rdf:type ?participantType ; bp:dataSource ?participantSource .\n" +
-            "  ?right bp:displayName|bp:name ?rightName ; rdf:type ?rightType ; bp:dataSource ?rightSource ." +
-            "  VALUES ?rightName { \""+b+"\"^^xsd:string }\n" +
-            "} order by ?catalysis";
+    public static String initialSignalingQuery(String b, Boolean smolecule){
+        String ISquery = "";
+        if (smolecule){
+            ISquery = "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n" +
+                "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n" +
+                "PREFIX owl: <http://www.w3.org/2002/07/owl#>\n" +
+                "PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n" +
+                "PREFIX bp: <http://www.biopax.org/release/biopax-level3.owl#>" +
+                "CONSTRUCT {\n" +
+                "  ?reaction rdf:type ?type ; bp:right ?right ; bp:controller ?controller ; " +
+                    "bp:left ?participant ; bp:dataSource ?source .\n" +
+                "  ?right a ?rightType ; bp:displayName ?rightName ; bp:dataSource ?rightSource .\n" +
+                "  ?participant a ?participantType ; bp:displayName ?participantName ; bp:dataSource ?participantSource .\n" +
+                "  ?controller a ?controllerType ; bp:displayName ?controllerName ; bp:dataSource ?controllerSource; bp:controlType ?controlType  ." +
+                "}WHERE{\n" +
+                "  OPTIONAL { \n" +
+                "    ?catalysis bp:controller ?controller ; bp:controlType ?controlType .\n" +
+                "    ?controller bp:displayName ?controllerName ; rdf:type ?controllerType ; bp:dataSource ?controllerSource ." +
+                "  }\n" +
+                "  FILTER (str(?source) != \"http://pathwaycommons.org/pc2/mirtarbase\")" +
+                "  ?catalysis bp:controlled* ?reaction .\n" +
+                "  ?reaction bp:right ?right ; bp:dataSource ?source ; rdf:type ?type .\n" +
+                "  ?reaction bp:left|bp:right ?participant .\n" +
+                "  ?participant bp:displayName ?participantName ; rdf:type ?participantType ; bp:dataSource ?participantSource .\n" +
+                "  ?right bp:displayName|bp:name ?rightName ; rdf:type ?rightType ; bp:dataSource ?rightSource ." +
+                "  VALUES ?rightName { \""+b+"\"^^xsd:string }\n" +
+                "} order by ?catalysis";
+        }else{
+            ISquery = "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n" +
+                "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n" +
+                "PREFIX owl: <http://www.w3.org/2002/07/owl#>\n" +
+                "PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n" +
+                "PREFIX bp: <http://www.biopax.org/release/biopax-level3.owl#>" +
+                "CONSTRUCT {\n" +
+                "  ?reaction rdf:type ?type ; bp:right ?right ; bp:controller ?controller ; " +
+                    "bp:left ?participant ; bp:dataSource ?source .\n" +
+                "  ?right a ?rightType ; bp:displayName ?rightName ; bp:dataSource ?rightSource .\n" +
+                "  ?participant a ?participantType ; bp:displayName ?participantName ; bp:dataSource ?participantSource .\n" +
+                "  ?controller a ?controllerType ; bp:displayName ?controllerName ; bp:dataSource ?controllerSource; bp:controlType ?controlType  ." +
+                "}WHERE{\n" +
+                "  OPTIONAL { \n" +
+                "    ?catalysis bp:controller ?controller ; bp:controlType ?controlType .\n" +
+                "    ?controller bp:displayName ?controllerName ; rdf:type ?controllerType ; bp:dataSource ?controllerSource ." +
+                "  }\n" +
+                "  FILTER (str(?source) != \"http://pathwaycommons.org/pc2/mirtarbase\" " +
+                "     && (str(?participantType) != \"http://www.biopax.org/release/biopax-level3.owl#SmallMolecule\"))" +
+                "  ?catalysis bp:controlled* ?reaction .\n" +
+                "  ?reaction bp:right ?right ; bp:dataSource ?source ; rdf:type ?type .\n" +
+                "  ?reaction bp:left|bp:right ?participant .\n" +
+                "  ?participant bp:displayName ?participantName ; rdf:type ?participantType ; bp:dataSource ?participantSource .\n" +
+                "  ?right bp:displayName|bp:name ?rightName ; rdf:type ?rightType ; bp:dataSource ?rightSource ." +
+                "  VALUES ?rightName { \""+b+"\"^^xsd:string }\n" +
+                "} order by ?catalysis";
+        }
         return ISquery;
     }
 
