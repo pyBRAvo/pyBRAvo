@@ -94,7 +94,7 @@ public class SparqlQuery {
                             +"?tempReac a bp:TemplateReactionRegulation .\n"
                             +"?tempReac rdf:type ?type ; bp:controlled ?controlled ; bp:controller ?controller ; bp:controlType ?controlType ; bp:dataSource ?source .\n"
                             +"?controlled bp:participant ?participant ; bp:dataSource ?controlledsource .\n"
-                            +"?participant bp:displayName ?controlledName; rdf:type ?controlledType .\n"
+                            +"?participant bp:displayName|bp:name ?controlledName; rdf:type ?controlledType .\n"
                             +"?controller bp:displayName ?controllerName ; rdf:type ?controllerType ; bp:dataSource ?controllersource .\n "
                             +"}";
 //                            + "GROUP BY ?controlledName ?controllerName";
@@ -229,7 +229,7 @@ public class SparqlQuery {
                 + "          bp:dataSource ?source .\n"
                 + "?controlled bp:participant ?participant ; "
                 + "            bp:dataSource ?controlledsource .\n"
-                + "?participant bp:displayName ?controlledName ; "
+                + "?participant bp:displayName|bp:name ?controlledName ; "
                 + "             rdf:type ?controlledType .\n"
                 + "?controller bp:displayName ?controllerName ; "
                 + "            rdf:type ?controllerType ; "
@@ -284,7 +284,7 @@ public class SparqlQuery {
             +"?tempReac a bp:TemplateReactionRegulation .\n"
             +"?tempReac rdf:type ?type ; bp:controlled ?controlled ; bp:controller ?controller ; bp:controlType ?controlType ; bp:dataSource ?source .\n"
             +"?controlled bp:participant ?participant ; bp:dataSource ?controlledsource .\n"
-            +"?participant bp:displayName ?controlledName; rdf:type ?controlledType ."
+            +"?participant bp:displayName|bp:name ?controlledName; rdf:type ?controlledType ."
             +"?controller bp:displayName ?controllerName ; rdf:type ?controllerType ; bp:dataSource ?controllersource .\n "
             +"}";
         return IURquery;
@@ -310,7 +310,7 @@ public class SparqlQuery {
             +"?tempReac a bp:TemplateReactionRegulation .\n"
             +"?tempReac rdf:type ?type ; bp:controlled ?controlled ; bp:controller ?controller ; bp:controlType ?controlType ; bp:dataSource ?source .\n"
             +"?controlled bp:participant ?participant ; bp:dataSource ?controlledsource .\n"
-            +"?participant bp:displayName ?controlledName; rdf:type ?controlledType ."
+            +"?participant bp:displayName|bp:name ?controlledName; rdf:type ?controlledType ."
             +"?controller bp:displayName ?controllerName ; rdf:type ?controllerType ; bp:dataSource ?controllersource .\n "
             +"}";
         return IDRquery;
@@ -343,7 +343,7 @@ public class SparqlQuery {
             "  ?reaction bp:right ?right ; bp:dataSource ?source ; rdf:type ?type .\n" +
             "  ?reaction bp:left|bp:right ?participant .\n" +
             "  ?participant bp:displayName ?participantName ; rdf:type ?participantType ; bp:dataSource ?participantSource .\n" +
-            "  ?right bp:displayName ?rightName ; rdf:type ?rightType ; bp:dataSource ?rightSource ." +
+            "  ?right bp:displayName|bp:name ?rightName ; rdf:type ?rightType ; bp:dataSource ?rightSource ." +
             "  VALUES ?rightName { \""+b+"\"^^xsd:string }\n" +
             "} order by ?catalysis";
         return ISquery;
@@ -371,7 +371,7 @@ public class SparqlQuery {
                 "  FILTER ( ?b = \""+idList.get(i).toString()+"\"^^xsd:string )\n" +
                 "  ?c ?d ?a .\n" +
                 "  ?e ?f ?c .\n" +
-                "  ?e bp:displayName ?name .\n" +
+                "  ?e bp:displayName|bp:name ?name .\n" +
                 "}\n";
             System.out.println("Query ID created");
 
