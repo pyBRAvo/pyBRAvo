@@ -48,7 +48,7 @@ public class SparqlQuery {
      * @param direction ; way of reconstruction
      * @return
      */
-    public static Model upstreamRegulationConstructQuery(Model listModel, Model tempModel, List genesDone, String direction) {
+    public static Model upstreamRegulationConstructQuery(Model listModel, Model tempModel, List genesDone, String direction, Boolean smolecule) {
 
         StopWatch sw = new StopWatch();
         sw.start();
@@ -80,23 +80,45 @@ public class SparqlQuery {
                     logger.info("exploring " + TF);
                     // SPARQL Query to get all transcription factors for a gene
                     // An error will be sent if TF contains an apostrophe 
-                    String queryStringC = "PREFIX bp: <http://www.biopax.org/release/biopax-level3.owl#>\n"
-                            +"PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n"
-                            +"PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> \n"
-                            +"CONSTRUCT {\n"
-                            +"  ?tempReac rdf:type ?type ; bp:controlled ?controlled ; bp:controller ?controller ; bp:dataSource ?source ; bp:controlType ?controlType .\n"
-                            +"  ?controlled a ?controlledType ; bp:displayName ?controlledName ; bp:dataSource ?controlledsource .\n"
-                            +"  ?controller a ?controllerType ; bp:displayName ?controllerName ; bp:dataSource ?controllersource ."
-                            +"} WHERE{ \n"
-                            + "FILTER( (?controlledName = \""+TF+"\"^^xsd:string) "
-                                + "&& (?controllerName != \""+TF+"\"^^xsd:string) "
-                            + "&& (str(?source) != \"http://pathwaycommons.org/pc2/mirtarbase\") ) .\n"
-                            +"?tempReac a bp:TemplateReactionRegulation .\n"
-                            +"?tempReac rdf:type ?type ; bp:controlled ?controlled ; bp:controller ?controller ; bp:controlType ?controlType ; bp:dataSource ?source .\n"
-                            +"?controlled bp:participant ?participant ; bp:dataSource ?controlledsource .\n"
-                            +"?participant bp:displayName|bp:name ?controlledName; rdf:type ?controlledType .\n"
-                            +"?controller bp:displayName ?controllerName ; rdf:type ?controllerType ; bp:dataSource ?controllersource .\n "
-                            +"}";
+                    String queryStringC = "";
+                    if (smolecule){
+                        queryStringC = "PREFIX bp: <http://www.biopax.org/release/biopax-level3.owl#>\n"
+                                +"PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n"
+                                +"PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> \n"
+                                +"CONSTRUCT {\n"
+                                +"  ?tempReac rdf:type ?type ; bp:controlled ?controlled ; bp:controller ?controller ; bp:dataSource ?source ; bp:controlType ?controlType .\n"
+                                +"  ?controlled a ?controlledType ; bp:displayName ?controlledName ; bp:dataSource ?controlledsource .\n"
+                                +"  ?controller a ?controllerType ; bp:displayName ?controllerName ; bp:dataSource ?controllersource ."
+                                +"} WHERE{ \n"
+                                + "FILTER( (?controlledName = \""+TF+"\"^^xsd:string) "
+                                    + "&& (?controllerName != \""+TF+"\"^^xsd:string) "
+                                + "&& (str(?source) != \"http://pathwaycommons.org/pc2/mirtarbase\") ) .\n"
+                                +"?tempReac a bp:TemplateReactionRegulation .\n"
+                                +"?tempReac rdf:type ?type ; bp:controlled ?controlled ; bp:controller ?controller ; bp:controlType ?controlType ; bp:dataSource ?source .\n"
+                                +"?controlled bp:participant ?participant ; bp:dataSource ?controlledsource .\n"
+                                +"?participant bp:displayName|bp:name ?controlledName; rdf:type ?controlledType .\n"
+                                +"?controller bp:displayName ?controllerName ; rdf:type ?controllerType ; bp:dataSource ?controllersource .\n "
+                                +"}";
+                    }else{
+                        queryStringC = "PREFIX bp: <http://www.biopax.org/release/biopax-level3.owl#>\n"
+                                +"PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n"
+                                +"PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> \n"
+                                +"CONSTRUCT {\n"
+                                +"  ?tempReac rdf:type ?type ; bp:controlled ?controlled ; bp:controller ?controller ; bp:dataSource ?source ; bp:controlType ?controlType .\n"
+                                +"  ?controlled a ?controlledType ; bp:displayName ?controlledName ; bp:dataSource ?controlledsource .\n"
+                                +"  ?controller a ?controllerType ; bp:displayName ?controllerName ; bp:dataSource ?controllersource ."
+                                +"} WHERE{ \n"
+                                + "FILTER( (?controlledName = \""+TF+"\"^^xsd:string) "
+                                    + "&& (?controllerName != \""+TF+"\"^^xsd:string) "
+                                + "&& (str(?source) != \"http://pathwaycommons.org/pc2/mirtarbase\")"
+                                + "&& (str(?controllerType) != \"http://www.biopax.org/release/biopax-level3.owl#SmallMolecule\") ) .\n"
+                                +"?tempReac a bp:TemplateReactionRegulation .\n"
+                                +"?tempReac rdf:type ?type ; bp:controlled ?controlled ; bp:controller ?controller ; bp:controlType ?controlType ; bp:dataSource ?source .\n"
+                                +"?controlled bp:participant ?participant ; bp:dataSource ?controlledsource .\n"
+                                +"?participant bp:displayName|bp:name ?controlledName; rdf:type ?controlledType .\n"
+                                +"?controller bp:displayName ?controllerName ; rdf:type ?controllerType ; bp:dataSource ?controllersource .\n "
+                                +"}";
+                    }
 //                            + "GROUP BY ?controlledName ?controllerName";
                     String contentType = "application/json";
                     // URI of the SPARQL Endpoint
@@ -269,50 +291,97 @@ public class SparqlQuery {
      * @param b {String} Entity name
      * @return
      */
-    public static String initialUpRegulationQuery(String b){
-        String IURquery = "PREFIX bp: <http://www.biopax.org/release/biopax-level3.owl#>\n"
-            +"PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n"
-            +"PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> \n"
-            +"CONSTRUCT {\n"
-            +"  ?tempReac rdf:type ?type ; bp:controlled ?controlled ; bp:controller ?controller ; bp:dataSource ?source ; bp:controlType ?controlType .\n"
-            +"  ?controlled a ?controlledType ; bp:displayName ?controlledName ; bp:dataSource ?controlledsource .\n"
-            +"  ?controller a ?controllerType ; bp:displayName ?controllerName ; bp:dataSource ?controllersource ."
-            +"} WHERE{ \n"
-            + "FILTER( (?controlledName = \""+b+"\"^^xsd:string) "
-                + "&& (?controllerName != \""+b+"\"^^xsd:string) "
-                + "&& (str(?source) != \"http://pathwaycommons.org/pc2/mirtarbase\") ) .\n"
-            +"?tempReac a bp:TemplateReactionRegulation .\n"
-            +"?tempReac rdf:type ?type ; bp:controlled ?controlled ; bp:controller ?controller ; bp:controlType ?controlType ; bp:dataSource ?source .\n"
-            +"?controlled bp:participant ?participant ; bp:dataSource ?controlledsource .\n"
-            +"?participant bp:displayName|bp:name ?controlledName; rdf:type ?controlledType ."
-            +"?controller bp:displayName ?controllerName ; rdf:type ?controllerType ; bp:dataSource ?controllersource .\n "
-            +"}";
+    public static String initialUpRegulationQuery(String b, Boolean smolecule){
+        String IURquery = "";
+        // smolecule set to True -> consider small molecules
+        if (smolecule){ 
+            IURquery = "PREFIX bp: <http://www.biopax.org/release/biopax-level3.owl#>\n"
+                +"PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n"
+                +"PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> \n"
+                +"CONSTRUCT {\n"
+                +"  ?tempReac rdf:type ?type ; bp:controlled ?controlled ; bp:controller ?controller ; bp:dataSource ?source ; bp:controlType ?controlType .\n"
+                +"  ?controlled a ?controlledType ; bp:displayName ?controlledName ; bp:dataSource ?controlledsource .\n"
+                +"  ?controller a ?controllerType ; bp:displayName ?controllerName ; bp:dataSource ?controllersource ."
+                +"} WHERE{ \n"
+                + "FILTER( (?controlledName = \""+b+"\"^^xsd:string) "
+                    + "&& (?controllerName != \""+b+"\"^^xsd:string) "
+                    + "&& (str(?source) != \"http://pathwaycommons.org/pc2/mirtarbase\") ) .\n"
+                +"?tempReac a bp:TemplateReactionRegulation .\n"
+                +"?tempReac rdf:type ?type ; bp:controlled ?controlled ; bp:controller ?controller ; bp:controlType ?controlType ; bp:dataSource ?source .\n"
+                +"?controlled bp:participant ?participant ; bp:dataSource ?controlledsource .\n"
+                +"?participant bp:displayName|bp:name ?controlledName; rdf:type ?controlledType ."
+                +"?controller bp:displayName ?controllerName ; rdf:type ?controllerType ; bp:dataSource ?controllersource .\n "
+                +"}";
+        }else{
+            IURquery = "PREFIX bp: <http://www.biopax.org/release/biopax-level3.owl#>\n"
+                +"PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n"
+                +"PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> \n"
+                +"CONSTRUCT {\n"
+                +"  ?tempReac rdf:type ?type ; bp:controlled ?controlled ; bp:controller ?controller ; bp:dataSource ?source ; bp:controlType ?controlType .\n"
+                +"  ?controlled a ?controlledType ; bp:displayName ?controlledName ; bp:dataSource ?controlledsource .\n"
+                +"  ?controller a ?controllerType ; bp:displayName ?controllerName ; bp:dataSource ?controllersource ."
+                +"} WHERE{ \n"
+                + "FILTER( (?controlledName = \""+b+"\"^^xsd:string) "
+                    + "&& (?controllerName != \""+b+"\"^^xsd:string) "
+                    + "&& (str(?source) != \"http://pathwaycommons.org/pc2/mirtarbase\") "
+                    + "&& (str(?controllerType) != \"http://www.biopax.org/release/biopax-level3.owl#SmallMolecule\") ) .\n"
+                +"?tempReac a bp:TemplateReactionRegulation .\n"
+                +"?tempReac rdf:type ?type ; bp:controlled ?controlled ; bp:controller ?controller ; bp:controlType ?controlType ; bp:dataSource ?source .\n"
+                +"?controlled bp:participant ?participant ; bp:dataSource ?controlledsource .\n"
+                +"?participant bp:displayName|bp:name ?controlledName; rdf:type ?controlledType ."
+                +"?controller bp:displayName ?controllerName ; rdf:type ?controllerType ; bp:dataSource ?controllersource .\n "
+                +"}";
+        }
         return IURquery;
     }
 
     /**
      *
      * @param b {String} Entity name
+     * @param smolecule
      * @return
      */
-    public static String initialDownRegulationQuery(String b){
-        String IDRquery = "PREFIX bp: <http://www.biopax.org/release/biopax-level3.owl#>\n"
-            +"PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n"
-            +"PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> \n"
-            +"CONSTRUCT {\n"
-            +"  ?tempReac rdf:type ?type ; bp:controlled ?controlled ; bp:controller ?controller ; bp:dataSource ?source ; bp:controlType ?controlType .\n"
-            +"  ?controlled a ?controlledType ; bp:displayName ?controlledName ; bp:dataSource ?controlledsource .\n"
-            +"  ?controller a ?controllerType ; bp:displayName ?controllerName ; bp:dataSource ?controllersource ."
-            +"} WHERE{ \n"
-            + "FILTER( (?controlledName != \""+b+"\"^^xsd:string) "
-                + "&& (?controllerName = \""+b+"\"^^xsd:string) "
-                + "&& (str(?source) != \"http://pathwaycommons.org/pc2/mirtarbase\") ) .\n"
-            +"?tempReac a bp:TemplateReactionRegulation .\n"
-            +"?tempReac rdf:type ?type ; bp:controlled ?controlled ; bp:controller ?controller ; bp:controlType ?controlType ; bp:dataSource ?source .\n"
-            +"?controlled bp:participant ?participant ; bp:dataSource ?controlledsource .\n"
-            +"?participant bp:displayName|bp:name ?controlledName; rdf:type ?controlledType ."
-            +"?controller bp:displayName ?controllerName ; rdf:type ?controllerType ; bp:dataSource ?controllersource .\n "
-            +"}";
+    public static String initialDownRegulationQuery(String b, Boolean smolecule){
+        String IDRquery = "";
+        // smolecule set to True -> consider small molecules
+        if (smolecule){
+            IDRquery = "PREFIX bp: <http://www.biopax.org/release/biopax-level3.owl#>\n"
+                +"PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n"
+                +"PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> \n"
+                +"CONSTRUCT {\n"
+                +"  ?tempReac rdf:type ?type ; bp:controlled ?controlled ; bp:controller ?controller ; bp:dataSource ?source ; bp:controlType ?controlType .\n"
+                +"  ?controlled a ?controlledType ; bp:displayName ?controlledName ; bp:dataSource ?controlledsource .\n"
+                +"  ?controller a ?controllerType ; bp:displayName ?controllerName ; bp:dataSource ?controllersource ."
+                +"} WHERE{ \n"
+                + "FILTER( (?controlledName != \""+b+"\"^^xsd:string) "
+                    + "&& (?controllerName = \""+b+"\"^^xsd:string) "
+                    + "&& (str(?source) != \"http://pathwaycommons.org/pc2/mirtarbase\") ) .\n"
+                +"?tempReac a bp:TemplateReactionRegulation .\n"
+                +"?tempReac rdf:type ?type ; bp:controlled ?controlled ; bp:controller ?controller ; bp:controlType ?controlType ; bp:dataSource ?source .\n"
+                +"?controlled bp:participant ?participant ; bp:dataSource ?controlledsource .\n"
+                +"?participant bp:displayName|bp:name ?controlledName; rdf:type ?controlledType ."
+                +"?controller bp:displayName ?controllerName ; rdf:type ?controllerType ; bp:dataSource ?controllersource .\n "
+                +"}";
+        }else {
+            IDRquery = "PREFIX bp: <http://www.biopax.org/release/biopax-level3.owl#>\n"
+                +"PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n"
+                +"PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> \n"
+                +"CONSTRUCT {\n"
+                +"  ?tempReac rdf:type ?type ; bp:controlled ?controlled ; bp:controller ?controller ; bp:dataSource ?source ; bp:controlType ?controlType .\n"
+                +"  ?controlled a ?controlledType ; bp:displayName ?controlledName ; bp:dataSource ?controlledsource .\n"
+                +"  ?controller a ?controllerType ; bp:displayName ?controllerName ; bp:dataSource ?controllersource ."
+                +"} WHERE{ \n"
+                + "FILTER( (?controlledName != \""+b+"\"^^xsd:string) "
+                    + "&& (?controllerName = \""+b+"\"^^xsd:string) "
+                    + "&& (str(?source) != \"http://pathwaycommons.org/pc2/mirtarbase\")"
+                    + "&& (str(?controllerType) != \"http://www.biopax.org/release/biopax-level3.owl#SmallMolecule\") ) .\n"
+                +"?tempReac a bp:TemplateReactionRegulation .\n"
+                +"?tempReac rdf:type ?type ; bp:controlled ?controlled ; bp:controller ?controller ; bp:controlType ?controlType ; bp:dataSource ?source .\n"
+                +"?controlled bp:participant ?participant ; bp:dataSource ?controlledsource .\n"
+                +"?participant bp:displayName|bp:name ?controlledName; rdf:type ?controlledType ."
+                +"?controller bp:displayName ?controllerName ; rdf:type ?controllerType ; bp:dataSource ?controllersource .\n "
+                +"}";
+        }
         return IDRquery;
     }
 
