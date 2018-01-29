@@ -163,7 +163,7 @@ public class Automatic {
             return tempModel;
         }
         
-        if (maxDepth != -1 && currentDepth >= maxDepth) {
+        if (maxDepth != -1 && currentDepth > maxDepth) {
             return tempModel;
         }
         
