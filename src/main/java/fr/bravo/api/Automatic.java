@@ -157,13 +157,17 @@ public class Automatic {
      * @throws java.io.IOException
      */
     public static Model upstreamRegulationConstruct(Model listModel, Model tempModel, List genesDone, String direction, Boolean smolecule, List<String> dataSources, int maxDepth, int currentDepth) throws IOException {
-
+       
+        if (currentDepth != 0) {
+            logger.info("depth = " + currentDepth);
+        }
+        
         // No next regulators
         if (listModel.isEmpty()) {
             return tempModel;
         }
         
-        if (maxDepth != -1 && currentDepth > maxDepth) {
+        if (maxDepth != -1 && currentDepth >= maxDepth) {
             return tempModel;
         }
         
@@ -171,7 +175,6 @@ public class Automatic {
         Model resultTemp = fr.bravo.api.SparqlQuery.upstreamRegulationConstructQuery(listModel, tempModel, genesDone, direction, smolecule, dataSources);
         tempModel.add(resultTemp);
         currentDepth += 1;
-        logger.info("depth = " + currentDepth);
         
         Model finalModel = upstreamRegulationConstruct(resultTemp, tempModel, genesDone, direction, smolecule, dataSources, maxDepth, currentDepth);
         return finalModel;
