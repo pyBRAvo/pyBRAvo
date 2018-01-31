@@ -33,7 +33,7 @@ BRAvo is a web application and command line tool for biomedical data integration
     
 5/ Choose web app or command line :
 
-Run the web appliation 
+Run the **web appliation** 
 
     java -jar target/BRAvo-1.0-SNAPSHOT-bin.jar
 
@@ -43,18 +43,31 @@ If behind a proxy
    
 See on http://localhost:8091/
 
-Use it as command line
+Use it as **command line**
 
     java -cp target/BRAvo-1.0-SNAPSHOT-bin.jar fr.bravo.cli.Main -i <input_file> -o <output_file> -f ("rdf" | "turtle") (-n | -d) (-r | -s) -w ('Up' | 'Down')
          
-         -d,--id             input data are ids COMING SOON
-         -f, --format        output file format: turtle, ttl, rdfxml, rdfjson, jsonld
-         -i,--input <arg>    input csv file name
-         -n,--name           input data are names
-         -o,--output <arg>   output file name
-         -r,--regulation     build regulation network
-         -s,--signaling      build signaling network
-         -w,--way            way of reconstruction {'Up' | 'Down'} - default is set to 'Up'
+             -d,--id                       Input data are ids
+             -ds,--data_sources <arg>      A data sources among {bind, biogrid, corum,
+                                           ctd, dip, drugbank, hprd, humancyc, inoh,
+                                           intact, kegg, mirtarbase, netpath, panther,
+                                           pid, psp, reactome, reconx, smpdb, wp,
+                                           intact_complex, msigdb}. Multiple -ds
+                                           parameters can be used.
+             -f,--format <arg>             Supported output file format: sif, turtle,
+                                           ttl, rdfxml, rdfjson, jsonld
+             -i,--input <arg>              Input csv file name
+             -md,--max_depth <arg>         Maximum exploration depth
+             -n,--name                     Input data are names
+             -o,--output <arg>             Output file name
+             -r,--regulation               Build regulatory network
+             -s,--signaling                Build signaling network (Downstreaming
+                                           reconstruction soon available)
+             -ssm,--skip_small_molecules   Skip small molecules
+             -w,--way <arg>                Way of reconstruction {'Up' | 'Down'} -
+                                           Default is set to 'Up' - Downstream signaling 
+                                           reconstruction soon available
+
 
 
 It can be used to build **upstream gene regulation network** with gene names : 
