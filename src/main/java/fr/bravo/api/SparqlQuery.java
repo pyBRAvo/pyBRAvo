@@ -453,7 +453,8 @@ public class SparqlQuery {
                 "    ?controller bp:displayName ?controllerName ; rdf:type ?controllerType ; bp:dataSource ?controllerSource ." +
                 "  }\n" +
                 "  FILTER (str(?source) != \"http://pathwaycommons.org/pc2/mirtarbase\" " +
-                "     && (str(?participantType) != \"http://www.biopax.org/release/biopax-level3.owl#SmallMolecule\"))" +
+                "     && (str(?participantType) != \"http://www.biopax.org/release/biopax-level3.owl#SmallMolecule\")" +
+                "     && (str(?controllerType) != \"http://www.biopax.org/release/biopax-level3.owl#SmallMolecule\")) \n" +
                 "  ?catalysis bp:controlled* ?reaction .\n" +
                 "  ?reaction bp:right ?right ; bp:dataSource ?source ; rdf:type ?type .\n" +
                 "  ?reaction bp:left|bp:right ?participant .\n" +
