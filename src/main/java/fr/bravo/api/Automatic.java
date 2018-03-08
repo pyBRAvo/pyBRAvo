@@ -111,6 +111,7 @@ public class Automatic {
             for (int i = 0; i < genes.length(); i++) {
                 StringBuilder result = new StringBuilder();
                 String gene = genes.get(i).toString().toUpperCase();
+                logger.info("exploring " + gene);
                 geneDone.add(gene);
                 // SPARQL Query to get all transcription factors for a gene
                 String queryString = fr.bravo.api.SparqlQuery.initialUpRegulationQuery(gene, true);
