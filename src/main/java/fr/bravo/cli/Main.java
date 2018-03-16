@@ -191,7 +191,7 @@ public class Main {
         } 
         if (cmd.hasOption("signaling")) {
             // Initial graph with Transcription Factors (TFs)
-            Object[] initialResults = initialConstruct(inputFilePath, way, "signaling", "name", molecule);
+            Object[] initialResults = initialConstruct(inputFilePath, way, "signaling", "name",dsList, molecule);
             System.out.println("Initial signaling graph : DONE");
             Model initialModel = (Model) initialResults[0];
             geneDone = (List) initialResults[1];
@@ -201,7 +201,7 @@ public class Main {
         } else if (cmd.hasOption("regulation")) {
             if (cmd.hasOption("id")){
                 // Initial graph with Transcription Factors (TFs)
-                Object[] initialResults = initialConstruct(inputFilePath, way, "regulation", "id", molecule);
+                Object[] initialResults = initialConstruct(inputFilePath, way, "regulation", "id",dsList , molecule);
                 System.out.println("Initial regulatory graph : DONE");
                 Model initialModel = (Model) initialResults[0];
                 geneDone = (List) initialResults[1];
@@ -210,7 +210,7 @@ public class Main {
                 network = fr.bravo.api.Automatic.upstreamRegulationConstruct(initialModel, initialModel, geneDone, way, molecule, dsList, maxDepth, 0);
             }else{
                 // Initial graph with Transcription Factors (TFs)
-                Object[] initialResults = initialConstruct(inputFilePath, way, "regulation", "name", molecule);
+                Object[] initialResults = initialConstruct(inputFilePath, way, "regulation", "name",dsList, molecule);
                 System.out.println("Initial regulatory graph : DONE");
                 Model initialModel = (Model) initialResults[0];
                 geneDone = (List) initialResults[1];
@@ -249,7 +249,7 @@ public class Main {
      * @throws java.io.IOException
      * @throws org.codehaus.jettison.json.JSONException
      */
-    public static Object[] initialConstruct(String filename, String direction, String type, String queryType, Boolean smolecule) throws IOException, JSONException {
+    public static Object[] initialConstruct(String filename, String direction, String type, String queryType, List<String> dataSources, Boolean smolecule) throws IOException, JSONException {
         String line;
         String splitBy = ";";
 
@@ -275,10 +275,10 @@ public class Main {
                     if (type.equals("regulation")) {
                         if (direction.equals("Up")) {
                             // SPARQL Query to get all transcription factors for a gene
-                            queryStringC = fr.bravo.api.SparqlQuery.initialUpRegulationQuery(genesList.get(i).toString(), smolecule);
+                            queryStringC = fr.bravo.api.SparqlQuery.initialUpRegulationQuery(genesList.get(i).toString(),dataSources, smolecule);
                         } else if (direction.equals("Down")) {
                             // SPARQL Query to get all genes regulated by the given genes
-                            queryStringC = fr.bravo.api.SparqlQuery.initialDownRegulationQuery(genesList.get(i).toString(), smolecule);
+                            queryStringC = fr.bravo.api.SparqlQuery.initialDownRegulationQuery(genesList.get(i).toString(), dataSources, smolecule);
                         }
                     } else {
                         // SPARQL Query to get all entities that have reaction link with the given genes (i.e. signaling)
@@ -318,10 +318,10 @@ public class Main {
                     if (type.equals("regulation")) {
                         if (direction.equals("Up")) {
                             // SPARQL Query to get all transcription factors for a gene
-                            queryStringC = fr.bravo.api.SparqlQuery.initialUpRegulationQuery(b[0], smolecule);
+                            queryStringC = fr.bravo.api.SparqlQuery.initialUpRegulationQuery(b[0],dataSources, smolecule);
                         } else if (direction.equals("Down")) {
                             // SPARQL Query to get all genes regulated by the given genes
-                            queryStringC = fr.bravo.api.SparqlQuery.initialDownRegulationQuery(b[0], smolecule);
+                            queryStringC = fr.bravo.api.SparqlQuery.initialDownRegulationQuery(b[0],dataSources, smolecule);
                         }
                     } else {
                         // SPARQL Query to get all entities that have reaction link with the given genes (i.e. signaling)

@@ -55,6 +55,7 @@ public class Automatic {
         try {
             // initial list of biological entities
             JSONArray genesList = new JSONArray(genes);
+            List<String> dataSources = new ArrayList<>();
 
             // Use of IDs 
             if ("id".equals(queryType)) {
@@ -63,7 +64,7 @@ public class Automatic {
             }
 
             // initial model with direct interaction, first level of regulation
-            Object[] initialResults = initialUpstreamConstruct(genesList);
+            Object[] initialResults = initialUpstreamConstruct(genesList, dataSources);
             System.out.println("Initial graph : DONE");
             Model initialModel = (Model) initialResults[0];
             // List of gene already done
@@ -103,7 +104,7 @@ public class Automatic {
      * @return Object with JENA Model and List of genes
      * @throws java.io.IOException
      */
-    public static Object[] initialUpstreamConstruct(JSONArray genes) throws IOException {
+    public static Object[] initialUpstreamConstruct(JSONArray genes, List<String> dataSources) throws IOException {
 
         Model modelResult = ModelFactory.createDefaultModel();
         List<String> geneDone = new ArrayList<String>();
@@ -114,7 +115,7 @@ public class Automatic {
                 logger.info("exploring " + gene);
                 geneDone.add(gene);
                 // SPARQL Query to get all transcription factors for a gene
-                String queryString = fr.bravo.api.SparqlQuery.initialUpRegulationQuery(gene, true);
+                String queryString = fr.bravo.api.SparqlQuery.initialUpRegulationQuery(gene, dataSources, true);
                 //+"GROUP BY ?controlledName ?controllerName";
                 String contentType = "application/json";
                 // URI of the SPARQL Endpoint
@@ -154,6 +155,8 @@ public class Automatic {
      * @param direction {String}
      * @param smolecule
      * @param dataSources
+     * @param maxDepth
+     * @param currentDepth
      * @return {Model}
      * @throws java.io.IOException
      */
