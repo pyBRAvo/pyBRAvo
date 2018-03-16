@@ -58,6 +58,7 @@ public class Systemic {
         Model transcriptorModel = ModelFactory.createDefaultModel();
         Model finalModel = ModelFactory.createDefaultModel();
         List<String> idToNameList = new ArrayList<String>();
+        List<String> dataSources = new ArrayList<>();
         
         // Use of IDs 
         if ("id".equals(queryType)) {
@@ -71,7 +72,7 @@ public class Systemic {
 
                     // Construct new graphe
                     // Filter on Trancription Factor and wihtout miRNA
-                    String filterQuery = fr.bravo.api.SparqlQuery.initialUpRegulationQuery(genesList.get(i).toString(), true);
+                    String filterQuery = fr.bravo.api.SparqlQuery.initialUpRegulationQuery(genesList.get(i).toString(),dataSources, true);
                     System.out.println("Query created");
 
                     // Parsing json is more simple than XML

@@ -309,8 +309,21 @@ public class SparqlQuery {
      * @param b {String} Entity name
      * @return
      */
-    public static String initialUpRegulationQuery(String b, Boolean smolecule){
+    public static String initialUpRegulationQuery(String b, List<String> dataSources, Boolean smolecule){
         String IURquery = "";
+        StringBuilder filterDataSources = new StringBuilder();
+        if (dataSources.size() > 0) {
+            filterDataSources.append("FILTER (?source IN (");
+            for (String ds : dataSources) {
+                String dsUri = "<http://pathwaycommons.org/pc2/"+ds.toLowerCase()+">";
+                filterDataSources.append(dsUri + ", ");
+            }
+            int i = filterDataSources.lastIndexOf(", ");
+            filterDataSources.deleteCharAt(i);
+            filterDataSources.append(")) . \n");
+//            System.out.println(filterDataSources);
+        }
+        
         // smolecule set to True -> consider small molecules
         if (smolecule){ 
             IURquery = "PREFIX bp: <http://www.biopax.org/release/biopax-level3.owl#>\n"
@@ -322,8 +335,8 @@ public class SparqlQuery {
                 +"  ?controller a ?controllerType ; bp:displayName ?controllerName ; bp:dataSource ?controllersource ."
                 +"} WHERE{ \n"
                 + "FILTER( (?controlledName = \""+b+"\"^^xsd:string) "
-                    + "&& (?controllerName != \""+b+"\"^^xsd:string) "
-                    + "&& (str(?source) != \"http://pathwaycommons.org/pc2/mirtarbase\") ) .\n"
+                    + "&& (?controllerName != \""+b+"\"^^xsd:string) ) .\n"
+                    + filterDataSources
                 +"?tempReac a bp:TemplateReactionRegulation .\n"
                 +"?tempReac rdf:type ?type ; bp:controlled ?controlled ; bp:controller ?controller ; bp:controlType ?controlType ; bp:dataSource ?source .\n"
                 +"?controlled bp:participant ?participant ; bp:dataSource ?controlledsource .\n"
@@ -341,8 +354,8 @@ public class SparqlQuery {
                 +"} WHERE{ \n"
                 + "FILTER( (?controlledName = \""+b+"\"^^xsd:string) "
                     + "&& (?controllerName != \""+b+"\"^^xsd:string) "
-                    + "&& (str(?source) != \"http://pathwaycommons.org/pc2/mirtarbase\") "
                     + "&& (str(?controllerType) != \"http://www.biopax.org/release/biopax-level3.owl#SmallMolecule\") ) .\n"
+                    + filterDataSources
                 +"?tempReac a bp:TemplateReactionRegulation .\n"
                 +"?tempReac rdf:type ?type ; bp:controlled ?controlled ; bp:controller ?controller ; bp:controlType ?controlType ; bp:dataSource ?source .\n"
                 +"?controlled bp:participant ?participant ; bp:dataSource ?controlledsource .\n"
@@ -359,8 +372,20 @@ public class SparqlQuery {
      * @param smolecule
      * @return
      */
-    public static String initialDownRegulationQuery(String b, Boolean smolecule){
+    public static String initialDownRegulationQuery(String b, List<String> dataSources, Boolean smolecule){
         String IDRquery = "";
+        StringBuilder filterDataSources = new StringBuilder();
+        if (dataSources.size() > 0) {
+            filterDataSources.append("FILTER (?source IN (");
+            for (String ds : dataSources) {
+                String dsUri = "<http://pathwaycommons.org/pc2/"+ds.toLowerCase()+">";
+                filterDataSources.append(dsUri + ", ");
+            }
+            int i = filterDataSources.lastIndexOf(", ");
+            filterDataSources.deleteCharAt(i);
+            filterDataSources.append(")) . \n");
+//            System.out.println(filterDataSources);
+        }
         // smolecule set to True -> consider small molecules
         if (smolecule){
             IDRquery = "PREFIX bp: <http://www.biopax.org/release/biopax-level3.owl#>\n"
@@ -374,6 +399,7 @@ public class SparqlQuery {
                 + "FILTER( (?controlledName != \""+b+"\"^^xsd:string) "
                     + "&& (?controllerName = \""+b+"\"^^xsd:string) "
                     + "&& (str(?source) != \"http://pathwaycommons.org/pc2/mirtarbase\") ) .\n"
+                    + filterDataSources
                 +"?tempReac a bp:TemplateReactionRegulation .\n"
                 +"?tempReac rdf:type ?type ; bp:controlled ?controlled ; bp:controller ?controller ; bp:controlType ?controlType ; bp:dataSource ?source .\n"
                 +"?controlled bp:participant ?participant ; bp:dataSource ?controlledsource .\n"
@@ -393,6 +419,7 @@ public class SparqlQuery {
                     + "&& (?controllerName = \""+b+"\"^^xsd:string) "
                     + "&& (str(?source) != \"http://pathwaycommons.org/pc2/mirtarbase\")"
                     + "&& (str(?controllerType) != \"http://www.biopax.org/release/biopax-level3.owl#SmallMolecule\") ) .\n"
+                    + filterDataSources
                 +"?tempReac a bp:TemplateReactionRegulation .\n"
                 +"?tempReac rdf:type ?type ; bp:controlled ?controlled ; bp:controller ?controller ; bp:controlType ?controlType ; bp:dataSource ?source .\n"
                 +"?controlled bp:participant ?participant ; bp:dataSource ?controlledsource .\n"
