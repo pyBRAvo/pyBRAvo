@@ -1,0 +1,962 @@
+Testing ../data/HMA_constrained/HMR3674wFluxes_786-O_FBS.mat for Sorafenib (USAN/INN)
+Importing all the correspondance tables
+Entering : Association RxN <-> Enzymes list construction
+Entering : Single Reaction Analysis
+Execution time (Single Reaction Analysis) =  472.343701748061 seconds
+Missing  ENSG00000123009
+Target gene list size = 156
+Entering : RRG reconstruction
+Treated  0  genes, still  156  limit =  50000
+Treated  50  genes, still  219  limit =  50000
+Treated  100  genes, still  207  limit =  50000
+Treated  150  genes, still  176  limit =  50000
+Traceback (most recent call last):
+  File "/Users/jeremiebourdon/miniconda3/envs/Bravo_Experiments/lib/python3.6/site-packages/SPARQLWrapper/Wrapper.py", line 657, in _query
+    response = urlopener(request)
+  File "/Users/jeremiebourdon/miniconda3/envs/Bravo_Experiments/lib/python3.6/urllib/request.py", line 223, in urlopen
+    return opener.open(url, data, timeout)
+  File "/Users/jeremiebourdon/miniconda3/envs/Bravo_Experiments/lib/python3.6/urllib/request.py", line 532, in open
+    response = meth(req, response)
+  File "/Users/jeremiebourdon/miniconda3/envs/Bravo_Experiments/lib/python3.6/urllib/request.py", line 642, in http_response
+    'http', request, response, code, msg, hdrs)
+  File "/Users/jeremiebourdon/miniconda3/envs/Bravo_Experiments/lib/python3.6/urllib/request.py", line 570, in error
+    return self._call_chain(*args)
+  File "/Users/jeremiebourdon/miniconda3/envs/Bravo_Experiments/lib/python3.6/urllib/request.py", line 504, in _call_chain
+    result = func(*args)
+  File "/Users/jeremiebourdon/miniconda3/envs/Bravo_Experiments/lib/python3.6/urllib/request.py", line 650, in http_error_default
+    raise HTTPError(req.full_url, code, msg, hdrs, fp)
+urllib.error.HTTPError: HTTP Error 500: SPARQL Request Failed
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "Reconstruction_sous_reseau_impacte.py", line 382, in <module>
+    a,b,u=getParentGraphList(TargetGenesName,50000)
+  File "Reconstruction_sous_reseau_impacte.py", line 349, in getParentGraphList
+    relations,newgenes=GetTFControllersList(L)
+  File "Reconstruction_sous_reseau_impacte.py", line 314, in GetTFControllersList
+    query = sparql.query().convert()
+  File "/Users/jeremiebourdon/miniconda3/envs/Bravo_Experiments/lib/python3.6/site-packages/SPARQLWrapper/Wrapper.py", line 687, in query
+    return QueryResult(self._query())
+  File "/Users/jeremiebourdon/miniconda3/envs/Bravo_Experiments/lib/python3.6/site-packages/SPARQLWrapper/Wrapper.py", line 665, in _query
+    raise EndPointInternalError(e.read())
+SPARQLWrapper.SPARQLExceptions.EndPointInternalError: EndPointInternalError: endpoint returned code 500 and response. 
+
+Response:
+b'Virtuoso S1T00 Error SR171: Transaction timed out\n\nSPARQL query:\ndefine sql:big-data-const 0 \n#output-format:application/sparql-results+json\n\nPREFIX bp: <http://www.biopax.org/release/biopax-level3.owl#>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?tempReac ?type ?controlledName ?controllerName ?source ?controllerType ?controlledType\nWHERE{\n    FILTER (\n    (((?controlledName = \'ACSBG1\'^^xsd:string) ) or\n        ((?controlledName = \'BG1\'^^xsd:string) ) or\n        ((?controlledName = \'BGM\'^^xsd:string) ) or\n        ((?controlledName = \'FLJ30320\'^^xsd:string) ) or\n        ((?controlledName = \'KIAA0631\'^^xsd:string) ) or\n        ((?controlledName = \'MGC14352\'^^xsd:string) ) or\n        ((?controlledName = \'hBG1\'^^xsd:string) ) or\n        ((?controlledName = \'hsBG\'^^xsd:string) ) or\n        ((?controlledName = \'HSD17B10\'^^xsd:string) ) or\n        ((?controlledName = \'17b-HSD10\'^^xsd:string) ) or\n        ((?controlledName = \'ABAD\'^^xsd:string) ) or\n        ((?controlledName = \'CAMR\'^^xsd:string) ) or\n        ((?controlledName = \'ERAB\'^^xsd:string) ) or\n        ((?controlledName = \'HADH2\'^^xsd:string) ) or\n        ((?controlledName = \'MHBD\'^^xsd:string) ) or\n        ((?controlledName = \'MRPP2\'^^xsd:string) ) or\n        ((?controlledName = \'MRXS10\'^^xsd:string) ) or\n        ((?controlledName = \'SDR5C1\'^^xsd:string) ) or\n        ((?controlledName = \'MAT2B\'^^xsd:string) ) or\n        ((?controlledName = \'MATIIbeta\'^^xsd:string) ) or\n        ((?controlledName = \'SDR23E1\'^^xsd:string) ) or\n        ((?controlledName = \'ENTPD3\'^^xsd:string) ) or\n        ((?controlledName = \'CD39L3\'^^xsd:string) ) or\n        ((?controlledName = \'HB6\'^^xsd:string) ) or\n        ((?controlledName = \'NTPDase-3\'^^xsd:string) ) or\n        ((?controlledName = \'GYS2\'^^xsd:string) ) or\n        ((?controlledName = \'NME4\'^^xsd:string) ) or\n        ((?controlledName = \'NDPKD\'^^xsd:string) ) or\n        ((?controlledName = \'NM23H4\'^^xsd:string) ) or\n        ((?controlledName = \'nm23-H4\'^^xsd:string) ) or\n        ((?controlledName = \'MAZ\'^^xsd:string) ) or\n        ((?controlledName = \'Pur-1\'^^xsd:string) ) or\n        ((?controlledName = \'ZF87\'^^xsd:string) ) or\n        ((?controlledName = \'ZNF801\'^^xsd:string) ) or\n        ((?controlledName = \'Zif87\'^^xsd:string) ) or\n        ((?controlledName = \'LMO2\'^^xsd:string) ) or\n        ((?controlledName = \'RBTN2\'^^xsd:string) ) or\n        ((?controlledName = \'RBTNL1\'^^xsd:string) ) or\n        ((?controlledName = \'RHOM2\'^^xsd:string) ) or\n        ((?controlledName = \'TTG2\'^^xsd:string) ) or\n        ((?controlledName = \'ELF2\'^^xsd:string) ) or\n        ((?controlledName = \'EU32\'^^xsd:string) ) or\n        ((?controlledName = \'NERF\'^^xsd:string) ) or\n        ((?controlledName = \'NERF-1A\'^^xsd:string) ) or\n        ((?controlledName = \'NERF-1B\'^^xsd:string) ) or\n        ((?controlledName = \'NERF-2\'^^xsd:string) ) or\n        ((?controlledName = \'NF-E1\'^^xsd:string) ) or\n        ((?controlledName = \'GATA1\'^^xsd:string) ) or\n        ((?controlledName = \'ERYF1\'^^xsd:string) ) or\n        ((?controlledName = \'GATA-1\'^^xsd:string) ) or\n        ((?controlledName = \'NFE1\'^^xsd:string) ) or\n        ((?controlledName = \'EGR3\'^^xsd:string) ) or\n        ((?controlledName = \'PILOT\'^^xsd:string) ) or\n        ((?controlledName = \'ELK1\'^^xsd:string) ) or\n        ((?controlledName = \'SP1\'^^xsd:string) ) or\n        ((?controlledName = \'FGF7\'^^xsd:string) ) or\n        ((?controlledName = \'KGF\'^^xsd:string) ) or\n        ((?controlledName = \'TP73\'^^xsd:string) ) or\n        ((?controlledName = \'P73\'^^xsd:string) ) or\n        ((?controlledName = \'ETS1\'^^xsd:string) ) or\n        ((?controlledName = \'ETS-1\'^^xsd:string) ) or\n        ((?controlledName = \'FLJ10768\'^^xsd:string) ) or\n        ((?controlledName = \'FOXO4\'^^xsd:string) ) or\n        ((?controlledName = \'AFX1\'^^xsd:string) ) or\n        ((?controlledName = \'MLLT7\'^^xsd:string) ) or\n        ((?controlledName = \'NF1\'^^xsd:string) ) or\n        ((?controlledName = \'MEIS1\'^^xsd:string) ) or\n        ((?controlledName = \'SPI1\'^^xsd:string) ) or\n        ((?controlledName = \'PU.1\'^^xsd:string) ) or\n        ((?controlledName = \'SFPI1\'^^xsd:string) ) or\n        ((?controlledName = \'SPI-1\'^^xsd:string) ) or\n        ((?controlledName = \'SPI-A\'^^xsd:string) ) or\n        ((?controlledName = \'TCF3\'^^xsd:string) ) or\n        ((?controlledName = \'TCF7L1\'^^xsd:string) ) or\n        ((?controlledName = \'ZBTB14\'^^xsd:string) ) or\n        ((?controlledName = \'ZFP161\'^^xsd:string) ) or\n        ((?controlledName = \'ZNF478\'^^xsd:string) ) or\n        ((?controlledName = \'STAT3\'^^xsd:string) ) or\n        ((?controlledName = \'APRF\'^^xsd:string) ) or\n        ((?controlledName = \'CASP\'^^xsd:string) ) or\n        ((?controlledName = \'CUX1\'^^xsd:string) ) or\n        ((?controlledName = \'CDP\'^^xsd:string) ) or\n        ((?controlledName = \'CDP/Cut\'^^xsd:string) ) or\n        ((?controlledName = \'CDP/Cux\'^^xsd:string) ) or\n        ((?controlledName = \'CDP1\'^^xsd:string) ) or\n        ((?controlledName = \'CUT\'^^xsd:string) ) or\n        ((?controlledName = \'CUTL1\'^^xsd:string) ) or\n        ((?controlledName = \'CUX\'^^xsd:string) ) or\n        ((?controlledName = \'Clox\'^^xsd:string) ) or\n        ((?controlledName = \'Cux/CDP\'^^xsd:string) ) or\n        ((?controlledName = \'GOLIM6\'^^xsd:string) ) or\n        ((?controlledName = \'RXRB\'^^xsd:string) ) or\n        ((?controlledName = \'H-2RIIBP\'^^xsd:string) ) or\n        ((?controlledName = \'NR2B2\'^^xsd:string) ) or\n        ((?controlledName = \'RCoR-1\'^^xsd:string) ) or\n        ((?controlledName = \'LEF1\'^^xsd:string) ) or\n        ((?controlledName = \'TCF10\'^^xsd:string) ) or\n        ((?controlledName = \'TCF1ALPHA\'^^xsd:string) ) or\n        ((?controlledName = \'TCF7L3\'^^xsd:string) ) or\n        ((?controlledName = \'RORA\'^^xsd:string) ) or\n        ((?controlledName = \'NR1F1\'^^xsd:string) ) or\n        ((?controlledName = \'ROR3\'^^xsd:string) ) or\n        ((?controlledName = \'RZRA\'^^xsd:string) ) or\n        ((?controlledName = \'TEAD1\'^^xsd:string) ) or\n        ((?controlledName = \'AA\'^^xsd:string) ) or\n        ((?controlledName = \'TCF13\'^^xsd:string) ) or\n        ((?controlledName = \'TEF-1\'^^xsd:string) ) or\n        ((?controlledName = \'CREB1\'^^xsd:string) ) or\n        ((?controlledName = \'ATF3\'^^xsd:string) ) or\n        ((?controlledName = \'MAX\'^^xsd:string) ) or\n        ((?controlledName = \'bHLHd4\'^^xsd:string) ) or\n        ((?controlledName = \'bHLHd5\'^^xsd:string) ) or\n        ((?controlledName = \'bHLHd6\'^^xsd:string) ) or\n        ((?controlledName = \'bHLHd7\'^^xsd:string) ) or\n        ((?controlledName = \'bHLHd8\'^^xsd:string) ) or\n        ((?controlledName = \'MYC\'^^xsd:string) ) or\n        ((?controlledName = \'MYCC\'^^xsd:string) ) or\n        ((?controlledName = \'bHLHe39\'^^xsd:string) ) or\n        ((?controlledName = \'c-Myc\'^^xsd:string) ) or\n        ((?controlledName = \'ATF2\'^^xsd:string) ) or\n        ((?controlledName = \'ATF1\'^^xsd:string) ) or\n        ((?controlledName = \'GDNF\'^^xsd:string) ) or\n        ((?controlledName = \'HFB1-GDNF\'^^xsd:string) ) or\n        ((?controlledName = \'NR1H4\'^^xsd:string) ) or\n        ((?controlledName = \'FXR\'^^xsd:string) ) or\n        ((?controlledName = \'HRR-1\'^^xsd:string) ) or\n        ((?controlledName = \'HRR1\'^^xsd:string) ) or\n        ((?controlledName = \'RIP14\'^^xsd:string) ) or\n        ((?controlledName = \'AP-1\'^^xsd:string) ) or\n        ((?controlledName = \'JUN\'^^xsd:string) ) or\n        ((?controlledName = \'c-Jun\'^^xsd:string) ) or\n        ((?controlledName = \'REPIN1\'^^xsd:string) ) or\n        ((?controlledName = \'AP4\'^^xsd:string) ) or\n        ((?controlledName = \'H_DJ0584D14.12\'^^xsd:string) ) or\n        ((?controlledName = \'RIP60\'^^xsd:string) ) or\n        ((?controlledName = \'ZNF464\'^^xsd:string) ) or\n        ((?controlledName = \'Zfp464\'^^xsd:string) ) or\n        ((?controlledName = \'SRY\'^^xsd:string) ) or\n        ((?controlledName = \'TDF\'^^xsd:string) ) or\n        ((?controlledName = \'TFAP4\'^^xsd:string) ) or\n        ((?controlledName = \'AP-4\'^^xsd:string) ) or\n        ((?controlledName = \'bHLHc41\'^^xsd:string) ) or\n        ((?controlledName = \'NFE2L2\'^^xsd:string) ) or\n        ((?controlledName = \'SOX9\'^^xsd:string) ) or\n        ((?controlledName = \'CMD1\'^^xsd:string) ) or\n        ((?controlledName = \'CMPD1\'^^xsd:string) ) or\n        ((?controlledName = \'ETS2\'^^xsd:string) ) or\n        ((?controlledName = \'FOXO3\'^^xsd:string) ) or\n        ((?controlledName = \'AF6q21\'^^xsd:string) ) or\n        ((?controlledName = \'FKHRL1\'^^xsd:string) ) or\n        ((?controlledName = \'FOXO2\'^^xsd:string) ) or\n        ((?controlledName = \'FOXO3A\'^^xsd:string) ) or\n        ((?controlledName = \'GTF3A\'^^xsd:string) ) or\n        ((?controlledName = \'AP2\'^^xsd:string) ) or\n        ((?controlledName = \'TFIIIA\'^^xsd:string) ) or\n        ((?controlledName = \'SF1\'^^xsd:string) ) or\n        ((?controlledName = \'ZCCHC25\'^^xsd:string) ) or\n        ((?controlledName = \'ZFM1\'^^xsd:string) ) or\n        ((?controlledName = \'ZNF162\'^^xsd:string) ) or\n        ((?controlledName = \'HNF1A\'^^xsd:string) ) or\n        ((?controlledName = \'HNF1\'^^xsd:string) ) or\n        ((?controlledName = \'LFB1\'^^xsd:string) ) or\n        ((?controlledName = \'MODY3\'^^xsd:string) ) or\n        ((?controlledName = \'TCF1\'^^xsd:string) ) or\n        ((?controlledName = \'DP1\'^^xsd:string) ) or\n        ((?controlledName = \'TFDP1\'^^xsd:string) ) or\n        ((?controlledName = \'DILC\'^^xsd:string) ) or\n        ((?controlledName = \'DRTF1\'^^xsd:string) ) or\n        ((?controlledName = \'Dp-1\'^^xsd:string) ) or\n        ((?controlledName = \'SRF\'^^xsd:string) ) or\n        ((?controlledName = \'MCM1\'^^xsd:string) ) or\n        ((?controlledName = \'E2F1\'^^xsd:string) ) or\n        ((?controlledName = \'RBBP3\'^^xsd:string) ) or\n        ((?controlledName = \'HAND1\'^^xsd:string) ) or\n        ((?controlledName = \'Hxt\'^^xsd:string) ) or\n        ((?controlledName = \'Thing1\'^^xsd:string) ) or\n        ((?controlledName = \'bHLHa27\'^^xsd:string) ) or\n        ((?controlledName = \'eHand\'^^xsd:string) ) or\n        ((?controlledName = \'RS\'^^xsd:string) ) or\n        ((?controlledName = \'PITX2\'^^xsd:string) ) or\n        ((?controlledName = \'Brx1\'^^xsd:string) ) or\n        ((?controlledName = \'IGDS\'^^xsd:string) ) or\n        ((?controlledName = \'IHG2\'^^xsd:string) ) or\n        ((?controlledName = \'IRID2\'^^xsd:string) ) or\n        ((?controlledName = \'Otlx2\'^^xsd:string) ) or\n        ((?controlledName = \'RGS\'^^xsd:string) ) or\n        ((?controlledName = \'RIEG\'^^xsd:string) ) or\n        ((?controlledName = \'RIEG1\'^^xsd:string) ))\n        and (str(?source) != "http://pathwaycommons.org/pc2/mirtarbase")\n        and ((str(?controlledType) = "http://www.biopax.org/release/biopax-level3.owl#Protein") or (str(?controlledType) = "http://www.biopax.org/release/biopax-level3.owl#Rna"))\n        and ((str(?controllerType) = "http://www.biopax.org/release/biopax-level3.owl#Protein") or (str(?controllerType) = "http://www.biopax.org/release/biopax-level3.owl#Rna"))\n) .\n?tempReac a bp:TemplateReactionRegulation .\n?tempReac rdf:type ?ctype ; bp:controlled ?controlled ; bp:controller ?controller ; bp:controlType ?type ; bp:dataSource ?source .\n?controlled bp:participant ?participant ; bp:dataSource ?controlledsource .\n?participant bp:displayName ?controlledName; rdf:type ?controlledType .\n?controller bp:displayName ?controllerName ; rdf:type ?controllerType ; bp:dataSource ?controllersource .\n}\nGROUP BY ?controlledName ?controllerName\n'
+Testing ../data/HMA_constrained/HMR3674wFluxes_A498_FBS.mat for Sorafenib (USAN/INN)
+Importing all the correspondance tables
+Entering : Association RxN <-> Enzymes list construction
+Entering : Single Reaction Analysis
+Execution time (Single Reaction Analysis) =  511.7961595689412 seconds
+Missing  ENSG00000123009
+Missing  ENSG00000183038
+Target gene list size = 154
+Entering : RRG reconstruction
+Treated  0  genes, still  154  limit =  50000
+Treated  50  genes, still  194  limit =  50000
+Treated  100  genes, still  192  limit =  50000
+Treated  150  genes, still  172  limit =  50000
+Treated  200  genes, still  157  limit =  50000
+Treated  250  genes, still  118  limit =  50000
+Treated  300  genes, still  73  limit =  50000
+Treated  350  genes, still  24  limit =  50000
+Execution time for RRG reconstruction =  51.248362940968946 seconds
+Reconstructed graph contains 375 genes, 4087 interactions
+Execution completed in 565.5982048399746 seconds
+Le nombre total de cibles potentielles après reconstruction est 19
+Le nombre total de cibles potentielles avant reconstruction est 10
+Le réseau de régulation possède 350 gènes
+Le réseau de régulation possède 4087 interactions
+Le sous-réseau de régulation impacté possède 178 gènes
+Le sous-réseau de régulation impacté possède 2085 interactions
+Testing ../data/HMA_constrained/HMR3674wFluxes_ACHN_FBS.mat for Sorafenib (USAN/INN)
+Importing all the correspondance tables
+Entering : Association RxN <-> Enzymes list construction
+Entering : Single Reaction Analysis
+Execution time (Single Reaction Analysis) =  503.9767166080419 seconds
+Missing  ENSG00000178723
+Missing  ENSG00000123009
+Target gene list size = 154
+Entering : RRG reconstruction
+Treated  0  genes, still  154  limit =  50000
+Treated  50  genes, still  213  limit =  50000
+Treated  100  genes, still  204  limit =  50000
+Treated  150  genes, still  174  limit =  50000
+Treated  200  genes, still  155  limit =  50000
+Treated  250  genes, still  114  limit =  50000
+Treated  300  genes, still  71  limit =  50000
+Treated  350  genes, still  24  limit =  50000
+Execution time for RRG reconstruction =  52.69508021092042 seconds
+Reconstructed graph contains 375 genes, 4134 interactions
+Execution completed in 559.0952545659384 seconds
+Le nombre total de cibles potentielles après reconstruction est 18
+Le nombre total de cibles potentielles avant reconstruction est 9
+Le réseau de régulation possède 350 gènes
+Le réseau de régulation possède 4104 interactions
+Le sous-réseau de régulation impacté possède 178 gènes
+Le sous-réseau de régulation impacté possède 2092 interactions
+Testing ../data/HMA_constrained/HMR3674wFluxes_CAKI-1_FBS.mat for Sorafenib (USAN/INN)
+Importing all the correspondance tables
+Entering : Association RxN <-> Enzymes list construction
+Entering : Single Reaction Analysis
+Execution time (Single Reaction Analysis) =  474.6156461830251 seconds
+Missing  ENSG00000183038
+Missing  ENSG00000123009
+Target gene list size = 169
+Entering : RRG reconstruction
+Treated  0  genes, still  169  limit =  50000
+Treated  50  genes, still  222  limit =  50000
+Treated  100  genes, still  202  limit =  50000
+Treated  150  genes, still  188  limit =  50000
+Treated  200  genes, still  169  limit =  50000
+Treated  250  genes, still  131  limit =  50000
+Treated  300  genes, still  85  limit =  50000
+Treated  350  genes, still  39  limit =  50000
+Execution time for RRG reconstruction =  57.590324550983496 seconds
+Reconstructed graph contains 390 genes, 4207 interactions
+Execution completed in 534.5873262990499 seconds
+Le nombre total de cibles potentielles après reconstruction est 18
+Le nombre total de cibles potentielles avant reconstruction est 9
+Le réseau de régulation possède 360 gènes
+Le réseau de régulation possède 4177 interactions
+Le sous-réseau de régulation impacté possède 185 gènes
+Le sous-réseau de régulation impacté possède 2134 interactions
+Testing ../data/HMA_constrained/HMR3674wFluxes_RXF-393_FBS.mat for Sorafenib (USAN/INN)
+Importing all the correspondance tables
+Entering : Association RxN <-> Enzymes list construction
+Entering : Single Reaction Analysis
+Execution time (Single Reaction Analysis) =  498.6587955208961 seconds
+Missing  ENSG00000123009
+Missing  ENSG00000183038
+Target gene list size = 172
+Entering : RRG reconstruction
+Treated  0  genes, still  172  limit =  50000
+Treated  50  genes, still  217  limit =  50000
+Treated  100  genes, still  209  limit =  50000
+Treated  150  genes, still  183  limit =  50000
+Treated  200  genes, still  173  limit =  50000
+Treated  250  genes, still  133  limit =  50000
+Treated  300  genes, still  91  limit =  50000
+Treated  350  genes, still  41  limit =  50000
+Execution time for RRG reconstruction =  50.41770947200712 seconds
+Reconstructed graph contains 393 genes, 4168 interactions
+Execution completed in 551.5281949139899 seconds
+Le nombre total de cibles potentielles après reconstruction est 19
+Le nombre total de cibles potentielles avant reconstruction est 10
+Le réseau de régulation possède 361 gènes
+Le réseau de régulation possède 4168 interactions
+Le sous-réseau de régulation impacté possède 185 gènes
+Le sous-réseau de régulation impacté possède 2132 interactions
+Testing ../data/HMA_constrained/HMR3674wFluxes_TK-10_FBS.mat for Sorafenib (USAN/INN)
+Importing all the correspondance tables
+Entering : Association RxN <-> Enzymes list construction
+Entering : Single Reaction Analysis
+Execution time (Single Reaction Analysis) =  459.5737495269859 seconds
+Missing  ENSG00000123009
+Target gene list size = 138
+Entering : RRG reconstruction
+Treated  0  genes, still  138  limit =  50000
+Treated  50  genes, still  175  limit =  50000
+Treated  100  genes, still  185  limit =  50000
+Treated  150  genes, still  167  limit =  50000
+Treated  200  genes, still  146  limit =  50000
+Treated  250  genes, still  104  limit =  50000
+Treated  300  genes, still  58  limit =  50000
+Treated  350  genes, still  8  limit =  50000
+Execution time for RRG reconstruction =  82.65922968205996 seconds
+Reconstructed graph contains 359 genes, 4036 interactions
+Execution completed in 544.681728466996 seconds
+Le nombre total de cibles potentielles après reconstruction est 17
+Le nombre total de cibles potentielles avant reconstruction est 8
+Le réseau de régulation possède 341 gènes
+Le réseau de régulation possède 4006 interactions
+Le sous-réseau de régulation impacté possède 174 gènes
+Le sous-réseau de régulation impacté possède 2052 interactions
+Testing ../data/HMA_constrained/HMR3674wFluxes_UO-31_FBS.mat for Sorafenib (USAN/INN)
+Importing all the correspondance tables
+Entering : Association RxN <-> Enzymes list construction
+Entering : Single Reaction Analysis
+Execution time (Single Reaction Analysis) =  472.9324380500475 seconds
+Missing  ENSG00000123009
+Target gene list size = 146
+Entering : RRG reconstruction
+Treated  0  genes, still  146  limit =  50000
+Treated  50  genes, still  214  limit =  50000
+Treated  100  genes, still  194  limit =  50000
+Treated  150  genes, still  170  limit =  50000
+Treated  200  genes, still  148  limit =  50000
+Traceback (most recent call last):
+  File "/Users/jeremiebourdon/miniconda3/envs/Bravo_Experiments/lib/python3.6/site-packages/SPARQLWrapper/Wrapper.py", line 657, in _query
+    response = urlopener(request)
+  File "/Users/jeremiebourdon/miniconda3/envs/Bravo_Experiments/lib/python3.6/urllib/request.py", line 223, in urlopen
+    return opener.open(url, data, timeout)
+  File "/Users/jeremiebourdon/miniconda3/envs/Bravo_Experiments/lib/python3.6/urllib/request.py", line 532, in open
+    response = meth(req, response)
+  File "/Users/jeremiebourdon/miniconda3/envs/Bravo_Experiments/lib/python3.6/urllib/request.py", line 642, in http_response
+    'http', request, response, code, msg, hdrs)
+  File "/Users/jeremiebourdon/miniconda3/envs/Bravo_Experiments/lib/python3.6/urllib/request.py", line 570, in error
+    return self._call_chain(*args)
+  File "/Users/jeremiebourdon/miniconda3/envs/Bravo_Experiments/lib/python3.6/urllib/request.py", line 504, in _call_chain
+    result = func(*args)
+  File "/Users/jeremiebourdon/miniconda3/envs/Bravo_Experiments/lib/python3.6/urllib/request.py", line 650, in http_error_default
+    raise HTTPError(req.full_url, code, msg, hdrs, fp)
+urllib.error.HTTPError: HTTP Error 500: SPARQL Request Failed
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "Reconstruction_sous_reseau_impacte.py", line 382, in <module>
+    a,b,u=getParentGraphList(TargetGenesName,50000)
+  File "Reconstruction_sous_reseau_impacte.py", line 349, in getParentGraphList
+    relations,newgenes=GetTFControllersList(L)
+  File "Reconstruction_sous_reseau_impacte.py", line 314, in GetTFControllersList
+    query = sparql.query().convert()
+  File "/Users/jeremiebourdon/miniconda3/envs/Bravo_Experiments/lib/python3.6/site-packages/SPARQLWrapper/Wrapper.py", line 687, in query
+    return QueryResult(self._query())
+  File "/Users/jeremiebourdon/miniconda3/envs/Bravo_Experiments/lib/python3.6/site-packages/SPARQLWrapper/Wrapper.py", line 665, in _query
+    raise EndPointInternalError(e.read())
+SPARQLWrapper.SPARQLExceptions.EndPointInternalError: EndPointInternalError: endpoint returned code 500 and response. 
+
+Response:
+b'Virtuoso S1T00 Error SR171: Transaction timed out\n\nSPARQL query:\ndefine sql:big-data-const 0 \n#output-format:application/sparql-results+json\n\nPREFIX bp: <http://www.biopax.org/release/biopax-level3.owl#>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?tempReac ?type ?controlledName ?controllerName ?source ?controllerType ?controlledType\nWHERE{\n    FILTER (\n    (((?controlledName = \'NFE2L2\'^^xsd:string) ) or\n        ((?controlledName = \'POU2F1\'^^xsd:string) ) or\n        ((?controlledName = \'OTF1\'^^xsd:string) ) or\n        ((?controlledName = \'HAND1\'^^xsd:string) ) or\n        ((?controlledName = \'Hxt\'^^xsd:string) ) or\n        ((?controlledName = \'Thing1\'^^xsd:string) ) or\n        ((?controlledName = \'bHLHa27\'^^xsd:string) ) or\n        ((?controlledName = \'eHand\'^^xsd:string) ) or\n        ((?controlledName = \'GTF3A\'^^xsd:string) ) or\n        ((?controlledName = \'AP2\'^^xsd:string) ) or\n        ((?controlledName = \'TFIIIA\'^^xsd:string) ) or\n        ((?controlledName = \'SF1\'^^xsd:string) ) or\n        ((?controlledName = \'ZCCHC25\'^^xsd:string) ) or\n        ((?controlledName = \'ZFM1\'^^xsd:string) ) or\n        ((?controlledName = \'ZNF162\'^^xsd:string) ) or\n        ((?controlledName = \'HNF1A\'^^xsd:string) ) or\n        ((?controlledName = \'HNF1\'^^xsd:string) ) or\n        ((?controlledName = \'LFB1\'^^xsd:string) ) or\n        ((?controlledName = \'MODY3\'^^xsd:string) ) or\n        ((?controlledName = \'TCF1\'^^xsd:string) ) or\n        ((?controlledName = \'NFIL3\'^^xsd:string) ) or\n        ((?controlledName = \'E4BP4\'^^xsd:string) ) or\n        ((?controlledName = \'IL3BP1\'^^xsd:string) ) or\n        ((?controlledName = \'NF-IL3A\'^^xsd:string) ) or\n        ((?controlledName = \'NFIL3A\'^^xsd:string) ) or\n        ((?controlledName = \'MYC\'^^xsd:string) ) or\n        ((?controlledName = \'MYCC\'^^xsd:string) ) or\n        ((?controlledName = \'bHLHe39\'^^xsd:string) ) or\n        ((?controlledName = \'c-Myc\'^^xsd:string) ) or\n        ((?controlledName = \'MAX\'^^xsd:string) ) or\n        ((?controlledName = \'bHLHd4\'^^xsd:string) ) or\n        ((?controlledName = \'bHLHd5\'^^xsd:string) ) or\n        ((?controlledName = \'bHLHd6\'^^xsd:string) ) or\n        ((?controlledName = \'bHLHd7\'^^xsd:string) ) or\n        ((?controlledName = \'bHLHd8\'^^xsd:string) ) or\n        ((?controlledName = \'HLF\'^^xsd:string) ) or\n        ((?controlledName = \'EPAS1\'^^xsd:string) ) or\n        ((?controlledName = \'HIF2A\'^^xsd:string) ) or\n        ((?controlledName = \'MOP2\'^^xsd:string) ) or\n        ((?controlledName = \'PASD2\'^^xsd:string) ) or\n        ((?controlledName = \'bHLHe73\'^^xsd:string) ) or\n        ((?controlledName = \'GABPB2\'^^xsd:string) ) or\n        ((?controlledName = \'MGC29891\'^^xsd:string) ) or\n        ((?controlledName = \'RB1\'^^xsd:string) ) or\n        ((?controlledName = \'OSRC\'^^xsd:string) ) or\n        ((?controlledName = \'PPP1R130\'^^xsd:string) ) or\n        ((?controlledName = \'RB\'^^xsd:string) ) or\n        ((?controlledName = \'REPIN1\'^^xsd:string) ) or\n        ((?controlledName = \'AP4\'^^xsd:string) ) or\n        ((?controlledName = \'H_DJ0584D14.12\'^^xsd:string) ) or\n        ((?controlledName = \'RIP60\'^^xsd:string) ) or\n        ((?controlledName = \'ZNF464\'^^xsd:string) ) or\n        ((?controlledName = \'Zfp464\'^^xsd:string) ) or\n        ((?controlledName = \'HSTF1\'^^xsd:string) ) or\n        ((?controlledName = \'HSF1\'^^xsd:string) ) or\n        ((?controlledName = \'IRF2\'^^xsd:string) ) or\n        ((?controlledName = \'ZIC1\'^^xsd:string) ) or\n        ((?controlledName = \'ZIC\'^^xsd:string) ) or\n        ((?controlledName = \'ZNF201\'^^xsd:string) ) or\n        ((?controlledName = \'ONECUT1\'^^xsd:string) ) or\n        ((?controlledName = \'HNF-6\'^^xsd:string) ) or\n        ((?controlledName = \'HNF6\'^^xsd:string) ) or\n        ((?controlledName = \'HNF6A\'^^xsd:string) ) or\n        ((?controlledName = \'VSX1\'^^xsd:string) ) or\n        ((?controlledName = \'PPCD1\'^^xsd:string) ) or\n        ((?controlledName = \'GATA6\'^^xsd:string) ) or\n        ((?controlledName = \'IFNA1\'^^xsd:string) ) or\n        ((?controlledName = \'IFL\'^^xsd:string) ) or\n        ((?controlledName = \'IFN\'^^xsd:string) ) or\n        ((?controlledName = \'IFN-ALPHA\'^^xsd:string) ) or\n        ((?controlledName = \'IFN-alphaD\'^^xsd:string) ) or\n        ((?controlledName = \'IFNA@\'^^xsd:string) ) or\n        ((?controlledName = \'PAX4\'^^xsd:string) ) or\n        ((?controlledName = \'MODY9\'^^xsd:string) ) or\n        ((?controlledName = \'ETS2\'^^xsd:string) ) or\n        ((?controlledName = \'HNF4A\'^^xsd:string) ) or\n        ((?controlledName = \'HNF4\'^^xsd:string) ) or\n        ((?controlledName = \'MODY\'^^xsd:string) ) or\n        ((?controlledName = \'MODY1\'^^xsd:string) ) or\n        ((?controlledName = \'NR2A1\'^^xsd:string) ) or\n        ((?controlledName = \'TCF14\'^^xsd:string) ) or\n        ((?controlledName = \'TCF4\'^^xsd:string) ) or\n        ((?controlledName = \'E2-2\'^^xsd:string) ) or\n        ((?controlledName = \'ITF2\'^^xsd:string) ) or\n        ((?controlledName = \'SEF2-1B\'^^xsd:string) ) or\n        ((?controlledName = \'bHLHb19\'^^xsd:string) ) or\n        ((?controlledName = \'IRF8\'^^xsd:string) ) or\n        ((?controlledName = \'ICSBP\'^^xsd:string) ) or\n        ((?controlledName = \'ICSBP1\'^^xsd:string) ) or\n        ((?controlledName = \'IRF-8\'^^xsd:string) ) or\n        ((?controlledName = \'ELF2\'^^xsd:string) ) or\n        ((?controlledName = \'EU32\'^^xsd:string) ) or\n        ((?controlledName = \'NERF\'^^xsd:string) ) or\n        ((?controlledName = \'NERF-1A\'^^xsd:string) ) or\n        ((?controlledName = \'NERF-1B\'^^xsd:string) ) or\n        ((?controlledName = \'NERF-2\'^^xsd:string) ) or\n        ((?controlledName = \'RELA\'^^xsd:string) ) or\n        ((?controlledName = \'NFKB3\'^^xsd:string) ) or\n        ((?controlledName = \'p65\'^^xsd:string) ) or\n        ((?controlledName = \'CRX\'^^xsd:string) ) or\n        ((?controlledName = \'CORD2\'^^xsd:string) ) or\n        ((?controlledName = \'LCA7\'^^xsd:string) ) or\n        ((?controlledName = \'POU1F1\'^^xsd:string) ) or\n        ((?controlledName = \'GHF-1\'^^xsd:string) ) or\n        ((?controlledName = \'PIT1\'^^xsd:string) ) or\n        ((?controlledName = \'POU1F1a\'^^xsd:string) ) or\n        ((?controlledName = \'ESRRA\'^^xsd:string) ) or\n        ((?controlledName = \'ERR1\'^^xsd:string) ) or\n        ((?controlledName = \'ERRa\'^^xsd:string) ) or\n        ((?controlledName = \'ERRalpha\'^^xsd:string) ) or\n        ((?controlledName = \'ESRL1\'^^xsd:string) ) or\n        ((?controlledName = \'NR3B1\'^^xsd:string) ) or\n        ((?controlledName = \'ZEB1\'^^xsd:string) ) or\n        ((?controlledName = \'AREB6\'^^xsd:string) ) or\n        ((?controlledName = \'BZP\'^^xsd:string) ) or\n        ((?controlledName = \'FECD6\'^^xsd:string) ) or\n        ((?controlledName = \'NIL-2-A\'^^xsd:string) ) or\n        ((?controlledName = \'PPCD3\'^^xsd:string) ) or\n        ((?controlledName = \'TCF8\'^^xsd:string) ) or\n        ((?controlledName = \'ZEB\'^^xsd:string) ) or\n        ((?controlledName = \'Zfhep\'^^xsd:string) ) or\n        ((?controlledName = \'Zfhx1a\'^^xsd:string) ) or\n        ((?controlledName = \'NR1H3\'^^xsd:string) ) or\n        ((?controlledName = \'LXR-a\'^^xsd:string) ) or\n        ((?controlledName = \'RLD-1\'^^xsd:string) ) or\n        ((?controlledName = \'MYOG\'^^xsd:string) ) or\n        ((?controlledName = \'MYF4\'^^xsd:string) ) or\n        ((?controlledName = \'bHLHc3\'^^xsd:string) ) or\n        ((?controlledName = \'MGF\'^^xsd:string) ) or\n        ((?controlledName = \'STAT5A\'^^xsd:string) ) or\n        ((?controlledName = \'STAT5\'^^xsd:string) ) or\n        ((?controlledName = \'TTF1\'^^xsd:string) ) or\n        ((?controlledName = \'NKX2-1\'^^xsd:string) ) or\n        ((?controlledName = \'BCH\'^^xsd:string) ) or\n        ((?controlledName = \'NKX2A\'^^xsd:string) ) or\n        ((?controlledName = \'TITF1\'^^xsd:string) ) or\n        ((?controlledName = \'TTF-1\'^^xsd:string) ) or\n        ((?controlledName = \'FOXO1\'^^xsd:string) ) or\n        ((?controlledName = \'FKH1\'^^xsd:string) ) or\n        ((?controlledName = \'FKHR\'^^xsd:string) ) or\n        ((?controlledName = \'FOXO1A\'^^xsd:string) ) or\n        ((?controlledName = \'MYOD1\'^^xsd:string) ) or\n        ((?controlledName = \'MYF3\'^^xsd:string) ) or\n        ((?controlledName = \'MYOD\'^^xsd:string) ) or\n        ((?controlledName = \'bHLHc1\'^^xsd:string) ) or\n        ((?controlledName = \'ATF4\'^^xsd:string) ) or\n        ((?controlledName = \'CREB-2\'^^xsd:string) ) or\n        ((?controlledName = \'TAXREB67\'^^xsd:string) ) or\n        ((?controlledName = \'TXREB\'^^xsd:string) ) or\n        ((?controlledName = \'BACH2\'^^xsd:string) ) or\n        ((?controlledName = \'BTBD25\'^^xsd:string) ) or\n        ((?controlledName = \'SOX9\'^^xsd:string) ) or\n        ((?controlledName = \'CMD1\'^^xsd:string) ) or\n        ((?controlledName = \'CMPD1\'^^xsd:string) ) or\n        ((?controlledName = \'STAT6\'^^xsd:string) ) or\n        ((?controlledName = \'D12S1644\'^^xsd:string) ) or\n        ((?controlledName = \'IL-4-STAT\'^^xsd:string) ) or\n        ((?controlledName = \'RREB1\'^^xsd:string) ) or\n        ((?controlledName = \'MAFG\'^^xsd:string) ) or\n        ((?controlledName = \'MGC13090\'^^xsd:string) ) or\n        ((?controlledName = \'MGC20149\'^^xsd:string) ) or\n        ((?controlledName = \'EN1\'^^xsd:string) ) or\n        ((?controlledName = \'GCN5\'^^xsd:string) ) or\n        ((?controlledName = \'KAT2B\'^^xsd:string) ) or\n        ((?controlledName = \'GCN5L\'^^xsd:string) ) or\n        ((?controlledName = \'P/CAF\'^^xsd:string) ) or\n        ((?controlledName = \'PCAF\'^^xsd:string) ) or\n        ((?controlledName = \'NFE2\'^^xsd:string) ) or\n        ((?controlledName = \'NF-E2\'^^xsd:string) ) or\n        ((?controlledName = \'FOXQ1\'^^xsd:string) ) or\n        ((?controlledName = \'HFH1\'^^xsd:string) ) or\n        ((?controlledName = \'CDC5L\'^^xsd:string) ) or\n        ((?controlledName = \'CDC5\'^^xsd:string) ) or\n        ((?controlledName = \'CEF1\'^^xsd:string) ) or\n        ((?controlledName = \'PCDC5RP\'^^xsd:string) ) or\n        ((?controlledName = \'hCDC5\'^^xsd:string) ) or\n        ((?controlledName = \'MPP2\'^^xsd:string) ) or\n        ((?controlledName = \'FOXM1\'^^xsd:string) ) or\n        ((?controlledName = \'FKHL16\'^^xsd:string) ) or\n        ((?controlledName = \'HFH-11\'^^xsd:string) ) or\n        ((?controlledName = \'HNF-3\'^^xsd:string) ) or\n        ((?controlledName = \'INS-1\'^^xsd:string) ) or\n        ((?controlledName = \'MPHOSPH2\'^^xsd:string) ) or\n        ((?controlledName = \'TGT3\'^^xsd:string) ) or\n        ((?controlledName = \'trident\'^^xsd:string) ) or\n        ((?controlledName = \'ETS1\'^^xsd:string) ) or\n        ((?controlledName = \'ETS-1\'^^xsd:string) ) or\n        ((?controlledName = \'FLJ10768\'^^xsd:string) ))\n        and (str(?source) != "http://pathwaycommons.org/pc2/mirtarbase")\n        and ((str(?controlledType) = "http://www.biopax.org/release/biopax-level3.owl#Protein") or (str(?controlledType) = "http://www.biopax.org/release/biopax-level3.owl#Rna"))\n        and ((str(?controllerType) = "http://www.biopax.org/release/biopax-level3.owl#Protein") or (str(?controllerType) = "http://www.biopax.org/release/biopax-level3.owl#Rna"))\n) .\n?tempReac a bp:TemplateReactionRegulation .\n?tempReac rdf:type ?ctype ; bp:controlled ?controlled ; bp:controller ?controller ; bp:controlType ?type ; bp:dataSource ?source .\n?controlled bp:participant ?participant ; bp:dataSource ?controlledsource .\n?participant bp:displayName ?controlledName; rdf:type ?controlledType .\n?controller bp:displayName ?controllerName ; rdf:type ?controllerType ; bp:dataSource ?controllersource .\n}\nGROUP BY ?controlledName ?controllerName\n'
+Testing ../data/HMA_constrained/iPC1675wFluxes_DU-145_FBS.mat for Sorafenib (USAN/INN)
+Importing all the correspondance tables
+Entering : Association RxN <-> Enzymes list construction
+Entering : Single Reaction Analysis
+Execution time (Single Reaction Analysis) =  92.90279102791101 seconds
+Target gene list size = 214
+Entering : RRG reconstruction
+Treated  0  genes, still  214  limit =  50000
+Treated  50  genes, still  262  limit =  50000
+Treated  100  genes, still  262  limit =  50000
+Treated  150  genes, still  221  limit =  50000
+Treated  200  genes, still  183  limit =  50000
+Treated  250  genes, still  172  limit =  50000
+Traceback (most recent call last):
+  File "/Users/jeremiebourdon/miniconda3/envs/Bravo_Experiments/lib/python3.6/site-packages/SPARQLWrapper/Wrapper.py", line 657, in _query
+    response = urlopener(request)
+  File "/Users/jeremiebourdon/miniconda3/envs/Bravo_Experiments/lib/python3.6/urllib/request.py", line 223, in urlopen
+    return opener.open(url, data, timeout)
+  File "/Users/jeremiebourdon/miniconda3/envs/Bravo_Experiments/lib/python3.6/urllib/request.py", line 532, in open
+    response = meth(req, response)
+  File "/Users/jeremiebourdon/miniconda3/envs/Bravo_Experiments/lib/python3.6/urllib/request.py", line 642, in http_response
+    'http', request, response, code, msg, hdrs)
+  File "/Users/jeremiebourdon/miniconda3/envs/Bravo_Experiments/lib/python3.6/urllib/request.py", line 570, in error
+    return self._call_chain(*args)
+  File "/Users/jeremiebourdon/miniconda3/envs/Bravo_Experiments/lib/python3.6/urllib/request.py", line 504, in _call_chain
+    result = func(*args)
+  File "/Users/jeremiebourdon/miniconda3/envs/Bravo_Experiments/lib/python3.6/urllib/request.py", line 650, in http_error_default
+    raise HTTPError(req.full_url, code, msg, hdrs, fp)
+urllib.error.HTTPError: HTTP Error 500: SPARQL Request Failed
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "Reconstruction_sous_reseau_impacte.py", line 382, in <module>
+    a,b,u=getParentGraphList(TargetGenesName,50000)
+  File "Reconstruction_sous_reseau_impacte.py", line 349, in getParentGraphList
+    relations,newgenes=GetTFControllersList(L)
+  File "Reconstruction_sous_reseau_impacte.py", line 314, in GetTFControllersList
+    query = sparql.query().convert()
+  File "/Users/jeremiebourdon/miniconda3/envs/Bravo_Experiments/lib/python3.6/site-packages/SPARQLWrapper/Wrapper.py", line 687, in query
+    return QueryResult(self._query())
+  File "/Users/jeremiebourdon/miniconda3/envs/Bravo_Experiments/lib/python3.6/site-packages/SPARQLWrapper/Wrapper.py", line 665, in _query
+    raise EndPointInternalError(e.read())
+SPARQLWrapper.SPARQLExceptions.EndPointInternalError: EndPointInternalError: endpoint returned code 500 and response. 
+
+Response:
+b'Virtuoso S1T00 Error SR171: Transaction timed out\n\nSPARQL query:\ndefine sql:big-data-const 0 \n#output-format:application/sparql-results+json\n\nPREFIX bp: <http://www.biopax.org/release/biopax-level3.owl#>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?tempReac ?type ?controlledName ?controllerName ?source ?controllerType ?controlledType\nWHERE{\n    FILTER (\n    (((?controlledName = \'NR3C1\'^^xsd:string) ) or\n        ((?controlledName = \'GR\'^^xsd:string) ) or\n        ((?controlledName = \'GRL\'^^xsd:string) ) or\n        ((?controlledName = \'SREBF1\'^^xsd:string) ) or\n        ((?controlledName = \'SREBP-1c\'^^xsd:string) ) or\n        ((?controlledName = \'SREBP1\'^^xsd:string) ) or\n        ((?controlledName = \'SREBP1a\'^^xsd:string) ) or\n        ((?controlledName = \'bHLHd1\'^^xsd:string) ) or\n        ((?controlledName = \'PAX4\'^^xsd:string) ) or\n        ((?controlledName = \'MODY9\'^^xsd:string) ) or\n        ((?controlledName = \'MAFG\'^^xsd:string) ) or\n        ((?controlledName = \'MGC13090\'^^xsd:string) ) or\n        ((?controlledName = \'MGC20149\'^^xsd:string) ) or\n        ((?controlledName = \'SMAD3\'^^xsd:string) ) or\n        ((?controlledName = \'HsT17436\'^^xsd:string) ) or\n        ((?controlledName = \'JV15-2\'^^xsd:string) ) or\n        ((?controlledName = \'MADH3\'^^xsd:string) ) or\n        ((?controlledName = \'NRF1\'^^xsd:string) ) or\n        ((?controlledName = \'ALPHA-PAL\'^^xsd:string) ) or\n        ((?controlledName = \'EWG\'^^xsd:string) ) or\n        ((?controlledName = \'NF-E1\'^^xsd:string) ) or\n        ((?controlledName = \'GATA1\'^^xsd:string) ) or\n        ((?controlledName = \'ERYF1\'^^xsd:string) ) or\n        ((?controlledName = \'GATA-1\'^^xsd:string) ) or\n        ((?controlledName = \'NFE1\'^^xsd:string) ) or\n        ((?controlledName = \'SPI1\'^^xsd:string) ) or\n        ((?controlledName = \'PU.1\'^^xsd:string) ) or\n        ((?controlledName = \'SFPI1\'^^xsd:string) ) or\n        ((?controlledName = \'SPI-1\'^^xsd:string) ) or\n        ((?controlledName = \'SPI-A\'^^xsd:string) ) or\n        ((?controlledName = \'PGR\'^^xsd:string) ) or\n        ((?controlledName = \'NR3C3\'^^xsd:string) ) or\n        ((?controlledName = \'MECOM\'^^xsd:string) ) or\n        ((?controlledName = \'EVI1\'^^xsd:string) ) or\n        ((?controlledName = \'MDS1\'^^xsd:string) ) or\n        ((?controlledName = \'MDS1-EVI1\'^^xsd:string) ) or\n        ((?controlledName = \'PRDM3\'^^xsd:string) ) or\n        ((?controlledName = \'TP53\'^^xsd:string) ) or\n        ((?controlledName = \'LFS1\'^^xsd:string) ) or\n        ((?controlledName = \'p53\'^^xsd:string) ) or\n        ((?controlledName = \'MYOD1\'^^xsd:string) ) or\n        ((?controlledName = \'MYF3\'^^xsd:string) ) or\n        ((?controlledName = \'MYOD\'^^xsd:string) ) or\n        ((?controlledName = \'bHLHc1\'^^xsd:string) ) or\n        ((?controlledName = \'REPIN1\'^^xsd:string) ) or\n        ((?controlledName = \'AP4\'^^xsd:string) ) or\n        ((?controlledName = \'H_DJ0584D14.12\'^^xsd:string) ) or\n        ((?controlledName = \'RIP60\'^^xsd:string) ) or\n        ((?controlledName = \'ZNF464\'^^xsd:string) ) or\n        ((?controlledName = \'Zfp464\'^^xsd:string) ) or\n        ((?controlledName = \'PAX2\'^^xsd:string) ) or\n        ((?controlledName = \'GABPB2\'^^xsd:string) ) or\n        ((?controlledName = \'MGC29891\'^^xsd:string) ) or\n        ((?controlledName = \'MEIS1\'^^xsd:string) ) or\n        ((?controlledName = \'TGIF\'^^xsd:string) ) or\n        ((?controlledName = \'TGIF1\'^^xsd:string) ) or\n        ((?controlledName = \'HPE4\'^^xsd:string) ) or\n        ((?controlledName = \'GFI1\'^^xsd:string) ) or\n        ((?controlledName = \'GFI-1\'^^xsd:string) ) or\n        ((?controlledName = \'GFI1A\'^^xsd:string) ) or\n        ((?controlledName = \'ZNF163\'^^xsd:string) ) or\n        ((?controlledName = \'GABPB1\'^^xsd:string) ) or\n        ((?controlledName = \'E4TF1-47\'^^xsd:string) ) or\n        ((?controlledName = \'GABPB\'^^xsd:string) ) or\n        ((?controlledName = \'SP3\'^^xsd:string) ) or\n        ((?controlledName = \'SPR-2\'^^xsd:string) ) or\n        ((?controlledName = \'NFIL3\'^^xsd:string) ) or\n        ((?controlledName = \'E4BP4\'^^xsd:string) ) or\n        ((?controlledName = \'IL3BP1\'^^xsd:string) ) or\n        ((?controlledName = \'NF-IL3A\'^^xsd:string) ) or\n        ((?controlledName = \'NFIL3A\'^^xsd:string) ) or\n        ((?controlledName = \'PAX8\'^^xsd:string) ) or\n        ((?controlledName = \'HNF4A\'^^xsd:string) ) or\n        ((?controlledName = \'HNF4\'^^xsd:string) ) or\n        ((?controlledName = \'MODY\'^^xsd:string) ) or\n        ((?controlledName = \'MODY1\'^^xsd:string) ) or\n        ((?controlledName = \'NR2A1\'^^xsd:string) ) or\n        ((?controlledName = \'TCF14\'^^xsd:string) ) or\n        ((?controlledName = \'HNF1A\'^^xsd:string) ) or\n        ((?controlledName = \'HNF1\'^^xsd:string) ) or\n        ((?controlledName = \'LFB1\'^^xsd:string) ) or\n        ((?controlledName = \'MODY3\'^^xsd:string) ) or\n        ((?controlledName = \'TCF1\'^^xsd:string) ) or\n        ((?controlledName = \'ATF4\'^^xsd:string) ) or\n        ((?controlledName = \'CREB-2\'^^xsd:string) ) or\n        ((?controlledName = \'TAXREB67\'^^xsd:string) ) or\n        ((?controlledName = \'TXREB\'^^xsd:string) ) or\n        ((?controlledName = \'LMO2\'^^xsd:string) ) or\n        ((?controlledName = \'RBTN2\'^^xsd:string) ) or\n        ((?controlledName = \'RBTNL1\'^^xsd:string) ) or\n        ((?controlledName = \'RHOM2\'^^xsd:string) ) or\n        ((?controlledName = \'TTG2\'^^xsd:string) ) or\n        ((?controlledName = \'RUNX1\'^^xsd:string) ) or\n        ((?controlledName = \'AML1\'^^xsd:string) ) or\n        ((?controlledName = \'AMLCR1\'^^xsd:string) ) or\n        ((?controlledName = \'CBFA2\'^^xsd:string) ) or\n        ((?controlledName = \'PEBP2A2\'^^xsd:string) ) or\n        ((?controlledName = \'NR1H4\'^^xsd:string) ) or\n        ((?controlledName = \'FXR\'^^xsd:string) ) or\n        ((?controlledName = \'HRR-1\'^^xsd:string) ) or\n        ((?controlledName = \'HRR1\'^^xsd:string) ) or\n        ((?controlledName = \'RIP14\'^^xsd:string) ) or\n        ((?controlledName = \'PBX1\'^^xsd:string) ) or\n        ((?controlledName = \'TFAP4\'^^xsd:string) ) or\n        ((?controlledName = \'AP-4\'^^xsd:string) ) or\n        ((?controlledName = \'bHLHc41\'^^xsd:string) ) or\n        ((?controlledName = \'EBF2\'^^xsd:string) ) or\n        ((?controlledName = \'COE2\'^^xsd:string) ) or\n        ((?controlledName = \'FLJ11500\'^^xsd:string) ) or\n        ((?controlledName = \'SMAD4\'^^xsd:string) ) or\n        ((?controlledName = \'DPC4\'^^xsd:string) ) or\n        ((?controlledName = \'MADH4\'^^xsd:string) ) or\n        ((?controlledName = \'XBP1\'^^xsd:string) ) or\n        ((?controlledName = \'XBP2\'^^xsd:string) ) or\n        ((?controlledName = \'AR\'^^xsd:string) ) or\n        ((?controlledName = \'AIS\'^^xsd:string) ) or\n        ((?controlledName = \'DHTR\'^^xsd:string) ) or\n        ((?controlledName = \'HUMARA\'^^xsd:string) ) or\n        ((?controlledName = \'NR3C4\'^^xsd:string) ) or\n        ((?controlledName = \'SBMA\'^^xsd:string) ) or\n        ((?controlledName = \'SMAX1\'^^xsd:string) ) or\n        ((?controlledName = \'NR6A1\'^^xsd:string) ) or\n        ((?controlledName = \'CT150\'^^xsd:string) ) or\n        ((?controlledName = \'GCNF\'^^xsd:string) ) or\n        ((?controlledName = \'GCNF1\'^^xsd:string) ) or\n        ((?controlledName = \'RTR\'^^xsd:string) ) or\n        ((?controlledName = \'RS\'^^xsd:string) ) or\n        ((?controlledName = \'PITX2\'^^xsd:string) ) or\n        ((?controlledName = \'Brx1\'^^xsd:string) ) or\n        ((?controlledName = \'IGDS\'^^xsd:string) ) or\n        ((?controlledName = \'IHG2\'^^xsd:string) ) or\n        ((?controlledName = \'IRID2\'^^xsd:string) ) or\n        ((?controlledName = \'Otlx2\'^^xsd:string) ) or\n        ((?controlledName = \'RGS\'^^xsd:string) ) or\n        ((?controlledName = \'RIEG\'^^xsd:string) ) or\n        ((?controlledName = \'RIEG1\'^^xsd:string) ) or\n        ((?controlledName = \'RFX1\'^^xsd:string) ) or\n        ((?controlledName = \'EF-C\'^^xsd:string) ) or\n        ((?controlledName = \'TCF12\'^^xsd:string) ) or\n        ((?controlledName = \'HEB\'^^xsd:string) ) or\n        ((?controlledName = \'HTF4\'^^xsd:string) ) or\n        ((?controlledName = \'HsT17266\'^^xsd:string) ) or\n        ((?controlledName = \'bHLHb20\'^^xsd:string) ) or\n        ((?controlledName = \'EGR1\'^^xsd:string) ) or\n        ((?controlledName = \'AT225\'^^xsd:string) ) or\n        ((?controlledName = \'G0S30\'^^xsd:string) ) or\n        ((?controlledName = \'KROX-24\'^^xsd:string) ) or\n        ((?controlledName = \'NGFI-A\'^^xsd:string) ) or\n        ((?controlledName = \'TIS8\'^^xsd:string) ) or\n        ((?controlledName = \'ZIF-268\'^^xsd:string) ) or\n        ((?controlledName = \'HSTF1\'^^xsd:string) ) or\n        ((?controlledName = \'HSF1\'^^xsd:string) ) or\n        ((?controlledName = \'FOXA2\'^^xsd:string) ) or\n        ((?controlledName = \'HNF3B\'^^xsd:string) ) or\n        ((?controlledName = \'MYOG\'^^xsd:string) ) or\n        ((?controlledName = \'MYF4\'^^xsd:string) ) or\n        ((?controlledName = \'bHLHc3\'^^xsd:string) ) or\n        ((?controlledName = \'ESRRA\'^^xsd:string) ) or\n        ((?controlledName = \'ERR1\'^^xsd:string) ) or\n        ((?controlledName = \'ERRa\'^^xsd:string) ) or\n        ((?controlledName = \'ERRalpha\'^^xsd:string) ) or\n        ((?controlledName = \'ESRL1\'^^xsd:string) ) or\n        ((?controlledName = \'NR3B1\'^^xsd:string) ) or\n        ((?controlledName = \'AHR\'^^xsd:string) ) or\n        ((?controlledName = \'bHLHe76\'^^xsd:string) ) or\n        ((?controlledName = \'PRRX2\'^^xsd:string) ) or\n        ((?controlledName = \'PMX2\'^^xsd:string) ) or\n        ((?controlledName = \'PCBP1\'^^xsd:string) ) or\n        ((?controlledName = \'HNRPE1\'^^xsd:string) ) or\n        ((?controlledName = \'HNRPX\'^^xsd:string) ) or\n        ((?controlledName = \'hnRNP-E1\'^^xsd:string) ) or\n        ((?controlledName = \'hnRNP-X\'^^xsd:string) ) or\n        ((?controlledName = \'EGR4\'^^xsd:string) ) or\n        ((?controlledName = \'NGFI-C\'^^xsd:string) ) or\n        ((?controlledName = \'PAT133\'^^xsd:string) ) or\n        ((?controlledName = \'RUNX2\'^^xsd:string) ) or\n        ((?controlledName = \'AML3\'^^xsd:string) ) or\n        ((?controlledName = \'CBFA1\'^^xsd:string) ) or\n        ((?controlledName = \'CCD\'^^xsd:string) ) or\n        ((?controlledName = \'CCD1\'^^xsd:string) ) or\n        ((?controlledName = \'PEBP2A1\'^^xsd:string) ) or\n        ((?controlledName = \'PEBP2aA1\'^^xsd:string) ) or\n        ((?controlledName = \'GATA3\'^^xsd:string) ) or\n        ((?controlledName = \'HDR\'^^xsd:string) ) or\n        ((?controlledName = \'SMAD1\'^^xsd:string) ) or\n        ((?controlledName = \'JV4-1\'^^xsd:string) ) or\n        ((?controlledName = \'MADH1\'^^xsd:string) ) or\n        ((?controlledName = \'MADR1\'^^xsd:string) ))\n        and (str(?source) != "http://pathwaycommons.org/pc2/mirtarbase")\n        and ((str(?controlledType) = "http://www.biopax.org/release/biopax-level3.owl#Protein") or (str(?controlledType) = "http://www.biopax.org/release/biopax-level3.owl#Rna"))\n        and ((str(?controllerType) = "http://www.biopax.org/release/biopax-level3.owl#Protein") or (str(?controllerType) = "http://www.biopax.org/release/biopax-level3.owl#Rna"))\n) .\n?tempReac a bp:TemplateReactionRegulation .\n?tempReac rdf:type ?ctype ; bp:controlled ?controlled ; bp:controller ?controller ; bp:controlType ?type ; bp:dataSource ?source .\n?controlled bp:participant ?participant ; bp:dataSource ?controlledsource .\n?participant bp:displayName ?controlledName; rdf:type ?controlledType .\n?controller bp:displayName ?controllerName ; rdf:type ?controllerType ; bp:dataSource ?controllersource .\n}\nGROUP BY ?controlledName ?controllerName\n'
+Testing ../data/HMA_constrained/iPC1675wFluxes_DU-145_HAM.mat for Sorafenib (USAN/INN)
+Importing all the correspondance tables
+Entering : Association RxN <-> Enzymes list construction
+Entering : Single Reaction Analysis
+Execution time (Single Reaction Analysis) =  104.89208838809282 seconds
+Target gene list size = 308
+Entering : RRG reconstruction
+Treated  0  genes, still  308  limit =  50000
+Treated  50  genes, still  359  limit =  50000
+Treated  100  genes, still  339  limit =  50000
+Treated  150  genes, still  319  limit =  50000
+Treated  200  genes, still  281  limit =  50000
+Treated  250  genes, still  240  limit =  50000
+Treated  300  genes, still  196  limit =  50000
+Treated  350  genes, still  165  limit =  50000
+Treated  400  genes, still  124  limit =  50000
+Traceback (most recent call last):
+  File "/Users/jeremiebourdon/miniconda3/envs/Bravo_Experiments/lib/python3.6/site-packages/SPARQLWrapper/Wrapper.py", line 657, in _query
+    response = urlopener(request)
+  File "/Users/jeremiebourdon/miniconda3/envs/Bravo_Experiments/lib/python3.6/urllib/request.py", line 223, in urlopen
+    return opener.open(url, data, timeout)
+  File "/Users/jeremiebourdon/miniconda3/envs/Bravo_Experiments/lib/python3.6/urllib/request.py", line 532, in open
+    response = meth(req, response)
+  File "/Users/jeremiebourdon/miniconda3/envs/Bravo_Experiments/lib/python3.6/urllib/request.py", line 642, in http_response
+    'http', request, response, code, msg, hdrs)
+  File "/Users/jeremiebourdon/miniconda3/envs/Bravo_Experiments/lib/python3.6/urllib/request.py", line 570, in error
+    return self._call_chain(*args)
+  File "/Users/jeremiebourdon/miniconda3/envs/Bravo_Experiments/lib/python3.6/urllib/request.py", line 504, in _call_chain
+    result = func(*args)
+  File "/Users/jeremiebourdon/miniconda3/envs/Bravo_Experiments/lib/python3.6/urllib/request.py", line 650, in http_error_default
+    raise HTTPError(req.full_url, code, msg, hdrs, fp)
+urllib.error.HTTPError: HTTP Error 500: SPARQL Request Failed
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "Reconstruction_sous_reseau_impacte.py", line 382, in <module>
+    a,b,u=getParentGraphList(TargetGenesName,50000)
+  File "Reconstruction_sous_reseau_impacte.py", line 349, in getParentGraphList
+    relations,newgenes=GetTFControllersList(L)
+  File "Reconstruction_sous_reseau_impacte.py", line 314, in GetTFControllersList
+    query = sparql.query().convert()
+  File "/Users/jeremiebourdon/miniconda3/envs/Bravo_Experiments/lib/python3.6/site-packages/SPARQLWrapper/Wrapper.py", line 687, in query
+    return QueryResult(self._query())
+  File "/Users/jeremiebourdon/miniconda3/envs/Bravo_Experiments/lib/python3.6/site-packages/SPARQLWrapper/Wrapper.py", line 665, in _query
+    raise EndPointInternalError(e.read())
+SPARQLWrapper.SPARQLExceptions.EndPointInternalError: EndPointInternalError: endpoint returned code 500 and response. 
+
+Response:
+b'Virtuoso S1T00 Error SR171: Transaction timed out\n\nSPARQL query:\ndefine sql:big-data-const 0 \n#output-format:application/sparql-results+json\n\nPREFIX bp: <http://www.biopax.org/release/biopax-level3.owl#>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?tempReac ?type ?controlledName ?controllerName ?source ?controllerType ?controlledType\nWHERE{\n    FILTER (\n    (((?controlledName = \'PRRX2\'^^xsd:string) ) or\n        ((?controlledName = \'PMX2\'^^xsd:string) ) or\n        ((?controlledName = \'EGR4\'^^xsd:string) ) or\n        ((?controlledName = \'NGFI-C\'^^xsd:string) ) or\n        ((?controlledName = \'PAT133\'^^xsd:string) ) or\n        ((?controlledName = \'DDIT3\'^^xsd:string) ) or\n        ((?controlledName = \'CHOP\'^^xsd:string) ) or\n        ((?controlledName = \'CHOP10\'^^xsd:string) ) or\n        ((?controlledName = \'GADD153\'^^xsd:string) ) or\n        ((?controlledName = \'EGR3\'^^xsd:string) ) or\n        ((?controlledName = \'PILOT\'^^xsd:string) ) or\n        ((?controlledName = \'EGR1\'^^xsd:string) ) or\n        ((?controlledName = \'AT225\'^^xsd:string) ) or\n        ((?controlledName = \'G0S30\'^^xsd:string) ) or\n        ((?controlledName = \'KROX-24\'^^xsd:string) ) or\n        ((?controlledName = \'NGFI-A\'^^xsd:string) ) or\n        ((?controlledName = \'TIS8\'^^xsd:string) ) or\n        ((?controlledName = \'ZIF-268\'^^xsd:string) ) or\n        ((?controlledName = \'MYCN\'^^xsd:string) ) or\n        ((?controlledName = \'MYCNOT\'^^xsd:string) ) or\n        ((?controlledName = \'N-myc\'^^xsd:string) ) or\n        ((?controlledName = \'NMYC\'^^xsd:string) ) or\n        ((?controlledName = \'bHLHe37\'^^xsd:string) ) or\n        ((?controlledName = \'STAT6\'^^xsd:string) ) or\n        ((?controlledName = \'D12S1644\'^^xsd:string) ) or\n        ((?controlledName = \'IL-4-STAT\'^^xsd:string) ) or\n        ((?controlledName = \'STAT3\'^^xsd:string) ) or\n        ((?controlledName = \'APRF\'^^xsd:string) ) or\n        ((?controlledName = \'PAX6\'^^xsd:string) ) or\n        ((?controlledName = \'AN2\'^^xsd:string) ) or\n        ((?controlledName = \'D11S812E\'^^xsd:string) ) or\n        ((?controlledName = \'SF1\'^^xsd:string) ) or\n        ((?controlledName = \'ZCCHC25\'^^xsd:string) ) or\n        ((?controlledName = \'ZFM1\'^^xsd:string) ) or\n        ((?controlledName = \'ZNF162\'^^xsd:string) ) or\n        ((?controlledName = \'RORA\'^^xsd:string) ) or\n        ((?controlledName = \'NR1F1\'^^xsd:string) ) or\n        ((?controlledName = \'ROR3\'^^xsd:string) ) or\n        ((?controlledName = \'RZRA\'^^xsd:string) ) or\n        ((?controlledName = \'CEBPA\'^^xsd:string) ) or\n        ((?controlledName = \'C/EBP-alpha\'^^xsd:string) ) or\n        ((?controlledName = \'CEBP\'^^xsd:string) ) or\n        ((?controlledName = \'LAP\'^^xsd:string) ) or\n        ((?controlledName = \'CEBPB\'^^xsd:string) ) or\n        ((?controlledName = \'C/EBP-beta\'^^xsd:string) ) or\n        ((?controlledName = \'IL6DBP\'^^xsd:string) ) or\n        ((?controlledName = \'NFIL6\'^^xsd:string) ) or\n        ((?controlledName = \'TCF5\'^^xsd:string) ) or\n        ((?controlledName = \'HAND1\'^^xsd:string) ) or\n        ((?controlledName = \'Hxt\'^^xsd:string) ) or\n        ((?controlledName = \'Thing1\'^^xsd:string) ) or\n        ((?controlledName = \'bHLHa27\'^^xsd:string) ) or\n        ((?controlledName = \'eHand\'^^xsd:string) ) or\n        ((?controlledName = \'CASP\'^^xsd:string) ) or\n        ((?controlledName = \'CUX1\'^^xsd:string) ) or\n        ((?controlledName = \'CDP\'^^xsd:string) ) or\n        ((?controlledName = \'CDP/Cut\'^^xsd:string) ) or\n        ((?controlledName = \'CDP/Cux\'^^xsd:string) ) or\n        ((?controlledName = \'CDP1\'^^xsd:string) ) or\n        ((?controlledName = \'CUT\'^^xsd:string) ) or\n        ((?controlledName = \'CUTL1\'^^xsd:string) ) or\n        ((?controlledName = \'CUX\'^^xsd:string) ) or\n        ((?controlledName = \'Clox\'^^xsd:string) ) or\n        ((?controlledName = \'Cux/CDP\'^^xsd:string) ) or\n        ((?controlledName = \'GOLIM6\'^^xsd:string) ) or\n        ((?controlledName = \'TFDP2\'^^xsd:string) ) or\n        ((?controlledName = \'Dp-2\'^^xsd:string) ) or\n        ((?controlledName = \'FOXN1\'^^xsd:string) ) or\n        ((?controlledName = \'FKHL20\'^^xsd:string) ) or\n        ((?controlledName = \'RONU\'^^xsd:string) ) or\n        ((?controlledName = \'WHN\'^^xsd:string) ) or\n        ((?controlledName = \'HIF1A\'^^xsd:string) ) or\n        ((?controlledName = \'HIF-1alpha\'^^xsd:string) ) or\n        ((?controlledName = \'HIF1\'^^xsd:string) ) or\n        ((?controlledName = \'MOP1\'^^xsd:string) ) or\n        ((?controlledName = \'PASD8\'^^xsd:string) ) or\n        ((?controlledName = \'bHLHe78\'^^xsd:string) ) or\n        ((?controlledName = \'REL\'^^xsd:string) ) or\n        ((?controlledName = \'I-Rel\'^^xsd:string) ) or\n        ((?controlledName = \'c-Rel\'^^xsd:string) ) or\n        ((?controlledName = \'NF1\'^^xsd:string) ) or\n        ((?controlledName = \'SMAD3\'^^xsd:string) ) or\n        ((?controlledName = \'HsT17436\'^^xsd:string) ) or\n        ((?controlledName = \'JV15-2\'^^xsd:string) ) or\n        ((?controlledName = \'MADH3\'^^xsd:string) ) or\n        ((?controlledName = \'SPI1\'^^xsd:string) ) or\n        ((?controlledName = \'PU.1\'^^xsd:string) ) or\n        ((?controlledName = \'SFPI1\'^^xsd:string) ) or\n        ((?controlledName = \'SPI-1\'^^xsd:string) ) or\n        ((?controlledName = \'SPI-A\'^^xsd:string) ) or\n        ((?controlledName = \'TFCP2\'^^xsd:string) ) or\n        ((?controlledName = \'CP2\'^^xsd:string) ) or\n        ((?controlledName = \'LBP-1C\'^^xsd:string) ) or\n        ((?controlledName = \'LSF\'^^xsd:string) ) or\n        ((?controlledName = \'TFCP2C\'^^xsd:string) ) or\n        ((?controlledName = \'NR1H3\'^^xsd:string) ) or\n        ((?controlledName = \'LXR-a\'^^xsd:string) ) or\n        ((?controlledName = \'RLD-1\'^^xsd:string) ) or\n        ((?controlledName = \'RXRB\'^^xsd:string) ) or\n        ((?controlledName = \'H-2RIIBP\'^^xsd:string) ) or\n        ((?controlledName = \'NR2B2\'^^xsd:string) ) or\n        ((?controlledName = \'RCoR-1\'^^xsd:string) ) or\n        ((?controlledName = \'REST\'^^xsd:string) ) or\n        ((?controlledName = \'NRSF\'^^xsd:string) ) or\n        ((?controlledName = \'XBR\'^^xsd:string) ) or\n        ((?controlledName = \'MECOM\'^^xsd:string) ) or\n        ((?controlledName = \'EVI1\'^^xsd:string) ) or\n        ((?controlledName = \'MDS1\'^^xsd:string) ) or\n        ((?controlledName = \'MDS1-EVI1\'^^xsd:string) ) or\n        ((?controlledName = \'PRDM3\'^^xsd:string) ) or\n        ((?controlledName = \'SMAD1\'^^xsd:string) ) or\n        ((?controlledName = \'JV4-1\'^^xsd:string) ) or\n        ((?controlledName = \'MADH1\'^^xsd:string) ) or\n        ((?controlledName = \'MADR1\'^^xsd:string) ) or\n        ((?controlledName = \'PPARA\'^^xsd:string) ) or\n        ((?controlledName = \'NR1C1\'^^xsd:string) ) or\n        ((?controlledName = \'PPAR\'^^xsd:string) ) or\n        ((?controlledName = \'hPPAR\'^^xsd:string) ) or\n        ((?controlledName = \'GTF3A\'^^xsd:string) ) or\n        ((?controlledName = \'AP2\'^^xsd:string) ) or\n        ((?controlledName = \'TFIIIA\'^^xsd:string) ) or\n        ((?controlledName = \'STAT2\'^^xsd:string) ) or\n        ((?controlledName = \'STAT113\'^^xsd:string) ) or\n        ((?controlledName = \'RB1\'^^xsd:string) ) or\n        ((?controlledName = \'OSRC\'^^xsd:string) ) or\n        ((?controlledName = \'PPP1R130\'^^xsd:string) ) or\n        ((?controlledName = \'RB\'^^xsd:string) ) or\n        ((?controlledName = \'SRY\'^^xsd:string) ) or\n        ((?controlledName = \'TDF\'^^xsd:string) ) or\n        ((?controlledName = \'STAT4\'^^xsd:string) ) or\n        ((?controlledName = \'CBFA2T3\'^^xsd:string) ) or\n        ((?controlledName = \'ETO2\'^^xsd:string) ) or\n        ((?controlledName = \'MTG16\'^^xsd:string) ) or\n        ((?controlledName = \'MTGR2\'^^xsd:string) ) or\n        ((?controlledName = \'RUNX1T3\'^^xsd:string) ) or\n        ((?controlledName = \'ZMYND4\'^^xsd:string) ) or\n        ((?controlledName = \'HMX1\'^^xsd:string) ) or\n        ((?controlledName = \'H6\'^^xsd:string) ) or\n        ((?controlledName = \'NKX5-3\'^^xsd:string) ) or\n        ((?controlledName = \'RELA\'^^xsd:string) ) or\n        ((?controlledName = \'NFKB3\'^^xsd:string) ) or\n        ((?controlledName = \'p65\'^^xsd:string) ) or\n        ((?controlledName = \'HEN1\'^^xsd:string) ) or\n        ((?controlledName = \'NHLH1\'^^xsd:string) ) or\n        ((?controlledName = \'NSCL\'^^xsd:string) ) or\n        ((?controlledName = \'NSCL1\'^^xsd:string) ) or\n        ((?controlledName = \'bHLHa35\'^^xsd:string) ) or\n        ((?controlledName = \'BACH1\'^^xsd:string) ) or\n        ((?controlledName = \'BACH-1\'^^xsd:string) ) or\n        ((?controlledName = \'BTBD24\'^^xsd:string) ) or\n        ((?controlledName = \'HSF2\'^^xsd:string) ) or\n        ((?controlledName = \'POU3F1\'^^xsd:string) ) or\n        ((?controlledName = \'OCT6\'^^xsd:string) ) or\n        ((?controlledName = \'OTF6\'^^xsd:string) ) or\n        ((?controlledName = \'SCIP\'^^xsd:string) ) or\n        ((?controlledName = \'GATA2\'^^xsd:string) ) or\n        ((?controlledName = \'NFE1B\'^^xsd:string) ) or\n        ((?controlledName = \'ELF2\'^^xsd:string) ) or\n        ((?controlledName = \'EU32\'^^xsd:string) ) or\n        ((?controlledName = \'NERF\'^^xsd:string) ) or\n        ((?controlledName = \'NERF-1A\'^^xsd:string) ) or\n        ((?controlledName = \'NERF-1B\'^^xsd:string) ) or\n        ((?controlledName = \'NERF-2\'^^xsd:string) ) or\n        ((?controlledName = \'NFE2L2\'^^xsd:string) ) or\n        ((?controlledName = \'RUNX1\'^^xsd:string) ) or\n        ((?controlledName = \'AML1\'^^xsd:string) ) or\n        ((?controlledName = \'AMLCR1\'^^xsd:string) ) or\n        ((?controlledName = \'CBFA2\'^^xsd:string) ) or\n        ((?controlledName = \'PEBP2A2\'^^xsd:string) ) or\n        ((?controlledName = \'MPP2\'^^xsd:string) ) or\n        ((?controlledName = \'FOXM1\'^^xsd:string) ) or\n        ((?controlledName = \'FKHL16\'^^xsd:string) ) or\n        ((?controlledName = \'HFH-11\'^^xsd:string) ) or\n        ((?controlledName = \'HNF-3\'^^xsd:string) ) or\n        ((?controlledName = \'INS-1\'^^xsd:string) ) or\n        ((?controlledName = \'MPHOSPH2\'^^xsd:string) ) or\n        ((?controlledName = \'TGT3\'^^xsd:string) ) or\n        ((?controlledName = \'trident\'^^xsd:string) ) or\n        ((?controlledName = \'ELF1\'^^xsd:string) ) or\n        ((?controlledName = \'ELOF1\'^^xsd:string) ) or\n        ((?controlledName = \'MGC4549\'^^xsd:string) ) or\n        ((?controlledName = \'HMGA1\'^^xsd:string) ) or\n        ((?controlledName = \'HMGIY\'^^xsd:string) ) or\n        ((?controlledName = \'CDC5L\'^^xsd:string) ) or\n        ((?controlledName = \'CDC5\'^^xsd:string) ) or\n        ((?controlledName = \'CEF1\'^^xsd:string) ) or\n        ((?controlledName = \'PCDC5RP\'^^xsd:string) ) or\n        ((?controlledName = \'hCDC5\'^^xsd:string) ))\n        and (str(?source) != "http://pathwaycommons.org/pc2/mirtarbase")\n        and ((str(?controlledType) = "http://www.biopax.org/release/biopax-level3.owl#Protein") or (str(?controlledType) = "http://www.biopax.org/release/biopax-level3.owl#Rna"))\n        and ((str(?controllerType) = "http://www.biopax.org/release/biopax-level3.owl#Protein") or (str(?controllerType) = "http://www.biopax.org/release/biopax-level3.owl#Rna"))\n) .\n?tempReac a bp:TemplateReactionRegulation .\n?tempReac rdf:type ?ctype ; bp:controlled ?controlled ; bp:controller ?controller ; bp:controlType ?type ; bp:dataSource ?source .\n?controlled bp:participant ?participant ; bp:dataSource ?controlledsource .\n?participant bp:displayName ?controlledName; rdf:type ?controlledType .\n?controller bp:displayName ?controllerName ; rdf:type ?controllerType ; bp:dataSource ?controllersource .\n}\nGROUP BY ?controlledName ?controllerName\n'
+Testing ../data/HMA_constrained/iPC1675wFluxes_PC-3_FBS.mat for Sorafenib (USAN/INN)
+Importing all the correspondance tables
+Entering : Association RxN <-> Enzymes list construction
+Entering : Single Reaction Analysis
+Execution time (Single Reaction Analysis) =  97.60672211891506 seconds
+Target gene list size = 220
+Entering : RRG reconstruction
+Treated  0  genes, still  220  limit =  50000
+Treated  50  genes, still  259  limit =  50000
+Treated  100  genes, still  253  limit =  50000
+Treated  150  genes, still  219  limit =  50000
+Treated  200  genes, still  192  limit =  50000
+Treated  250  genes, still  169  limit =  50000
+Treated  300  genes, still  132  limit =  50000
+Treated  350  genes, still  87  limit =  50000
+Treated  400  genes, still  38  limit =  50000
+Execution time for RRG reconstruction =  66.79502520803362 seconds
+Reconstructed graph contains 440 genes, 4229 interactions
+Execution completed in 166.61223684996367 seconds
+Le nombre total de cibles potentielles après reconstruction est 25
+Le nombre total de cibles potentielles avant reconstruction est 16
+Le réseau de régulation possède 396 gènes
+Le réseau de régulation possède 4229 interactions
+Le sous-réseau de régulation impacté possède 198 gènes
+Le sous-réseau de régulation impacté possède 2121 interactions
+Testing ../data/HMA_constrained/iPC1675wFluxes_PC-3_HAM.mat for Sorafenib (USAN/INN)
+Importing all the correspondance tables
+Entering : Association RxN <-> Enzymes list construction
+Entering : Single Reaction Analysis
+Execution time (Single Reaction Analysis) =  110.15538343298249 seconds
+Target gene list size = 319
+Entering : RRG reconstruction
+Treated  0  genes, still  319  limit =  50000
+Treated  50  genes, still  361  limit =  50000
+Treated  100  genes, still  348  limit =  50000
+Treated  150  genes, still  331  limit =  50000
+Treated  200  genes, still  294  limit =  50000
+Treated  250  genes, still  253  limit =  50000
+Treated  300  genes, still  206  limit =  50000
+Treated  350  genes, still  172  limit =  50000
+Treated  400  genes, still  133  limit =  50000
+Treated  450  genes, still  87  limit =  50000
+Treated  500  genes, still  38  limit =  50000
+Execution time for RRG reconstruction =  81.8652212730376 seconds
+Reconstructed graph contains 539 genes, 4781 interactions
+Execution completed in 194.21837680204771 seconds
+Le nombre total de cibles potentielles après reconstruction est 29
+Le nombre total de cibles potentielles avant reconstruction est 20
+Le réseau de régulation possède 476 gènes
+Le réseau de régulation possède 4781 interactions
+Le sous-réseau de régulation impacté possède 238 gènes
+Le sous-réseau de régulation impacté possède 2382 interactions
+Testing ../data/HMA_constrained/iPC1675woFluxes_FBS.mat for Sorafenib (USAN/INN)
+Importing all the correspondance tables
+Entering : Association RxN <-> Enzymes list construction
+Entering : Single Reaction Analysis
+Execution time (Single Reaction Analysis) =  86.2849854909582 seconds
+Target gene list size = 135
+Entering : RRG reconstruction
+Treated  0  genes, still  135  limit =  50000
+Treated  50  genes, still  169  limit =  50000
+Treated  100  genes, still  165  limit =  50000
+Treated  150  genes, still  167  limit =  50000
+Treated  200  genes, still  145  limit =  50000
+Treated  250  genes, still  102  limit =  50000
+Treated  300  genes, still  54  limit =  50000
+Treated  350  genes, still  6  limit =  50000
+Execution time for RRG reconstruction =  52.82761831593234 seconds
+Reconstructed graph contains 356 genes, 3952 interactions
+Execution completed in 141.29094896605238 seconds
+Le nombre total de cibles potentielles après reconstruction est 13
+Le nombre total de cibles potentielles avant reconstruction est 4
+Le réseau de régulation possède 337 gènes
+Le réseau de régulation possède 3952 interactions
+Le sous-réseau de régulation impacté possède 169 gènes
+Le sous-réseau de régulation impacté possède 1972 interactions
+Testing ../data/HMA_constrained/iPC1675woFluxes_HAM.mat for Sorafenib (USAN/INN)
+Importing all the correspondance tables
+Entering : Association RxN <-> Enzymes list construction
+Entering : Single Reaction Analysis
+Execution time (Single Reaction Analysis) =  86.43613296106923 seconds
+Target gene list size = 143
+Entering : RRG reconstruction
+Treated  0  genes, still  143  limit =  50000
+Treated  50  genes, still  189  limit =  50000
+Treated  100  genes, still  173  limit =  50000
+Treated  150  genes, still  162  limit =  50000
+Treated  200  genes, still  145  limit =  50000
+Treated  250  genes, still  107  limit =  50000
+Treated  300  genes, still  62  limit =  50000
+Treated  350  genes, still  13  limit =  50000
+Execution time for RRG reconstruction =  57.63315254601184 seconds
+Reconstructed graph contains 364 genes, 3972 interactions
+Execution completed in 146.28040375292767 seconds
+Le nombre total de cibles potentielles après reconstruction est 15
+Le nombre total de cibles potentielles avant reconstruction est 6
+Le réseau de régulation possède 342 gènes
+Le réseau de régulation possède 3972 interactions
+Le sous-réseau de régulation impacté possède 174 gènes
+Le sous-réseau de régulation impacté possède 1997 interactions
+Testing ../data/HMA_constrained/iPC1675woFluxes__FBS.mat for Sorafenib (USAN/INN)
+Importing all the correspondance tables
+Entering : Association RxN <-> Enzymes list construction
+Entering : Single Reaction Analysis
+Execution time (Single Reaction Analysis) =  89.54500819800887 seconds
+Target gene list size = 135
+Entering : RRG reconstruction
+Treated  0  genes, still  135  limit =  50000
+Treated  50  genes, still  180  limit =  50000
+Treated  100  genes, still  165  limit =  50000
+Treated  150  genes, still  161  limit =  50000
+Treated  200  genes, still  144  limit =  50000
+Treated  250  genes, still  103  limit =  50000
+Treated  300  genes, still  53  limit =  50000
+Treated  350  genes, still  5  limit =  50000
+Execution time for RRG reconstruction =  56.588565869955346 seconds
+Reconstructed graph contains 356 genes, 3945 interactions
+Execution completed in 148.30948496900965 seconds
+Le nombre total de cibles potentielles après reconstruction est 13
+Le nombre total de cibles potentielles avant reconstruction est 4
+Le réseau de régulation possède 336 gènes
+Le réseau de régulation possède 3945 interactions
+Le sous-réseau de régulation impacté possède 168 gènes
+Le sous-réseau de régulation impacté possède 1968 interactions
+Testing ../data/HMA_constrained/iPC1675woFluxes__HAM.mat for Sorafenib (USAN/INN)
+Importing all the correspondance tables
+Entering : Association RxN <-> Enzymes list construction
+Entering : Single Reaction Analysis
+Execution time (Single Reaction Analysis) =  92.07069582305849 seconds
+Target gene list size = 143
+Entering : RRG reconstruction
+Treated  0  genes, still  143  limit =  50000
+Treated  50  genes, still  168  limit =  50000
+Treated  100  genes, still  177  limit =  50000
+Treated  150  genes, still  157  limit =  50000
+Treated  200  genes, still  150  limit =  50000
+Treated  250  genes, still  107  limit =  50000
+Treated  300  genes, still  62  limit =  50000
+Treated  350  genes, still  13  limit =  50000
+Execution time for RRG reconstruction =  53.99447559204418 seconds
+Reconstructed graph contains 364 genes, 3972 interactions
+Execution completed in 148.32352884998545 seconds
+Le nombre total de cibles potentielles après reconstruction est 15
+Le nombre total de cibles potentielles avant reconstruction est 6
+Le réseau de régulation possède 342 gènes
+Le réseau de régulation possède 3972 interactions
+Le sous-réseau de régulation impacté possède 174 gènes
+Le sous-réseau de régulation impacté possède 1997 interactions
+Testing ../data/HMA_constrained/iRC1410wFluxes_786-O_FBS.mat for Sorafenib (USAN/INN)
+Importing all the correspondance tables
+Entering : Association RxN <-> Enzymes list construction
+Entering : Single Reaction Analysis
+Execution time (Single Reaction Analysis) =  121.22763996711001 seconds
+Missing  ENSG00000183038
+Target gene list size = 285
+Entering : RRG reconstruction
+Treated  0  genes, still  285  limit =  50000
+Treated  50  genes, still  347  limit =  50000
+Treated  100  genes, still  325  limit =  50000
+Treated  150  genes, still  302  limit =  50000
+Treated  200  genes, still  262  limit =  50000
+Treated  250  genes, still  217  limit =  50000
+Treated  300  genes, still  181  limit =  50000
+Treated  350  genes, still  146  limit =  50000
+Treated  400  genes, still  99  limit =  50000
+Treated  450  genes, still  55  limit =  50000
+Treated  500  genes, still  6  limit =  50000
+Execution time for RRG reconstruction =  77.58124981599394 seconds
+Reconstructed graph contains 506 genes, 4550 interactions
+Execution completed in 201.00503021094482 seconds
+Le nombre total de cibles potentielles après reconstruction est 26
+Le nombre total de cibles potentielles avant reconstruction est 17
+Le réseau de régulation possède 445 gènes
+Le réseau de régulation possède 4550 interactions
+Le sous-réseau de régulation impacté possède 221 gènes
+Le sous-réseau de régulation impacté possède 2235 interactions
+Testing ../data/HMA_constrained/iRC1410wFluxes_786-O_HAM.mat for Sorafenib (USAN/INN)
+Importing all the correspondance tables
+Entering : Association RxN <-> Enzymes list construction
+Entering : Single Reaction Analysis
+Execution time (Single Reaction Analysis) =  95.70708923903294 seconds
+Target gene list size = 306
+Entering : RRG reconstruction
+Treated  0  genes, still  306  limit =  50000
+Treated  50  genes, still  368  limit =  50000
+Treated  100  genes, still  336  limit =  50000
+Treated  150  genes, still  312  limit =  50000
+Treated  200  genes, still  270  limit =  50000
+Treated  250  genes, still  230  limit =  50000
+Treated  300  genes, still  192  limit =  50000
+Treated  350  genes, still  166  limit =  50000
+Treated  400  genes, still  119  limit =  50000
+Treated  450  genes, still  76  limit =  50000
+Treated  500  genes, still  26  limit =  50000
+Execution time for RRG reconstruction =  79.74997330200858 seconds
+Reconstructed graph contains 527 genes, 4674 interactions
+Execution completed in 177.68101794295944 seconds
+Le nombre total de cibles potentielles après reconstruction est 28
+Le nombre total de cibles potentielles avant reconstruction est 19
+Le réseau de régulation possède 461 gènes
+Le réseau de régulation possède 4674 interactions
+Le sous-réseau de régulation impacté possède 228 gènes
+Le sous-réseau de régulation impacté possède 2303 interactions
+Testing ../data/HMA_constrained/iRC1410wFluxes_A498_FBS.mat for Sorafenib (USAN/INN)
+Importing all the correspondance tables
+Entering : Association RxN <-> Enzymes list construction
+Entering : Single Reaction Analysis
+Execution time (Single Reaction Analysis) =  115.27905201597605 seconds
+Missing  ENSG00000183038
+Target gene list size = 304
+Entering : RRG reconstruction
+Treated  0  genes, still  304  limit =  50000
+Treated  50  genes, still  338  limit =  50000
+Treated  100  genes, still  343  limit =  50000
+Treated  150  genes, still  316  limit =  50000
+Treated  200  genes, still  278  limit =  50000
+Treated  250  genes, still  232  limit =  50000
+Treated  300  genes, still  189  limit =  50000
+Treated  350  genes, still  161  limit =  50000
+Treated  400  genes, still  118  limit =  50000
+Treated  450  genes, still  71  limit =  50000
+Treated  500  genes, still  23  limit =  50000
+Execution time for RRG reconstruction =  76.00702638004441 seconds
+Reconstructed graph contains 524 genes, 4594 interactions
+Execution completed in 193.50120853004046 seconds
+Le nombre total de cibles potentielles après reconstruction est 28
+Le nombre total de cibles potentielles avant reconstruction est 19
+Le réseau de régulation possède 456 gènes
+Le réseau de régulation possède 4594 interactions
+Le sous-réseau de régulation impacté possède 226 gènes
+Le sous-réseau de régulation impacté possède 2261 interactions
+Testing ../data/HMA_constrained/iRC1410wFluxes_A498_HAM.mat for Sorafenib (USAN/INN)
+Importing all the correspondance tables
+Entering : Association RxN <-> Enzymes list construction
+Entering : Single Reaction Analysis
+Execution time (Single Reaction Analysis) =  95.85431121301372 seconds
+Target gene list size = 303
+Entering : RRG reconstruction
+Treated  0  genes, still  303  limit =  50000
+Treated  50  genes, still  353  limit =  50000
+Treated  100  genes, still  332  limit =  50000
+Treated  150  genes, still  297  limit =  50000
+Treated  200  genes, still  260  limit =  50000
+Treated  250  genes, still  221  limit =  50000
+Treated  300  genes, still  189  limit =  50000
+Treated  350  genes, still  156  limit =  50000
+Treated  400  genes, still  119  limit =  50000
+Treated  450  genes, still  69  limit =  50000
+Treated  500  genes, still  22  limit =  50000
+Execution time for RRG reconstruction =  77.75983555696439 seconds
+Reconstructed graph contains 523 genes, 4672 interactions
+Execution completed in 175.7802988239564 seconds
+Le nombre total de cibles potentielles après reconstruction est 28
+Le nombre total de cibles potentielles avant reconstruction est 19
+Le réseau de régulation possède 460 gènes
+Le réseau de régulation possède 4672 interactions
+Le sous-réseau de régulation impacté possède 227 gènes
+Le sous-réseau de régulation impacté possède 2302 interactions
+Testing ../data/HMA_constrained/iRC1410wFluxes_ACHN_FBS.mat for Sorafenib (USAN/INN)
+Importing all the correspondance tables
+Entering : Association RxN <-> Enzymes list construction
+Entering : Single Reaction Analysis
+Execution time (Single Reaction Analysis) =  125.17499717290048 seconds
+Target gene list size = 300
+Entering : RRG reconstruction
+Treated  0  genes, still  300  limit =  50000
+Treated  50  genes, still  357  limit =  50000
+Treated  100  genes, still  337  limit =  50000
+Treated  150  genes, still  301  limit =  50000
+Treated  200  genes, still  273  limit =  50000
+Treated  250  genes, still  230  limit =  50000
+Treated  300  genes, still  185  limit =  50000
+Treated  350  genes, still  158  limit =  50000
+Treated  400  genes, still  113  limit =  50000
+Treated  450  genes, still  64  limit =  50000
+Treated  500  genes, still  19  limit =  50000
+Execution time for RRG reconstruction =  86.34131493594032 seconds
+Reconstructed graph contains 520 genes, 4593 interactions
+Execution completed in 213.71683892107103 seconds
+Le nombre total de cibles potentielles après reconstruction est 27
+Le nombre total de cibles potentielles avant reconstruction est 18
+Le réseau de régulation possède 454 gènes
+Le réseau de régulation possède 4593 interactions
+Le sous-réseau de régulation impacté possède 226 gènes
+Le sous-réseau de régulation impacté possède 2261 interactions
+Testing ../data/HMA_constrained/iRC1410wFluxes_ACHN_HAM.mat for Sorafenib (USAN/INN)
+Importing all the correspondance tables
+Entering : Association RxN <-> Enzymes list construction
+Entering : Single Reaction Analysis
+Execution time (Single Reaction Analysis) =  100.43929330294486 seconds
+Target gene list size = 316
+Entering : RRG reconstruction
+Treated  0  genes, still  316  limit =  50000
+Treated  50  genes, still  370  limit =  50000
+Treated  100  genes, still  367  limit =  50000
+Treated  150  genes, still  325  limit =  50000
+Treated  200  genes, still  281  limit =  50000
+Treated  250  genes, still  243  limit =  50000
+Treated  300  genes, still  203  limit =  50000
+Treated  350  genes, still  171  limit =  50000
+Treated  400  genes, still  128  limit =  50000
+Treated  450  genes, still  81  limit =  50000
+Treated  500  genes, still  35  limit =  50000
+Execution time for RRG reconstruction =  81.5044284670148 seconds
+Reconstructed graph contains 536 genes, 4769 interactions
+Execution completed in 184.13956205395516 seconds
+Le nombre total de cibles potentielles après reconstruction est 28
+Le nombre total de cibles potentielles avant reconstruction est 19
+Le réseau de régulation possède 468 gènes
+Le réseau de régulation possède 4769 interactions
+Le sous-réseau de régulation impacté possède 234 gènes
+Le sous-réseau de régulation impacté possède 2367 interactions
+Testing ../data/HMA_constrained/iRC1410wFluxes_CAKI-1_FBS.mat for Sorafenib (USAN/INN)
+Importing all the correspondance tables
+Entering : Association RxN <-> Enzymes list construction
+Entering : Single Reaction Analysis
+Execution time (Single Reaction Analysis) =  113.78127177606802 seconds
+Missing  ENSG00000183038
+Target gene list size = 301
+Entering : RRG reconstruction
+Treated  0  genes, still  301  limit =  50000
+Treated  50  genes, still  348  limit =  50000
+Treated  100  genes, still  342  limit =  50000
+Treated  150  genes, still  310  limit =  50000
+Treated  200  genes, still  275  limit =  50000
+Treated  250  genes, still  231  limit =  50000
+Treated  300  genes, still  186  limit =  50000
+Treated  350  genes, still  156  limit =  50000
+Treated  400  genes, still  117  limit =  50000
+Treated  450  genes, still  69  limit =  50000
+Treated  500  genes, still  20  limit =  50000
+Execution time for RRG reconstruction =  80.7418751809746 seconds
+Reconstructed graph contains 521 genes, 4587 interactions
+Execution completed in 196.7584082649555 seconds
+Le nombre total de cibles potentielles après reconstruction est 26
+Le nombre total de cibles potentielles avant reconstruction est 17
+Le réseau de régulation possède 455 gènes
+Le réseau de régulation possède 4587 interactions
+Le sous-réseau de régulation impacté possède 225 gènes
+Le sous-réseau de régulation impacté possède 2258 interactions
+Testing ../data/HMA_constrained/iRC1410wFluxes_CAKI-1_HAM.mat for Sorafenib (USAN/INN)
+Importing all the correspondance tables
+Entering : Association RxN <-> Enzymes list construction
+Entering : Single Reaction Analysis
+Execution time (Single Reaction Analysis) =  98.7674103169702 seconds
+Target gene list size = 307
+Entering : RRG reconstruction
+Treated  0  genes, still  307  limit =  50000
+Treated  50  genes, still  352  limit =  50000
+Treated  100  genes, still  358  limit =  50000
+Treated  150  genes, still  318  limit =  50000
+Treated  200  genes, still  274  limit =  50000
+Treated  250  genes, still  237  limit =  50000
+Treated  300  genes, still  192  limit =  50000
+Treated  350  genes, still  162  limit =  50000
+Treated  400  genes, still  118  limit =  50000
+Treated  450  genes, still  72  limit =  50000
+Treated  500  genes, still  26  limit =  50000
+Execution time for RRG reconstruction =  82.19050054589752 seconds
+Reconstructed graph contains 527 genes, 4695 interactions
+Execution completed in 183.22187592298724 seconds
+Le nombre total de cibles potentielles après reconstruction est 28
+Le nombre total de cibles potentielles avant reconstruction est 19
+Le réseau de régulation possède 462 gènes
+Le réseau de régulation possède 4695 interactions
+Le sous-réseau de régulation impacté possède 229 gènes
+Le sous-réseau de régulation impacté possède 2320 interactions
+Testing ../data/HMA_constrained/iRC1410wFluxes_RXF-393_FBS.mat for Sorafenib (USAN/INN)
+Importing all the correspondance tables
+Entering : Association RxN <-> Enzymes list construction
+Entering : Single Reaction Analysis
+Execution time (Single Reaction Analysis) =  114.00352348899469 seconds
+Missing  ENSG00000183038
+Target gene list size = 322
+Entering : RRG reconstruction
+Treated  0  genes, still  322  limit =  50000
+Treated  50  genes, still  366  limit =  50000
+Treated  100  genes, still  366  limit =  50000
+Treated  150  genes, still  332  limit =  50000
+Treated  200  genes, still  294  limit =  50000
+Treated  250  genes, still  250  limit =  50000
+Treated  300  genes, still  208  limit =  50000
+Treated  350  genes, still  176  limit =  50000
+Treated  400  genes, still  132  limit =  50000
+Treated  450  genes, still  85  limit =  50000
+Treated  500  genes, still  41  limit =  50000
+Execution time for RRG reconstruction =  84.34059401403647 seconds
+Reconstructed graph contains 542 genes, 4691 interactions
+Execution completed in 200.530347002903 seconds
+Le nombre total de cibles potentielles après reconstruction est 27
+Le nombre total de cibles potentielles avant reconstruction est 18
+Le réseau de régulation possède 469 gènes
+Le réseau de régulation possède 4691 interactions
+Le sous-réseau de régulation impacté possède 232 gènes
+Le sous-réseau de régulation impacté possède 2317 interactions
+Testing ../data/HMA_constrained/iRC1410wFluxes_RXF-393_HAM.mat for Sorafenib (USAN/INN)
+Importing all the correspondance tables
+Entering : Association RxN <-> Enzymes list construction
+Entering : Single Reaction Analysis
+Execution time (Single Reaction Analysis) =  94.8390113619389 seconds
+Target gene list size = 308
+Entering : RRG reconstruction
+Treated  0  genes, still  308  limit =  50000
+Treated  50  genes, still  333  limit =  50000
+Treated  100  genes, still  342  limit =  50000
+Treated  150  genes, still  314  limit =  50000
+Treated  200  genes, still  276  limit =  50000
+Treated  250  genes, still  237  limit =  50000
+Treated  300  genes, still  194  limit =  50000
+Treated  350  genes, still  159  limit =  50000
+Treated  400  genes, still  118  limit =  50000
+Treated  450  genes, still  77  limit =  50000
+Treated  500  genes, still  27  limit =  50000
+Execution time for RRG reconstruction =  87.52587268303614 seconds
+Reconstructed graph contains 528 genes, 4651 interactions
+Execution completed in 184.6064045149833 seconds
+Le nombre total de cibles potentielles après reconstruction est 28
+Le nombre total de cibles potentielles avant reconstruction est 19
+Le réseau de régulation possède 460 gènes
+Le réseau de régulation possède 4651 interactions
+Le sous-réseau de régulation impacté possède 228 gènes
+Le sous-réseau de régulation impacté possède 2298 interactions
+Testing ../data/HMA_constrained/iRC1410wFluxes_TK-10_FBS.mat for Sorafenib (USAN/INN)
+Importing all the correspondance tables
+Entering : Association RxN <-> Enzymes list construction
+Entering : Single Reaction Analysis
+Execution time (Single Reaction Analysis) =  116.90193363896105 seconds
+Missing  ENSG00000183038
+Target gene list size = 271
+Entering : RRG reconstruction
+Treated  0  genes, still  271  limit =  50000
+Treated  50  genes, still  318  limit =  50000
+Treated  100  genes, still  294  limit =  50000
+Treated  150  genes, still  274  limit =  50000
+Treated  200  genes, still  239  limit =  50000
+Treated  250  genes, still  196  limit =  50000
+Treated  300  genes, still  176  limit =  50000
+Treated  350  genes, still  134  limit =  50000
+Treated  400  genes, still  86  limit =  50000
+Treated  450  genes, still  39  limit =  50000
+Execution time for RRG reconstruction =  66.9239816069603 seconds
+Reconstructed graph contains 492 genes, 4465 interactions
+Execution completed in 186.05944839399308 seconds
+Le nombre total de cibles potentielles après reconstruction est 25
+Le nombre total de cibles potentielles avant reconstruction est 16
+Le réseau de régulation possède 431 gènes
+Le réseau de régulation possède 4465 interactions
+Le sous-réseau de régulation impacté possède 213 gènes
+Le sous-réseau de régulation impacté possède 2201 interactions
+Testing ../data/HMA_constrained/iRC1410wFluxes_TK-10_HAM.mat for Sorafenib (USAN/INN)
+Importing all the correspondance tables
+Entering : Association RxN <-> Enzymes list construction
+Entering : Single Reaction Analysis
+Execution time (Single Reaction Analysis) =  96.46143668401055 seconds
+Target gene list size = 309
+Entering : RRG reconstruction
+Treated  0  genes, still  309  limit =  50000
+Treated  50  genes, still  356  limit =  50000
+Treated  100  genes, still  355  limit =  50000
+Treated  150  genes, still  317  limit =  50000
+Treated  200  genes, still  281  limit =  50000
+Treated  250  genes, still  239  limit =  50000
+Treated  300  genes, still  194  limit =  50000
+Treated  350  genes, still  161  limit =  50000
+Treated  400  genes, still  118  limit =  50000
+Treated  450  genes, still  74  limit =  50000
+Treated  500  genes, still  29  limit =  50000
+Execution time for RRG reconstruction =  82.21861665602773 seconds
+Reconstructed graph contains 530 genes, 4678 interactions
+Execution completed in 180.86274473601952 seconds
+Le nombre total de cibles potentielles après reconstruction est 28
+Le nombre total de cibles potentielles avant reconstruction est 19
+Le réseau de régulation possède 462 gènes
+Le réseau de régulation possède 4678 interactions
+Le sous-réseau de régulation impacté possède 228 gènes
+Le sous-réseau de régulation impacté possède 2303 interactions
+Testing ../data/HMA_constrained/iRC1410wFluxes_UO-31_FBS.mat for Sorafenib (USAN/INN)
+Importing all the correspondance tables
+Entering : Association RxN <-> Enzymes list construction
+Entering : Single Reaction Analysis
+Execution time (Single Reaction Analysis) =  113.50382731098216 seconds
+Missing  ENSG00000183038
+Target gene list size = 270
+Entering : RRG reconstruction
+Treated  0  genes, still  270  limit =  50000
+Treated  50  genes, still  324  limit =  50000
+Treated  100  genes, still  296  limit =  50000
+Treated  150  genes, still  268  limit =  50000
+Treated  200  genes, still  243  limit =  50000
+Treated  250  genes, still  201  limit =  50000
+Treated  300  genes, still  167  limit =  50000
+Treated  350  genes, still  131  limit =  50000
+Treated  400  genes, still  86  limit =  50000
+Treated  450  genes, still  37  limit =  50000
+Execution time for RRG reconstruction =  78.94567706400994 seconds
+Reconstructed graph contains 490 genes, 4479 interactions
+Execution completed in 194.6556320580421 seconds
+Le nombre total de cibles potentielles après reconstruction est 25
+Le nombre total de cibles potentielles avant reconstruction est 16
+Le réseau de régulation possède 429 gènes
+Le réseau de régulation possède 4479 interactions
+Le sous-réseau de régulation impacté possède 213 gènes
+Le sous-réseau de régulation impacté possède 2214 interactions
+Testing ../data/HMA_constrained/iRC1410wFluxes_UO-31_HAM.mat for Sorafenib (USAN/INN)
+Importing all the correspondance tables
+Entering : Association RxN <-> Enzymes list construction
+Entering : Single Reaction Analysis
+Execution time (Single Reaction Analysis) =  94.52778061199933 seconds
+Target gene list size = 311
+Entering : RRG reconstruction
+Treated  0  genes, still  311  limit =  50000
+Treated  50  genes, still  361  limit =  50000
+Treated  100  genes, still  336  limit =  50000
+Treated  150  genes, still  310  limit =  50000
+Treated  200  genes, still  275  limit =  50000
+Treated  250  genes, still  241  limit =  50000
+Treated  300  genes, still  195  limit =  50000
+Treated  350  genes, still  165  limit =  50000
+Treated  400  genes, still  126  limit =  50000
+Treated  450  genes, still  80  limit =  50000
+Treated  500  genes, still  30  limit =  50000
+Execution time for RRG reconstruction =  88.2878443839727 seconds
+Reconstructed graph contains 531 genes, 4697 interactions
+Execution completed in 185.16540072497446 seconds
+Le nombre total de cibles potentielles après reconstruction est 28
+Le nombre total de cibles potentielles avant reconstruction est 19
+Le réseau de régulation possède 463 gènes
+Le réseau de régulation possède 4697 interactions
+Le sous-réseau de régulation impacté possède 229 gènes
+Le sous-réseau de régulation impacté possède 2318 interactions
+Testing ../data/HMA_constrained/iRC1410woFluxes_FBS.mat for Sorafenib (USAN/INN)
+Importing all the correspondance tables
+Entering : Association RxN <-> Enzymes list construction
+Entering : Single Reaction Analysis
+Execution time (Single Reaction Analysis) =  82.08355920901522 seconds
+Target gene list size = 112
+Entering : RRG reconstruction
+Treated  0  genes, still  112  limit =  50000
+Treated  50  genes, still  151  limit =  50000
+Treated  100  genes, still  142  limit =  50000
+Treated  150  genes, still  159  limit =  50000
+Treated  200  genes, still  123  limit =  50000
+Treated  250  genes, still  78  limit =  50000
+Treated  300  genes, still  32  limit =  50000
+Execution time for RRG reconstruction =  43.216719303047284 seconds
+Reconstructed graph contains 333 genes, 3836 interactions
+Execution completed in 127.50613423495088 seconds
+Le nombre total de cibles potentielles après reconstruction est 10
+Le nombre total de cibles potentielles avant reconstruction est 1
+Le réseau de régulation possède 322 gènes
+Le réseau de régulation possède 3836 interactions
+Le sous-réseau de régulation impacté possède 158 gènes
+Le sous-réseau de régulation impacté possède 1926 interactions
+Testing ../data/HMA_constrained/iRC1410woFluxes_HAM.mat for Sorafenib (USAN/INN)
+Importing all the correspondance tables
+Entering : Association RxN <-> Enzymes list construction
+Entering : Single Reaction Analysis
+Execution time (Single Reaction Analysis) =  79.797671890934 seconds
+Target gene list size = 108
+Entering : RRG reconstruction
+Treated  0  genes, still  108  limit =  50000
+Treated  50  genes, still  158  limit =  50000
+Treated  100  genes, still  143  limit =  50000
+Treated  150  genes, still  160  limit =  50000
+Treated  200  genes, still  124  limit =  50000
+Treated  250  genes, still  77  limit =  50000
+Treated  300  genes, still  27  limit =  50000
+Execution time for RRG reconstruction =  56.12200251000468 seconds
+Reconstructed graph contains 329 genes, 3795 interactions
+Execution completed in 138.11217599804513 seconds
+Le nombre total de cibles potentielles après reconstruction est 17
+Le nombre total de cibles potentielles avant reconstruction est 8
+Le réseau de régulation possède 314 gènes
+Le réseau de régulation possède 3795 interactions
+Le sous-réseau de régulation impacté possède 161 gènes
+Le sous-réseau de régulation impacté possède 1943 interactions
+Testing ../data/HMA_constrained/iRC1410woFluxes__FBS.mat for Sorafenib (USAN/INN)
+Importing all the correspondance tables
+Entering : Association RxN <-> Enzymes list construction
+Entering : Single Reaction Analysis
+Execution time (Single Reaction Analysis) =  79.90490375400987 seconds
+Target gene list size = 112
+Entering : RRG reconstruction
+Treated  0  genes, still  112  limit =  50000
+Treated  50  genes, still  142  limit =  50000
+Treated  100  genes, still  133  limit =  50000
+Treated  150  genes, still  157  limit =  50000
+Treated  200  genes, still  126  limit =  50000
+Treated  250  genes, still  81  limit =  50000
+Treated  300  genes, still  32  limit =  50000
+Execution time for RRG reconstruction =  55.76411545695737 seconds
+Reconstructed graph contains 333 genes, 3836 interactions
+Execution completed in 137.87942832207773 seconds
+Le nombre total de cibles potentielles après reconstruction est 10
+Le nombre total de cibles potentielles avant reconstruction est 1
+Le réseau de régulation possède 322 gènes
+Le réseau de régulation possède 3836 interactions
+Le sous-réseau de régulation impacté possède 158 gènes
+Le sous-réseau de régulation impacté possède 1926 interactions
+Testing ../data/HMA_constrained/iRC1410woFluxes__HAM.mat for Sorafenib (USAN/INN)
+Importing all the correspondance tables
+Entering : Association RxN <-> Enzymes list construction
+Entering : Single Reaction Analysis
+Execution time (Single Reaction Analysis) =  77.8772874759743 seconds
+Target gene list size = 108
+Entering : RRG reconstruction
+Treated  0  genes, still  108  limit =  50000
+Treated  50  genes, still  149  limit =  50000
+Treated  100  genes, still  142  limit =  50000
+Traceback (most recent call last):
+  File "/Users/jeremiebourdon/miniconda3/envs/Bravo_Experiments/lib/python3.6/site-packages/SPARQLWrapper/Wrapper.py", line 657, in _query
+    response = urlopener(request)
+  File "/Users/jeremiebourdon/miniconda3/envs/Bravo_Experiments/lib/python3.6/urllib/request.py", line 223, in urlopen
+    return opener.open(url, data, timeout)
+  File "/Users/jeremiebourdon/miniconda3/envs/Bravo_Experiments/lib/python3.6/urllib/request.py", line 532, in open
+    response = meth(req, response)
+  File "/Users/jeremiebourdon/miniconda3/envs/Bravo_Experiments/lib/python3.6/urllib/request.py", line 642, in http_response
+    'http', request, response, code, msg, hdrs)
+  File "/Users/jeremiebourdon/miniconda3/envs/Bravo_Experiments/lib/python3.6/urllib/request.py", line 570, in error
+    return self._call_chain(*args)
+  File "/Users/jeremiebourdon/miniconda3/envs/Bravo_Experiments/lib/python3.6/urllib/request.py", line 504, in _call_chain
+    result = func(*args)
+  File "/Users/jeremiebourdon/miniconda3/envs/Bravo_Experiments/lib/python3.6/urllib/request.py", line 650, in http_error_default
+    raise HTTPError(req.full_url, code, msg, hdrs, fp)
+urllib.error.HTTPError: HTTP Error 500: SPARQL Request Failed
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "Reconstruction_sous_reseau_impacte.py", line 382, in <module>
+    a,b,u=getParentGraphList(TargetGenesName,50000)
+  File "Reconstruction_sous_reseau_impacte.py", line 349, in getParentGraphList
+    relations,newgenes=GetTFControllersList(L)
+  File "Reconstruction_sous_reseau_impacte.py", line 314, in GetTFControllersList
+    query = sparql.query().convert()
+  File "/Users/jeremiebourdon/miniconda3/envs/Bravo_Experiments/lib/python3.6/site-packages/SPARQLWrapper/Wrapper.py", line 687, in query
+    return QueryResult(self._query())
+  File "/Users/jeremiebourdon/miniconda3/envs/Bravo_Experiments/lib/python3.6/site-packages/SPARQLWrapper/Wrapper.py", line 665, in _query
+    raise EndPointInternalError(e.read())
+SPARQLWrapper.SPARQLExceptions.EndPointInternalError: EndPointInternalError: endpoint returned code 500 and response. 
+
+Response:
+b'Virtuoso S1T00 Error SR171: Transaction timed out\n\nSPARQL query:\n\nPREFIX bp: <http://www.biopax.org/release/biopax-level3.owl#>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?tempReac ?type ?controlledName ?controllerName ?source ?controllerType ?controlledType\nWHERE{\n    FILTER (\n    (((?controlledName = \'DHODH\'^^xsd:string) ) or\n        ((?controlledName = \'AK5\'^^xsd:string) ) or\n        ((?controlledName = \'GYS1\'^^xsd:string) ) or\n        ((?controlledName = \'GSY\'^^xsd:string) ) or\n        ((?controlledName = \'GYS\'^^xsd:string) ) or\n        ((?controlledName = \'PN-I\'^^xsd:string) ) or\n        ((?controlledName = \'NT5C\'^^xsd:string) ) or\n        ((?controlledName = \'DNT-1\'^^xsd:string) ) or\n        ((?controlledName = \'DNT1\'^^xsd:string) ) or\n        ((?controlledName = \'UMPH2\'^^xsd:string) ) or\n        ((?controlledName = \'cdN\'^^xsd:string) ) or\n        ((?controlledName = \'PCYT1A\'^^xsd:string) ) or\n        ((?controlledName = \'CT\'^^xsd:string) ) or\n        ((?controlledName = \'CTPCT\'^^xsd:string) ) or\n        ((?controlledName = \'PCYT1\'^^xsd:string) ) or\n        ((?controlledName = \'GMPS\'^^xsd:string) ) or\n        ((?controlledName = \'NME1-NME2\'^^xsd:string) ) or\n        ((?controlledName = \'NM23-LV\'^^xsd:string) ) or\n        ((?controlledName = \'NMELV\'^^xsd:string) ) or\n        ((?controlledName = \'SGMS1\'^^xsd:string) ) or\n        ((?controlledName = \'MGC17342\'^^xsd:string) ) or\n        ((?controlledName = \'MOB\'^^xsd:string) ) or\n        ((?controlledName = \'SMS1\'^^xsd:string) ) or\n        ((?controlledName = \'TMEM23\'^^xsd:string) ) or\n        ((?controlledName = \'LEF1\'^^xsd:string) ) or\n        ((?controlledName = \'TCF10\'^^xsd:string) ) or\n        ((?controlledName = \'TCF1ALPHA\'^^xsd:string) ) or\n        ((?controlledName = \'TCF7L3\'^^xsd:string) ) or\n        ((?controlledName = \'RORA\'^^xsd:string) ) or\n        ((?controlledName = \'NR1F1\'^^xsd:string) ) or\n        ((?controlledName = \'ROR3\'^^xsd:string) ) or\n        ((?controlledName = \'RZRA\'^^xsd:string) ) or\n        ((?controlledName = \'TEAD1\'^^xsd:string) ) or\n        ((?controlledName = \'AA\'^^xsd:string) ) or\n        ((?controlledName = \'TCF13\'^^xsd:string) ) or\n        ((?controlledName = \'TEF-1\'^^xsd:string) ) or\n        ((?controlledName = \'YY1\'^^xsd:string) ) or\n        ((?controlledName = \'INO80S\'^^xsd:string) ) or\n        ((?controlledName = \'UCRBP\'^^xsd:string) ) or\n        ((?controlledName = \'YIN-YANG-1\'^^xsd:string) ) or\n        ((?controlledName = \'DP1\'^^xsd:string) ) or\n        ((?controlledName = \'TFDP1\'^^xsd:string) ) or\n        ((?controlledName = \'DILC\'^^xsd:string) ) or\n        ((?controlledName = \'DRTF1\'^^xsd:string) ) or\n        ((?controlledName = \'Dp-1\'^^xsd:string) ) or\n        ((?controlledName = \'POU3F2\'^^xsd:string) ) or\n        ((?controlledName = \'BRN2\'^^xsd:string) ) or\n        ((?controlledName = \'OCT7\'^^xsd:string) ) or\n        ((?controlledName = \'OTF7\'^^xsd:string) ) or\n        ((?controlledName = \'POUF3\'^^xsd:string) ) or\n        ((?controlledName = \'SREBF1\'^^xsd:string) ) or\n        ((?controlledName = \'SREBP-1c\'^^xsd:string) ) or\n        ((?controlledName = \'SREBP1\'^^xsd:string) ) or\n        ((?controlledName = \'SREBP1a\'^^xsd:string) ) or\n        ((?controlledName = \'bHLHd1\'^^xsd:string) ) or\n        ((?controlledName = \'PAX4\'^^xsd:string) ) or\n        ((?controlledName = \'MODY9\'^^xsd:string) ) or\n        ((?controlledName = \'MYC\'^^xsd:string) ) or\n        ((?controlledName = \'MYCC\'^^xsd:string) ) or\n        ((?controlledName = \'bHLHe39\'^^xsd:string) ) or\n        ((?controlledName = \'c-Myc\'^^xsd:string) ) or\n        ((?controlledName = \'RB1\'^^xsd:string) ) or\n        ((?controlledName = \'OSRC\'^^xsd:string) ) or\n        ((?controlledName = \'PPP1R130\'^^xsd:string) ) or\n        ((?controlledName = \'RB\'^^xsd:string) ) or\n        ((?controlledName = \'FOXF2\'^^xsd:string) ) or\n        ((?controlledName = \'FKHL6\'^^xsd:string) ) or\n        ((?controlledName = \'FREAC2\'^^xsd:string) ) or\n        ((?controlledName = \'FOXO4\'^^xsd:string) ) or\n        ((?controlledName = \'AFX1\'^^xsd:string) ) or\n        ((?controlledName = \'MLLT7\'^^xsd:string) ) or\n        ((?controlledName = \'HIF1A\'^^xsd:string) ) or\n        ((?controlledName = \'HIF-1alpha\'^^xsd:string) ) or\n        ((?controlledName = \'HIF1\'^^xsd:string) ) or\n        ((?controlledName = \'MOP1\'^^xsd:string) ) or\n        ((?controlledName = \'PASD8\'^^xsd:string) ) or\n        ((?controlledName = \'bHLHe78\'^^xsd:string) ) or\n        ((?controlledName = \'NFIL3\'^^xsd:string) ) or\n        ((?controlledName = \'E4BP4\'^^xsd:string) ) or\n        ((?controlledName = \'IL3BP1\'^^xsd:string) ) or\n        ((?controlledName = \'NF-IL3A\'^^xsd:string) ) or\n        ((?controlledName = \'NFIL3A\'^^xsd:string) ) or\n        ((?controlledName = \'ATF2\'^^xsd:string) ) or\n        ((?controlledName = \'ATF1\'^^xsd:string) ) or\n        ((?controlledName = \'GDNF\'^^xsd:string) ) or\n        ((?controlledName = \'HFB1-GDNF\'^^xsd:string) ) or\n        ((?controlledName = \'HNF1A\'^^xsd:string) ) or\n        ((?controlledName = \'HNF1\'^^xsd:string) ) or\n        ((?controlledName = \'LFB1\'^^xsd:string) ) or\n        ((?controlledName = \'MODY3\'^^xsd:string) ) or\n        ((?controlledName = \'TCF1\'^^xsd:string) ) or\n        ((?controlledName = \'RS\'^^xsd:string) ) or\n        ((?controlledName = \'PITX2\'^^xsd:string) ) or\n        ((?controlledName = \'Brx1\'^^xsd:string) ) or\n        ((?controlledName = \'IGDS\'^^xsd:string) ) or\n        ((?controlledName = \'IHG2\'^^xsd:string) ) or\n        ((?controlledName = \'IRID2\'^^xsd:string) ) or\n        ((?controlledName = \'Otlx2\'^^xsd:string) ) or\n        ((?controlledName = \'RGS\'^^xsd:string) ) or\n        ((?controlledName = \'RIEG\'^^xsd:string) ) or\n        ((?controlledName = \'RIEG1\'^^xsd:string) ) or\n        ((?controlledName = \'ELK1\'^^xsd:string) ) or\n        ((?controlledName = \'MAX\'^^xsd:string) ) or\n        ((?controlledName = \'bHLHd4\'^^xsd:string) ) or\n        ((?controlledName = \'bHLHd5\'^^xsd:string) ) or\n        ((?controlledName = \'bHLHd6\'^^xsd:string) ) or\n        ((?controlledName = \'bHLHd7\'^^xsd:string) ) or\n        ((?controlledName = \'bHLHd8\'^^xsd:string) ) or\n        ((?controlledName = \'MYOG\'^^xsd:string) ) or\n        ((?controlledName = \'MYF4\'^^xsd:string) ) or\n        ((?controlledName = \'bHLHc3\'^^xsd:string) ) or\n        ((?controlledName = \'ESRRA\'^^xsd:string) ) or\n        ((?controlledName = \'ERR1\'^^xsd:string) ) or\n        ((?controlledName = \'ERRa\'^^xsd:string) ) or\n        ((?controlledName = \'ERRalpha\'^^xsd:string) ) or\n        ((?controlledName = \'ESRL1\'^^xsd:string) ) or\n        ((?controlledName = \'NR3B1\'^^xsd:string) ) or\n        ((?controlledName = \'SP1\'^^xsd:string) ) or\n        ((?controlledName = \'MYOD1\'^^xsd:string) ) or\n        ((?controlledName = \'MYF3\'^^xsd:string) ) or\n        ((?controlledName = \'MYOD\'^^xsd:string) ) or\n        ((?controlledName = \'bHLHc1\'^^xsd:string) ) or\n        ((?controlledName = \'ZEB1\'^^xsd:string) ) or\n        ((?controlledName = \'AREB6\'^^xsd:string) ) or\n        ((?controlledName = \'BZP\'^^xsd:string) ) or\n        ((?controlledName = \'FECD6\'^^xsd:string) ) or\n        ((?controlledName = \'NIL-2-A\'^^xsd:string) ) or\n        ((?controlledName = \'PPCD3\'^^xsd:string) ) or\n        ((?controlledName = \'TCF8\'^^xsd:string) ) or\n        ((?controlledName = \'ZEB\'^^xsd:string) ) or\n        ((?controlledName = \'Zfhep\'^^xsd:string) ) or\n        ((?controlledName = \'Zfhx1a\'^^xsd:string) ) or\n        ((?controlledName = \'REL\'^^xsd:string) ) or\n        ((?controlledName = \'I-Rel\'^^xsd:string) ) or\n        ((?controlledName = \'c-Rel\'^^xsd:string) ) or\n        ((?controlledName = \'CDX2\'^^xsd:string) ) or\n        ((?controlledName = \'CDX3\'^^xsd:string) ) or\n        ((?controlledName = \'AHR\'^^xsd:string) ) or\n        ((?controlledName = \'bHLHe76\'^^xsd:string) ) or\n        ((?controlledName = \'LAP\'^^xsd:string) ) or\n        ((?controlledName = \'CEBPB\'^^xsd:string) ) or\n        ((?controlledName = \'C/EBP-beta\'^^xsd:string) ) or\n        ((?controlledName = \'IL6DBP\'^^xsd:string) ) or\n        ((?controlledName = \'NFIL6\'^^xsd:string) ) or\n        ((?controlledName = \'TCF5\'^^xsd:string) ) or\n        ((?controlledName = \'HSF2\'^^xsd:string) ) or\n        ((?controlledName = \'ATF3\'^^xsd:string) ) or\n        ((?controlledName = \'RFX1\'^^xsd:string) ) or\n        ((?controlledName = \'EF-C\'^^xsd:string) ) or\n        ((?controlledName = \'FOXN1\'^^xsd:string) ) or\n        ((?controlledName = \'FKHL20\'^^xsd:string) ) or\n        ((?controlledName = \'RONU\'^^xsd:string) ) or\n        ((?controlledName = \'WHN\'^^xsd:string) ) or\n        ((?controlledName = \'PTF1A\'^^xsd:string) ) or\n        ((?controlledName = \'PTF1-p48\'^^xsd:string) ) or\n        ((?controlledName = \'bHLHa29\'^^xsd:string) ) or\n        ((?controlledName = \'MYB\'^^xsd:string) ) or\n        ((?controlledName = \'c-myb\'^^xsd:string) ) or\n        ((?controlledName = \'MAZ\'^^xsd:string) ) or\n        ((?controlledName = \'Pur-1\'^^xsd:string) ) or\n        ((?controlledName = \'ZF87\'^^xsd:string) ) or\n        ((?controlledName = \'ZNF801\'^^xsd:string) ) or\n        ((?controlledName = \'Zif87\'^^xsd:string) ) or\n        ((?controlledName = \'ATF4\'^^xsd:string) ) or\n        ((?controlledName = \'CREB-2\'^^xsd:string) ) or\n        ((?controlledName = \'TAXREB67\'^^xsd:string) ) or\n        ((?controlledName = \'TXREB\'^^xsd:string) ) or\n        ((?controlledName = \'POU2F1\'^^xsd:string) ) or\n        ((?controlledName = \'OTF1\'^^xsd:string) ) or\n        ((?controlledName = \'PBX1\'^^xsd:string) ) or\n        ((?controlledName = \'ONECUT1\'^^xsd:string) ) or\n        ((?controlledName = \'HNF-6\'^^xsd:string) ) or\n        ((?controlledName = \'HNF6\'^^xsd:string) ) or\n        ((?controlledName = \'HNF6A\'^^xsd:string) ) or\n        ((?controlledName = \'CASP\'^^xsd:string) ) or\n        ((?controlledName = \'CUX1\'^^xsd:string) ) or\n        ((?controlledName = \'CDP\'^^xsd:string) ) or\n        ((?controlledName = \'CDP/Cut\'^^xsd:string) ) or\n        ((?controlledName = \'CDP/Cux\'^^xsd:string) ) or\n        ((?controlledName = \'CDP1\'^^xsd:string) ) or\n        ((?controlledName = \'CUT\'^^xsd:string) ) or\n        ((?controlledName = \'CUTL1\'^^xsd:string) ) or\n        ((?controlledName = \'CUX\'^^xsd:string) ) or\n        ((?controlledName = \'Clox\'^^xsd:string) ) or\n        ((?controlledName = \'Cux/CDP\'^^xsd:string) ) or\n        ((?controlledName = \'GOLIM6\'^^xsd:string) ) or\n        ((?controlledName = \'NF1\'^^xsd:string) ) or\n        ((?controlledName = \'MEIS1\'^^xsd:string) ))\n        and (str(?source) != "http://pathwaycommons.org/pc2/mirtarbase")\n        and ((str(?controlledType) = "http://www.biopax.org/release/biopax-level3.owl#Protein") or (str(?controlledType) = "http://www.biopax.org/release/biopax-level3.owl#Rna"))\n        and ((str(?controllerType) = "http://www.biopax.org/release/biopax-level3.owl#Protein") or (str(?controllerType) = "http://www.biopax.org/release/biopax-level3.owl#Rna"))\n) .\n?tempReac a bp:TemplateReactionRegulation .\n?tempReac rdf:type ?ctype ; bp:controlled ?controlled ; bp:controller ?controller ; bp:controlType ?type ; bp:dataSource ?source .\n?controlled bp:participant ?participant ; bp:dataSource ?controlledsource .\n?participant bp:displayName ?controlledName; rdf:type ?controlledType .\n?controller bp:displayName ?controllerName ; rdf:type ?controllerType ; bp:dataSource ?controllersource .\n}\nGROUP BY ?controlledName ?controllerName\n'
