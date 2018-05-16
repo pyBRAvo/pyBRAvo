@@ -1,5 +1,5 @@
 /** 
- * Systemic API code
+ * Interactive API code
  *
  * @author : Marie Lefebvre
  */
@@ -11,7 +11,7 @@
  * @param {Cytoscape object} cy
  */
 function sparqlSysBio(genesList, queryType, cy) {
-    var endpointURL = rootURL + '/systemic/network';
+    var endpointURL = rootURL + '/interactive/network';
     genesList = genesList.split(",");
     var genesJSON = JSON.stringify(genesList);
     document.getElementById("noResult").style.display = 'none';
@@ -93,7 +93,7 @@ function sparqlSysBio(genesList, queryType, cy) {
  * 
  */
 function nextLevelRegulation(genesList, cy) {
-    endpointURL = rootURL + '/systemic/network';
+    endpointURL = rootURL + '/interactive/network';
     var genesJSON = JSON.stringify(genesList);
     // Show 'query on run' message
     document.getElementById("noResult").style.display = 'none';
@@ -147,7 +147,7 @@ function nextLevelRegulation(genesList, cy) {
  * @param {Cytoscape object} cy
  */
 function sparqlSignaling(genesList, cy) {
-    var endpointURL = rootURL + '/systemic/network';
+    var endpointURL = rootURL + '/interactive/network';
     var genesJSON = JSON.stringify(genesList);
     document.getElementById("noResult").style.display = 'none';
     console.log("Query signaling network with only TFs");
@@ -230,7 +230,7 @@ function sparqlSignaling(genesList, cy) {
  * 
  */
 function nextLevelSignaling(genesList, cy, firststep) {
-    var endpointURL = rootURL + '/systemic/network';
+    var endpointURL = rootURL + '/interactive/network';
     var genesJSON = JSON.stringify(genesList);
     // Show 'query on run' message
     document.getElementById("noResult").style.display = 'none';
@@ -249,7 +249,7 @@ function nextLevelSignaling(genesList, cy, firststep) {
         success: function (data, textStatus, jqXHR) {
             // Get valid JSON format
             var itemsR = JSON.parse(JSON.stringify(data));
-            endpointURL = rootURL + '/systemic/network-signaling';
+            endpointURL = rootURL + '/interactive/network-signaling';
             // Request on signaling part
             $.ajax({
                 type: 'GET',
