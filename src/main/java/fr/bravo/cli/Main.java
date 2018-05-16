@@ -236,8 +236,7 @@ public class Main {
     }
 
     /**
-     * Initial SPARQL query - First level of regulation (e.g. Transcription
-     * Factor)
+     * First level of regulation (e.g. Transcription Factor)
      *
      * @author Marie Lefebvre
      * @param filename input file

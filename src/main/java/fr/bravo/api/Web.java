@@ -15,6 +15,7 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URLConnection;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -33,10 +34,10 @@ import org.codehaus.jettison.json.JSONException;
  *
  * @author Marie Lefebvre
  */
-@Path("systemic")
-public class Systemic {
+@Path("interactive")
+public class Web {
     
-    private Logger logger = Logger.getLogger(Systemic.class);
+    private Logger logger = Logger.getLogger(Web.class);
     private String headerAccept = "Access-Control-Allow-Origin";
     
     /**
@@ -59,6 +60,9 @@ public class Systemic {
         Model finalModel = ModelFactory.createDefaultModel();
         List<String> idToNameList = new ArrayList<String>();
         List<String> dataSources = new ArrayList<>();
+        dataSources.addAll(Arrays.asList("bind", "biogrid", "corum", "ctd", "dip", "drugbank", "hprd", 
+                "humancyc", "inoh", "intact", "kegg", "netpath", "panther", "pid", "psp", "reactome", 
+                "reconx", "smpdb", "wp", "intact_complex", "msigdb"));
         
         // Use of IDs 
         if ("id".equals(queryType)) {
