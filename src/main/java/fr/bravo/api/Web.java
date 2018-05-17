@@ -131,6 +131,10 @@ public class Web {
         JSONArray genesList = new JSONArray(genes);
         Model transcriptorModel = ModelFactory.createDefaultModel();
         Model finalModel = ModelFactory.createDefaultModel();
+        List<String> dataSources = new ArrayList<>();
+        dataSources.addAll(Arrays.asList("bind", "biogrid", "corum", "ctd", "dip", "drugbank", "hprd", 
+                "humancyc", "inoh", "intact", "kegg", "netpath", "panther", "pid", "psp", "reactome", 
+                "reconx", "smpdb", "wp", "intact_complex", "msigdb"));
         
         try {
             // Iterate over biological entites (input)
@@ -139,7 +143,7 @@ public class Web {
                     StringBuilder result = new StringBuilder();
                     
                     // Construct new graphe
-                    String filterQuery = fr.bravo.api.SparqlQuery.initialSignalingQuery(genesList.get(i).toString(), true);
+                    String filterQuery = fr.bravo.api.SparqlQuery.initialSignalingQuery(genesList.get(i).toString(), dataSources, true);
 
                     // Parsing json is more simple than XML
                     String contentType = "application/json";
