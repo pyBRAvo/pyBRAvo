@@ -6,6 +6,7 @@
 package fr.bravo.api;
 
 import static fr.bravo.api.SparqlQuery.logger;
+import static fr.bravo.api.SparqlQuery.RegulatoryConstruct;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -55,24 +56,53 @@ public class Automatic {
         try {
             // initial list of biological entities
             JSONArray genesList = new JSONArray(genes);
+            List geneDone = new ArrayList<String>();
             List<String> dataSources = new ArrayList<>();
+            Model initialGraph = ModelFactory.createDefaultModel();
+            dataSources.addAll(Arrays.asList("bind", "biogrid", "corum", "ctd", "dip", "drugbank", "hprd", 
+                "humancyc", "inoh", "intact", "kegg", "netpath", "panther", "pid", "psp", "reactome", 
+                "reconx", "smpdb", "wp", "intact_complex", "msigdb"));
 
             // Use of IDs 
             if ("id".equals(queryType)) {
                 JSONArray idList = genesList;
                 genesList = fr.bravo.api.SparqlQuery.IdToNameQuery(idList);
             }
+            
+            for(int i=0; i < genesList.length(); i++){
+                StringBuilder result = new StringBuilder();
+                geneDone.add(genesList.get(i).toString());
+                // SPARQL Query to get all transcription factors for a gene
+                String queryStringC = fr.bravo.api.SparqlQuery.initialUpRegulationQuery(genesList.get(i).toString(),dataSources, true);
 
-            // initial model with direct interaction, first level of regulation
-            Object[] initialResults = initialUpstreamConstruct(genesList, dataSources);
+                //+"GROUP BY ?controlledName ?controllerName";
+                String contentType = "application/json";
+                // URI of the SPARQL Endpoint
+                String accessUri = "http://rdf.pathwaycommons.org/sparql";
+
+                URI requestURI = javax.ws.rs.core.UriBuilder.fromUri(accessUri)
+                        .queryParam("query", "{query}")
+                        .queryParam("format", "{format}")
+                        .build(queryStringC, contentType);
+                URLConnection con = requestURI.toURL().openConnection();
+                con.addRequestProperty("Accept", contentType);
+                InputStream in = con.getInputStream();
+
+                // Read result
+                BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+
+                String lineResult;
+                while ((lineResult = reader.readLine()) != null) {
+                    result.append(lineResult);
+                }
+                // Prepare model
+                ByteArrayInputStream bais = new ByteArrayInputStream(result.toString().getBytes());
+                initialGraph.read(bais, null, "RDF/JSON");
+            }
             System.out.println("Initial graph : DONE");
-            Model initialModel = (Model) initialResults[0];
-            // List of gene already done
-            List geneDone = (List) initialResults[1];
             Model network = ModelFactory.createDefaultModel();
             // Final model
-            //TODO make dynamic depth, maxDepth, and data_sources parameters
-            network = upstreamRegulationConstruct(initialModel, initialModel, geneDone, "Up", true, Arrays.asList("KEGG", "PID"), 10, 0);
+            network = RegulatoryConstruct(initialGraph, initialGraph, geneDone, "Up", true, dataSources, 10, 1);
             HashMap<String, String> scopes = new HashMap<>();
             // Render JSON and RDF format
             if (format.equals("all")) {
@@ -95,92 +125,4 @@ public class Automatic {
         }
     }
 
-    /**
-     * Initial SPARQL query - First level of regulation (e.g. Transcription
-     * Factor)
-     *
-     * @author Marie Lefebvre
-     * @param genes list of biological entities
-     * @return Object with JENA Model and List of genes
-     * @throws java.io.IOException
-     */
-    public static Object[] initialUpstreamConstruct(JSONArray genes, List<String> dataSources) throws IOException {
-
-        Model modelResult = ModelFactory.createDefaultModel();
-        List<String> geneDone = new ArrayList<String>();
-        try {
-            for (int i = 0; i < genes.length(); i++) {
-                StringBuilder result = new StringBuilder();
-                String gene = genes.get(i).toString().toUpperCase();
-                logger.info("exploring " + gene);
-                geneDone.add(gene);
-                // SPARQL Query to get all transcription factors for a gene
-                String queryString = fr.bravo.api.SparqlQuery.initialUpRegulationQuery(gene, dataSources, true);
-                //+"GROUP BY ?controlledName ?controllerName";
-                String contentType = "application/json";
-                // URI of the SPARQL Endpoint
-                String accessUri = "http://rdf.pathwaycommons.org/sparql";
-
-                URI requestURI = javax.ws.rs.core.UriBuilder.fromUri(accessUri)
-                        .queryParam("query", "{query}")
-                        .queryParam("format", "{format}")
-                        .build(queryString, contentType);
-                URLConnection con = requestURI.toURL().openConnection();
-                con.addRequestProperty("Accept", contentType);
-                InputStream in = con.getInputStream();
-
-                // Read result
-                BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-
-                String lineResult;
-                while ((lineResult = reader.readLine()) != null) {
-                    result.append(lineResult);
-                }
-                // Prepare model
-                ByteArrayInputStream bais = new ByteArrayInputStream(result.toString().getBytes());
-                modelResult.read(bais, null, "RDF/JSON");
-            } // End While
-        } catch (Exception e) {
-            System.err.println(e.getMessage());
-            System.exit(1);
-        }
-        return new Object[]{modelResult, geneDone};
-    }
-
-    /**
-     *
-     * @param listModel {Model}
-     * @param tempModel {Model}
-     * @param genesDone {ArrayList}
-     * @param direction {String}
-     * @param smolecule
-     * @param dataSources
-     * @param maxDepth
-     * @param currentDepth
-     * @return {Model}
-     * @throws java.io.IOException
-     */
-    public static Model upstreamRegulationConstruct(Model listModel, Model tempModel, List genesDone, String direction, Boolean smolecule, List<String> dataSources, int maxDepth, int currentDepth) throws IOException {
-       
-        if (currentDepth != 0) {
-            logger.info("depth = " + currentDepth);
-        }
-        
-        // No next regulators
-        if (listModel.isEmpty()) {
-            return tempModel;
-        }
-        
-        if (maxDepth != -1 && currentDepth >= maxDepth) {
-            return tempModel;
-        }
-        
-//        Model resultTemp = fr.bravo.api.SparqlQuery.upstreamRegulationConstructQueryOptimized(listModel, tempModel, genesDone, direction);
-        Model resultTemp = fr.bravo.api.SparqlQuery.upstreamRegulationConstructQuery(listModel, tempModel, genesDone, direction, smolecule, dataSources);
-        tempModel.add(resultTemp);
-        currentDepth += 1;
-        
-        Model finalModel = upstreamRegulationConstruct(resultTemp, tempModel, genesDone, direction, smolecule, dataSources, maxDepth, currentDepth);
-        return finalModel;
-    }
 }
