@@ -5,6 +5,7 @@
  */
 package fr.bravo.cli;
 
+import fr.bravo.api.Util;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.FileNotFoundException;
@@ -71,15 +72,15 @@ public class Main {
         Option format = new Option("f", "format", true, "supported output file format: sif, turtle, ttl, rdfxml, rdfjson, jsonld");
         format.setRequired(true);
         options.addOption(format);
-        
+
         Option smolecule = new Option("ssm", "skip_small_molecules", false, "skip small molecules");
         smolecule.setRequired(false);
         options.addOption(smolecule);
-        
+
         Option mDepth = new Option("md", "max_depth", true, "maximum exploration depth");
         mDepth.setRequired(false);
         options.addOption(mDepth);
-        
+
         Option datasources = new Option("ds", "data_sources", true, "a data sources among {bind, "
                 + "biogrid, corum, ctd, dip, drugbank, hprd, humancyc, inoh, intact, kegg, mirtarbase, netpath, "
                 + "panther, pid, psp, reactome, reconx, smpdb, wp, intact_complex, msigdb}. Multiple -ds parameters can be used.");
@@ -134,7 +135,7 @@ public class Main {
             System.exit(1);
             return;
         }
-        
+
         if (cmd.hasOption("regulation") && cmd.hasOption("signaling")) {
             logger.error("Set regulatory (-r) OR signaling (-s) network assembly option");
             formatter.printHelp("utility-name", options);
@@ -151,8 +152,8 @@ public class Main {
             formatter.printHelp("utility-name", options);
             System.exit(1);
             return;
-        }else{
-            if ( cmd.getOptionValue("format").equals("sif") && cmd.hasOption("signaling") ){
+        } else {
+            if (cmd.getOptionValue("format").equals("sif") && cmd.hasOption("signaling")) {
                 logger.error("SIF format is not available for signaling reconstruction yet. Please, use another format.");
                 formatter.printHelp("utility-name", options);
                 System.exit(1);
@@ -171,6 +172,7 @@ public class Main {
         }
         StopWatch sw = new StopWatch();
         sw.start();
+        logger.info("Network reconstruction based on endpoint "+Util.SPARQL_ENDPOINT);
         Model network = ModelFactory.createDefaultModel();
         List geneDone = new ArrayList<String>();
         Boolean molecule = true;
@@ -181,15 +183,15 @@ public class Main {
         int maxDepth = -1;
         if (cmd.hasOption("md")) {
             maxDepth = Integer.parseInt(cmd.getOptionValue("md"));
-            System.out.println("Max depth fixed to "+maxDepth);
+            System.out.println("Max depth fixed to " + maxDepth);
         }
         List<String> dsList = new ArrayList<>();
         if (cmd.hasOption("data_sources")) {
-            String [] ds = cmd.getOptionValues("data_sources"); 
+            String[] ds = cmd.getOptionValues("data_sources");
             dsList = Arrays.asList(ds);
             System.out.println(dsList);
-        } 
-        
+        }
+
         /*
         *** Core:
         * * Regulatory, distinguish ID or Name situation
@@ -200,20 +202,20 @@ public class Main {
         * 1/ inital query : first level of interactors
         * 2/ contruct : next level of interactors (i.e. recursive)
         *
-        */
+         */
         if (cmd.hasOption("signaling")) {
-            if (cmd.hasOption("id")){
+            if (cmd.hasOption("id")) {
                 // Initial graph 
-                Object[] initialResults = dispatch(inputFilePath, way, "signaling", "id",dsList, molecule);
+                Object[] initialResults = dispatch(inputFilePath, way, "signaling", "id", dsList, molecule);
                 System.out.println("Initial signaling graph : DONE");
                 Model initialModel = (Model) initialResults[0];
                 geneDone = (List) initialResults[1];
                 // Next level of signaling network
                 System.out.println("Run signaling network construction");
                 network = fr.bravo.api.SparqlQuery.SignalingConstruct(initialModel, initialModel, geneDone, molecule, dsList);
-            }else{
+            } else {
                 // Initial graph 
-                Object[] initialResults = dispatch(inputFilePath, way, "signaling", "name",dsList, molecule);
+                Object[] initialResults = dispatch(inputFilePath, way, "signaling", "name", dsList, molecule);
                 System.out.println("Initial signaling graph : DONE");
                 Model initialModel = (Model) initialResults[0];
                 geneDone = (List) initialResults[1];
@@ -222,26 +224,28 @@ public class Main {
                 network = fr.bravo.api.SparqlQuery.SignalingConstruct(initialModel, initialModel, geneDone, molecule, dsList);
             }
         } else if (cmd.hasOption("regulation")) {
-            if (cmd.hasOption("id")){
+            if (cmd.hasOption("id")) {
                 // Initial graph with Transcription Factors (TFs)
-                Object[] initialResults = dispatch(inputFilePath, way, "regulation", "id",dsList , molecule);
+                Object[] initialResults = dispatch(inputFilePath, way, "regulation", "id", dsList, molecule);
                 System.out.println("Initial regulatory graph : DONE");
                 Model initialModel = (Model) initialResults[0];
                 geneDone = (List) initialResults[1];
                 // Next level of regulation network
                 System.out.println("Run regulatory network construction");
                 network = fr.bravo.api.SparqlQuery.RegulatoryConstruct(initialModel, initialModel, geneDone, way, molecule, dsList, maxDepth, 1);
-            }else{
+            } else {
                 // Initial graph with Transcription Factors (TFs)
-                Object[] initialResults = dispatch(inputFilePath, way, "regulation", "name",dsList, molecule);
+                Object[] initialResults = dispatch(inputFilePath, way, "regulation", "name", dsList, molecule);
                 System.out.println("Initial regulatory graph : DONE");
+                List<String> genesDone = (List<String>) initialResults[1];
+                System.out.println("\t" + genesDone.size() + " explored genes");
                 Model initialModel = (Model) initialResults[0];
                 geneDone = (List) initialResults[1];
                 // Next level of regulation network
                 System.out.println("Run regulatory network construction");
                 network = fr.bravo.api.SparqlQuery.RegulatoryConstruct(initialModel, initialModel, geneDone, way, molecule, dsList, maxDepth, 1);
             }
-            
+
         } else {
             logger.error("Wrong type of network");
             System.exit(1);
@@ -254,7 +258,8 @@ public class Main {
                 + "\nResults file written :" + outputFilePath
                 + "\nInfo :"
                 + "\n------ Reconstruction : " + way
-                + "\n------ Nodes : " + geneDone.size());
+                + "\n------ Explored regulators : " + geneDone.size()
+                + "\n------ Resulting graph size (edges) : " + network.size());
         sw.stop();
         System.out.println("------ Execution time " + sw.getTime() + " ms");
     }
@@ -281,7 +286,7 @@ public class Main {
         List<String> geneDone = new ArrayList<String>();
         JSONArray genesList = new JSONArray();
         String queryStringC = "";
-        
+
         try {
             // Use of IDs 
             if ("id".equals(queryType)) {
@@ -289,16 +294,17 @@ public class Main {
                 while ((line = br.readLine()) != null) {
                     String[] b = line.split(splitBy);
                     genesList.put(b[0]);
-                }                
+                }
                 JSONArray idList = genesList;
                 genesList = fr.bravo.api.SparqlQuery.IdToNameQuery(idList);
-                for(int i=0; i < genesList.length(); i++){
+                for (int i = 0; i < genesList.length(); i++) {
+                    logger.info("Init TFs for ID " + genesList.get(i).toString());
                     StringBuilder result = new StringBuilder();
                     geneDone.add(genesList.get(i).toString());
                     if (type.equals("regulation")) {
                         if (direction.equals("Up")) {
                             // SPARQL Query to get all transcription factors for a gene
-                            queryStringC = fr.bravo.api.SparqlQuery.initialUpRegulationQuery(genesList.get(i).toString(),dataSources, smolecule);
+                            queryStringC = fr.bravo.api.SparqlQuery.initialUpRegulationQuery(genesList.get(i).toString(), dataSources, smolecule);
                         } else if (direction.equals("Down")) {
                             // SPARQL Query to get all genes regulated by the given genes
                             queryStringC = fr.bravo.api.SparqlQuery.initialDownRegulationQuery(genesList.get(i).toString(), dataSources, smolecule);
@@ -309,9 +315,9 @@ public class Main {
                     }
 
                     //+"GROUP BY ?controlledName ?controllerName";
-                    String contentType = "application/json";
+                    String contentType = "text/turtle";
                     // URI of the SPARQL Endpoint
-                    String accessUri = "http://rdf.pathwaycommons.org/sparql";
+                    String accessUri = Util.SPARQL_ENDPOINT;
 
                     URI requestURI = javax.ws.rs.core.UriBuilder.fromUri(accessUri)
                             .queryParam("query", "{query}")
@@ -330,21 +336,22 @@ public class Main {
                     }
                     // Prepare model
                     ByteArrayInputStream bais = new ByteArrayInputStream(result.toString().getBytes());
-                    modelResult.read(bais, null, "RDF/JSON");
+                    modelResult.read(bais, null, "TTL");
                 }
-            }else {
+            } else {
                 BufferedReader br = new BufferedReader(new FileReader(filename));
                 while ((line = br.readLine()) != null) {
                     StringBuilder result = new StringBuilder();
                     String[] b = line.split(splitBy);
+                    logger.info("Init TFs for name " + b[0]);
                     geneDone.add(b[0]);
                     if (type.equals("regulation")) {
                         if (direction.equals("Up")) {
                             // SPARQL Query to get all transcription factors for a gene
-                            queryStringC = fr.bravo.api.SparqlQuery.initialUpRegulationQuery(b[0],dataSources, smolecule);
+                            queryStringC = fr.bravo.api.SparqlQuery.initialUpRegulationQuery(b[0], dataSources, smolecule);
                         } else if (direction.equals("Down")) {
                             // SPARQL Query to get all genes regulated by the given genes
-                            queryStringC = fr.bravo.api.SparqlQuery.initialDownRegulationQuery(b[0],dataSources, smolecule);
+                            queryStringC = fr.bravo.api.SparqlQuery.initialDownRegulationQuery(b[0], dataSources, smolecule);
                         }
                     } else {
                         // SPARQL Query to get all entities that have reaction link with the given genes (i.e. signaling)
@@ -352,9 +359,9 @@ public class Main {
                     }
 
                     //+"GROUP BY ?controlledName ?controllerName";
-                    String contentType = "application/json";
+                    String contentType = "text/turtle";
                     // URI of the SPARQL Endpoint
-                    String accessUri = "http://rdf.pathwaycommons.org/sparql";
+                    String accessUri = Util.SPARQL_ENDPOINT;
 
                     URI requestURI = javax.ws.rs.core.UriBuilder.fromUri(accessUri)
                             .queryParam("query", "{query}")
@@ -373,7 +380,150 @@ public class Main {
                     }
                     // Prepare model
                     ByteArrayInputStream bais = new ByteArrayInputStream(result.toString().getBytes());
-                    modelResult.read(bais, null, "RDF/JSON");
+                    modelResult.read(bais, null, "TTL");
+                } // End While
+                br.close();
+            }
+        } catch (IOException | IllegalArgumentException | UriBuilderException e) {
+            logger.error(e.getMessage());
+            System.exit(1);
+        }
+        return new Object[]{modelResult, geneDone};
+    }
+
+    /**
+     * Select query depending on parameters (e.g. Transcription Factor)
+     *
+     * @author Marie Lefebvre
+     * @param filename input file
+     * @param direction set direction of reconstruction {Up, Down}
+     * @param type { regulation, signalisation}
+     * @param queryType {id, name}
+     * @param dataSources {list of databases}
+     * @param smolecule if set to TRUE, consider small molecule
+     * @return Object with JENA Model and List of genes
+     * @throws java.io.IOException
+     * @throws org.codehaus.jettison.json.JSONException
+     */
+    public static Object[] dispatchOpt(String filename, String direction, String type, String queryType, List<String> dataSources, Boolean smolecule) throws IOException, JSONException {
+        String line;
+        String splitBy = ";";
+
+        Model modelResult = ModelFactory.createDefaultModel();
+        List<String> geneDone = new ArrayList<String>();
+        JSONArray genesList = new JSONArray();
+        String queryStringC = "";
+
+        try {
+            // Use of IDs 
+            if ("id".equals(queryType)) {
+                BufferedReader br = new BufferedReader(new FileReader(filename));
+                while ((line = br.readLine()) != null) {
+                    String[] b = line.split(splitBy);
+                    genesList.put(b[0]);
+                }
+                JSONArray idList = genesList;
+                genesList = fr.bravo.api.SparqlQuery.IdToNameQuery(idList);
+                for (int i = 0; i < genesList.length(); i++) {
+                    logger.info("Init TFs for ID " + genesList.get(i).toString());
+                    StringBuilder result = new StringBuilder();
+                    geneDone.add(genesList.get(i).toString());
+                    if (type.equals("regulation")) {
+                        if (direction.equals("Up")) {
+                            // SPARQL Query to get all transcription factors for a gene
+                            queryStringC = fr.bravo.api.SparqlQuery.initialUpRegulationQuery(genesList.get(i).toString(), dataSources, smolecule);
+                        } else if (direction.equals("Down")) {
+                            // SPARQL Query to get all genes regulated by the given genes
+                            queryStringC = fr.bravo.api.SparqlQuery.initialDownRegulationQuery(genesList.get(i).toString(), dataSources, smolecule);
+                        }
+                    } else {
+                        // SPARQL Query to get all entities that have reaction link with the given genes (i.e. signaling)
+                        queryStringC = fr.bravo.api.SparqlQuery.initialSignalingQuery(genesList.get(i).toString(), dataSources, smolecule);
+                    }
+
+                    //+"GROUP BY ?controlledName ?controllerName";
+                    String contentType = "text/turtle";
+                    // URI of the SPARQL Endpoint
+                    String accessUri = Util.SPARQL_ENDPOINT;
+
+                    URI requestURI = javax.ws.rs.core.UriBuilder.fromUri(accessUri)
+                            .queryParam("query", "{query}")
+                            .queryParam("format", "{format}")
+                            .build(queryStringC, contentType);
+                    URLConnection con = requestURI.toURL().openConnection();
+                    con.addRequestProperty("Accept", contentType);
+                    InputStream in = con.getInputStream();
+
+                    // Read result
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+
+                    String lineResult;
+                    while ((lineResult = reader.readLine()) != null) {
+                        result.append(lineResult);
+                    }
+                    // Prepare model
+                    ByteArrayInputStream bais = new ByteArrayInputStream(result.toString().getBytes());
+                    modelResult.read(bais, null, "TTL");
+                }
+            } else {
+                BufferedReader br = new BufferedReader(new FileReader(filename));
+                List<String> inputs = new ArrayList<>();
+                
+                while ((line = br.readLine()) != null) {
+                    StringBuilder result = new StringBuilder();
+                    String[] b = line.split(splitBy);
+                    inputs.add(b[0]);
+                }
+                
+                List<List<String>> chunks = Util.groupGenes(inputs) ;
+
+//                while ((line = br.readLine()) != null) {
+                for (List<String> chunk : chunks) {
+                    StringBuilder result = new StringBuilder();
+//                    String[] b = line.split(splitBy);
+                    logger.info("Init TFs for chunk " + chunk);
+                    geneDone.addAll(chunk);
+                    if (type.equals("regulation")) {
+                        if (direction.equals("Up")) {
+                            // SPARQL Query to get all transcription factors for a gene
+                            queryStringC = fr.bravo.api.SparqlQuery.initialUpRegulationQueryOpt(chunk, dataSources, smolecule);
+                        } else if (direction.equals("Down")) {
+                            // SPARQL Query to get all genes regulated by the given genes
+//                            queryStringC = fr.bravo.api.SparqlQuery.initialDownRegulationQuery(b[0], dataSources, smolecule);
+                        }
+                    } else {
+                        // SPARQL Query to get all entities that have reaction link with the given genes (i.e. signaling)
+//                        queryStringC = fr.bravo.api.SparqlQuery.initialSignalingQuery(b[0], dataSources, smolecule);
+                    }
+
+                    //+"GROUP BY ?controlledName ?controllerName";
+                    String contentType = "text/turtle";
+                    // URI of the SPARQL Endpoint
+                    String accessUri = Util.SPARQL_ENDPOINT;
+
+                    URI requestURI = javax.ws.rs.core.UriBuilder.fromUri(accessUri)
+                            .queryParam("query", "{query}")
+                            .queryParam("format", "{format}")
+                            .build(queryStringC, contentType);
+                    URLConnection con = requestURI.toURL().openConnection();
+                    con.addRequestProperty("Accept", contentType);
+                    InputStream in = con.getInputStream();
+
+                    // Read result
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+
+                    String lineResult;
+                    while ((lineResult = reader.readLine()) != null) {
+                        result.append(lineResult);
+                    }
+                    
+                    System.out.println("");
+                    System.out.println(result.toString());
+                    System.out.println("");
+                    
+                    // Prepare model
+                    ByteArrayInputStream bais = new ByteArrayInputStream(result.toString().getBytes());
+                    modelResult.read(bais, null, "TTL");
                 } // End While
                 br.close();
             }

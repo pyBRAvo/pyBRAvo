@@ -206,6 +206,7 @@
                     <createDependencyReducedPom>true</createDependencyReducedPom>
                     <shadedArtifactAttached>true</shadedArtifactAttached>
                     <shadedClassifierName>bin</shadedClassifierName>
+                    <includeSources>true</includeSources> 
                     <filters>
                         <filter>
                             <artifact>*:*</artifact>
