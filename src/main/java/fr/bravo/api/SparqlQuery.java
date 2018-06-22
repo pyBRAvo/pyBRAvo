@@ -117,6 +117,8 @@ public class SparqlQuery {
                             System.out.println("\t" + component);
                             toBeExplored.add(component);
                         }
+                        System.out.println("\t" + TF.toString());
+                        toBeExplored.add(TF.toString());
                     } else {
                         toBeExplored.add(TF.toString());
                     }
@@ -173,6 +175,141 @@ public class SparqlQuery {
         logger.info("explored " + genesDone.size() + " biological controllers (BC)");
         tempModel.add(resultTemp);
         Model finalModel = RegulatoryConstruct(resultTemp, tempModel, genesDone, direction, smolecule, dataSources, maxDepth, (currentDepth + 1));
+        return finalModel;
+    }
+    
+    /**
+     *
+     * @param listModel
+     * @param tempModel
+     * @param genesDone
+     * @param direction ; way of reconstruction
+     * @param smolecule
+     * @param dataSources
+     * @param maxDepth
+     * @param currentDepth
+     * @return
+     */
+    public static Model RegulatoryConstructOpt(Model listModel,
+            Model tempModel,
+            List<String> genesDone,
+            String direction,
+            Boolean smolecule,
+            List<String> dataSources,
+            int maxDepth,
+            int currentDepth) {
+
+        int alreadyExplored = genesDone.size();
+
+        // No next regulators
+        if (listModel.isEmpty()) {
+            return tempModel;
+        }
+
+        if (maxDepth != -1 && currentDepth >= maxDepth) {
+            return tempModel;
+        }
+
+        // SPARQL Query to get controller of a model (e.g. gene)
+        String queryStringS = "PREFIX bp: <http://www.biopax.org/release/biopax-level3.owl#>\n"
+                + "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n"
+                + "SELECT DISTINCT ?name\n"
+                + "WHERE{ "
+                + "?x bp:controller ?controller .\n"
+                + "?controller bp:displayName ?name"
+                + " }";
+        Model resultTemp = ModelFactory.createDefaultModel();
+        // Create query
+        Query queryS = QueryFactory.create(queryStringS);
+        QueryExecution qex = QueryExecutionFactory.create(queryS, listModel);
+        // Execute select
+        ResultSet TFs = qex.execSelect();
+        List<String> toBeExplored = new ArrayList<String>();
+        try {
+
+            // For each regulators found in the local graph
+            for (; TFs.hasNext();) {
+                QuerySolution soln = TFs.nextSolution();
+                StringBuilder result = new StringBuilder();
+                RDFNode TF = soln.get("name");       // Get a result variable by name (e.g. gene)
+
+                // Research not done yet
+                if (!genesDone.contains(TF) && !TF.toString().contains("'") && !TF.toString().contains("?")) {
+                    //decomposing protein complex
+                    if (TF.toString().contains("/")) {
+                        System.out.println(TF.toString() + " complex to be decomposed and further explored");
+                        List<String> toBeAdded = Arrays.asList(TF.toString().split("\\s*/\\s*"));
+                        for (String component : toBeAdded) {
+                            System.out.println("\t" + component);
+                            toBeExplored.add(component);
+                        }
+                        System.out.println("\t" + TF.toString());
+                        toBeExplored.add(TF.toString());
+                    } else {
+                        toBeExplored.add(TF.toString());
+                    }
+                }
+            }
+            System.out.println("To be exploreded : " + toBeExplored.toString());
+            
+            // Grouping optimization
+            List<List<String>> chunks = Util.groupGenes(toBeExplored) ;
+            
+            for (List<String> chunk : chunks) {
+//            for (String TF : toBeExplored) {
+//                QuerySolution soln = TFs.nextSolution() ;
+//                RDFNode TF = soln.get("name") ;       // Get a result variable by name (e.g. gene)
+
+//                String TF = toBeExplored.iterator().next();
+                StringBuilder result = new StringBuilder();
+
+                // Research not done yet
+//                if (!genesDone.contains(TF) && !TF.contains("'") && !TF.contains("?")) {
+                    genesDone.addAll(chunk);
+                    logger.info("exploring " + chunk);
+                    // SPARQL Query to get all transcription factors for a gene
+                    // An error will be sent if TF contains an apostrophe 
+                    String queryStringC = "";
+                    if (direction.equals("Up")) {
+                        queryStringC = initialUpRegulationQueryOpt(chunk, dataSources, smolecule);
+                    } else {
+//                        queryStringC = initialDownRegulationQuery(TF.toString(), dataSources, smolecule);
+                    }
+                    
+//                    System.out.println("");
+//                    System.out.println(queryStringC);
+//                    System.out.println("");
+                    
+                    String contentType = "text/turtle";
+                    // URI of the SPARQL Endpoint
+                    String accessUri = Util.SPARQL_ENDPOINT;
+
+                    URI requestURI = javax.ws.rs.core.UriBuilder.fromUri(accessUri)
+                            .queryParam("query", "{query}")
+                            .queryParam("format", "{format}")
+                            .build(queryStringC, contentType);
+                    URLConnection con = requestURI.toURL().openConnection();
+                    con.addRequestProperty("Accept", contentType);
+                    InputStream in = con.getInputStream();
+
+                    // Read result
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+
+                    String lineResult;
+                    while ((lineResult = reader.readLine()) != null) {
+                        result.append(lineResult);
+                    }
+                    // Prepare model
+                    ByteArrayInputStream bais = new ByteArrayInputStream(result.toString().getBytes());
+                    resultTemp.read(bais, null, "TTL");
+//                }
+            } // End for loop
+        } catch (IOException | IllegalArgumentException | UriBuilderException e) {
+            System.err.println(e.getMessage());
+        }
+        logger.info("explored " + genesDone.size() + " biological controllers (BC)");
+        tempModel.add(resultTemp);
+        Model finalModel = RegulatoryConstructOpt(resultTemp, tempModel, genesDone, direction, smolecule, dataSources, maxDepth, (currentDepth + 1));
         return finalModel;
     }
 
@@ -359,7 +496,7 @@ public class SparqlQuery {
                     + "?controlled bp:participant ?participant ; bp:dataSource ?controlledsource .\n"
                     + "?participant bp:displayName|bp:name ?controlledName; rdf:type ?controlledType ."
                     + "?controller bp:displayName ?controllerName ; rdf:type ?controllerType ; bp:dataSource ?controllersource .\n "
-                    + "}";
+                    + "} LIMIT 1000";
         } else {
             IURquery = "PREFIX bp: <http://www.biopax.org/release/biopax-level3.owl#>\n"
                     + "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n"
@@ -377,7 +514,7 @@ public class SparqlQuery {
                     + "?controlled bp:participant ?participant ; bp:dataSource ?controlledsource .\n"
                     + "?participant bp:displayName|bp:name ?controlledName; rdf:type ?controlledType ."
                     + "?controller bp:displayName ?controllerName ; rdf:type ?controllerType ; bp:dataSource ?controllersource .\n "
-                    + "}";
+                    + "} LIMIT 1000";
         }
         return IURquery;
     }
