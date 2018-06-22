@@ -235,6 +235,8 @@ public class Main {
                 network = fr.bravo.api.SparqlQuery.RegulatoryConstruct(initialModel, initialModel, geneDone, way, molecule, dsList, maxDepth, 1);
             } else {
                 // Initial graph with Transcription Factors (TFs)
+                // ! OPTIMIZATION
+//                Object[] initialResults = dispatchOpt(inputFilePath, way, "regulation", "name", dsList, molecule);
                 Object[] initialResults = dispatch(inputFilePath, way, "regulation", "name", dsList, molecule);
                 System.out.println("Initial regulatory graph : DONE");
                 List<String> genesDone = (List<String>) initialResults[1];
@@ -243,6 +245,8 @@ public class Main {
                 geneDone = (List) initialResults[1];
                 // Next level of regulation network
                 System.out.println("Run regulatory network construction");
+                // ! OPTIMIZATION
+//                network = fr.bravo.api.SparqlQuery.RegulatoryConstructOpt(initialModel, initialModel, geneDone, way, molecule, dsList, maxDepth, 1);
                 network = fr.bravo.api.SparqlQuery.RegulatoryConstruct(initialModel, initialModel, geneDone, way, molecule, dsList, maxDepth, 1);
             }
 
@@ -252,6 +256,8 @@ public class Main {
             return;
         }
         System.out.println("Next level : DONE");
+        long endTime = sw.getTime();
+        System.out.println("------ Execution time " + endTime + " ms");
         // Save graph as source/target format 
         saveRegulationGraph(network, outputFilePath, formatOut);
         System.out.println("Input file " + inputFilePath
@@ -259,9 +265,9 @@ public class Main {
                 + "\nInfo :"
                 + "\n------ Reconstruction : " + way
                 + "\n------ Explored regulators : " + geneDone.size()
-                + "\n------ Resulting graph size (edges) : " + network.size());
+                + "\n------ Resulting graph size (number of reaction) : " + computeNetworkSize(network));
         sw.stop();
-        System.out.println("------ Execution time " + sw.getTime() + " ms");
+        
     }
 
     /**
@@ -517,10 +523,6 @@ public class Main {
                         result.append(lineResult);
                     }
                     
-                    System.out.println("");
-                    System.out.println(result.toString());
-                    System.out.println("");
-                    
                     // Prepare model
                     ByteArrayInputStream bais = new ByteArrayInputStream(result.toString().getBytes());
                     modelResult.read(bais, null, "TTL");
@@ -600,5 +602,33 @@ public class Main {
             System.out.println("error while saving file");
             logger.error(e);
         }
+    }
+    
+    public static int computeNetworkSize(Model constructModel) {
+
+        String querySIF = "PREFIX bp: <http://www.biopax.org/release/biopax-level3.owl#>\n"
+                + "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n"
+                + "SELECT DISTINCT ?left_name ?type ?right_name "
+                + "WHERE{ "
+                + "     ?reac bp:controller ?left .\n"
+                + "     ?reac bp:controlled ?right .\n"
+                + "     ?reac bp:controlType ?type .\n"
+                + "     ?left bp:displayName ?left_name .\n"
+                + "     ?right bp:displayName ?right_name .\n"
+                + "}";
+        // Create query
+        Query queryS = QueryFactory.create(querySIF);
+        QueryExecution qex = QueryExecutionFactory.create(queryS, constructModel);
+        // Execute select
+        ResultSet SIF = qex.execSelect();
+
+        int reactCounter = 0;
+        // For each regulators
+        StringBuilder lines = new StringBuilder();
+        for (; SIF.hasNext();) {
+            QuerySolution soln = SIF.nextSolution();
+            reactCounter++;
+        }
+        return reactCounter;
     }
 }
