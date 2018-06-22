@@ -158,6 +158,9 @@ def upstream_regulation(to_be_explored, max_depth = 1, data_sources = [], alread
         - the maximum exploration depth is reached
     """
 
+    if max_depth is None:
+        HAS_MAX_DEPTH = False
+
     MAX_DEPTH = max_depth
     DATA_SOURCES = data_sources
 
@@ -179,12 +182,16 @@ def upstream_regulation(to_be_explored, max_depth = 1, data_sources = [], alread
     new_to_be_explored = []
     for name in to_be_explored:
         splits = name.split('/')
-        if len(splits) > 1:
+        if len(splits) > 1 :
             print(name + ' decomposed into ' + str(splits))
-        new_to_be_explored.extend(splits)
-    if len(new_to_be_explored) > len(to_be_explored):
-        to_be_explored = new_to_be_explored
-        print('to be explored after complex decomposition ' + str(to_be_explored))
+            new_to_be_explored.extend(splits)
+            for s in splits:
+                sif_network.append({"source":s, "relation":"PART_OF", "target":name})
+
+    for new in new_to_be_explored:
+        if new not in to_be_explored:
+                to_be_explored.append(new)
+    print('to be explored after complex decomposition ' + str(to_be_explored))
 
     """  """
     chunks = gen_chunks(to_be_explored)
@@ -214,7 +221,7 @@ def upstream_regulation(to_be_explored, max_depth = 1, data_sources = [], alread
         for result in results["results"]["bindings"]:
             source, reg_type, target = result["controllerName"]["value"], result["controlType"]["value"], \
                                        result["controlledName"]["value"]
-            sif_network.append({"source": source, "regulation": reg_type, "target": target})
+            sif_network.append({"source": source, "relation": reg_type, "target": target})
             # print(source + ' --- ' + reg_type + ' --> ' + target)
 
             if source not in already_explored:
@@ -226,7 +233,7 @@ def upstream_regulation(to_be_explored, max_depth = 1, data_sources = [], alread
             # print('skipping ' + source + ', already_explored')
 
         print()
-        print('Explored ' + str(explored_reg) + ' regulators')
+        #print('Explored ' + str(explored_reg) + ' regulators')
 
     current_depth += 1
     upstream_regulation(to_be_explored, max_depth, data_sources, already_explored, sif_network, current_depth, explored_reg)
