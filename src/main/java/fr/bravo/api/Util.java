@@ -18,7 +18,7 @@ public class Util {
 //    public static String SPARQL_ENDPOINT = "http://localhost:3030/PC/query";
 //    public static String SPARQL_ENDPOINT = "http://172.18.253.87:9001/sparql?default-graph-uri=http%3A%2F%2Flocal-PC"; //
 
-    public static int SLICE_SIZE = 4;
+    public static int SLICE_SIZE = 1;
 
     public static List<List<String>> groupGenes(List<String> geneList) {
         List<List<String>> results = new ArrayList<List<String>>();
