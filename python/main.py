@@ -4,63 +4,85 @@ import csv
 import networkx as nx
 import bravo.regulation as bravo
 
+data_sources = ['bind', 'biogrid', 'corum',
+                'ctd', 'dip', 'drugbank', 'hprd', 'humancyc', 'inoh',
+                'intact', 'kegg', 'mirtarbase', 'netpath', 'panther',
+                'pid', 'psp', 'reactome', 'reconx', 'smpdb', 'wp',
+                'intact_complex', 'msigdb']
+
 parser = argparse.ArgumentParser(description="""
     BRAvo upstream regulation network reconstruction. 
 
     Sample Usage :
 
     """)
-parser.add_argument('-md', '--max_depth', metavar='max_depth', type=int, help='the maximum exploration depth',
-                    dest='md', required=False)
-parser.add_argument('-i', '--input_genes', nargs='+', required=True, help='the input gene list', dest='i')
+parser.add_argument('-md', '--max_depth', type=int, required=False, help='the maximum exploration depth', dest='md')
+parser.add_argument('-i', '--input_genes', nargs='+', required=False, help='the input gene list', dest='i')
+parser.add_argument('-f', '--input_file', required=False, help='the input file, one gene per line', dest='f')
+parser.add_argument('-incl', '--include_sources', nargs='+', required=False, help='the data sources to include', dest='incl')
+parser.add_argument('-excl', '--exclude_sources', nargs='+', required=False, help='the data sources to exclude', dest='excl')
 
-# parser = argparse.ArgumentParser(description="""
-# JSON import tool for the NeuBIAS Bise.eu registry.
-#
-# Sample Usage :
-#     python biseEU_importer.py -u <USERNAME> -p <PASSWORD> -td http://dev-bise2.pantheonsite.io -px http://cache.ha.univ-nantes.fr:3128 -d ../data/small_set/
-#     python biseEU_importer.py -u <USERNAME> -p <PASSWORD> -td http://dev-bise2.pantheonsite.io -px http://cache.ha.univ-nantes.fr:3128 -i ../data/small_set/node3.json
-#                                  """)
-# parser.add_argument('-px', '--proxy', metavar='proxy', type=str, help='your proxy URL, including the proxy port',
-#                     dest='px', required=False)
-# parser.add_argument('-td', '--target_drupal_url', metavar='target_drupal_url', type=str, help='the target drupal url',
-#                     dest='td', required=True)
-# parser.add_argument('-u', '--username', metavar='username', type=str, help='username', dest='u', required=True)
-# parser.add_argument('-p', '--password', metavar='password', type=str, help='password', dest='p', required=True)
-# parser.add_argument('-i', '--input_file', metavar='input_directory', type=str, help='the JSON file to be imported',
-#                     dest='i',
-#                     required=False)
-# parser.add_argument('-d', '--input_directory', metavar='input_directory', type=str,
-#                     help='the JSON file directory to be imported', dest='d', required=False)
+
+def read_input_genes(filename):
+    res = []
+    with open(filename, newline='') as csvfile:
+        reader = csv.reader(csvfile, delimiter=' ', quotechar='|')
+        for row in reader:
+            res.append(''.join(row))
+    return res
+
 
 def main(args = []):
     args = parser.parse_args(args)
-    if args.md is None:
-        print('please fill the -md or --max_depth parameter')
+    # if args.md is None:
+    #     print('please fill the -md or --max_depth parameter')
+    #     parser.print_help()
+    #     exit(0)
+
+    if (args.i is None) and (args.f is None):
+        print('please fill the -i (--input_genes) or -f (--input_file) parameter')
         parser.print_help()
         exit(0)
 
-    if args.i is None:
-        print('please fill the -i or --input_genes parameter')
+    if args.i and args.f:
+        print('--input_genes and --input_file parameters are mutually exclusive : please provide only one of them')
         parser.print_help()
         exit(0)
 
-    data_sources = ['bind', 'biogrid', 'corum',
-                               'ctd', 'dip', 'drugbank', 'hprd', 'humancyc', 'inoh',
-                               'intact', 'kegg', 'mirtarbase', 'netpath', 'panther',
-                               'pid', 'psp', 'reactome', 'reconx', 'smpdb', 'wp',
-                               'intact_complex', 'msigdb']
-    exclude_data_source = ['mirtarbase']
+    input_genes_parameter = []
+    if args.i:
+        input_genes_parameter = args.i
 
-    for ds in exclude_data_source:
-        data_sources.remove(ds)
+    if args.f:
+        input_genes_parameter = read_input_genes(args.f)
 
-    print(data_sources)
+    if args.incl and args.excl:
+        print('--include_sources and --exclude_sources parameters are mutually exclusive : please provide only one of them')
+        parser.print_help()
+        exit(0)
+
+    max_depth_parameter = None
+    if args.md:
+        max_depth_parameter = args.md
+
+    data_sources_parameter = []
+    if args.excl:
+        for ds in args.excl:
+            data_sources.remove(ds)
+        data_sources_parameter = data_sources
+    if args.incl:
+        data_sources_parameter = args.incl
+
+    if not data_sources_parameter is None:
+        print("BRAvo will explore the following data sources:\n" + str(data_sources_parameter))
+    else:
+        print("BRAvo will explore all available data sources")
 
     start_time = time.time()
     # reconstructed_network = bravo.upstream_regulation(["JUN/FOS", "SCN5A"], max_depth=1)
     # reconstructed_network = bravo.upstream_regulation(["JUN/FOS", "SCN5A"], max_depth=2, data_sources = data_sources)
-    reconstructed_network = bravo.upstream_regulation(args.i, args.md, data_sources=data_sources)
+    # reconstructed_network = bravo.upstream_regulation(args.i, args.md, data_sources=data_sources)
+    reconstructed_network = bravo.upstream_regulation(input_genes_parameter, max_depth=max_depth_parameter, data_sources=data_sources_parameter)
     elapsed_time = round((time.time() - start_time), 2)
 
     print("--- Upstream regulation network in %s seconds ---" % elapsed_time)
@@ -69,8 +91,8 @@ def main(args = []):
     for e in reconstructed_network:
         #    print(e['source'] + ' --- ' + e['regulation'] + ' --> ' + e['target'])
         G.add_edge(e['source'], e['target'],
-                   color='g' if (e['regulation'] in 'ACTIVATION') else 'r',
-                   label=e['regulation'])
+                   color='g' if (e['relation'] in 'ACTIVATION') else 'r',
+                   label=e['relation'])
 
     print('Number of nodes = ' + str(len(G.nodes())))
     print('Number of edges = ' + str(len(G.edges())))
@@ -82,8 +104,32 @@ def main(args = []):
             sif_writer.writerow([e[0], e[2], e[1]])
     print('SIF network written to ' + filename)
 
+    import operator
+    centrality = nx.degree_centrality(G)
+    # centrality = nx.closeness_centrality(G)
+    # centrality = nx.betweenness_centrality(G)
+    sorted_centrality = reversed(sorted(centrality.items(), key=operator.itemgetter(1)))
+    sorted_centrality = list(sorted_centrality)
+    cpt = 0
+    md = """
+| Gene | Degree Centrality |
+|------|------|
+"""
+    for g in sorted_centrality:
+        md += "| " + g[0] + " | " + str(g[1]) + " | \n"
+        cpt += 1
+        if cpt > 9:
+            break
+    print(md)
 
 if __name__ == "__main__":
-    args = ['--input_genes', 'JUN/FOS', 'SCN5A', '-md', '1']
-    # args = []
+    args = ['--input_genes', 'HEY2', 'SCN5A', 'SCN3A', '-md', '1']
+    args = ['--input_genes', 'HEY2', 'SCN5A', 'SCN3A', '-md', '2',
+            '-excl', 'mirtarbase', 'kegg']
+    args = ['--input_genes', 'HEY2', 'SCN5A', 'SCN3A', '-md', '1',
+            '-incl', 'pid', 'panther', 'msigdb', 'kegg']
+    args = ['-f', '../test-complex.csv', '-md', '1',
+            '-incl', 'pid', 'panther', 'msigdb', 'kegg']
+    args = ['-f', '../test-complex.csv',
+            '-incl', 'pid', 'panther', 'kegg']
     main(args = args)
