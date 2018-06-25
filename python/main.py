@@ -1,5 +1,6 @@
 import time
 import argparse
+import operator
 import csv
 import networkx as nx
 import bravo.regulation as bravo
@@ -24,6 +25,11 @@ parser.add_argument('-excl', '--exclude_sources', nargs='+', required=False, hel
 
 
 def read_input_genes(filename):
+    """
+
+    :param filename:
+    :return:
+    """
     res = []
     with open(filename, newline='') as csvfile:
         reader = csv.reader(csvfile, delimiter=' ', quotechar='|')
@@ -31,6 +37,79 @@ def read_input_genes(filename):
             res.append(''.join(row))
     return res
 
+def write_to_SIF(G, filename):
+    """
+
+    :param graph:
+    :param filename:
+    :return:
+    """
+    with open(filename, 'w', newline='') as csvfile:
+        sif_writer = csv.writer(csvfile, delimiter='\t')
+        for e in G.edges(data='attr'):
+            try:
+                sif_writer.writerow([e[0], e[2]['label'], e[1]])
+            except TypeError:
+                print('Error for '+str(e))
+
+    print('SIF network written to ' + filename)
+
+def write_provenance(G, filename):
+    """
+
+    :param graph:
+    :param filename:
+    :return:
+    """
+    with open(filename, 'w', newline='') as csvfile:
+        provenance_writer = csv.writer(csvfile, delimiter=',')
+        for e in G.edges(data='attr'):
+            reac = str(e[0]) + '\t' + str(e[2]['label']) + '\t' + str(e[1])
+            p = e[2]['provenance']
+            if 'http://pathwaycommons.org/pc2/' in p:
+                p = p.split('http://pathwaycommons.org/pc2/')[1]
+            provenance_writer.writerow([reac, p])
+    print('Basic regulation reaction provenance written to ' + filename)
+
+def get_centrality_as_md(G):
+    """
+
+    :param graph:
+    :return:
+    """
+    centrality = nx.degree_centrality(G)
+    # centrality = nx.closeness_centrality(G)
+    # centrality = nx.betweenness_centrality(G)
+    sorted_centrality = reversed(sorted(centrality.items(), key=operator.itemgetter(1)))
+    sorted_centrality = list(sorted_centrality)
+    cpt = 0
+    md = """
+| Gene | Degree Centrality |
+|------|------|
+"""
+    for g in sorted_centrality:
+        md += "| " + g[0] + " | " + str(round(g[1], 3)) + " | \n"
+        cpt += 1
+        if cpt > 9:
+            break
+    return(md)
+
+def build_nx_digraph(reconstructed_network):
+    """
+
+    :param reconstructed_network:
+    :return:
+    """
+    G = nx.DiGraph()
+    for e in reconstructed_network:
+        # print(e)
+        # print(e['source'] + ' --- ' + e['relation'] + ' --> ' + e['target'] + ' | ' + e['provenance'])
+        G.add_edge(e['source'], e['target'],
+                   color='g' if (e['relation'] in 'ACTIVATION') else 'r',
+                   attr={'label': e['relation'], 'provenance': e['provenance']})
+    print('Number of nodes = ' + str(len(G.nodes())))
+    print('Number of edges = ' + str(len(G.edges())))
+    return G
 
 def main(args = []):
     args = parser.parse_args(args)
@@ -87,49 +166,21 @@ def main(args = []):
 
     print("--- Upstream regulation network in %s seconds ---" % elapsed_time)
 
-    G = nx.DiGraph()
-    for e in reconstructed_network:
-        #    print(e['source'] + ' --- ' + e['regulation'] + ' --> ' + e['target'])
-        G.add_edge(e['source'], e['target'],
-                   color='g' if (e['relation'] in 'ACTIVATION') else 'r',
-                   label=e['relation'])
-
-    print('Number of nodes = ' + str(len(G.nodes())))
-    print('Number of edges = ' + str(len(G.edges())))
-
-    filename = "out.sif"
-    with open(filename, 'w', newline='') as csvfile:
-        sif_writer = csv.writer(csvfile, delimiter='\t')
-        for e in G.edges(data='label'):
-            sif_writer.writerow([e[0], e[2], e[1]])
-    print('SIF network written to ' + filename)
-
-    import operator
-    centrality = nx.degree_centrality(G)
-    # centrality = nx.closeness_centrality(G)
-    # centrality = nx.betweenness_centrality(G)
-    sorted_centrality = reversed(sorted(centrality.items(), key=operator.itemgetter(1)))
-    sorted_centrality = list(sorted_centrality)
-    cpt = 0
-    md = """
-| Gene | Degree Centrality |
-|------|------|
-"""
-    for g in sorted_centrality:
-        md += "| " + g[0] + " | " + str(g[1]) + " | \n"
-        cpt += 1
-        if cpt > 9:
-            break
+    G = build_nx_digraph(reconstructed_network)
+    write_to_SIF(G, 'out.sif')
+    write_provenance(G, 'out-provenance.csv')
+    md = get_centrality_as_md(G)
     print(md)
 
 if __name__ == "__main__":
     args = ['--input_genes', 'HEY2', 'SCN5A', 'SCN3A', '-md', '1']
     args = ['--input_genes', 'HEY2', 'SCN5A', 'SCN3A', '-md', '2',
             '-excl', 'mirtarbase', 'kegg']
-    args = ['--input_genes', 'HEY2', 'SCN5A', 'SCN3A', '-md', '1',
-            '-incl', 'pid', 'panther', 'msigdb', 'kegg']
     args = ['-f', '../test-complex.csv', '-md', '1',
             '-incl', 'pid', 'panther', 'msigdb', 'kegg']
     args = ['-f', '../test-complex.csv',
             '-incl', 'pid', 'panther', 'kegg']
+    args = ['-f', '../test-complex.csv', '-excl', 'mirtarbase']
+    args = ['--input_genes', 'JUN/FOS', 'SCN5A', '-md', '1',
+            '-incl', 'pid', 'msigdb']
     main(args = args)
