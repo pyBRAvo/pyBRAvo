@@ -47,7 +47,7 @@ PREFIX bp: <http://www.biopax.org/release/biopax-level3.owl#>
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> 
 
-SELECT DISTINCT ?controllerName ?controlType ?controlledName ?ds WHERE {
+SELECT DISTINCT ?controllerName ?controlType ?controlledName ?source WHERE {
     $filter_Chunks
     $filter_SkipSmallMollecules
     $filter_DataSources
@@ -159,6 +159,7 @@ def upstream_regulation(to_be_explored, max_depth = 1, data_sources = [], alread
     """
 
     if max_depth is None:
+        global HAS_MAX_DEPTH
         HAS_MAX_DEPTH = False
 
     MAX_DEPTH = max_depth
@@ -186,7 +187,7 @@ def upstream_regulation(to_be_explored, max_depth = 1, data_sources = [], alread
             print(name + ' decomposed into ' + str(splits))
             new_to_be_explored.extend(splits)
             for s in splits:
-                sif_network.append({"source":s, "relation":"PART_OF", "target":name})
+                sif_network.append({"source":s, "relation":"PART_OF", "target":name, "provenance": "PathwayCommons"})
 
     for new in new_to_be_explored:
         if new not in to_be_explored:
@@ -219,9 +220,8 @@ def upstream_regulation(to_be_explored, max_depth = 1, data_sources = [], alread
         # print('already explored ' + str(already_explored))
 
         for result in results["results"]["bindings"]:
-            source, reg_type, target = result["controllerName"]["value"], result["controlType"]["value"], \
-                                       result["controlledName"]["value"]
-            sif_network.append({"source": source, "relation": reg_type, "target": target})
+            source, reg_type, target, provenance = result["controllerName"]["value"], result["controlType"]["value"], result["controlledName"]["value"], result["source"]["value"]
+            sif_network.append({"source": source, "relation": reg_type, "target": target, "provenance": provenance})
             # print(source + ' --- ' + reg_type + ' --> ' + target)
 
             if source not in already_explored:
