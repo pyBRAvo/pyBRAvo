@@ -1,5 +1,6 @@
 import time
 import argparse
+from argparse import RawTextHelpFormatter
 import operator
 import csv
 import networkx as nx
@@ -12,17 +13,20 @@ data_sources = ['bind', 'biogrid', 'corum',
                 'intact_complex', 'msigdb']
 
 parser = argparse.ArgumentParser(description="""
-    BRAvo upstream regulation network reconstruction. 
-
-    Sample Usage :
-
-    """)
+BRAvo upstream regulation network reconstruction. 
+Here are some possible command lines :
+    
+    python pyBravo.py --input_genes JUN/FOS SCN5A -md 1
+    python pyBravo.py --input_genes JUN/FOS SCN5A -md 1 -excl mirtarbase
+    python pyBravo.py --input_file myGenes.csv -md 1 -incl pid panther msigdb kegg
+    
+Please report any issue to alban.gaignard@univ-nantes.fr. 
+""", formatter_class=RawTextHelpFormatter)
 parser.add_argument('-md', '--max_depth', type=int, required=False, help='the maximum exploration depth', dest='md')
 parser.add_argument('-i', '--input_genes', nargs='+', required=False, help='the input gene list', dest='i')
 parser.add_argument('-f', '--input_file', required=False, help='the input file, one gene per line', dest='f')
 parser.add_argument('-incl', '--include_sources', nargs='+', required=False, help='the data sources to include', dest='incl')
 parser.add_argument('-excl', '--exclude_sources', nargs='+', required=False, help='the data sources to exclude', dest='excl')
-
 
 def read_input_genes(filename):
     """
@@ -111,12 +115,9 @@ def build_nx_digraph(reconstructed_network):
     print('Number of edges = ' + str(len(G.edges())))
     return G
 
-def main(args = []):
-    args = parser.parse_args(args)
-    # if args.md is None:
-    #     print('please fill the -md or --max_depth parameter')
-    #     parser.print_help()
-    #     exit(0)
+def main():
+    #args = parser.parse_args(args)
+    args = parser.parse_args()
 
     if (args.i is None) and (args.f is None):
         print('please fill the -i (--input_genes) or -f (--input_file) parameter')
@@ -173,14 +174,15 @@ def main(args = []):
     print(md)
 
 if __name__ == "__main__":
-    args = ['--input_genes', 'HEY2', 'SCN5A', 'SCN3A', '-md', '1']
-    args = ['--input_genes', 'HEY2', 'SCN5A', 'SCN3A', '-md', '2',
-            '-excl', 'mirtarbase', 'kegg']
-    args = ['-f', '../test-complex.csv', '-md', '1',
-            '-incl', 'pid', 'panther', 'msigdb', 'kegg']
-    args = ['-f', '../test-complex.csv',
-            '-incl', 'pid', 'panther', 'kegg']
-    args = ['-f', '../test-complex.csv', '-excl', 'mirtarbase']
-    args = ['--input_genes', 'JUN/FOS', 'SCN5A', '-md', '1',
-            '-incl', 'pid', 'msigdb']
-    main(args = args)
+    # args = ['--input_genes', 'HEY2', 'SCN5A', 'SCN3A', '-md', '1']
+    # args = ['--input_genes', 'HEY2', 'SCN5A', 'SCN3A', '-md', '2',
+    #         '-excl', 'mirtarbase', 'kegg']
+    # args = ['-f', '../test-complex.csv', '-md', '1',
+    #         '-incl', 'pid', 'panther', 'msigdb', 'kegg']
+    # args = ['-f', '../test-complex.csv',
+    #         '-incl', 'pid', 'panther', 'kegg']
+    # args = ['-f', '../test-complex.csv', '-excl', 'mirtarbase']
+    # args = ['--input_genes', 'JUN/FOS', 'SCN5A', '-md', '1',
+    #         '-incl', 'pid', 'msigdb']
+    # main(args = args)
+    main()
