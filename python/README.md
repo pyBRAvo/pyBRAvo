@@ -41,3 +41,31 @@ Basic regulation reaction provenance written to out-provenance.csv
 ## Usage from a Jupyter notebook 
 
 ## Usage from a terminal 
+Here is the help message for the command line when running `python pyBravo.py`:
+```
+please fill the -i (--input_genes) or -f (--input_file) parameter
+usage: pyBravo.py [-h] [-md MD] [-i I [I ...]] [-f F] [-incl INCL [INCL ...]]
+                  [-excl EXCL [EXCL ...]]
+
+BRAvo upstream regulation network reconstruction. 
+Here are some possible command lines :
+    
+    python pyBravo.py --input_genes JUN/FOS SCN5A -md 1
+    python pyBravo.py --input_genes JUN/FOS SCN5A -md 1 -excl mirtarbase
+    python pyBravo.py --input_file myGenes.csv -md 1 -incl pid panther msigdb kegg
+    
+Please report any issue to alban.gaignard@univ-nantes.fr. 
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -md MD, --max_depth MD
+                        the maximum exploration depth
+  -i I [I ...], --input_genes I [I ...]
+                        the input gene list
+  -f F, --input_file F  the input file, one gene per line
+  -incl INCL [INCL ...], --include_sources INCL [INCL ...]
+                        the data sources to include
+  -excl EXCL [EXCL ...], --exclude_sources EXCL [EXCL ...]
+                        the data sources to exclude
+
+```
