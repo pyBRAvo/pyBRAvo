@@ -43,6 +43,7 @@ test:
 pages:
   script:
   - pip install sphinx sphinx-rtd-theme
+  - sphinx-quickstart
   - cd doc ; make html
   - mv build/html/ ../public/
   artifacts:
