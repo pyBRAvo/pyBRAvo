@@ -39,6 +39,9 @@ Basic regulation reaction provenance written to out-provenance.csv
 | ATF1 | 0.03 | 
 ```
 ## Usage from a Jupyter notebook 
+Inside the python directory, just run the `jupyter-notebook BRAvo-python-API-tutorial.ipynb` command. 
+
+The notebook can be browsed here: [notebook](https://gitlab.univ-nantes.fr/gaignard-a/BRAvo/blob/master/python/BRAvo-python-API-tutorial.ipynb). 
 
 ## Usage from a terminal 
 Here is the help message for the command line when running `python pyBravo.py`:
