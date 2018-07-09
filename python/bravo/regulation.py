@@ -19,11 +19,15 @@ import csv
 INPUT_GENES = ['JUN/FOS', 'SCN5A', 'HEY2']
 
 SPARQL_ENDPOINT = "http://rdf.pathwaycommons.org/sparql"  # type: str
-CHUNKS_SIZE = 30  # type: int
-MAX_DEPTH = 2 # type: int
+CHUNKS_SIZE = 40  # type: int
+MAX_DEPTH = 3 # type: int
 SKIP_SMALL_MOLECULES = True # type: Boolean
 #DATA_SOURCES = ['pid', 'humancyc', 'panther', 'msigdb']
 DATA_SOURCES = []  # type: List[str]
+
+DECOMPOSE_COMPLEXES = False
+EXTEND_WITH_SYNONYMS = False
+EXTEND_WITH_SUFFIXES = False
 
 HAS_MAX_DEPTH = False
 try:
@@ -40,6 +44,32 @@ except NameError:
   HAS_DATA_SOURCES = False
 else:
   HAS_DATA_SOURCES = True
+
+
+def init_gene_synonyms_cache():
+    """
+
+    :return:
+    """
+    index_syn = {}
+    index_std = {}
+    with open('Homo_sapiens.gene_info', newline='') as csvfile:
+        reader = csv.reader(csvfile, delimiter='\t', quotechar='|')
+        for row in reader:
+            index_std[row[2]] = row[4].split('|')
+
+            index_syn[row[2]] = row[2]
+            for syn in row[4].split('|'):
+                index_syn[syn] = row[2]
+    return index_std, index_syn
+
+print('--- Memory foot print cache ---')
+index_std, index_syn = init_gene_synonyms_cache()
+print('index_syn size : ' + str(len(index_syn.keys()) * 2))
+s = 0
+for key, value in index_std.items():
+    s += 1 + len(value)
+print('index_std size : ' + str(s))
 
 
 tpl_select_reg_query = """
@@ -66,6 +96,87 @@ SELECT DISTINCT ?controllerName ?controlType ?controlledName ?source WHERE {
         bp:dataSource ?source . 
 } 
 """
+
+def fast_get_std_name(n, index_syn):
+    """
+
+    :param n:
+    :param index_syn:
+    :return:
+    """
+    return index_syn[n]
+
+def fast_get_synonyms(n, index_std, index_syn):
+    """
+
+    :param n:
+    :param index_std:
+    :param index_syn:
+    :return:
+    """
+    try:
+        std = index_syn[n]
+    except:
+        std = None
+    try:
+        synonyms = index_std[std]
+    except:
+        synonyms = []
+
+    all_names = []
+    if std != None:
+        all_names = [std] + synonyms
+    else:
+        all_names = synonyms
+    if n in all_names:
+        all_names.remove(n)
+    return all_names
+
+def fast_are_synonyms(n, m, index_syn):
+    """
+
+    :param n:
+    :param m:
+    :param index_syn:
+    :return:
+    """
+    try:
+        index_syn[n]
+    except:
+        return False
+    try:
+        index_syn[m]
+    except:
+        return False
+    return (index_syn[n] == index_syn[m])
+
+
+def expandGeneNames(toBeExplored):
+    """
+
+    :param toBeExplored:
+    :return:
+    """
+    expansion_suffixes = [' mRna', ' protein']
+    new_names = []
+    for gene in toBeExplored:
+        for suf in expansion_suffixes:
+            new_names.append(str(gene+suf))
+    return (toBeExplored+new_names)
+
+def removeSuffixForUnification(name):
+    """
+
+    :param name:
+    :return:
+    """
+    expansion_suffixes = [' mRna', ' protein']
+    for suf in expansion_suffixes:
+        if suf in name:
+            print('\t\t! removing suffix '+str(suf)+' for '+str(name))
+            name = name.replace(suf, '')
+    return name
+
 
 def get_gene_alias(gene_name):
     """
@@ -179,37 +290,73 @@ def upstream_regulation(to_be_explored, max_depth = 1, data_sources = [], alread
     print('exploration depth ' + str(current_depth))
     print('to be explored ' + str(to_be_explored))
 
+    """"""
     """ Decomposing protein complexes """
-    new_to_be_explored = []
-    for name in to_be_explored:
-        splits = name.split('/')
-        if len(splits) > 1 :
-            print(name + ' decomposed into ' + str(splits))
-            new_to_be_explored.extend(splits)
-            for s in splits:
-                sif_network.append({"source":s, "relation":"PART_OF", "target":name, "provenance": "PathwayCommons"})
+    """"""
+    if DECOMPOSE_COMPLEXES:
+        new_to_be_explored = []
+        for name in to_be_explored:
+            splits = name.split('/')
+            if len(splits) > 1 :
+                print(name + ' decomposed into ' + str(splits))
+                new_to_be_explored.extend(splits)
+                for s in splits:
+                    sif_network.append({"source": s, "relation": "PART_OF", "target": name, "provenance": "PathwayCommons"})
 
-    for new in new_to_be_explored:
-        if new not in to_be_explored:
-                to_be_explored.append(new)
-    print('to be explored after complex decomposition ' + str(to_be_explored))
+        for new in new_to_be_explored:
+            if new not in to_be_explored:
+                    to_be_explored.append(new)
+        print('to be explored after complex decomposition ' + str(to_be_explored))
 
-    """  """
+    """"""
+    """ Expanding the list with synonyms """
+    """"""
+    if EXTEND_WITH_SYNONYMS:
+        new_to_be_explored = []
+        for name in to_be_explored:
+            synonyms = fast_get_synonyms(name, index_std=index_std, index_syn=index_syn)
+            for s in synonyms:
+                if s not in "-":
+                    new_to_be_explored.append(s)
+        if len(new_to_be_explored) > 0:
+            print('new synonmys to be explored:' + str(new_to_be_explored))
+        for new in new_to_be_explored:
+            if new not in to_be_explored:
+                    to_be_explored.append(new)
+
+    """"""
+    """ Expanding the list with [' mRna', ' protein'] """
+    """"""
+    if EXTEND_WITH_SUFFIXES:
+        new_to_be_explored = expandGeneNames(to_be_explored)
+        for new in new_to_be_explored:
+            if new not in to_be_explored:
+                    to_be_explored.append(new)
+
+    """"""
+    """ Grouping genes into chunks to be processed remotely by block """
+    """"""
     chunks = gen_chunks(to_be_explored)
     to_be_explored = []
 
-    for regulators in chunks:
+    """"""
+    """ Network reconstruction """
+    """"""
+    for regulators in chunks :
         print('exploring ' + str(regulators))
         query = Template(tpl_select_reg_query)
 
-        # fds = gen_data_source_filter(data_sources)
         fds = gen_data_source_filter(DATA_SOURCES)
         fchunks = gen_chunks_filter(regulators)
         ssm = gen_small_mol_filter(SKIP_SMALL_MOLECULES)
 
-        q = query.substitute(filter_DataSources=fds,
-                             filter_SkipSmallMollecules=ssm,
-                             filter_Chunks=fchunks)
+        q = query.substitute(filter_DataSources = fds,
+                    filter_SkipSmallMollecules = ssm,
+                    filter_Chunks = fchunks)
+
+#        print("=====================")
+#        print(q)
+#        print("=====================")
 
         sparql = SPARQLWrapper(SPARQL_ENDPOINT)
         sparql.setQuery(q)
@@ -217,25 +364,32 @@ def upstream_regulation(to_be_explored, max_depth = 1, data_sources = [], alread
         results = sparql.query().convert()
 
         already_explored.extend(regulators)
-        # print('already explored ' + str(already_explored))
+        #print('already explored ' + str(already_explored))
 
         for result in results["results"]["bindings"]:
-            source, reg_type, target, provenance = result["controllerName"]["value"], result["controlType"]["value"], result["controlledName"]["value"], result["source"]["value"]
+            # source, reg_type, target = result["controllerName"]["value"], result["controlType"]["value"], result["controlledName"]["value"]
+            # sif_network.append({"source":source, "relation":reg_type, "target":target})
+            source, reg_type, target, provenance = result["controllerName"]["value"], result["controlType"]["value"], \
+                                                   result["controlledName"]["value"], result["source"]["value"]
             sif_network.append({"source": source, "relation": reg_type, "target": target, "provenance": provenance})
-            # print(source + ' --- ' + reg_type + ' --> ' + target)
+
+            #print(source + ' --- ' + reg_type + ' --> ' + target)
+
+            source = removeSuffixForUnification(source)
 
             if source not in already_explored:
                 if source not in to_be_explored:
                     to_be_explored.append(source)
                     explored_reg += 1
-                    # print('Adding ' + source + ', in to_be_explored')
-            # else:
-            # print('skipping ' + source + ', already_explored')
+                    #print('Adding ' + source + ', in to_be_explored')
+            #else:
+                #print('skipping ' + source + ', already_explored')
 
         print()
-        #print('Explored ' + str(explored_reg) + ' regulators')
+        print('Explored ' + str(explored_reg)+ ' regulators')
 
     current_depth += 1
-    upstream_regulation(to_be_explored, max_depth, data_sources, already_explored, sif_network, current_depth, explored_reg)
+    # upstream_regulation(to_be_explored, already_explored, sif_network, current_depth, explored_reg)
+    upstream_regulation(to_be_explored, max_depth = max_depth, data_sources = data_sources, already_explored = already_explored, sif_network = sif_network, current_depth = current_depth, explored_reg = explored_reg)
 
     return sif_network

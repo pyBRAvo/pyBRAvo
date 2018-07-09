@@ -23,6 +23,9 @@ Here are some possible command lines :
 Please report any issue to alban.gaignard@univ-nantes.fr. 
 """, formatter_class=RawTextHelpFormatter)
 parser.add_argument('-md', '--max_depth', type=int, required=False, help='the maximum exploration depth', dest='md')
+parser.add_argument('-sy', '--extend_with_synonyms', action='store_true', required=False, help='if specified, explore also synonyms', dest='s')
+parser.add_argument('-su', '--extend_with_rna_protein_suffixes', action='store_true', required=False, help='if specified, explore also names suffixed with " rna" or " protein"', dest='su')
+parser.add_argument('-co', '--decompose_complexes', required=False, action='store_true', help='if specified, decompose protein complexes', dest='c')
 parser.add_argument('-i', '--input_genes', nargs='+', required=False, help='the input gene list', dest='i')
 parser.add_argument('-f', '--input_file', required=False, help='the input file, one gene per line', dest='f')
 parser.add_argument('-incl', '--include_sources', nargs='+', required=False, help='the data sources to include', dest='incl')
@@ -115,9 +118,10 @@ def build_nx_digraph(reconstructed_network):
     print('Number of edges = ' + str(len(G.edges())))
     return G
 
-def main():
-    #args = parser.parse_args(args)
-    args = parser.parse_args()
+# def main():
+def main(args):
+    args = parser.parse_args(args)
+    # args = parser.parse_args()
 
     if (args.i is None) and (args.f is None):
         print('please fill the -i (--input_genes) or -f (--input_file) parameter')
@@ -158,6 +162,21 @@ def main():
     else:
         print("BRAvo will explore all available data sources")
 
+    if args.s:
+        bravo.EXTEND_WITH_SYNONYMS = True
+    else:
+        bravo.EXTEND_WITH_SYNONYMS = False
+
+    if args.su:
+        bravo.EXTEND_WITH_SUFFIXES = True
+    else:
+        bravo.EXTEND_WITH_SUFFIXES = False
+
+    if args.c:
+        bravo.DECOMPOSE_COMPLEXES = True
+    else:
+        bravo.DECOMPOSE_COMPLEXES = False
+
     start_time = time.time()
     # reconstructed_network = bravo.upstream_regulation(["JUN/FOS", "SCN5A"], max_depth=1)
     # reconstructed_network = bravo.upstream_regulation(["JUN/FOS", "SCN5A"], max_depth=2, data_sources = data_sources)
@@ -175,7 +194,8 @@ def main():
 
 if __name__ == "__main__":
     # args = ['--input_genes', 'HEY2', 'SCN5A', 'SCN3A', '-md', '1']
-    # args = ['--input_genes', 'HEY2', 'SCN5A', 'SCN3A', '-md', '2',
+    # args = ['--input_genes', 'HEY2', 'SCN5A', '-md', '2']
+    args = ['--input_genes', 'HEY2', 'SCN5A', '-md', '2', '-co', '-sy', '-su']
     #         '-excl', 'mirtarbase', 'kegg']
     # args = ['-f', '../test-complex.csv', '-md', '1',
     #         '-incl', 'pid', 'panther', 'msigdb', 'kegg']
@@ -183,6 +203,6 @@ if __name__ == "__main__":
     #         '-incl', 'pid', 'panther', 'kegg']
     # args = ['-f', '../test-complex.csv', '-excl', 'mirtarbase']
     # args = ['--input_genes', 'JUN/FOS', 'SCN5A', '-md', '1',
-    #         '-incl', 'pid', 'msigdb']
-    # main(args = args)
-    main()
+    #        '-incl', 'pid', 'msigdb']
+    main(args = args)
+    # main()
