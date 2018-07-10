@@ -2,4 +2,5 @@
 /nbproject/
 /dependency-reduced-pom.xml
 /hs_err_*.log
+/python/.ipynb*
 *~
