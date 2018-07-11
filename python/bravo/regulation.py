@@ -19,8 +19,8 @@ import csv
 INPUT_GENES = ['JUN/FOS', 'SCN5A', 'HEY2']
 
 SPARQL_ENDPOINT = "http://rdf.pathwaycommons.org/sparql"  # type: str
-CHUNKS_SIZE = 40  # type: int
-MAX_DEPTH = 3 # type: int
+CHUNKS_SIZE = 50  # type: int
+MAX_DEPTH = 2 # type: int
 SKIP_SMALL_MOLECULES = True # type: Boolean
 #DATA_SOURCES = ['pid', 'humancyc', 'panther', 'msigdb']
 DATA_SOURCES = []  # type: List[str]
@@ -28,6 +28,7 @@ DATA_SOURCES = []  # type: List[str]
 DECOMPOSE_COMPLEXES = False
 EXTEND_WITH_SYNONYMS = False
 EXTEND_WITH_SUFFIXES = False
+VERBOSE = False
 
 HAS_MAX_DEPTH = False
 try:
@@ -229,24 +230,20 @@ def gen_data_source_filter(data_sources):
         filter_clause = filter_clause + ')) .'
     return filter_clause
 
-def gen_chunks_filter(chunks):
+def gen_chunks_values_constraint(chunks):
     """
-    Generation of a SPARQL Filter clause to restrict gene/protein/etc. names
+    Generation of a SPARQL VALUES clause to restrict gene/protein/etc. names
     Produces something like
-        FILTER (
-            ((?controlledName = "JUN"^^xsd:string) && (?controllerName != "JUN"^^xsd:string))
-            || ((?controlledName = "FOS"^^xsd:string) && (?controllerName != "FOS"^^xsd:string))
-        )
+        VALUES ?controlledName {"hsa-miR-6079"^^xsd:string "hsa-miR-4452"^^xsd:string "hsa-miR-6512-5p"^^xsd:string "RBPJ"^^xsd:string "NICD"^^xsd:string}
     """
     filter_clause = ''
     if len(chunks) > 0 :
-        filter_clause = 'FILTER ( \n'
+        filter_clause = 'VALUES ?controlledName { \n'
         for g in chunks :
-            filter_clause += '((?controlledName = "' + g + '"^^xsd:string) && (?controllerName != "' + g + '"^^xsd:string)) \n'
-            filter_clause +=' || '
-        k = filter_clause.rfind(" || ")
+            filter_clause += '"' + g + '"^^xsd:string '
+        k = filter_clause.rfind(" ")
         filter_clause = filter_clause[:k]
-        filter_clause += ' ) .'
+        filter_clause += ' } .'
     return filter_clause
 
 
@@ -283,7 +280,7 @@ def upstream_regulation(to_be_explored, max_depth = 1, data_sources = [], alread
 
     """ 2nd stopping criteria """
     if (HAS_MAX_DEPTH and (current_depth >= MAX_DEPTH)):
-        print("Exploring alted due to maximum depth")
+        print("Exploring halted due to maximum depth")
         return sif_network
 
     print()
@@ -347,16 +344,17 @@ def upstream_regulation(to_be_explored, max_depth = 1, data_sources = [], alread
         query = Template(tpl_select_reg_query)
 
         fds = gen_data_source_filter(DATA_SOURCES)
-        fchunks = gen_chunks_filter(regulators)
+        fchunks = gen_chunks_values_constraint(regulators)
         ssm = gen_small_mol_filter(SKIP_SMALL_MOLECULES)
 
         q = query.substitute(filter_DataSources = fds,
                     filter_SkipSmallMollecules = ssm,
                     filter_Chunks = fchunks)
 
-#        print("=====================")
-#        print(q)
-#        print("=====================")
+        if VERBOSE:
+            print("======= PathwayCommons v9 query =======")
+            print(q)
+            print("=====================")
 
         sparql = SPARQLWrapper(SPARQL_ENDPOINT)
         sparql.setQuery(q)
@@ -367,15 +365,15 @@ def upstream_regulation(to_be_explored, max_depth = 1, data_sources = [], alread
         #print('already explored ' + str(already_explored))
 
         for result in results["results"]["bindings"]:
-            # source, reg_type, target = result["controllerName"]["value"], result["controlType"]["value"], result["controlledName"]["value"]
-            # sif_network.append({"source":source, "relation":reg_type, "target":target})
+
             source, reg_type, target, provenance = result["controllerName"]["value"], result["controlType"]["value"], \
                                                    result["controlledName"]["value"], result["source"]["value"]
+
+            source = removeSuffixForUnification(source)
+
             sif_network.append({"source": source, "relation": reg_type, "target": target, "provenance": provenance})
 
             #print(source + ' --- ' + reg_type + ' --> ' + target)
-
-            source = removeSuffixForUnification(source)
 
             if source not in already_explored:
                 if source not in to_be_explored:
