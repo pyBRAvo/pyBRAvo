@@ -30,6 +30,7 @@ parser.add_argument('-i', '--input_genes', nargs='+', required=False, help='the 
 parser.add_argument('-f', '--input_file', required=False, help='the input file, one gene per line', dest='f')
 parser.add_argument('-incl', '--include_sources', nargs='+', required=False, help='the data sources to include', dest='incl')
 parser.add_argument('-excl', '--exclude_sources', nargs='+', required=False, help='the data sources to exclude', dest='excl')
+parser.add_argument('-v', '--verbose', action='store_true', required=False, help='print debug information', dest='v')
 
 def read_input_genes(filename):
     """
@@ -118,10 +119,10 @@ def build_nx_digraph(reconstructed_network):
     print('Number of edges = ' + str(len(G.edges())))
     return G
 
-# def main():
-def main(args):
-    args = parser.parse_args(args)
-    # args = parser.parse_args()
+def main():
+# def main(args):
+    # args = parser.parse_args(args)
+    args = parser.parse_args()
 
     if (args.i is None) and (args.f is None):
         print('please fill the -i (--input_genes) or -f (--input_file) parameter')
@@ -177,6 +178,11 @@ def main(args):
     else:
         bravo.DECOMPOSE_COMPLEXES = False
 
+    if args.v:
+        bravo.VERBOSE = True
+    else:
+        bravo.VERBOSE = False
+
     start_time = time.time()
     # reconstructed_network = bravo.upstream_regulation(["JUN/FOS", "SCN5A"], max_depth=1)
     # reconstructed_network = bravo.upstream_regulation(["JUN/FOS", "SCN5A"], max_depth=2, data_sources = data_sources)
@@ -204,5 +210,5 @@ if __name__ == "__main__":
     # args = ['-f', '../test-complex.csv', '-excl', 'mirtarbase']
     # args = ['--input_genes', 'JUN/FOS', 'SCN5A', '-md', '1',
     #        '-incl', 'pid', 'msigdb']
-    main(args = args)
-    # main()
+    # main(args = args)
+    main()
