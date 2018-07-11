@@ -198,10 +198,22 @@ def main():
     md = get_centrality_as_md(G)
     print(md)
 
+    start_time = time.time()
+    G_prime = bravo.fast_reg_network_unification(G, bravo.index_syn)
+    elapsed_time = round((time.time() - start_time), 2)
+    print("--- Network simplification in %s seconds ---" % elapsed_time)
+    write_to_SIF(G_prime, 'out-unified.sif')
+    write_provenance(G_prime, 'out-unified-provenance.csv')
+    print('Nodes after simplification = ' + str(len(G_prime.nodes())))
+    print('Edges after simplification = ' + str(len(G_prime.edges())))
+
+    md = get_centrality_as_md(G_prime)
+    print(md)
+
 if __name__ == "__main__":
     # args = ['--input_genes', 'HEY2', 'SCN5A', 'SCN3A', '-md', '1']
     # args = ['--input_genes', 'HEY2', 'SCN5A', '-md', '2']
-    args = ['--input_genes', 'HEY2', 'SCN5A', '-md', '2', '-co', '-sy', '-su']
+    # args = ['--input_genes', 'HEY2', 'SCN5A', '-md', '2', '-co', '-sy', '-su']
     #         '-excl', 'mirtarbase', 'kegg']
     # args = ['-f', '../test-complex.csv', '-md', '1',
     #         '-incl', 'pid', 'panther', 'msigdb', 'kegg']
