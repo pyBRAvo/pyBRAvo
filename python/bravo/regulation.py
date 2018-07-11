@@ -258,6 +258,32 @@ def gen_small_mol_filter(skip_small_molecules = True):
     else:
         return ''
 
+def fast_reg_network_unification(graph, index_syn):
+    H = graph.copy()
+    cpt = 0
+    nodes_size = len(H.nodes())
+    for n in H.nodes():
+        #print('for each ' + str(n))
+        for m in H.nodes():
+            if n not in m:
+                #print('\tfor each ' + str(m))
+                if (fast_are_synonyms(n,m, index_syn=index_syn)):
+                    key = index_syn[n]
+                    if n not in key:
+                        #print('\t\t' + str(n) + ' is synonym with ' + str(m))
+                        print('\t\t' + 'merging node ' + str(n) + ' into node ' + str(key))
+                        try:
+                            H = nx.contracted_nodes(H, key, n)
+                        except:
+                            continue
+                    if m not in key:
+                        print('\t\t' + 'merging node ' + str(m) + ' into node ' + str(key))
+                        try:
+                            H = nx.contracted_nodes(H, key, m)
+                        except:
+                            continue
+    return H
+
 
 def upstream_regulation(to_be_explored, max_depth = 1, data_sources = [], already_explored = [], sif_network = [], current_depth = 0, explored_reg = 0):
     """
