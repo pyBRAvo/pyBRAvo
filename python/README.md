@@ -15,28 +15,27 @@ cd BRAvo/python
 ```
 Then **test** that everything is fine:
 ```
-python pyBravo.py --input_genes JUN/FOS SCN5A -md 1 -excl mirtarbase
+python pyBravo.py --input_genes JUN/FOS SCN5A -md 2 -co -su -sy
 ```
 You should obtain something like:
 ```
---- Upstream regulation network in 7.56 seconds ---
-Number of nodes = 67
-Number of edges = 82
-SIF network written to out.sif
-Basic regulation reaction provenance written to out-provenance.csv
+SIF network written to out-unified.sif
+Basic regulation reaction provenance written to out-unified-provenance.csv
+Nodes after simplification = 1336
+Edges after simplification = 2078
 
 | Gene | Degree Centrality |
 |------|------|
-| FOS | 0.667 | 
-| JUN | 0.394 | 
-| SCN5A | 0.212 | 
-| MAZ | 0.045 | 
-| JUN/FOS | 0.045 | 
-| CEBPD | 0.03 | 
-| HSF1 | 0.03 | 
-| SP1 | 0.03 | 
-| HSF2 | 0.03 | 
-| ATF1 | 0.03 | 
+| SOD2 | 0.226 | 
+| FGF2 | 0.088 | 
+| FOS | 0.086 | 
+| CREB1 | 0.081 | 
+| TNF | 0.073 | 
+| SRF | 0.071 | 
+| RHOA | 0.07 | 
+| SMAD4 | 0.067 | 
+| APP | 0.066 | 
+| AHR | 0.055 | 
 ```
 ## Usage from a Jupyter notebook 
 Inside the python directory, just run the `jupyter-notebook BRAvo-python-API-tutorial.ipynb` command. 
@@ -46,16 +45,15 @@ The notebook can be browsed [here](https://gitlab.univ-nantes.fr/gaignard-a/BRAv
 ## Usage from a terminal 
 Here is the help message for the command line when running `python pyBravo.py`:
 ```
-please fill the -i (--input_genes) or -f (--input_file) parameter
-usage: pyBravo.py [-h] [-md MD] [-i I [I ...]] [-f F] [-incl INCL [INCL ...]]
-                  [-excl EXCL [EXCL ...]]
+usage: pyBravo.py [-h] [-md MD] [-sy] [-su] [-co] [-i I [I ...]] [-f F]
+                  [-incl INCL [INCL ...]] [-excl EXCL [EXCL ...]] [-v]
 
 BRAvo upstream regulation network reconstruction. 
 Here are some possible command lines :
     
-    python pyBravo.py --input_genes JUN/FOS SCN5A -md 1
-    python pyBravo.py --input_genes JUN/FOS SCN5A -md 1 -excl mirtarbase
-    python pyBravo.py --input_file myGenes.csv -md 1 -incl pid panther msigdb kegg
+    python pyBravo.py --input_genes JUN/FOS SCN5A -md 2 -co -su -sy
+    python pyBravo.py --input_genes JUN/FOS SCN5A -md 2 -excl mirtarbase -co -su -sy
+    python pyBravo.py --input_file myGenes.csv -md 2 -incl pid panther msigdb kegg -co -su -sy
     
 Please report any issue to alban.gaignard@univ-nantes.fr. 
 
@@ -63,6 +61,12 @@ optional arguments:
   -h, --help            show this help message and exit
   -md MD, --max_depth MD
                         the maximum exploration depth
+  -sy, --extend_with_synonyms
+                        if specified, explore also synonyms
+  -su, --extend_with_rna_protein_suffixes
+                        if specified, explore also names suffixed with " rna" or " protein"
+  -co, --decompose_complexes
+                        if specified, decompose protein complexes
   -i I [I ...], --input_genes I [I ...]
                         the input gene list
   -f F, --input_file F  the input file, one gene per line
@@ -70,5 +74,6 @@ optional arguments:
                         the data sources to include
   -excl EXCL [EXCL ...], --exclude_sources EXCL [EXCL ...]
                         the data sources to exclude
+  -v, --verbose         print debug information
 
 ```
