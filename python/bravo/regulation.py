@@ -21,7 +21,7 @@ INPUT_GENES = ['JUN/FOS', 'SCN5A', 'HEY2']
 SPARQL_ENDPOINT = "http://rdf.pathwaycommons.org/sparql"  # type: str
 CHUNKS_SIZE = 50  # type: int
 MAX_DEPTH = 2 # type: int
-SKIP_SMALL_MOLECULES = True # type: Boolean
+SKIP_SMALL_MOLECULES = True # type: Bool
 #DATA_SOURCES = ['pid', 'humancyc', 'panther', 'msigdb']
 DATA_SOURCES = []  # type: List[str]
 
@@ -313,6 +313,7 @@ def upstream_regulation(to_be_explored, max_depth = 1, data_sources = [], alread
     print()
     print('exploration depth ' + str(current_depth))
     print('to be explored ' + str(to_be_explored))
+    print()
 
     """"""
     """ Decomposing protein complexes """
