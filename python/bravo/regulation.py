@@ -64,13 +64,13 @@ def init_gene_synonyms_cache():
                 index_syn[syn] = row[2]
     return index_std, index_syn
 
-print('--- Memory foot print cache ---')
+#print('--- Memory foot print cache ---')
 index_std, index_syn = init_gene_synonyms_cache()
-print('index_syn size : ' + str(len(index_syn.keys()) * 2))
-s = 0
-for key, value in index_std.items():
-    s += 1 + len(value)
-print('index_std size : ' + str(s))
+#print('index_syn size : ' + str(len(index_syn.keys()) * 2))
+#s = 0
+#for key, value in index_std.items():
+#    s += 1 + len(value)
+#print('index_std size : ' + str(s))
 
 
 tpl_select_reg_query = """
