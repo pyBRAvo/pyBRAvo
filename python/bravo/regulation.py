@@ -397,6 +397,7 @@ def upstream_regulation(to_be_explored, max_depth = 1, data_sources = [], alread
                                                    result["controlledName"]["value"], result["source"]["value"]
 
             source = removeSuffixForUnification(source)
+            target = removeSuffixForUnification(target)
 
             sif_network.append({"source": source, "relation": reg_type, "target": target, "provenance": provenance})
 
