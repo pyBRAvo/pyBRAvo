@@ -171,11 +171,12 @@ def removeSuffixForUnification(name):
     :param name:
     :return:
     """
-    expansion_suffixes = [' mRna', ' protein']
+    expansion_suffixes = [' mRna', ' protein', ' mRNA', ' mutant form', ' complex', ' modified form']
     for suf in expansion_suffixes:
         if suf in name:
-            print('\t\t! removing suffix '+str(suf)+' for '+str(name))
+            print('\t\tremoving suffix '+str(suf)+' for '+str(name))
             name = name.replace(suf, '')
+            print('\t\t\t\t --> ' + str(name))
     return name
 
 
