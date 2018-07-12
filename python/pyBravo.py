@@ -16,9 +16,9 @@ parser = argparse.ArgumentParser(description="""
 BRAvo upstream regulation network reconstruction. 
 Here are some possible command lines :
     
-    python pyBravo.py --input_genes JUN/FOS SCN5A -md 1
-    python pyBravo.py --input_genes JUN/FOS SCN5A -md 1 -excl mirtarbase
-    python pyBravo.py --input_file myGenes.csv -md 1 -incl pid panther msigdb kegg
+    python pyBravo.py --input_genes JUN/FOS SCN5A -md 2 -co -su -sy
+    python pyBravo.py --input_genes JUN/FOS SCN5A -md 2 -excl mirtarbase -co -su -sy
+    python pyBravo.py --input_file myGenes.csv -md 2 -incl pid panther msigdb kegg -co -su -sy
     
 Please report any issue to alban.gaignard@univ-nantes.fr. 
 """, formatter_class=RawTextHelpFormatter)
