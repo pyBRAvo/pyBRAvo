@@ -28,6 +28,7 @@ parser.add_argument('-su', '--extend_with_rna_protein_suffixes', action='store_t
 parser.add_argument('-co', '--decompose_complexes', required=False, action='store_true', help='if specified, decompose protein complexes', dest='c')
 parser.add_argument('-i', '--input_genes', nargs='+', required=False, help='the input gene list', dest='i')
 parser.add_argument('-f', '--input_file', required=False, help='the input file, one gene per line', dest='f')
+parser.add_argument('-o', '--output_file', required=False, help='the output files path and prefix', dest='o', default='out')
 parser.add_argument('-incl', '--include_sources', nargs='+', required=False, help='the data sources to include', dest='incl')
 parser.add_argument('-excl', '--exclude_sources', nargs='+', required=False, help='the data sources to exclude', dest='excl')
 parser.add_argument('-v', '--verbose', action='store_true', required=False, help='print debug information', dest='v')
@@ -193,8 +194,8 @@ def main():
     print("--- Upstream regulation network in %s seconds ---" % elapsed_time)
 
     G = build_nx_digraph(reconstructed_network)
-    write_to_SIF(G, 'out.sif')
-    write_provenance(G, 'out-provenance.csv')
+    write_to_SIF(G, args.o + '.sif')
+    write_provenance(G, args.o + '-provenance.csv')
     md = get_centrality_as_md(G)
     print(md)
 
@@ -202,8 +203,8 @@ def main():
     G_prime = bravo.fast_reg_network_unification(G, bravo.index_syn)
     elapsed_time = round((time.time() - start_time), 2)
     print("--- Network simplification in %s seconds ---" % elapsed_time)
-    write_to_SIF(G_prime, 'out-unified.sif')
-    write_provenance(G_prime, 'out-unified-provenance.csv')
+    write_to_SIF(G_prime, args.o + '-unified.sif')
+    write_provenance(G_prime, args.o + '-unified-provenance.csv')
     print('Nodes after simplification = ' + str(len(G_prime.nodes())))
     print('Edges after simplification = ' + str(len(G_prime.edges())))
 
