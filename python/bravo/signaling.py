@@ -63,7 +63,7 @@ def upstream_signaling(to_be_explored, already_explored = [], sif_network = [], 
             print(name + ' decomposed into ' + str(splits))
             new_to_be_explored.extend(splits)
             for s in splits:
-                sif_network.append({"source": s, "relation": "PART_OF", "target": name})
+                sif_network.append({"source": s, "relation": "PART_OF", "target": name, "provenance": "PathwayCommons"})
 
     for new in new_to_be_explored:
         if new not in to_be_explored:
