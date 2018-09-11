@@ -26,6 +26,7 @@ parser.add_argument('-md', '--max_depth', type=int, required=False, help='the ma
 parser.add_argument('-sy', '--extend_with_synonyms', action='store_true', required=False, help='if specified, explore also synonyms', dest='s')
 parser.add_argument('-su', '--extend_with_rna_protein_suffixes', action='store_true', required=False, help='if specified, explore also names suffixed with " rna" or " protein"', dest='su')
 parser.add_argument('-co', '--decompose_complexes', required=False, action='store_true', help='if specified, decompose protein complexes', dest='c')
+parser.add_argument('-fa', '--fast', required=False, action='store_true', help='if specified, only explore biopax display names', dest='fast')
 parser.add_argument('-i', '--input_genes', nargs='+', required=False, help='the input gene list', dest='i')
 parser.add_argument('-f', '--input_file', required=False, help='the input file, one gene per line', dest='f')
 parser.add_argument('-o', '--output_file', required=False, help='the output files path and prefix', dest='o', default='out')
@@ -178,6 +179,11 @@ def main():
         bravo.DECOMPOSE_COMPLEXES = True
     else:
         bravo.DECOMPOSE_COMPLEXES = False
+
+    if args.fast:
+        bravo.FAST = True
+    else:
+        bravo.FAST = False
 
     if args.v:
         bravo.VERBOSE = True
