@@ -118,8 +118,8 @@ def build_nx_digraph(reconstructed_network):
     """
     G = nx.DiGraph()
     for e in reconstructed_network:
-        # print(e)
-        # print(e['source'] + ' --- ' + e['relation'] + ' --> ' + e['target'] + ' | ' + e['provenance'])
+        #print(e)
+        #print(e['source'] + ' --- ' + e['relation'] + ' --> ' + e['target'] + ' | ' + e['provenance'])
         G.add_edge(e['source'], e['target'],
                    color='g' if (e['relation'] in 'ACTIVATION') else 'r',
                    attr={'label': e['relation'], 'provenance': e['provenance']})
@@ -132,7 +132,7 @@ def main():
     # args = parser.parse_args(args)
     args = parser.parse_args()
 
-    if (args.sig is None) and (args.reg is None):
+    if (not args.sig) and (not args.reg):
         print('please specify one of -reg (--regulation) or -sig (--signaling) option')
         parser.print_help()
         exit(0)
@@ -169,6 +169,7 @@ def main():
     else:
         config.MAX_DEPTH = 1
 
+    config.DATA_SOURCES = data_sources
     if args.excl:
         for ds in args.excl:
             data_sources.remove(ds)
