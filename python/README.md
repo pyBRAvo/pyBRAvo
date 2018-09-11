@@ -20,23 +20,24 @@ python pyBravo.py --regulation --input_genes JUN/FOS SCN5A -md 2 -co -su -sy -ex
 ```
 You should obtain something like:
 ```
-SIF network written to out-unified.sif
-Basic regulation reaction provenance written to out-unified-provenance.csv
-Nodes after simplification = 1336
-Edges after simplification = 2078
+--- Upstream regulation network in 71.1 seconds ---
+Number of nodes = 257
+Number of edges = 337
+SIF network written to out.sif
+Basic regulation reaction provenance written to out-provenance.csv
 
-| Gene | Degree Centrality |
+| Node | Degree Centrality |
 |------|------|
-| SOD2 | 0.226 | 
-| FGF2 | 0.088 | 
-| FOS | 0.086 | 
-| CREB1 | 0.081 | 
-| TNF | 0.073 | 
-| SRF | 0.071 | 
-| RHOA | 0.07 | 
-| SMAD4 | 0.067 | 
-| APP | 0.066 | 
-| AHR | 0.055 | 
+| TNF | 0.312 | 
+| FOS | 0.234 | 
+| SOD2 | 0.164 | 
+| IL2 | 0.066 | 
+| JUN | 0.066 | 
+| IL1A | 0.062 | 
+| FGF2 | 0.051 | 
+| BDNF | 0.043 | 
+| NGF | 0.043 | 
+| EP300 | 0.039 | 
 ```
 ## Usage from a Jupyter notebook 
 Inside the python directory, just run the `jupyter-notebook BRAvo-python-API-tutorial.ipynb` command. 
