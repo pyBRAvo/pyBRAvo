@@ -16,27 +16,28 @@ cd BRAvo/python
 ```
 Then **test** that everything is fine:
 ```
-python pyBravo.py --input_genes JUN/FOS SCN5A -md 2 -co -su -sy
+python pyBravo.py --regulation --fast --input_genes JUN/FOS SCN5A -md 2 -co -su -sy -excl mirtarbase
 ```
 You should obtain something like:
 ```
-SIF network written to out-unified.sif
-Basic regulation reaction provenance written to out-unified-provenance.csv
-Nodes after simplification = 1336
-Edges after simplification = 2078
+--- Upstream regulation network in 7.88 seconds ---
+Number of nodes = 248
+Number of edges = 323
+SIF network written to out.sif
+Basic regulation reaction provenance written to out-provenance.csv
 
-| Gene | Degree Centrality |
+| Node | Degree Centrality |
 |------|------|
-| SOD2 | 0.226 | 
-| FGF2 | 0.088 | 
-| FOS | 0.086 | 
-| CREB1 | 0.081 | 
-| TNF | 0.073 | 
-| SRF | 0.071 | 
-| RHOA | 0.07 | 
-| SMAD4 | 0.067 | 
-| APP | 0.066 | 
-| AHR | 0.055 | 
+| TNF | 0.324 | 
+| FOS | 0.235 | 
+| SOD2 | 0.17 | 
+| IL2 | 0.069 | 
+| IL1A | 0.065 | 
+| FGF2 | 0.053 | 
+| JUN | 0.053 | 
+| BDNF | 0.045 | 
+| NGF | 0.045 | 
+| EP300 | 0.04 | 
 ```
 ## Usage from a Jupyter notebook 
 Inside the python directory, just run the `jupyter-notebook BRAvo-python-API-tutorial.ipynb` command. 
