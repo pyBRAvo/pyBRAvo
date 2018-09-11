@@ -39,7 +39,33 @@ Basic regulation reaction provenance written to out-provenance.csv
 | NGF | 0.045 | 
 | EP300 | 0.04 | 
 ```
-## Usage from a Jupyter notebook 
+
+For signaling networks :
+```
+python pyBravo.py --signaling --input_genes JUN/FOS SCN5A -md 2 -co -su -sy -excl mirtarbase --fast
+```
+You should obtain something like:
+```
+--- Upstream regulation network in 1.78 seconds ---
+Number of nodes = 257
+Number of edges = 336
+SIF network written to out.sif
+Basic regulation reaction provenance written to out-provenance.csv
+
+| Node | Degree Centrality |
+|------|------|
+| ERK1-2-active | 0.191 |
+| Jnk1 | 0.09 |
+| Fyn | 0.074 |
+| ELK1 | 0.07 |
+| Btk | 0.066 |
+| LYN | 0.062 |
+| JNK family-active | 0.062 |
+| AP1 | 0.055 |
+| p38 alpha | 0.055 |
+| JUN | 0.055 |
+```
+## Usage from a Jupyter notebook
 Inside the python directory, just run the `jupyter-notebook BRAvo-python-API-tutorial.ipynb` command. 
 
 The notebook can be browsed [here](https://gitlab.univ-nantes.fr/gaignard-a/BRAvo/blob/master/python/BRAvo-python-API-tutorial.ipynb). 
