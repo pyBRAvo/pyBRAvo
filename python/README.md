@@ -16,7 +16,7 @@ cd BRAvo/python
 ```
 Then **test** that everything is fine:
 ```
-python pyBravo.py --input_genes JUN/FOS SCN5A -md 2 -co -su -sy
+python pyBravo.py --regulation --input_genes JUN/FOS SCN5A -md 2 -co -su -sy -excl mirtarbase
 ```
 You should obtain something like:
 ```
