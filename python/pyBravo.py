@@ -206,7 +206,7 @@ def main():
     print(md)
 
     start_time = time.time()
-    G_prime = bravo.fast_reg_network_unification(G, bravo.index_syn)
+    G_prime = bravo.util.fast_reg_network_unification(G, bravo.util.index_syn)
     elapsed_time = round((time.time() - start_time), 2)
     print("--- Network simplification in %s seconds ---" % elapsed_time)
     write_to_SIF(G_prime, args.o + '-unified.sif')
