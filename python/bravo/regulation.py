@@ -68,19 +68,12 @@ SELECT DISTINCT ?controllerName ?controlType ?controlledName ?source WHERE {
 """
 
 
-def upstream_regulation(to_be_explored, max_depth = 1, data_sources = [], already_explored = [], sif_network = [], current_depth = 0, explored_reg = 0):
+def upstream_regulation(to_be_explored, already_explored = [], sif_network = [], current_depth = 0, explored_reg = 0):
     """
     Recursive exploration with two stopping criteria:
         - nothing new to explore
         - the maximum exploration depth is reached
     """
-
-    if max_depth is None:
-        global HAS_MAX_DEPTH
-        HAS_MAX_DEPTH = False
-
-    MAX_DEPTH = max_depth
-    DATA_SOURCES = data_sources
 
     """ 1st stopping criteria """
     if len(to_be_explored) == 0:
@@ -88,7 +81,7 @@ def upstream_regulation(to_be_explored, max_depth = 1, data_sources = [], alread
         return sif_network
 
     """ 2nd stopping criteria """
-    if (config.HAS_MAX_DEPTH and (current_depth >= MAX_DEPTH)):
+    if (config.HAS_MAX_DEPTH and (current_depth >= config.MAX_DEPTH)):
         print("Exploring halted due to maximum depth")
         return sif_network
 
@@ -156,8 +149,8 @@ def upstream_regulation(to_be_explored, max_depth = 1, data_sources = [], alread
         else:
             query = Template(tpl_select_reg_query)
 
-        fds = util.gen_data_source_filter(DATA_SOURCES)
-        fchunks = util.gen_chunks_values_constraint(regulators)
+        fds = util.gen_data_source_filter(config.DATA_SOURCES)
+        fchunks = util.gen_chunks_values_constraint(regulators, '?controlledName')
         ssm = util.gen_small_mol_filter(config.SKIP_SMALL_MOLECULES)
 
         q = query.substitute(filter_DataSources = fds,
@@ -202,6 +195,6 @@ def upstream_regulation(to_be_explored, max_depth = 1, data_sources = [], alread
 
     current_depth += 1
     # upstream_regulation(to_be_explored, already_explored, sif_network, current_depth, explored_reg)
-    upstream_regulation(to_be_explored, max_depth = max_depth, data_sources = data_sources, already_explored = already_explored, sif_network = sif_network, current_depth = current_depth, explored_reg = explored_reg)
+    upstream_regulation(to_be_explored, already_explored = already_explored, sif_network = sif_network, current_depth = current_depth, explored_reg = explored_reg)
 
     return sif_network
