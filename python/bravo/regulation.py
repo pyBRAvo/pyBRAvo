@@ -28,6 +28,8 @@ SKIP_SMALL_MOLECULES = True # type: Bool
 #DATA_SOURCES = ['pid', 'humancyc', 'panther', 'msigdb']
 DATA_SOURCES = []  # type: List[str]
 
+FAST = True
+
 DECOMPOSE_COMPLEXES = False
 EXTEND_WITH_SYNONYMS = False
 EXTEND_WITH_SUFFIXES = False
@@ -86,10 +88,46 @@ SELECT DISTINCT ?controllerName ?controlType ?controlledName ?source WHERE {
     $filter_SkipSmallMollecules
     $filter_DataSources
 
-    ?participant bp:displayName ?controlledName ;
-        rdf:type ?controlledType .
-    ?controller bp:displayName ?controllerName ;
-        rdf:type ?controllerType . 
+    {{?participant bp:displayName ?controlledName .} 
+    UNION
+    {?participant bp:standardName ?controlledName .}}
+    UNION
+    {?participant bp:name ?controlledName .}
+
+    ?participant rdf:type ?controlledType . 
+
+    {{?controller bp:displayName ?controllerName .} 
+    UNION
+    {?controller bp:standardName ?controllerName .}}
+    UNION
+    {?controller bp:name ?controllerName .}
+    ?controller rdf:type ?controllerType .
+
+    ?controlled bp:participant ?participant .
+
+    ?tempReac a bp:TemplateReactionRegulation ; 
+        bp:controlled ?controlled ; 
+        bp:controller ?controller ; 
+        bp:controlType ?controlType ; 
+        bp:dataSource ?source . 
+} 
+"""
+
+tpl_select_reg_query_fast = """
+PREFIX bp: <http://www.biopax.org/release/biopax-level3.owl#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> 
+
+SELECT DISTINCT ?controllerName ?controlType ?controlledName ?source WHERE {
+    $filter_Chunks
+    $filter_SkipSmallMollecules
+    $filter_DataSources
+
+    ?participant bp:displayName ?controlledName .
+    ?participant rdf:type ?controlledType . 
+
+    ?controller bp:displayName ?controllerName .
+    ?controller rdf:type ?controllerType . 
 
     ?controlled bp:participant ?participant .
 
@@ -372,7 +410,10 @@ def upstream_regulation(to_be_explored, max_depth = 1, data_sources = [], alread
     """"""
     for regulators in chunks :
         print('exploring ' + str(regulators))
-        query = Template(tpl_select_reg_query)
+        if FAST == True:
+            query = Template(tpl_select_reg_query_fast)
+        else:
+            query = Template(tpl_select_reg_query)
 
         fds = gen_data_source_filter(DATA_SOURCES)
         fchunks = gen_chunks_values_constraint(regulators)
