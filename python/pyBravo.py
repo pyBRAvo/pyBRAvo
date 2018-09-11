@@ -4,7 +4,10 @@ from argparse import RawTextHelpFormatter
 import operator
 import csv
 import networkx as nx
-import bravo.regulation as bravo
+from bravo.regulation import upstream_regulation
+from bravo.signaling import upstream_signaling
+import bravo.config as config
+import bravo.util as util
 
 data_sources = ['bind', 'biogrid', 'corum',
                 'ctd', 'dip', 'drugbank', 'hprd', 'humancyc', 'inoh',
@@ -16,12 +19,15 @@ parser = argparse.ArgumentParser(description="""
 BRAvo upstream regulation network reconstruction. 
 Here are some possible command lines :
     
-    python pyBravo.py --input_genes JUN/FOS SCN5A -md 2 -co -su -sy
-    python pyBravo.py --input_genes JUN/FOS SCN5A -md 2 -excl mirtarbase -co -su -sy
-    python pyBravo.py --input_file myGenes.csv -md 2 -incl pid panther msigdb kegg -co -su -sy
+    python pyBravo.py --regulation --input_genes JUN/FOS SCN5A -md 2 -co -su -sy
+    python pyBravo.py --regulation --input_genes JUN/FOS SCN5A -md 2 -excl mirtarbase -co -su -sy
+    python pyBravo.py --regulation --input_file myGenes.csv -md 2 -incl pid panther msigdb kegg -co -su -sy
     
 Please report any issue to alban.gaignard@univ-nantes.fr. 
 """, formatter_class=RawTextHelpFormatter)
+parser.add_argument('-reg', '--regulation', action='store_true', required=False, help='to assemble a regulation network', dest='reg')
+parser.add_argument('-sig', '--signaling', action='store_true', required=False, help='to assemble a signaling network', dest='sig')
+parser.add_argument('-sigd', '--signaling-detailed', action='store_true', required=False, help='to assemble a signaling network with detailed reactions', dest='sigd')
 parser.add_argument('-md', '--max_depth', type=int, required=False, help='the maximum exploration depth', dest='md')
 parser.add_argument('-sy', '--extend_with_synonyms', action='store_true', required=False, help='if specified, explore also synonyms', dest='s')
 parser.add_argument('-su', '--extend_with_rna_protein_suffixes', action='store_true', required=False, help='if specified, explore also names suffixed with " rna" or " protein"', dest='su')
@@ -94,7 +100,7 @@ def get_centrality_as_md(G):
     sorted_centrality = list(sorted_centrality)
     cpt = 0
     md = """
-| Gene | Degree Centrality |
+| Node | Degree Centrality |
 |------|------|
 """
     for g in sorted_centrality:
@@ -126,6 +132,11 @@ def main():
     # args = parser.parse_args(args)
     args = parser.parse_args()
 
+    if (args.sig is None) and (args.reg is None):
+        print('please specify one of -reg (--regulation) or -sig (--signaling) option')
+        parser.print_help()
+        exit(0)
+
     if (args.i is None) and (args.f is None):
         print('please fill the -i (--input_genes) or -f (--input_file) parameter')
         parser.print_help()
@@ -135,6 +146,11 @@ def main():
         print('--input_genes and --input_file parameters are mutually exclusive : please provide only one of them')
         parser.print_help()
         exit(0)
+
+    if args.sigd:
+        config.FINE_GRAINED_SIGNALING_SIF = True
+    else:
+        config.FINE_GRAINED_SIGNALING_SIF = False
 
     input_genes_parameter = []
     if args.i:
@@ -148,74 +164,100 @@ def main():
         parser.print_help()
         exit(0)
 
-    max_depth_parameter = None
     if args.md:
-        max_depth_parameter = args.md
+        config.MAX_DEPTH = args.md
+    else:
+        config.MAX_DEPTH = 1
 
-    data_sources_parameter = []
     if args.excl:
         for ds in args.excl:
             data_sources.remove(ds)
-        data_sources_parameter = data_sources
+        config.DATA_SOURCES = data_sources
     if args.incl:
-        data_sources_parameter = args.incl
+        config.DATA_SOURCES = args.incl
 
-    if not data_sources_parameter is None:
-        print("BRAvo will explore the following data sources:\n" + str(data_sources_parameter))
-    else:
-        print("BRAvo will explore all available data sources")
+    print("BRAvo will explore the following data sources:\n" + str(config.DATA_SOURCES))
 
     if args.s:
-        bravo.EXTEND_WITH_SYNONYMS = True
+        config.EXTEND_WITH_SYNONYMS = True
     else:
-        bravo.EXTEND_WITH_SYNONYMS = False
+        config.EXTEND_WITH_SYNONYMS = False
 
     if args.su:
-        bravo.EXTEND_WITH_SUFFIXES = True
+        config.EXTEND_WITH_SUFFIXES = True
     else:
-        bravo.EXTEND_WITH_SUFFIXES = False
+        config.EXTEND_WITH_SUFFIXES = False
 
     if args.c:
-        bravo.DECOMPOSE_COMPLEXES = True
+        config.DECOMPOSE_COMPLEXES = True
     else:
-        bravo.DECOMPOSE_COMPLEXES = False
+        config.DECOMPOSE_COMPLEXES = False
 
     if args.fast:
-        bravo.FAST = True
+        config.FAST = True
     else:
-        bravo.FAST = False
+        config.FAST = False
 
     if args.v:
-        bravo.VERBOSE = True
+        config.VERBOSE = True
     else:
-        bravo.VERBOSE = False
+        config.VERBOSE = False
 
-    start_time = time.time()
-    # reconstructed_network = bravo.upstream_regulation(["JUN/FOS", "SCN5A"], max_depth=1)
-    # reconstructed_network = bravo.upstream_regulation(["JUN/FOS", "SCN5A"], max_depth=2, data_sources = data_sources)
-    # reconstructed_network = bravo.upstream_regulation(args.i, args.md, data_sources=data_sources)
-    reconstructed_network = bravo.upstream_regulation(input_genes_parameter, max_depth=max_depth_parameter, data_sources=data_sources_parameter)
-    elapsed_time = round((time.time() - start_time), 2)
 
-    print("--- Upstream regulation network in %s seconds ---" % elapsed_time)
 
-    G = build_nx_digraph(reconstructed_network)
-    write_to_SIF(G, args.o + '.sif')
-    write_provenance(G, args.o + '-provenance.csv')
-    md = get_centrality_as_md(G)
-    print(md)
+    if args.reg:
+        start_time = time.time()
+        # reconstructed_network = bravo.upstream_regulation(["JUN/FOS", "SCN5A"], max_depth=1)
+        # reconstructed_network = bravo.upstream_regulation(["JUN/FOS", "SCN5A"], max_depth=2, data_sources = data_sources)
+        # reconstructed_network = bravo.upstream_regulation(args.i, args.md, data_sources=data_sources)
+        reconstructed_network = upstream_regulation(input_genes_parameter)
+        elapsed_time = round((time.time() - start_time), 2)
 
-    start_time = time.time()
-    G_prime = bravo.util.fast_reg_network_unification(G, bravo.util.index_syn)
-    elapsed_time = round((time.time() - start_time), 2)
-    print("--- Network simplification in %s seconds ---" % elapsed_time)
-    write_to_SIF(G_prime, args.o + '-unified.sif')
-    write_provenance(G_prime, args.o + '-unified-provenance.csv')
-    print('Nodes after simplification = ' + str(len(G_prime.nodes())))
-    print('Edges after simplification = ' + str(len(G_prime.edges())))
+        print("--- Upstream regulation network in %s seconds ---" % elapsed_time)
 
-    md = get_centrality_as_md(G_prime)
-    print(md)
+        G = build_nx_digraph(reconstructed_network)
+        write_to_SIF(G, args.o + '.sif')
+        write_provenance(G, args.o + '-provenance.csv')
+        md = get_centrality_as_md(G)
+        print(md)
+
+        start_time = time.time()
+        G_prime = util.fast_reg_network_unification(G, util.index_syn)
+        elapsed_time = round((time.time() - start_time), 2)
+        print("--- Network simplification in %s seconds ---" % elapsed_time)
+        write_to_SIF(G_prime, args.o + '-unified.sif')
+        write_provenance(G_prime, args.o + '-unified-provenance.csv')
+        print('Nodes after simplification = ' + str(len(G_prime.nodes())))
+        print('Edges after simplification = ' + str(len(G_prime.edges())))
+
+        md = get_centrality_as_md(G_prime)
+        print(md)
+
+    elif args.sig:
+        start_time = time.time()
+        reconstructed_network = upstream_signaling(input_genes_parameter)
+
+        elapsed_time = round((time.time() - start_time), 2)
+
+        print("--- Upstream regulation network in %s seconds ---" % elapsed_time)
+
+        G = build_nx_digraph(reconstructed_network)
+        write_to_SIF(G, args.o + '.sif')
+        write_provenance(G, args.o + '-provenance.csv')
+        md = get_centrality_as_md(G)
+        print(md)
+
+        start_time = time.time()
+        G_prime = util.fast_reg_network_unification(G, util.index_syn)
+        elapsed_time = round((time.time() - start_time), 2)
+        print("--- Network simplification in %s seconds ---" % elapsed_time)
+        write_to_SIF(G_prime, args.o + '-unified.sif')
+        write_provenance(G_prime, args.o + '-unified-provenance.csv')
+        print('Nodes after simplification = ' + str(len(G_prime.nodes())))
+        print('Edges after simplification = ' + str(len(G_prime.edges())))
+
+        md = get_centrality_as_md(G_prime)
+        print(md)
 
 if __name__ == "__main__":
     # args = ['--input_genes', 'HEY2', 'SCN5A', 'SCN3A', '-md', '1']
