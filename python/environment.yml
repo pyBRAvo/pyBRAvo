@@ -1,0 +1,9 @@
+name: pybravo
+
+dependencies:
+        - python=3.6
+        - rdflib 
+        - requests 
+        - matplotlib 
+        - jupyter 
+        - networkx
