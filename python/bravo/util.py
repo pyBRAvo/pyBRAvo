@@ -177,7 +177,7 @@ def gen_data_source_filter(data_sources):
         filter_clause = filter_clause + ')) .'
     return filter_clause
 
-def gen_chunks_values_constraint(chunks):
+def gen_chunks_values_constraint(chunks, variable_name):
     """
     Generation of a SPARQL VALUES clause to restrict gene/protein/etc. names
     Produces something like
@@ -185,7 +185,7 @@ def gen_chunks_values_constraint(chunks):
     """
     filter_clause = ''
     if len(chunks) > 0 :
-        filter_clause = 'VALUES ?controlledName { \n'
+        filter_clause = 'VALUES ' + variable_name + '{ \n'
         for g in chunks :
             filter_clause += '"' + g + '"^^xsd:string '
         k = filter_clause.rfind(" ")
