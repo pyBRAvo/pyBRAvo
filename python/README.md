@@ -7,6 +7,7 @@ The first step consists in creating a software environment and **pull the requir
 ```
 conda create --name pybravo rdflib requests matplotlib jupyter networkx -c conda-forge -c bioconda
 source activate pybravo
+pip install nxpd
 ```
 Then just **clone** this repository:
 ```
