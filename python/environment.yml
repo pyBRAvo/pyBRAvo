@@ -1,9 +1,13 @@
 name: pybravo
 
+channels:
+  - bioconda
+  - conda-forge
+
 dependencies:
-        - python=3.6
-        - rdflib 
-        - requests 
-        - matplotlib 
-        - jupyter 
-        - networkx
+  - python=3.5
+  - rdflib
+  - requests
+  - matplotlib
+  - jupyter
+  - networkx

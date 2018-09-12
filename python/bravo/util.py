@@ -23,7 +23,7 @@ def init_gene_synonyms_cache():
     """
     index_syn = {}
     index_std = {}
-    with open(fullpath + 'Homo_sapiens.gene_info', newline='') as csvfile:
+    with open('Homo_sapiens.gene_info', newline='') as csvfile:
         reader = csv.reader(csvfile, delimiter='\t', quotechar='|')
         for row in reader:
             index_std[row[2]] = row[4].split('|')
