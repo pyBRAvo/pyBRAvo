@@ -7,10 +7,6 @@ WORKDIR /home
 
 # Copy repository files to the image
 COPY environment.yml .
-COPY README.md .
-COPY bravo bravo
-COPY pyBravo.py .
-COPY BRAvo-python-API-tutorial.ipynb .
 
 # Update Ubuntu + basic install
 RUN apt-get update
@@ -25,6 +21,11 @@ RUN conda config --add channels conda-forge
 RUN conda config --add channels bioconda
 RUN conda env create -n pybravo -f environment.yml
 
+# Copy repository files to the image
+COPY README.md .
+COPY bravo bravo
+COPY pyBravo.py .
+COPY BRAvo-python-API-tutorial.ipynb .
 
 #CMD [ "bash" ]
 CMD /bin/bash -c 'source activate pybravo && jupyter notebook --ip 0.0.0.0 --no-browser --allow-root'
