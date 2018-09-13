@@ -35,9 +35,10 @@ SELECT DISTINCT ?controllerName ?controlType ?controlledName ?source WHERE {
 
     ?tempReac a bp:TemplateReactionRegulation ; 
         bp:controlled ?controlled ; 
-        bp:controller ?controller ; 
-        bp:controlType ?controlType ; 
+        bp:controller ?controller ;  
         bp:dataSource ?source . 
+        
+    OPTIONAL {?tempReac bp:controlType ?controlType}
 } 
 """
 
@@ -61,9 +62,10 @@ SELECT DISTINCT ?controllerName ?controlType ?controlledName ?source WHERE {
 
     ?tempReac a bp:TemplateReactionRegulation ; 
         bp:controlled ?controlled ; 
-        bp:controller ?controller ; 
-        bp:controlType ?controlType ; 
+        bp:controller ?controller ;  
         bp:dataSource ?source . 
+    
+    OPTIONAL {?tempReac bp:controlType ?controlType}
 } 
 """
 
@@ -172,8 +174,13 @@ def upstream_regulation(to_be_explored, already_explored = [], sif_network = [],
 
         for result in results["results"]["bindings"]:
 
-            source, reg_type, target, provenance = result["controllerName"]["value"], result["controlType"]["value"], \
+            if "controlType" in result.keys():
+                source, reg_type, target, provenance = result["controllerName"]["value"], result["controlType"]["value"], \
                                                    result["controlledName"]["value"], result["source"]["value"]
+            else:
+                source, target, provenance = result["controllerName"]["value"], \
+                                                       result["controlledName"]["value"], result["source"]["value"]
+                reg_type = "UNKNOWN"
 
             source = util.removeSuffixForUnification(source)
             target = util.removeSuffixForUnification(target)
