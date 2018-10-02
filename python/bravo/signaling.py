@@ -1,5 +1,6 @@
 from SPARQLWrapper import SPARQLWrapper, JSON
 from string import Template
+from pprint import pprint
 
 import bravo.util as util
 import bravo.config as config
@@ -68,7 +69,8 @@ def upstream_signaling(to_be_explored, already_explored = [], sif_network = [], 
     for new in new_to_be_explored:
         if new not in to_be_explored:
             to_be_explored.append(new)
-    print('to be explored after complex decomposition ' + str(to_be_explored))
+    print('to be explored after complex decomposition:')
+    pprint(to_be_explored, width = 100, compact = True)
 
     """"""
     """ Expanding the list with synonyms """
@@ -80,7 +82,8 @@ def upstream_signaling(to_be_explored, already_explored = [], sif_network = [], 
             if s not in "-":
                 new_to_be_explored.append(s)
     if len(new_to_be_explored) > 0:
-       print('new synonmys to be explored:' + str(new_to_be_explored))
+       print('new synonmys to be explored:')
+       pprint(new_to_be_explored, width = 100, compact = True)
     for new in new_to_be_explored:
         if new not in to_be_explored:
             to_be_explored.append(new)
