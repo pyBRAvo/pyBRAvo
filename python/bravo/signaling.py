@@ -56,34 +56,36 @@ def upstream_signaling(to_be_explored, already_explored = [], sif_network = [], 
     """"""
     """ Decomposing protein complexes """
     """"""
-    new_to_be_explored = []
-    for name in to_be_explored:
-        splits = name.split('/')
-        if len(splits) > 1:
-            print(name + ' decomposed into ' + str(splits))
-            new_to_be_explored.extend(splits)
-            for s in splits:
-                sif_network.append({"source": s, "relation": "PART_OF", "target": name, "provenance": "PathwayCommons"})
+    if config.DECOMPOSE_COMPLEXES:
+        new_to_be_explored = []
+        for name in to_be_explored:
+            splits = name.split('/')
+            if len(splits) > 1:
+                print(name + ' decomposed into ' + str(splits))
+                new_to_be_explored.extend(splits)
+                for s in splits:
+                    sif_network.append({"source": s, "relation": "PART_OF", "target": name, "provenance": "PathwayCommons"})
 
-    for new in new_to_be_explored:
-        if new not in to_be_explored:
-            to_be_explored.append(new)
-    print('to be explored after complex decomposition ' + str(to_be_explored))
+        for new in new_to_be_explored:
+            if new not in to_be_explored:
+                to_be_explored.append(new)
+        print('to be explored after complex decomposition ' + str(to_be_explored))
 
     """"""
     """ Expanding the list with synonyms """
     """"""
-    new_to_be_explored = []
-    for name in to_be_explored:
-        synonyms = util.fast_get_synonyms(name, index_std=util.index_std, index_syn=util.index_syn)
-        for s in synonyms:
-            if s not in "-":
-                new_to_be_explored.append(s)
-    if len(new_to_be_explored) > 0:
-       print('new synonmys to be explored:' + str(new_to_be_explored))
-    for new in new_to_be_explored:
-        if new not in to_be_explored:
-            to_be_explored.append(new)
+    if config.EXTEND_WITH_SYNONYMS:
+        new_to_be_explored = []
+        for name in to_be_explored:
+            synonyms = util.fast_get_synonyms(name, index_std=util.index_std, index_syn=util.index_syn)
+            for s in synonyms:
+                if s not in "-":
+                    new_to_be_explored.append(s)
+        if len(new_to_be_explored) > 0:
+           print('new synonmys to be explored:' + str(new_to_be_explored))
+        for new in new_to_be_explored:
+            if new not in to_be_explored:
+                to_be_explored.append(new)
 
     """"""
     """ Expanding the list with [' mRna', ' protein'] """
