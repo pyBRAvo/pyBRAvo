@@ -27,7 +27,7 @@ before_script:
 test:
   script:
   - cd python
-  - pip install requests jupyter SPARQLWrapper rdflib-jsonld networkx matplotlib
+  - pip install requests jupyter SPARQLWrapper rdflib-jsonld networkx matplotlib flask
   - python pyBravo.py --input_genes JUN/FOS SCN5A -md 1 -excl mirtarbase
 
 #run:
