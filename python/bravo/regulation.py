@@ -1,11 +1,12 @@
 from typing import List, Any
 from SPARQLWrapper import SPARQLWrapper, JSON
 from string import Template
-from pprint import pprint
+from flask import Flask, request, render_template, abort, Response
 
 import bravo.util as util
 import bravo.config as config
 
+app = Flask("pyBravo")
 
 tpl_select_reg_query = """
 PREFIX bp: <http://www.biopax.org/release/biopax-level3.owl#>
@@ -70,6 +71,9 @@ SELECT DISTINCT ?controllerName ?controlType ?controlledName ?source WHERE {
 } 
 """
 
+@app.route('/upstream_regulation')
+def upstream_regulation_api():
+    return "Upstream regulation"
 
 def upstream_regulation(to_be_explored, already_explored = [], sif_network = [], current_depth = 0, explored_reg = 0):
     """
@@ -90,8 +94,7 @@ def upstream_regulation(to_be_explored, already_explored = [], sif_network = [],
 
     print()
     print('exploration depth ' + str(current_depth))
-    print('to be explored:')
-    pprint(to_be_explored, width = 100, compact = True)
+    print('to be explored ' + str(to_be_explored))
     print()
 
     """"""
@@ -110,8 +113,7 @@ def upstream_regulation(to_be_explored, already_explored = [], sif_network = [],
         for new in new_to_be_explored:
             if new not in to_be_explored:
                     to_be_explored.append(new)
-        print('to be explored after complex decomposition:')
-        pprint(to_be_explored, width = 100, compact = True)
+        print('to be explored after complex decomposition ' + str(to_be_explored))
 
     """"""
     """ Expanding the list with synonyms """
@@ -124,8 +126,7 @@ def upstream_regulation(to_be_explored, already_explored = [], sif_network = [],
                 if s not in "-":
                     new_to_be_explored.append(s)
         if len(new_to_be_explored) > 0:
-            print('new synonmys to be explored:')
-            pprint(new_to_be_explored, width = 100, compact = True)
+            print('new synonmys to be explored:' + str(new_to_be_explored))
         for new in new_to_be_explored:
             if new not in to_be_explored:
                     to_be_explored.append(new)
@@ -149,8 +150,7 @@ def upstream_regulation(to_be_explored, already_explored = [], sif_network = [],
     """ Network reconstruction """
     """"""
     for regulators in chunks :
-        print('exploring:')
-        pprint(regulators, width = 100, compact = True)
+        print('exploring ' + str(regulators))
         if config.FAST == True:
             query = Template(tpl_select_reg_query_fast)
         else:
