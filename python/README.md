@@ -5,7 +5,7 @@ pyBRAvo can be used through either a Jupyter notebook, or a command line interfa
 ## Installation  
 The first step consists in creating a software environment and **pull the required python packages**:
 ```
-conda create --name pybravo rdflib requests matplotlib jupyter networkx -c conda-forge -c bioconda
+conda create --name pybravo rdflib requests matplotlib jupyter networkx flask -c conda-forge -c bioconda
 source activate pybravo
 pip install nxpd
 ```
