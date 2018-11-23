@@ -1,13 +1,27 @@
 import time
+import logging
 import argparse
 from argparse import RawTextHelpFormatter
 import operator
 import csv
+from flask import Flask, request, render_template, abort, Response
 import networkx as nx
 from bravo.regulation import upstream_regulation
 from bravo.signaling import upstream_signaling
 import bravo.config as config
 import bravo.util as util
+
+
+logger = logging.getLogger()
+
+ch = logging.StreamHandler()
+ch.setLevel(logging.DEBUG)
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(pathname)s - %(funcName)s - %(lineno)d - %(levelname)s - %(message)s')
+ch.setFormatter(formatter)
+logger.addHandler(ch)
+logger.info("Intialized")
+
+app = Flask("pyBravo")
 
 data_sources = ['bind', 'biogrid', 'corum',
                 'ctd', 'dip', 'drugbank', 'hprd', 'humancyc', 'inoh',
@@ -18,13 +32,14 @@ data_sources = ['bind', 'biogrid', 'corum',
 parser = argparse.ArgumentParser(description="""
 BRAvo upstream regulation network reconstruction. 
 Here are some possible command lines :
-    
+    python pyBravo.py --server
     python pyBravo.py --regulation --input_genes JUN/FOS SCN5A -md 2 -co -su -sy
     python pyBravo.py --regulation --input_genes JUN/FOS SCN5A -md 2 -excl mirtarbase -co -su -sy
     python pyBravo.py --regulation --input_file myGenes.csv -md 2 -incl pid panther msigdb kegg -co -su -sy
     
 Please report any issue to alban.gaignard@univ-nantes.fr. 
 """, formatter_class=RawTextHelpFormatter)
+parser.add_argument('-w', '--web', action='store_true', required=False, help='to launch pyBravo as a web server', dest='web')
 parser.add_argument('-reg', '--regulation', action='store_true', required=False, help='to assemble a regulation network', dest='reg')
 parser.add_argument('-sig', '--signaling', action='store_true', required=False, help='to assemble a signaling network', dest='sig')
 parser.add_argument('-sigd', '--signaling-detailed', action='store_true', required=False, help='to assemble a signaling network with detailed reactions', dest='sigd')
@@ -39,6 +54,14 @@ parser.add_argument('-o', '--output_file', required=False, help='the output file
 parser.add_argument('-incl', '--include_sources', nargs='+', required=False, help='the data sources to include', dest='incl')
 parser.add_argument('-excl', '--exclude_sources', nargs='+', required=False, help='the data sources to exclude', dest='excl')
 parser.add_argument('-v', '--verbose', action='store_true', required=False, help='print debug information', dest='v')
+
+@app.route("/test")
+def test():
+    return "test"
+
+@app.route('/')
+def home():
+    return render_template('index.html')
 
 def read_input_genes(filename):
     """
@@ -132,12 +155,12 @@ def main():
     # args = parser.parse_args(args)
     args = parser.parse_args()
 
-    if (not args.sig) and (not args.reg):
-        print('please specify one of -reg (--regulation) or -sig (--signaling) option')
+    if (not args.sig) and (not args.reg) and (not args.web):
+        print('please specify one of -reg (--regulation), -sig (--signaling), or -w (--web) option')
         parser.print_help()
         exit(0)
 
-    if (args.i is None) and (args.f is None):
+    if (args.i is None) and (args.f is None) and (not args.web):
         print('please fill the -i (--input_genes) or -f (--input_file) parameter')
         parser.print_help()
         exit(0)
@@ -204,8 +227,6 @@ def main():
     else:
         config.VERBOSE = False
 
-
-
     if args.reg:
         start_time = time.time()
         # reconstructed_network = bravo.upstream_regulation(["JUN/FOS", "SCN5A"], max_depth=1)
@@ -260,7 +281,12 @@ def main():
         md = get_centrality_as_md(G_prime)
         print(md)
 
+    elif args.web:
+        app.run(host='0.0.0.0', port=9000, debug=True)
+        logger.info("pyBravo launched as a web server")
+
 if __name__ == "__main__":
+    #args = ['--web']
     # args = ['--input_genes', 'HEY2', 'SCN5A', 'SCN3A', '-md', '1']
     # args = ['--input_genes', 'HEY2', 'SCN5A', '-md', '2']
     # args = ['--input_genes', 'HEY2', 'SCN5A', '-md', '2', '-co', '-sy', '-su']
