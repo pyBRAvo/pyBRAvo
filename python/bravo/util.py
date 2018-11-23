@@ -14,7 +14,8 @@ import bravo.config as config
 from IPython.display import display, Markdown, Latex
 from rdflib import Graph, RDF, RDFS, Namespace
 
-fullpath = os.path.abspath(os.path.dirname(sys.argv[0])) + '/'
+#fullpath = os.path.abspath(os.path.dirname(sys.argv[0])) + '/'
+fullpath = os.getcwd()
 
 def init_gene_synonyms_cache():
     """
@@ -23,7 +24,7 @@ def init_gene_synonyms_cache():
     """
     index_syn = {}
     index_std = {}
-    with open(fullpath + 'Homo_sapiens.gene_info', newline='') as csvfile:
+    with open(fullpath + '/Homo_sapiens.gene_info', newline='') as csvfile:
         reader = csv.reader(csvfile, delimiter='\t')
         next(reader)   # Skip first line
         for row in reader:
