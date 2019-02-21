@@ -4,3 +4,5 @@
 /hs_err_*.log
 /python/.ipynb*
 *~
+/experiments-comparison/log
+/experiments-comparison/.ipynb*
