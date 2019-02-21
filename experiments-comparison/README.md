@@ -17,4 +17,3 @@ Inside the experiments-comparison directory, run the `jupyter-notebook pypath-si
 
 The notebook can be browsed [here](https://gitlab.univ-nantes.fr/gaignard-a/BRAvo/blob/master/experiments-comparison/pypath-sign-up.ipynb). 
 
-## Usage from a terminal 
