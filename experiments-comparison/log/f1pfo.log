@@ -1,0 +1,12 @@
+[2019-02-21 10:49:18] ### INFO ### Logger initialized, logging to log/f1pfo.log
+[2019-02-21 10:49:18] ### INFO ### PyPath has been initialized
+[2019-02-21 10:49:18] ### INFO ### Beginning session 'f1pfo'
+[2019-02-21 10:50:50] ### INFO ###### Retrieving data by dataio.trip_interactions() ...
+[2019-02-21 10:50:54] ### ERROR ###### trip_interactions: No such file or dataio function! :(
+
+[2019-02-21 10:50:54] ### INFO ###### attach_network(): No data, nothing to do.
+[2019-02-21 10:50:54] ### INFO ###### Retrieving data by dataio.spike_interactions() ...
+[2019-02-21 10:50:55] ### ERROR ###### spike_interactions: No such file or dataio function! :(
+
+[2019-02-21 10:50:55] ### INFO ###### attach_network(): No data, nothing to do.
+[2019-02-21 10:50:55] ### INFO ###### Retrieving data by dataio.signalink_interactions() ...
