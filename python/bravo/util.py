@@ -165,19 +165,17 @@ def gen_chunks(list_of_genes):
 
 def gen_data_source_filter(data_sources):
     """
-    Generation of a SPARQL Filter clause to restrict data sources
-    Produces something like
-        FILTER (?source IN (<http://pathwaycommons.org/pc2/pid>, <http://pathwaycommons.org/pc2/humancyc>))
+    generates a SPARQL Filter clause aimed at
+    limiting the possible values of a ?source variable
     """
     filter_clause = ''
     if len(data_sources) > 0 :
-        filter_clause = 'FILTER (?source IN ('
+        filter_clause = 'FILTER ( \n'
         for ds in data_sources :
-            dsUri = '<http://pathwaycommons.org/pc2/' + ds.lower() + '>'
-            filter_clause = filter_clause + dsUri + ', '
-        k = filter_clause.rfind(", ")
+            filter_clause += '    (str(lcase(?source)) = "' + ds.lower() + '" ) || \n'
+        k = filter_clause.rfind("|| ")
         filter_clause = filter_clause[:k]
-        filter_clause = filter_clause + ')) .'
+        filter_clause += '\n) .'
     return filter_clause
 
 def gen_chunks_values_constraint(chunks, variable_name):
