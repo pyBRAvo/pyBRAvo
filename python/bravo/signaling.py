@@ -18,7 +18,7 @@ SELECT DISTINCT ?rightName ?leftName ?controlType ?controllerName ?reaction ?sou
     ?right bp:displayName ?rightName .
 
     ?reaction bp:right ?right ; 
-        bp:dataSource ?source .
+        bp:dataSource/bp:displayName ?source .
 
     ?reaction bp:left ?left .
     ?left bp:displayName ?leftName .
