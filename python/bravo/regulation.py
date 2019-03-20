@@ -38,7 +38,7 @@ SELECT DISTINCT ?controllerName ?controlType ?controlledName ?source WHERE {
     ?tempReac a bp:TemplateReactionRegulation ; 
         bp:controlled ?controlled ; 
         bp:controller ?controller ;  
-        bp:dataSource ?source . 
+        bp:dataSource/bp:displayName ?source . 
         
     OPTIONAL {?tempReac bp:controlType ?controlType}
 } 
@@ -65,7 +65,7 @@ SELECT DISTINCT ?controllerName ?controlType ?controlledName ?source WHERE {
     ?tempReac a bp:TemplateReactionRegulation ; 
         bp:controlled ?controlled ; 
         bp:controller ?controller ;  
-        bp:dataSource ?source . 
+        bp:dataSource/bp:displayName ?source . 
     
     OPTIONAL {?tempReac bp:controlType ?controlType}
 } 
