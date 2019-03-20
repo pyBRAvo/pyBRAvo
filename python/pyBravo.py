@@ -189,8 +189,6 @@ def main():
 
     if args.md:
         config.MAX_DEPTH = args.md
-    else:
-        config.MAX_DEPTH = 1
 
     config.DATA_SOURCES = data_sources
     if args.excl:
