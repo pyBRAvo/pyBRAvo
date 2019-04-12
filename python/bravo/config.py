@@ -4,7 +4,8 @@ CONFIG file used to define pyBRAvo main parameters
 
 INPUT_GENES = ['JUN/FOS', 'SCN5A', 'HEY2']
 
-SPARQL_ENDPOINT = "http://rdf.pathwaycommons.org/sparql"  # type: str
+#SPARQL_ENDPOINT = "http://rdf.pathwaycommons.org/sparql/"  # type: str
+SPARQL_ENDPOINT = "http://134.158.247.161/sparql/"
 CHUNKS_SIZE = 50  # type: int
 MAX_DEPTH = 2 # type: int
 SKIP_SMALL_MOLECULES = True # type: Bool

@@ -3,6 +3,8 @@ from SPARQLWrapper import SPARQLWrapper, JSON
 from string import Template
 from flask import Flask, request, render_template, abort, Response
 
+import requests
+
 import bravo.util as util
 import bravo.config as config
 
@@ -173,6 +175,15 @@ def upstream_regulation(to_be_explored, already_explored = [], sif_network = [],
         sparql.setQuery(q)
         sparql.setReturnFormat(JSON)
         results = sparql.query().convert()
+
+        # q_test = 'PREFIX bp:<http://www.biopax.org/release/biopax-level3.owl%23> SELECT * WHERE {?x ?p ?y} LIMIT 1'
+        # r = requests.get('http://rdf.pathwaycommons.org/sparql?query='+q, headers={"Accept": "application/json"})
+
+        #print(r.url)
+        #print(r.status_code)
+        #print(r.text)
+        #results = r.json()
+        #print(results)
 
         already_explored.extend(regulators)
         #print('already explored ' + str(already_explored))
