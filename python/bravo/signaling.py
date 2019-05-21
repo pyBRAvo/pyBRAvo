@@ -90,10 +90,11 @@ def upstream_signaling(to_be_explored, already_explored = [], sif_network = [], 
     """"""
     """ Expanding the list with [' mRna', ' protein'] """
     """"""
-    # new_to_be_explored = expandGeneNames(to_be_explored)
-    # for new in new_to_be_explored:
-    #    if new not in to_be_explored:
-    #            to_be_explored.append(new)
+    if config.EXTEND_WITH_SUFFIXES:
+        new_to_be_explored = util.expandGeneNames(to_be_explored)
+        for new in new_to_be_explored:
+           if new not in to_be_explored:
+                   to_be_explored.append(new)
 
     """"""
     """ Grouping genes into chunks to be processed remotely by block """
