@@ -106,7 +106,7 @@ def expandGeneNames(toBeExplored):
     :param toBeExplored:
     :return:
     """
-    expansion_suffixes = [' mRna', ' protein']
+    expansion_suffixes = [' mRna', ' protein', ' mRNA', ' mutant form', ' complex', ' modified form', ' protein complex']
     new_names = []
     for gene in toBeExplored:
         for suf in expansion_suffixes:
@@ -119,8 +119,8 @@ def removeSuffixForUnification(name):
     :param name:
     :return:
     """
-    expansion_suffixes = [' mRna', ' protein', ' mRNA', ' mutant form', ' complex', ' modified form']
-    for suf in expansion_suffixes:
+    remove_suffixes = [' mRna', ' protein', ' mRNA', ' mutant form', ' complex', ' modified form', ' protein complex']
+    for suf in remove_suffixes:
         if suf in name:
             print('\t\tremoving suffix '+str(suf)+' for '+str(name))
             name = name.replace(suf, '')
