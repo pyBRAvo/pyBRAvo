@@ -139,10 +139,15 @@ def upstream_signaling(to_be_explored, already_explored = [], sif_network = [], 
                                                     result["rightName"]["value"], \
                                                     result["source"]["value"]
                 if config.FINE_GRAINED_SIGNALING_SIF == True:
+                    ctl = util.removeSuffixForUnification(ctl)
+                    left = util.removeSuffixForUnification(left)
+                    right = util.removeSuffixForUnification(right)
                     sif_network.append({"source": ctl, "relation": sign_type, "target": reac, "provenance": provenance})
                     sif_network.append({"source": reac, "relation": "HAS_LEFT", "target": left, "provenance": provenance})
                     sif_network.append({"source": reac, "relation": "HAS_RIGHT", "target": right, "provenance": provenance})
                 else:
+                    ctl = util.removeSuffixForUnification(ctl)
+                    right = util.removeSuffixForUnification(right)
                     sif_network.append({"source": ctl, "relation": sign_type, "target": right, "provenance": provenance})
             else:
                 ctl, reac, left, right, provenance = result["controllerName"]["value"], \
@@ -151,14 +156,16 @@ def upstream_signaling(to_be_explored, already_explored = [], sif_network = [], 
                                          result["rightName"]["value"], \
                                          result["source"]["value"]
                 if config.FINE_GRAINED_SIGNALING_SIF == True:
+                    ctl = util.removeSuffixForUnification(ctl)
+                    left = util.removeSuffixForUnification(left)
+                    right = util.removeSuffixForUnification(right)
                     sif_network.append({"source": ctl, "relation": "CATALYSIS", "target": reac, "provenance": provenance})
                     sif_network.append({"source": reac, "relation": "HAS_LEFT", "target": left, "provenance": provenance})
                     sif_network.append({"source": reac, "relation": "HAS_RIGHT", "target": right, "provenance": provenance})
                 else:
+                    ctl = util.removeSuffixForUnification(ctl)
+                    right = util.removeSuffixForUnification(right)
                     sif_network.append({"source": ctl, "relation": "CATALYSIS", "target": right, "provenance": provenance})
-
-            # source = removeSuffixForUnification(source)
-            # target = removeSuffixForUnification(target)
 
             if ctl not in already_explored:
                 if ctl not in to_be_explored:
