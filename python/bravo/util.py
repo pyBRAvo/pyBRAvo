@@ -280,7 +280,7 @@ def get_refs(path):
     return(nodes)
 
 def compute_coverage(ref_file, node_file):
-    # sif file
+    # sif file from BRAvo
     bravo_path = fullpath + "/" + node_file
     to_be_explored = get_sif_nodes(bravo_path)
     # csv file
