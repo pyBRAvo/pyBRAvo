@@ -53,6 +53,7 @@ parser.add_argument('-f', '--input_file', required=False, help='the input file, 
 parser.add_argument('-o', '--output_file', required=False, help='the output files path and prefix', dest='o', default='out')
 parser.add_argument('-incl', '--include_sources', nargs='+', required=False, help='the data sources to include', dest='incl')
 parser.add_argument('-excl', '--exclude_sources', nargs='+', required=False, help='the data sources to exclude', dest='excl')
+parser.add_argument('-e', '--endpoint', required=False, help='the endpoint to query (default: {})'.format(config.SPARQL_ENDPOINT), dest='endpoint')
 parser.add_argument('-v', '--verbose', action='store_true', required=False, help='print debug information', dest='v')
 
 @app.route("/test")
@@ -189,6 +190,14 @@ def main():
 
     if args.md:
         config.MAX_DEPTH = args.md
+
+    if args.endpoint:
+        if args.endpoint == 'pc':
+            config.SPARQL_ENDPOINT = "http://rdf.pathwaycommons.org/sparql/"
+        elif args.endpoint == 'ifb':
+            config.SPARQL_ENDPOINT = "http://134.158.247.161/sparql/"
+        else:
+            config.SPARQL_ENDPOINT = args.endpoint
 
     config.DATA_SOURCES = data_sources
     if args.excl:
