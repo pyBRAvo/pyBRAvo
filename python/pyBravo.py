@@ -27,7 +27,7 @@ data_sources = ['bind', 'biogrid', 'corum',
                 'ctd', 'dip', 'drugbank', 'hprd', 'humancyc', 'inoh',
                 'intact', 'kegg', 'mirtarbase', 'netpath', 'panther',
                 'pid', 'psp', 'reactome', 'reconx', 'smpdb', 'wp',
-                'intact_complex', 'msigdb']
+                'intact_complex', 'msigdb', 'reach', 'wikipathways']
 
 parser = argparse.ArgumentParser(description="""
 BRAvo upstream regulation network reconstruction. 
