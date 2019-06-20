@@ -107,10 +107,14 @@ def expandGeneNames(toBeExplored):
     :return:
     """
     expansion_suffixes = [' mRna', ' protein', ' mRNA', ' mutant form', ' complex', ' modified form', ' protein complex']
+    expansion_prefixes = ['expression of ']
     new_names = []
     for gene in toBeExplored:
         for suf in expansion_suffixes:
             new_names.append(str(gene+suf))
+            if suf in [' mRna', ' mRNA']:
+                for pre in expansion_prefixes:
+                    new_names.append(str(pre+gene+suf))
     return (toBeExplored+new_names)
 
 def removeSuffixForUnification(name):
@@ -119,7 +123,7 @@ def removeSuffixForUnification(name):
     :param name:
     :return:
     """
-    remove_suffixes = [' mRna', ' protein', ' mRNA', ' mutant form', ' complex', ' modified form', ' protein complex']
+    remove_suffixes = [' mRna', ' protein', ' mRNA', ' mutant form', ' complex', ' modified form', ' protein complex', 'expression of ']
     for suf in remove_suffixes:
         if suf in name:
             print('\t\tremoving suffix '+str(suf)+' for '+str(name))
@@ -231,3 +235,70 @@ def fast_reg_network_unification(graph, index_syn):
                         except:
                             continue
     return H
+
+def get_sif_nodes(path):
+    """
+
+    :param path: path to sif file
+    :return:
+    """
+    nodes = []
+    with open(path, newline='\n') as file:
+        # iterate over line
+        for line in file:
+            # split line to obtain column
+            left = removeSuffixForUnification(line.replace("\r\n", "").split("\t")[0])
+            # test existence
+            if left not in nodes:
+                # do not keep PC link
+                if left.startswith( 'http' ):
+                    pass
+                else:
+                    nodes.append(left)
+            right = removeSuffixForUnification(line.replace("\r\n", "").split("\t")[2])
+            if right not in nodes:
+                if right.startswith( 'http' ):
+                    pass
+                else:
+                    nodes.append(right)
+    return nodes
+
+def get_refs(path):
+    """
+
+    :param path: list of input genes
+    :return: array of string
+    """
+    nodes = []
+    with open(path, newline='\n') as file:
+        # iterate over line
+        for line in file:
+            # remove \n
+            node = line.replace("\n", "")
+            if node not in nodes:
+                nodes.append(node)
+    return(nodes)
+
+def compute_coverage(ref_file, node_file):
+    # sif file from BRAvo
+    bravo_path = fullpath + "/" + node_file
+    to_be_explored = get_sif_nodes(bravo_path)
+    # csv file
+    ref_path = fullpath + "/" + ref_file
+    ref = get_refs(ref_path)
+    new_to_be_explored = []
+    for name in to_be_explored:
+        synonyms = fast_get_synonyms(name, index_std=index_std, index_syn=index_syn)
+        for s in synonyms:
+            if s not in "-":
+                new_to_be_explored.append(s)
+    if len(new_to_be_explored) > 0:
+        print('new synonmys are explored')
+    for new in new_to_be_explored:
+        if new not in to_be_explored:
+                to_be_explored.append(new)
+    count = 0
+    for node in ref:
+        if node in to_be_explored:
+            count = count + 1
+    print(str(count) + " genes are present over " + str(len(ref)))
