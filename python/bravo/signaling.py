@@ -111,8 +111,7 @@ def upstream_signaling(to_be_explored, already_explored = [], sif_network = [], 
 
         fds = util.gen_data_source_filter(config.DATA_SOURCES)
         fchunks = util.gen_chunks_values_constraint(regulators, '?rightName')
-        ssm = util.gen_small_mol_filter(config.SKIP_SMALL_MOLECULES)
-
+        ssm = util.gen_small_mol_filter(config.SKIP_SMALL_MOLECULES, networktype="signaling")
         q = query.substitute(filter_DataSources=fds,
                              filter_SkipSmallMollecules=ssm,
                              filter_Chunks=fchunks)
