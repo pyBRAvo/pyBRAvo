@@ -199,14 +199,18 @@ def gen_chunks_values_constraint(chunks, variable_name):
     return filter_clause
 
 
-def gen_small_mol_filter(skip_small_molecules = True):
+def gen_small_mol_filter(skip_small_molecules = True, networktype="regulation"):
     """
     Generation of a SPARQL Filter clause to exclude small molecules
     Produces something like
         FILTER( str(?controllerType) != "http://www.biopax.org/release/biopax-level3.owl#SmallMolecule")
     """
     if skip_small_molecules:
-        return 'FILTER( str(?controllerType) != "http://www.biopax.org/release/biopax-level3.owl#SmallMolecule" and str(?controlledType) != "http://www.biopax.org/release/biopax-level3.owl#SmallMolecule")  .'
+        if networktype=="regulation":
+            return 'FILTER( str(?controllerType) != "http://www.biopax.org/release/biopax-level3.owl#SmallMolecule" and str(?controlledType) != "http://www.biopax.org/release/biopax-level3.owl#SmallMolecule")  .'
+        else:
+            return 'FILTER( str(?controllerType) != "http://www.biopax.org/release/biopax-level3.owl#SmallMolecule" and str(?right) != "http://www.biopax.org/release/biopax-level3.owl#SmallMolecule")  .'
+
     else:
         return ''
 
