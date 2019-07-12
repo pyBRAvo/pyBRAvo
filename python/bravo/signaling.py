@@ -16,6 +16,7 @@ SELECT DISTINCT ?rightName ?leftName ?controlType ?controllerName ?reaction ?sou
     $filter_DataSources
 
     ?right bp:displayName ?rightName .
+    ?right rdf:type ?rightType .
 
     ?reaction bp:right ?right ; 
         bp:dataSource/bp:displayName ?source .
