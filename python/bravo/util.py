@@ -209,7 +209,7 @@ def gen_small_mol_filter(skip_small_molecules = True, networktype="regulation"):
         if networktype=="regulation":
             return 'FILTER( str(?controllerType) != "http://www.biopax.org/release/biopax-level3.owl#SmallMolecule" and str(?controlledType) != "http://www.biopax.org/release/biopax-level3.owl#SmallMolecule")  .'
         else:
-            return 'FILTER( str(?controllerType) != "http://www.biopax.org/release/biopax-level3.owl#SmallMolecule" and str(?right) != "http://www.biopax.org/release/biopax-level3.owl#SmallMolecule")  .'
+            return 'FILTER( str(?controllerType) != "http://www.biopax.org/release/biopax-level3.owl#SmallMolecule" and str(?rightType) != "http://www.biopax.org/release/biopax-level3.owl#SmallMolecule")  .'
 
     else:
         return ''
