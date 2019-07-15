@@ -138,6 +138,7 @@ def upstream_regulation(to_be_explored, already_explored = [], sif_network = [],
                 print(name + ' decomposed into ' + str(splits))
                 ### Début Jérémie
                 splits = [s for s in splits if not filterSmallMolecules(s)]
+                print(name + ' decomposed into ' + str(splits)+' when removing small molecules')
                 if len(splits) == 0:
                     print(name + ' is only composed by small molecules. It should be removed from the graph...')
                 ### Début Jérémie
