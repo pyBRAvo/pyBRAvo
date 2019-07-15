@@ -214,6 +214,18 @@ def gen_small_mol_filter(skip_small_molecules = True, networktype="regulation"):
     else:
         return ''
 
+def gen_unknown_filter(skip_unknown = False):
+    """
+    Generation of a SPARQL Filter clause to exclude unknown edge type
+    Produces something like 
+        FILTER( ?controlType = "ACTIVATION"^^xsd:string || ?controlType = "INHIBITION"^^xsd:string)
+    """
+    if skip_unknown == True:
+        return 'FILTER( ?controlType = "ACTIVATION"^^xsd:string || ?controlType = "INHIBITION"^^xsd:string)'
+    else:
+        return ''
+
+
 def fast_reg_network_unification(graph, index_syn):
     H = graph.copy()
     cpt = 0
