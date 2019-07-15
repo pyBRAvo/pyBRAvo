@@ -88,7 +88,7 @@ select ?y where {
    ?x bp:displayName ?y.
    FILTER (?y = "$name"^^xsd:string).
    } limit 1""".replace("$name",name)
-    sparql = SPARQLWrapper(configSPARQL_ENDPOINT)
+    sparql = SPARQLWrapper(config.SPARQL_ENDPOINT)
     sparql.setQuery(query)
     sparql.setReturnFormat(JSON)
     results = sparql.query().convert()
