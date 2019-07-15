@@ -133,7 +133,7 @@ def upstream_regulation(to_be_explored, already_explored = [], sif_network = [],
             lsplits = name.split('/')
             splits = []
             for s in lsplits:
-                splits = splits + s.split('::') ## Jérémie, 
+                splits = splits + s.split(':') ## Jérémie, 
             if len(splits) > 1 :
                 print(name + ' decomposed into ' + str(splits))
                 ### Début Jérémie
