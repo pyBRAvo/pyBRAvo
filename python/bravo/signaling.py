@@ -90,7 +90,7 @@ def upstream_signaling(to_be_explored, already_explored = [], sif_network = [], 
             lsplits = name.split('/')
             splits = []
             for s in lsplits:
-                splits = splits + s.split('::') ## Jérémie, 
+                splits = splits + s.split(':') ## Jérémie, 
             if len(splits) > 1 :
                 print(name + ' decomposed into ' + str(splits))
                 splits = [s for s in splits if not filterSmallMolecules(s)]
