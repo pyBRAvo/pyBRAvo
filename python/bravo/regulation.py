@@ -75,6 +75,26 @@ SELECT DISTINCT ?controllerName ?controlType ?controlledName ?source WHERE {
 } 
 """
 
+### début Jérémie
+
+def filterSmallMolecules(name):
+    query="""
+PREFIX bp: <http://www.biopax.org/release/biopax-level3.owl#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> 
+
+select ?y where {
+   ?x rdf:type <http://www.biopax.org/release/biopax-level3.owl#SmallMolecule>.
+   ?x bp:displayName ?y.
+   FILTER (?y = "$name"^^xsd:string).
+   } limit 1""".replace("$name",name)
+    sparql = SPARQLWrapper(configSPARQL_ENDPOINT)
+    sparql.setQuery(query)
+    sparql.setReturnFormat(JSON)
+    results = sparql.query().convert()
+    return len(results.get("results").get("bindings")) > 0
+### fin Jérémie
+
 @app.route('/upstream_regulation')
 def upstream_regulation_api():
     return "Upstream regulation"
@@ -110,6 +130,11 @@ def upstream_regulation(to_be_explored, already_explored = [], sif_network = [],
             splits = name.split('/')
             if len(splits) > 1 :
                 print(name + ' decomposed into ' + str(splits))
+                ### Début Jérémie
+                splits = [s for s in splits if not filterSmallMolecules(s)]
+                if len(splits) == 0:
+                    print(name + ' is only composed by small molecules. It should be removed from the graph...')
+                ### Début Jérémie
                 new_to_be_explored.extend(splits)
                 for s in splits:
                     sif_network.append({"source": s, "relation": "PART_OF", "target": name, "provenance": "PathwayCommons"})
