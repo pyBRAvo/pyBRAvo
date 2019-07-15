@@ -19,6 +19,7 @@ SELECT DISTINCT ?controllerName ?controlType ?controlledName ?source WHERE {
     $filter_Chunks
     $filter_SkipSmallMollecules
     $filter_DataSources
+    $filter_Unknown
 
     {{?participant bp:displayName ?controlledName .} 
     UNION
@@ -55,6 +56,7 @@ SELECT DISTINCT ?controllerName ?controlType ?controlledName ?source WHERE {
     $filter_Chunks
     $filter_SkipSmallMollecules
     $filter_DataSources
+    $filter_Unknown
 
     ?participant bp:displayName ?controlledName . 
     ?participant rdf:type ?controlledType .  
@@ -161,10 +163,12 @@ def upstream_regulation(to_be_explored, already_explored = [], sif_network = [],
         fds = util.gen_data_source_filter(config.DATA_SOURCES)
         fchunks = util.gen_chunks_values_constraint(regulators, '?controlledName')
         ssm = util.gen_small_mol_filter(config.SKIP_SMALL_MOLECULES)
+        funk = util.gen_unknown_filter(config.UNKNOWN)
 
         q = query.substitute(filter_DataSources = fds,
                     filter_SkipSmallMollecules = ssm,
-                    filter_Chunks = fchunks)
+                    filter_Chunks = fchunks,
+                    filter_Unknown = funk)
 
         if config.VERBOSE:
             print("======= PathwayCommons v9 query =======")
