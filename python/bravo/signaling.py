@@ -93,7 +93,7 @@ def upstream_signaling(to_be_explored, already_explored = [], sif_network = [], 
                 splits = splits + s.split(':') ## Jérémie, 
             if len(splits) > 1 :
                 print(name + ' decomposed into ' + str(splits))
-                splits = [s.replace(" ","") for s in splits if not filterSmallMolecules(s.replace(" ",""))]
+                splits = [s.strip() for s in splits if not filterSmallMolecules(s.strip())]
                 print(name + ' decomposed into ' + str(splits)+' when removing small molecules')
                 if len(splits) == 0:
                     print(name + ' is only composed by small molecules. It should be removed from the graph...')
