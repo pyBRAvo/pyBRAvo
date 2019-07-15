@@ -128,8 +128,8 @@ def upstream_regulation(to_be_explored, already_explored = [], sif_network = [],
         new_to_be_explored = []
         for name in to_be_explored:
             # different types of complexes
-            if "Complex(" in name:
-                name=name.replace("Complex(","").replace(")","")
+            if "Complex (" in name:
+                name=name.replace("Complex (","").replace(")","")
             lsplits = name.split('/')
             splits = []
             for s in lsplits:
