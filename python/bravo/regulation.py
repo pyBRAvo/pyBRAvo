@@ -127,7 +127,11 @@ def upstream_regulation(to_be_explored, already_explored = [], sif_network = [],
     if config.DECOMPOSE_COMPLEXES:
         new_to_be_explored = []
         for name in to_be_explored:
+            # different types of complexes
+            if "Complex(" in name:
+                name=name.replace("Complex(","").replace(")","")
             splits = name.split('/')
+            splits = [s.split('::') for s in splits] ## Jérémie, 
             if len(splits) > 1 :
                 print(name + ' decomposed into ' + str(splits))
                 ### Début Jérémie
