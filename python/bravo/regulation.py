@@ -130,8 +130,10 @@ def upstream_regulation(to_be_explored, already_explored = [], sif_network = [],
             # different types of complexes
             if "Complex(" in name:
                 name=name.replace("Complex(","").replace(")","")
-            splits = name.split('/')
-            splits = [s.split('::') for s in splits] ## Jérémie, 
+            lsplits = name.split('/')
+            splits = []
+            for s in lsplits:
+                splits = splits + s.split('::') ## Jérémie, 
             if len(splits) > 1 :
                 print(name + ' decomposed into ' + str(splits))
                 ### Début Jérémie
