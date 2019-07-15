@@ -54,6 +54,7 @@ parser.add_argument('-o', '--output_file', required=False, help='the output file
 parser.add_argument('-incl', '--include_sources', nargs='+', required=False, help='the data sources to include', dest='incl')
 parser.add_argument('-excl', '--exclude_sources', nargs='+', required=False, help='the data sources to exclude', dest='excl')
 parser.add_argument('-e', '--endpoint', required=False, help='the endpoint to query (default: {})'.format(config.SPARQL_ENDPOINT), dest='endpoint')
+parser.add_argument('-unk', '--unknown', required=False, action='store_true', help='if specified, do not consider unsigned edges', dest='unk')
 parser.add_argument('-v', '--verbose', action='store_true', required=False, help='print debug information', dest='v')
 
 @app.route("/test")
@@ -229,6 +230,11 @@ def main():
     else:
         config.FAST = False
 
+    if args.unk:
+        config.UNKNOWN = True
+    else:
+        config.UNKNOWN = False
+
     if args.v:
         config.VERBOSE = True
     else:
@@ -265,7 +271,6 @@ def main():
     elif args.sig:
         start_time = time.time()
         reconstructed_network = upstream_signaling(input_genes_parameter)
-
         elapsed_time = round((time.time() - start_time), 2)
 
         print("--- Upstream regulation network in %s seconds ---" % elapsed_time)
