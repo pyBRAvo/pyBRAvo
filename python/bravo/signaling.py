@@ -14,6 +14,7 @@ SELECT DISTINCT ?rightName ?leftName ?controlType ?controllerName ?reaction ?sou
     $filter_Chunks
     $filter_SkipSmallMollecules
     $filter_DataSources
+    $filter_Unknown
 
     ?right bp:displayName ?rightName .
     ?right rdf:type ?rightType .
@@ -113,9 +114,11 @@ def upstream_signaling(to_be_explored, already_explored = [], sif_network = [], 
         fds = util.gen_data_source_filter(config.DATA_SOURCES)
         fchunks = util.gen_chunks_values_constraint(regulators, '?rightName')
         ssm = util.gen_small_mol_filter(config.SKIP_SMALL_MOLECULES, networktype="signaling")
+        funk = util.gen_unknown_filter(config.UNKNOWN)
         q = query.substitute(filter_DataSources=fds,
                              filter_SkipSmallMollecules=ssm,
-                             filter_Chunks=fchunks)
+                             filter_Chunks=fchunks,
+                             filter_Unknown = funk)
 
         if config.VERBOSE:
             print("======= PathwayCommons v9 query =======")
