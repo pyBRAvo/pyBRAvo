@@ -43,7 +43,7 @@ parser.add_argument('-w', '--web', action='store_true', required=False, help='to
 parser.add_argument('-reg', '--regulation', action='store_true', required=False, help='to assemble a regulation network', dest='reg')
 parser.add_argument('-sig', '--signaling', action='store_true', required=False, help='to assemble a signaling network', dest='sig')
 parser.add_argument('-sigd', '--signaling-detailed', action='store_true', required=False, help='to assemble a signaling network with detailed reactions', dest='sigd')
-parser.add_argument('-md', '--max_depth', type=int, required=False, help='the maximum exploration depth', dest='md')
+parser.add_argument('-md', '--max_depth', type=int, required=False, help='the maximum exploration depth', dest='md', default=1)
 parser.add_argument('-sy', '--extend_with_synonyms', action='store_true', required=False, help='if specified, explore also synonyms', dest='s')
 parser.add_argument('-su', '--extend_with_rna_protein_suffixes', action='store_true', required=False, help='if specified, explore also names suffixed with " rna" or " protein"', dest='su')
 parser.add_argument('-co', '--decompose_complexes', required=False, action='store_true', help='if specified, decompose protein complexes', dest='c')
@@ -157,18 +157,26 @@ def main():
     # args = parser.parse_args(args)
     args = parser.parse_args()
 
+    print(args.md)
+    if (args.md == None):
+        print('please specify the maximum depth of exploration -md (--max_depth), 0 means complete exploration, 1 means '
+              'first level of neighborhood.\n')
+        parser.print_help()
+        exit(0)
+
+
     if (not args.sig) and (not args.reg) and (not args.web):
-        print('please specify one of -reg (--regulation), -sig (--signaling), or -w (--web) option')
+        print('please specify one of -reg (--regulation), -sig (--signaling), or -w (--web) option\n')
         parser.print_help()
         exit(0)
 
     if (args.i is None) and (args.f is None) and (not args.web):
-        print('please fill the -i (--input_genes) or -f (--input_file) parameter')
+        print('please fill the -i (--input_genes) or -f (--input_file) parameter\n')
         parser.print_help()
         exit(0)
 
     if args.i and args.f:
-        print('--input_genes and --input_file parameters are mutually exclusive : please provide only one of them')
+        print('--input_genes and --input_file parameters are mutually exclusive : please provide only one of them\n')
         parser.print_help()
         exit(0)
 
@@ -185,12 +193,17 @@ def main():
         input_genes_parameter = read_input_genes(args.f)
 
     if args.incl and args.excl:
-        print('--include_sources and --exclude_sources parameters are mutually exclusive : please provide only one of them')
+        print('--include_sources and --exclude_sources parameters are mutually exclusive : please provide only one of them\\')
         parser.print_help()
         exit(0)
 
-    if args.md:
+    if args.md > 0:
+        print('>0')
         config.MAX_DEPTH = args.md
+        config.HAS_MAX_DEPTH = True
+    else:
+        print('complete explo')
+        config.HAS_MAX_DEPTH = False
 
     if args.endpoint:
         if args.endpoint == 'pc':
