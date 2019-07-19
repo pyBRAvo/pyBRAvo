@@ -114,12 +114,45 @@ def upstream_regulation(to_be_explored, already_explored = [], sif_network = [],
     """ 2nd stopping criteria """
     if (config.HAS_MAX_DEPTH and (current_depth >= config.MAX_DEPTH)):
         print("Exploring halted due to maximum depth")
+
+        """"""
+        """ Decomposing protein complexes """
+        """"""
+        if config.DECOMPOSE_COMPLEXES:
+            new_to_be_explored = []
+            for name in to_be_explored:
+                # different types of complexes
+                if "Complex (" in name:
+                    name = name.replace("Complex (", "").replace(")", "")
+                lsplits = name.split('/')
+                splits = []
+                for s in lsplits:
+                    splits = splits + s.split(':')  ## Jérémie,
+                if len(splits) > 1:
+                    print(name + ' decomposed into ' + str(splits))
+                    ### Début Jérémie
+                    splits = [s.strip() for s in splits if not filterSmallMolecules(s.strip())]
+                    print(name + ' decomposed into ' + str(splits) + ' when removing small molecules')
+                    if len(splits) == 0:
+                        print(name + ' is only composed by small molecules. It should be removed from the graph...')
+                    ### Début Jérémie
+                    new_to_be_explored.extend(splits)
+                    for s in splits:
+                        sif_network.append(
+                            {"source": s, "relation": "PART_OF", "target": name, "provenance": "PathwayCommons"})
+
+            for new in new_to_be_explored:
+                if new not in to_be_explored:
+                    to_be_explored.append(new)
+
         return sif_network
 
-    print()
-    print('exploration depth ' + str(current_depth))
-    print('to be explored ' + str(to_be_explored))
-    print()
+
+    if config.VERBOSE:
+        print()
+        print('exploration depth ' + str(current_depth))
+        print('to be explored ' + str(to_be_explored))
+        print()
 
     """"""
     """ Decomposing protein complexes """
@@ -186,7 +219,8 @@ def upstream_regulation(to_be_explored, already_explored = [], sif_network = [],
     """ Network reconstruction """
     """"""
     for regulators in chunks :
-        print('exploring ' + str(regulators))
+        if config.VERBOSE:
+            print('exploring ' + str(regulators))
         if config.FAST == True:
             query = Template(tpl_select_reg_query_fast)
         else:
