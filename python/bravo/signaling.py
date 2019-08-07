@@ -1,5 +1,7 @@
 from SPARQLWrapper import SPARQLWrapper, JSON
 from string import Template
+from urllib import error
+import time 
 
 import bravo.util as util
 import bravo.config as config
@@ -198,9 +200,46 @@ def upstream_signaling(to_be_explored, already_explored = [], sif_network = [], 
         sparql = SPARQLWrapper(config.SPARQL_ENDPOINT)
         sparql.setQuery(q)
         sparql.setReturnFormat(JSON)
-        results = sparql.query().convert()
 
-        already_explored.extend(regulators)
+        try: 
+            results = sparql.query().convert()
+            already_explored.extend(regulators)
+        except:
+            # Too much queries in a short time 
+            time.sleep(2)
+            try:
+                results = sparql.query().convert()
+                already_explored.extend(regulators)
+            except:
+                # Query too long
+                # Shorte the chunks to 1
+                minichunks = util.gen_chunks(regulators, 1)
+                results = {}
+                results["results"] = {}
+                results["results"]["bindings"] = []
+                for minireg in minichunks:
+                    minifchunks = util.gen_chunks_values_constraint(minireg, '?rightName')
+                    q = query.substitute(filter_DataSources=fds,
+                                 filter_SkipSmallMollecules=ssm,
+                                 filter_Chunks=minifchunks,
+                                 filter_Unknown = funk)
+                    if config.VERBOSE:
+                        print("======= PathwayCommons v9 query =======")
+                        print(q)
+                        print("=====================")
+
+                    sparql = SPARQLWrapper(config.SPARQL_ENDPOINT)
+                    sparql.setQuery(q)
+                    sparql.setReturnFormat(JSON)
+                    miniresults = sparql.query().convert()
+                    for res in miniresults["results"]["bindings"]:
+                        if not res:
+                            pass
+                        else:
+                            results["results"]["bindings"].append(res)
+                    already_explored.extend(minireg)
+
+        
         # print('already explored ' + str(already_explored))
 
         # ?rightName ?controlType ?controllerName ?reaction ?reaction_type ?source

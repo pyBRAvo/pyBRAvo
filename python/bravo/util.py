@@ -150,17 +150,21 @@ def get_gene_alias(gene_name):
     res.remove(gene_name)
     return res
 
-def gen_chunks(list_of_genes):
+def gen_chunks(list_of_genes, miniSize=None):
     """
     Splitting a list of genes based on `CHUNKS_SIZE`
     """
     chunks_list = []
     chunk = []
     cpt = 0
+    if miniSize is None:
+        threshold = config.CHUNKS_SIZE
+    else:
+        threshold = miniSize
     for gene in list_of_genes:
         chunk.append(gene)
         cpt += 1
-        if ((cpt % config.CHUNKS_SIZE) == 0):
+        if ((cpt % threshold) == 0):
             chunks_list.append(chunk)
             chunk = []
     if (len(chunk) > 0):
