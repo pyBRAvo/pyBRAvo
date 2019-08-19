@@ -28,7 +28,7 @@ grep -c 'PART_OF' "${NAME}"
 echo ''
 
 echo -n 'Coverage: '
-python3 ../scripts/compute_coverage.py "${NAME}" ../data/input-910.csv ../../Homo_sapiens.gene_info
+python3 scripts/compute_coverage.py "${NAME}" data/input-910.csv ../Homo_sapiens.gene_info
 
 echo ''
 
