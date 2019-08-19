@@ -62,7 +62,7 @@ def get_main_name(syn, index_syn, clashes):
         res = index_syn[syn]
     return res, syn in clashes
 
-# csv file
+# CSV file
 if len(sys.argv) > 2:
     csv_file_name = sys.argv[2]
     if not csv_file_name.startswith('/'):
@@ -70,6 +70,13 @@ if len(sys.argv) > 2:
     csvfile = open(csv_file_name, newline = '')
 else:
     csvfile = sys.stdin
+
+# Output clashes?
+output_clashes = False
+if len(sys.argv) > 3:
+    if sys.argv[3] == '--clashes':
+        output_clashes = True
+
 clashesfound = []
 reader = csv.reader(csvfile, delimiter = '\t')
 row = next(reader)   # Skip first line
@@ -85,6 +92,6 @@ for row in reader:
 
 csvfile.close()
 
-if clashesfound != []:
+if clashesfound != [] and output_clashes:
     print('{} clash(es) when searching for synonyms: {}'.format(len(clashesfound), ' '.join(clashesfound)), file = sys.stderr)
 
