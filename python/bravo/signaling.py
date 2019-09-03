@@ -54,7 +54,11 @@ select ?y where {
     sparql = SPARQLWrapper(config.SPARQL_ENDPOINT)
     sparql.setQuery(query)
     sparql.setReturnFormat(JSON)
-    results = sparql.query().convert()
+    try:
+        results = sparql.query().convert()
+    except:
+        sleep(3)
+        results = sparql.query().convert()
     return len(results.get("results").get("bindings")) > 0
 ### fin Jérémie
 
@@ -93,11 +97,12 @@ def upstream_signaling(to_be_explored, already_explored = [], sif_network = [], 
                 for s in lsplits:
                     splits = splits + s.split(':')  ## Jérémie,
                 if len(splits) > 1:
-                    print(name + ' decomposed into ' + str(splits))
                     splits = [s.strip() for s in splits if not filterSmallMolecules(s.strip())]
-                    print(name + ' decomposed into ' + str(splits) + ' when removing small molecules')
+                    if config.VERBOSE:
+                        print(name + ' decomposed into ' + str(splits) + ' when removing small molecules')
                     if len(splits) == 0:
-                        print(name + ' is only composed by small molecules. It should be removed from the graph...')
+                        if config.VERBOSE:
+                            print(name + ' is only composed by small molecules. It should be removed from the graph...')
                     ### Début Jérémie
                     new_to_be_explored.extend(splits)
                     for s in splits:
@@ -128,14 +133,13 @@ def upstream_signaling(to_be_explored, already_explored = [], sif_network = [], 
             lsplits = name.split('/')
             splits = []
             for s in lsplits:
-                splits = splits + s.split(':') ## Jérémie, 
+                splits = splits + s.split(':')
             if len(splits) > 1 :
-                print(name + ' decomposed into ' + str(splits))
+                # print(name + ' decomposed into ' + str(splits))
                 splits = [s.strip() for s in splits if not filterSmallMolecules(s.strip())]
                 print(name + ' decomposed into ' + str(splits)+' when removing small molecules')
                 if len(splits) == 0:
                     print(name + ' is only composed by small molecules. It should be removed from the graph...')
-                ### Début Jérémie
                 new_to_be_explored.extend(splits)
                 for s in splits:
                     sif_network.append({"source": s, "relation": "PART_OF", "target": name, "provenance": "PathwayCommons"})
@@ -143,7 +147,7 @@ def upstream_signaling(to_be_explored, already_explored = [], sif_network = [], 
         for new in new_to_be_explored:
             if new not in to_be_explored:
                 to_be_explored.append(new)
-        print('to be explored after complex decomposition ' + str(to_be_explored))
+        # print('to be explored after complex decomposition ' + str(to_be_explored))
 
     """"""
     """ Expanding the list with synonyms """
@@ -156,7 +160,8 @@ def upstream_signaling(to_be_explored, already_explored = [], sif_network = [], 
                 if s not in "-":
                     new_to_be_explored.append(s)
         if len(new_to_be_explored) > 0:
-           print('new synonmys to be explored:' + str(new_to_be_explored))
+            if config.VERBOSE:
+                print('new synonmys to be explored:' + str(new_to_be_explored))
         for new in new_to_be_explored:
             if new not in to_be_explored:
                 to_be_explored.append(new)
@@ -193,7 +198,7 @@ def upstream_signaling(to_be_explored, already_explored = [], sif_network = [], 
                              filter_Unknown = funk)
 
         if config.VERBOSE:
-            print("======= PathwayCommons v9 query =======")
+            print("======= PathwayCommons v11 query =======")
             print(q)
             print("=====================")
 
@@ -224,7 +229,7 @@ def upstream_signaling(to_be_explored, already_explored = [], sif_network = [], 
                                  filter_Chunks=minifchunks,
                                  filter_Unknown = funk)
                     if config.VERBOSE:
-                        print("======= PathwayCommons v9 query =======")
+                        print("======= PathwayCommons v11 query =======")
                         print(q)
                         print("=====================")
 
@@ -288,8 +293,9 @@ def upstream_signaling(to_be_explored, already_explored = [], sif_network = [], 
             # else:
             # print('skipping ' + source + ', already_explored')
 
-        print()
-        print('Explored ' + str(explored_reg) + ' regulators')
+        if config.VERBOSE:
+            print()
+            print('Explored ' + str(explored_reg) + ' regulators')
 
     current_depth += 1
     upstream_signaling(to_be_explored, already_explored, sif_network, current_depth, explored_reg)

@@ -126,9 +126,11 @@ def removeSuffixForUnification(name):
     remove_suffixes = [' mRna', ' protein', ' mRNA', ' mutant form', ' complex', ' modified form', ' protein complex', 'expression of ', ' gene', ' tetramer']
     for suf in remove_suffixes:
         if suf in name:
-            print('\t\tremoving suffix '+str(suf)+' for '+str(name))
+            if config.VERBOSE:
+                print('\t\tremoving suffix '+str(suf)+' for '+str(name))
             name = name.replace(suf, '')
-            print('\t\t\t\t --> ' + str(name))
+            if config.VERBOSE:
+                print('\t\t\t\t --> ' + str(name))
     return name
 
 
@@ -243,13 +245,15 @@ def fast_reg_network_unification(graph, index_syn):
                     key = index_syn[n]
                     if n not in key:
                         #print('\t\t' + str(n) + ' is synonym with ' + str(m))
-                        print('\t\t' + 'merging node ' + str(n) + ' into node ' + str(key))
+                        if config.VERBOSE:
+                            print('\t\t' + 'merging node ' + str(n) + ' into node ' + str(key))
                         try:
                             H = nx.contracted_nodes(H, key, n)
                         except:
                             continue
                     if m not in key:
-                        print('\t\t' + 'merging node ' + str(m) + ' into node ' + str(key))
+                        if config.VERBOSE:
+                            print('\t\t' + 'merging node ' + str(m) + ' into node ' + str(key))
                         try:
                             H = nx.contracted_nodes(H, key, m)
                         except:
@@ -313,7 +317,8 @@ def compute_coverage(ref_file, node_file):
             if s not in "-":
                 new_to_be_explored.append(s)
     if len(new_to_be_explored) > 0:
-        print('new synonmys are explored')
+        if config.VERBOSE:
+            print('new synonmys are explored')
     for new in new_to_be_explored:
         if new not in to_be_explored:
                 to_be_explored.append(new)
