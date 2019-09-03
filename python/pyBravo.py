@@ -157,7 +157,7 @@ def main():
     # args = parser.parse_args(args)
     args = parser.parse_args()
 
-    print(args.md)
+    #print(args.md)
     if (args.md == None):
         print('please specify the maximum depth of exploration -md (--max_depth), 0 means complete exploration, 1 means '
               'first level of neighborhood.\n')
@@ -198,11 +198,10 @@ def main():
         exit(0)
 
     if args.md > 0:
-        print('>0')
         config.MAX_DEPTH = args.md
         config.HAS_MAX_DEPTH = True
     else:
-        print('complete explo')
+        print('complete exploration')
         config.HAS_MAX_DEPTH = False
 
     if args.endpoint:
@@ -267,7 +266,6 @@ def main():
         write_to_SIF(G, args.o + '.sif')
         write_provenance(G, args.o + '-provenance.csv')
         md = get_centrality_as_md(G)
-        print(md)
 
         start_time = time.time()
         G_prime = util.fast_reg_network_unification(G, util.index_syn)
@@ -279,7 +277,6 @@ def main():
         print('Edges after simplification = ' + str(len(G_prime.edges())))
 
         md = get_centrality_as_md(G_prime)
-        print(md)
 
     elif args.sig:
         start_time = time.time()
@@ -292,7 +289,6 @@ def main():
         write_to_SIF(G, args.o + '.sif')
         write_provenance(G, args.o + '-provenance.csv')
         md = get_centrality_as_md(G)
-        print(md)
 
         start_time = time.time()
         G_prime = util.fast_reg_network_unification(G, util.index_syn)
@@ -304,7 +300,6 @@ def main():
         print('Edges after simplification = ' + str(len(G_prime.edges())))
 
         md = get_centrality_as_md(G_prime)
-        print(md)
 
     elif args.web:
         app.run(host='0.0.0.0', port=9000, debug=True)
