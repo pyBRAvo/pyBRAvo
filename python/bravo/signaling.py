@@ -50,14 +50,14 @@ select ?y where {
    ?x rdf:type <http://www.biopax.org/release/biopax-level3.owl#SmallMolecule>.
    ?x bp:displayName ?y.
    FILTER (?y = "$name"^^xsd:string).
-   } limit 1""".replace("$name",name)
+   } limit 1""".replace("$name",name.replace('"', ''))
     sparql = SPARQLWrapper(config.SPARQL_ENDPOINT)
     sparql.setQuery(query)
     sparql.setReturnFormat(JSON)
     try:
         results = sparql.query().convert()
     except:
-        sleep(3)
+        time.sleep(3)
         results = sparql.query().convert()
     return len(results.get("results").get("bindings")) > 0
 ### fin Jérémie
@@ -137,9 +137,11 @@ def upstream_signaling(to_be_explored, already_explored = [], sif_network = [], 
             if len(splits) > 1 :
                 # print(name + ' decomposed into ' + str(splits))
                 splits = [s.strip() for s in splits if not filterSmallMolecules(s.strip())]
-                print(name + ' decomposed into ' + str(splits)+' when removing small molecules')
+                if config.VERBOSE:
+                    print(name + ' decomposed into ' + str(splits)+' when removing small molecules')
                 if len(splits) == 0:
-                    print(name + ' is only composed by small molecules. It should be removed from the graph...')
+                    if config.VERBOSE:
+                        print(name + ' is only composed by small molecules. It should be removed from the graph...')
                 new_to_be_explored.extend(splits)
                 for s in splits:
                     sif_network.append({"source": s, "relation": "PART_OF", "target": name, "provenance": "PathwayCommons"})
