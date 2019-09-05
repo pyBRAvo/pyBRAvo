@@ -3,7 +3,7 @@ from SPARQLWrapper import SPARQLWrapper, JSON
 from string import Template
 from flask import Flask, request, render_template, abort, Response
 
-import requests
+import logging
 
 import bravo.util as util
 import bravo.config as config
@@ -108,12 +108,12 @@ def upstream_regulation(to_be_explored, already_explored = [], sif_network = [],
 
     """ 1st stopping criteria """
     if len(to_be_explored) == 0:
-        print("Exploring done")
+        logging.info("Exploring done")
         return sif_network
 
     """ 2nd stopping criteria """
     if (config.HAS_MAX_DEPTH and (current_depth >= config.MAX_DEPTH)):
-        print("Exploring halted due to maximum depth")
+        logging.info("Exploring halted due to maximum depth")
 
         """"""
         """ Decomposing protein complexes """
@@ -129,12 +129,12 @@ def upstream_regulation(to_be_explored, already_explored = [], sif_network = [],
                 for s in lsplits:
                     splits = splits + s.split(':')  ## Jérémie,
                 if len(splits) > 1:
-                    print(name + ' decomposed into ' + str(splits))
+                    logging.info(name + ' decomposed into ' + str(splits))
                     ### Début Jérémie
                     splits = [s.strip() for s in splits if not filterSmallMolecules(s.strip())]
-                    print(name + ' decomposed into ' + str(splits) + ' when removing small molecules')
+                    logging.info(name + ' decomposed into ' + str(splits) + ' when removing small molecules')
                     if len(splits) == 0:
-                        print(name + ' is only composed by small molecules. It should be removed from the graph...')
+                        logging.info(name + ' is only composed by small molecules. It should be removed from the graph...')
                     ### Début Jérémie
                     new_to_be_explored.extend(splits)
                     for s in splits:
@@ -147,12 +147,10 @@ def upstream_regulation(to_be_explored, already_explored = [], sif_network = [],
 
         return sif_network
 
+    # if config.VERBOSE:
+        logging.info('exploration depth ' + str(current_depth))
+        logging.info('to be explored ' + str(to_be_explored))
 
-    if config.VERBOSE:
-        print()
-        print('exploration depth ' + str(current_depth))
-        print('to be explored ' + str(to_be_explored))
-        print()
 
     """"""
     """ Decomposing protein complexes """
@@ -168,12 +166,12 @@ def upstream_regulation(to_be_explored, already_explored = [], sif_network = [],
             for s in lsplits:
                 splits = splits + s.split(':') ## Jérémie, 
             if len(splits) > 1 :
-                print(name + ' decomposed into ' + str(splits))
+                logging.info(name + ' decomposed into ' + str(splits))
                 ### Début Jérémie
                 splits = [s.strip() for s in splits if not filterSmallMolecules(s.strip())]
-                print(name + ' decomposed into ' + str(splits)+' when removing small molecules')
+                logging.info(name + ' decomposed into ' + str(splits)+' when removing small molecules')
                 if len(splits) == 0:
-                    print(name + ' is only composed by small molecules. It should be removed from the graph...')
+                    logging.info(name + ' is only composed by small molecules. It should be removed from the graph...')
                 ### Début Jérémie
                 new_to_be_explored.extend(splits)
                 for s in splits:
@@ -182,7 +180,7 @@ def upstream_regulation(to_be_explored, already_explored = [], sif_network = [],
         for new in new_to_be_explored:
             if new not in to_be_explored:
                     to_be_explored.append(new)
-        print('to be explored after complex decomposition ' + str(to_be_explored))
+        logging.info('to be explored after complex decomposition ' + str(to_be_explored))
 
     """"""
     """ Expanding the list with synonyms """
@@ -195,7 +193,7 @@ def upstream_regulation(to_be_explored, already_explored = [], sif_network = [],
                 if s not in "-":
                     new_to_be_explored.append(s)
         if len(new_to_be_explored) > 0:
-            print('new synonmys to be explored:' + str(new_to_be_explored))
+            logging.info('new synonmys to be explored:' + str(new_to_be_explored))
         for new in new_to_be_explored:
             if new not in to_be_explored:
                     to_be_explored.append(new)
@@ -219,8 +217,7 @@ def upstream_regulation(to_be_explored, already_explored = [], sif_network = [],
     """ Network reconstruction """
     """"""
     for regulators in chunks :
-        if config.VERBOSE:
-            print('exploring ' + str(regulators))
+        logging.debug('exploring ' + str(regulators))
         if config.FAST == True:
             query = Template(tpl_select_reg_query_fast)
         else:
@@ -236,10 +233,9 @@ def upstream_regulation(to_be_explored, already_explored = [], sif_network = [],
                     filter_Chunks = fchunks,
                     filter_Unknown = funk)
 
-        if config.VERBOSE:
-            print("======= PathwayCommons v9 query =======")
-            print(q)
-            print("=====================")
+        logging.debug("======= PathwayCommons v9 query =======")
+        logging.debug(q)
+        logging.debug("=====================")
 
         sparql = SPARQLWrapper(config.SPARQL_ENDPOINT)
         sparql.setQuery(q)
@@ -283,7 +279,6 @@ def upstream_regulation(to_be_explored, already_explored = [], sif_network = [],
             #else:
                 #print('skipping ' + source + ', already_explored')
 
-        print()
         print('Explored ' + str(explored_reg)+ ' regulators')
 
     current_depth += 1
