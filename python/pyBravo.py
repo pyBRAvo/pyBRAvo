@@ -1,5 +1,6 @@
 import time
 import logging
+import sys
 import argparse
 from argparse import RawTextHelpFormatter
 import operator
@@ -12,14 +13,7 @@ import bravo.config as config
 import bravo.util as util
 
 
-logger = logging.getLogger()
-
-ch = logging.StreamHandler()
-ch.setLevel(logging.DEBUG)
-formatter = logging.Formatter('%(asctime)s - %(name)s - %(pathname)s - %(funcName)s - %(lineno)d - %(levelname)s - %(message)s')
-ch.setFormatter(formatter)
-logger.addHandler(ch)
-logger.info("Intialized")
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s: %(message)s', stream=sys.stdout)
 
 app = Flask("pyBravo")
 
@@ -32,7 +26,7 @@ data_sources = ['bind', 'biogrid', 'corum',
 parser = argparse.ArgumentParser(description="""
 BRAvo upstream regulation network reconstruction. 
 Here are some possible command lines :
-    python pyBravo.py --server
+    python pyBravo.py --web
     python pyBravo.py --regulation --input_genes JUN/FOS SCN5A -md 2 -co -su -sy
     python pyBravo.py --regulation --input_genes JUN/FOS SCN5A -md 2 -excl mirtarbase -co -su -sy
     python pyBravo.py --regulation --input_file myGenes.csv -md 2 -incl pid panther msigdb kegg -co -su -sy
@@ -91,7 +85,7 @@ def write_to_SIF(G, filename):
             try:
                 sif_writer.writerow([e[0], e[2]['label'], e[1]])
             except TypeError:
-                print('Error for '+str(e))
+                logging.error('Error for '+str(e))
 
     print('SIF network written to ' + filename)
 
@@ -157,13 +151,18 @@ def main():
     # args = parser.parse_args(args)
     args = parser.parse_args()
 
-    #print(args.md)
     if (args.md == None):
         print('please specify the maximum depth of exploration -md (--max_depth), 0 means complete exploration, 1 means '
               'first level of neighborhood.\n')
         parser.print_help()
         exit(0)
 
+    if args.v:
+        config.VERBOSE = True
+        logging.getLogger().setLevel(logging.INFO)
+    else:
+        config.VERBOSE = False
+        logging.getLogger().setLevel(logging.CRITICAL)
 
     if (not args.sig) and (not args.reg) and (not args.web):
         print('please specify one of -reg (--regulation), -sig (--signaling), or -w (--web) option\n')
@@ -201,7 +200,7 @@ def main():
         config.MAX_DEPTH = args.md
         config.HAS_MAX_DEPTH = True
     else:
-        print('complete exploration')
+        logging.info('pyBravo is going for complete reconstruction')
         config.HAS_MAX_DEPTH = False
 
     if args.endpoint:
@@ -220,7 +219,7 @@ def main():
     if args.incl:
         config.DATA_SOURCES = args.incl
 
-    print("BRAvo will explore the following data sources:\n" + str(config.DATA_SOURCES))
+    logging.info("BRAvo will explore the following data sources:\n" + str(config.DATA_SOURCES))
 
     if args.s:
         config.EXTEND_WITH_SYNONYMS = True
@@ -247,10 +246,7 @@ def main():
     else:
         config.UNKNOWN = False
 
-    if args.v:
-        config.VERBOSE = True
-    else:
-        config.VERBOSE = False
+    logging.info("pyBravo version 1.0")
 
     if args.reg:
         start_time = time.time()
@@ -303,7 +299,7 @@ def main():
 
     elif args.web:
         app.run(host='0.0.0.0', port=9000, debug=True)
-        logger.info("pyBravo launched as a web server")
+        logging.info("pyBravo launched as a web server")
 
 if __name__ == "__main__":
     #args = ['--web']
