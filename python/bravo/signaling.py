@@ -1,7 +1,8 @@
 from SPARQLWrapper import SPARQLWrapper, JSON
 from string import Template
 from urllib import error
-import time 
+import time
+import logging
 
 import bravo.util as util
 import bravo.config as config
@@ -39,7 +40,6 @@ SELECT DISTINCT ?rightName ?leftName ?controlType ?controllerName ?reaction ?sou
 """
 
 ### début Jérémie
-
 def filterSmallMolecules(name):
     query="""
 PREFIX bp: <http://www.biopax.org/release/biopax-level3.owl#>
@@ -73,14 +73,14 @@ def upstream_signaling(to_be_explored, already_explored = [], sif_network = [], 
     """ 1st stopping criteria """
     """"""
     if len(to_be_explored) == 0:
-        print("Exploring done")
+        logging.info("Exploring done")
         return sif_network
 
     """"""
     """ 2nd stopping criteria """
     """"""
     if (config.HAS_MAX_DEPTH and (current_depth >= config.MAX_DEPTH)):
-        print("Exploring halted due to maximum depth")
+        logging.info("Exploring halted due to maximum depth")
 
         """"""
         """ Decomposing protein complexes """
@@ -97,12 +97,11 @@ def upstream_signaling(to_be_explored, already_explored = [], sif_network = [], 
                 for s in lsplits:
                     splits = splits + s.split(':')  ## Jérémie,
                 if len(splits) > 1:
+                    logging.info(name + ' decomposed into ' + str(splits))
                     splits = [s.strip() for s in splits if not filterSmallMolecules(s.strip())]
-                    if config.VERBOSE:
-                        print(name + ' decomposed into ' + str(splits) + ' when removing small molecules')
+                    logging.info(name + ' decomposed into ' + str(splits) + ' when removing small molecules')
                     if len(splits) == 0:
-                        if config.VERBOSE:
-                            print(name + ' is only composed by small molecules. It should be removed from the graph...')
+                        logging.info(name + ' is only composed by small molecules. It should be removed from the graph...')
                     ### Début Jérémie
                     new_to_be_explored.extend(splits)
                     for s in splits:
@@ -115,10 +114,8 @@ def upstream_signaling(to_be_explored, already_explored = [], sif_network = [], 
 
         return sif_network
 
-    if config.VERBOSE:
-        print()
-        print('exploration depth ' + str(current_depth))
-        print('to be explored ' + str(to_be_explored))
+
+
 
     """"""
     """ Decomposing protein complexes """
@@ -135,13 +132,12 @@ def upstream_signaling(to_be_explored, already_explored = [], sif_network = [], 
             for s in lsplits:
                 splits = splits + s.split(':')
             if len(splits) > 1 :
-                # print(name + ' decomposed into ' + str(splits))
+                logging.info(name + ' decomposed into ' + str(splits))
                 splits = [s.strip() for s in splits if not filterSmallMolecules(s.strip())]
-                if config.VERBOSE:
-                    print(name + ' decomposed into ' + str(splits)+' when removing small molecules')
+                logging.info(name + ' decomposed into ' + str(splits)+' when removing small molecules')
                 if len(splits) == 0:
-                    if config.VERBOSE:
-                        print(name + ' is only composed by small molecules. It should be removed from the graph...')
+                    logging.info(name + ' is only composed by small molecules. It should be removed from the graph...')
+                ### Début Jérémie
                 new_to_be_explored.extend(splits)
                 for s in splits:
                     sif_network.append({"source": s, "relation": "PART_OF", "target": name, "provenance": "PathwayCommons"})
@@ -149,7 +145,7 @@ def upstream_signaling(to_be_explored, already_explored = [], sif_network = [], 
         for new in new_to_be_explored:
             if new not in to_be_explored:
                 to_be_explored.append(new)
-        # print('to be explored after complex decomposition ' + str(to_be_explored))
+        logging.info('to be explored after complex decomposition ' + str(to_be_explored))
 
     """"""
     """ Expanding the list with synonyms """
@@ -162,8 +158,7 @@ def upstream_signaling(to_be_explored, already_explored = [], sif_network = [], 
                 if s not in "-":
                     new_to_be_explored.append(s)
         if len(new_to_be_explored) > 0:
-            if config.VERBOSE:
-                print('new synonmys to be explored:' + str(new_to_be_explored))
+           logging.info('new synonmys to be explored:' + str(new_to_be_explored))
         for new in new_to_be_explored:
             if new not in to_be_explored:
                 to_be_explored.append(new)
@@ -186,6 +181,8 @@ def upstream_signaling(to_be_explored, already_explored = [], sif_network = [], 
     """"""
     """ Network reconstruction """
     """"""
+    logging.info('exploration depth ' + str(current_depth))
+    logging.info('to be explored ' + str(to_be_explored))
     for regulators in chunks:
         # print('exploring ' + str(regulators))
         query = Template(tpl_select_signaling_query)
@@ -199,10 +196,9 @@ def upstream_signaling(to_be_explored, already_explored = [], sif_network = [], 
                              filter_Chunks=fchunks,
                              filter_Unknown = funk)
 
-        if config.VERBOSE:
-            print("======= PathwayCommons v11 query =======")
-            print(q)
-            print("=====================")
+
+        logging.debug("======= PathwayCommons v11 query =======")
+        logging.debug(q)
 
         sparql = SPARQLWrapper(config.SPARQL_ENDPOINT)
         sparql.setQuery(q)
@@ -212,14 +208,15 @@ def upstream_signaling(to_be_explored, already_explored = [], sif_network = [], 
             results = sparql.query().convert()
             already_explored.extend(regulators)
         except:
-            # Too much queries in a short time 
+            ## TO BE REVISED
+            ## Too much queries in a short time
             time.sleep(2)
             try:
                 results = sparql.query().convert()
                 already_explored.extend(regulators)
             except:
                 # Query too long
-                # Shorte the chunks to 1
+                # Short the chunks to 1
                 minichunks = util.gen_chunks(regulators, 1)
                 results = {}
                 results["results"] = {}
@@ -230,10 +227,9 @@ def upstream_signaling(to_be_explored, already_explored = [], sif_network = [], 
                                  filter_SkipSmallMollecules=ssm,
                                  filter_Chunks=minifchunks,
                                  filter_Unknown = funk)
-                    if config.VERBOSE:
-                        print("======= PathwayCommons v11 query =======")
-                        print(q)
-                        print("=====================")
+
+                    logging.debug("======= PathwayCommons v9 query =======")
+                    logging.debug(q)
 
                     sparql = SPARQLWrapper(config.SPARQL_ENDPOINT)
                     sparql.setQuery(q)
@@ -295,9 +291,7 @@ def upstream_signaling(to_be_explored, already_explored = [], sif_network = [], 
             # else:
             # print('skipping ' + source + ', already_explored')
 
-        if config.VERBOSE:
-            print()
-            print('Explored ' + str(explored_reg) + ' regulators')
+        print('Explored ' + str(explored_reg) + ' regulators')
 
     current_depth += 1
     upstream_signaling(to_be_explored, already_explored, sif_network, current_depth, explored_reg)
