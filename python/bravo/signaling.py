@@ -50,7 +50,7 @@ select ?y where {
    ?x rdf:type <http://www.biopax.org/release/biopax-level3.owl#SmallMolecule>.
    ?x bp:displayName ?y.
    FILTER (?y = "$name"^^xsd:string).
-   } limit 1""".replace("$name",name.replace('"', ''))
+   } limit 1""".replace("$name",name.replace('"', '').replace('\\\\', '\\'))
     sparql = SPARQLWrapper(config.SPARQL_ENDPOINT)
     sparql.setQuery(query)
     sparql.setReturnFormat(JSON)

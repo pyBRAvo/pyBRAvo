@@ -2,10 +2,13 @@
 This example allows you to use the pyPath library to construct signaling networks.
 This implementation was used to make a comparison with pyBRAvo.
 
+## Prerequisite
+conda 4.7.5
+
 ## Installation  
 The first step consists in loading pyBRAvo environment (as explain [here](https://gitlab.univ-nantes.fr/gaignard-a/BRAvo/blob/master/python/README.md)) and **pull the required pyPath packages**:
 ```bash
-source activate pybravo
+conda activate pybravo
 pip install git+https://github.com/saezlab/pypath.git
 conda install pycairo
 conda install pygraphviz pysftp
