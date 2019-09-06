@@ -197,7 +197,7 @@ def gen_chunks_values_constraint(chunks, variable_name):
     if len(chunks) > 0 :
         filter_clause = 'VALUES ' + variable_name + '{ \n'
         for g in chunks :
-            filter_clause += '"' + g.replace('"', '').replace("'", "") + '"^^xsd:string '
+            filter_clause += '"' + g.replace('"', '').replace("'", "").replace('\\\\', '\\') + '"^^xsd:string '
         k = filter_clause.rfind(" ")
         filter_clause = filter_clause[:k]
         filter_clause += ' } .'
