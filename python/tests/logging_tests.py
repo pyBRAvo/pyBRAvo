@@ -8,7 +8,7 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s: %(m
 class TestLogging(unittest.TestCase):
 
     def setUp(self) -> None:
-        logging.info("Logger intialized")
+        logging.info("Logger intialized !")
 
     def test_logging(self):
         logging.getLogger().setLevel(logging.DEBUG)
