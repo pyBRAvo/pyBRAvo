@@ -14,9 +14,9 @@ RUN apt-get install -y git curl wget bzip2 libcurl4-openssl-dev libxml2-dev zlib
 
 # Install miniconda to /miniconda
 RUN curl -LO https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh
-RUN bash Miniconda3-latest-Linux-x86_64.sh -p /miniconda -b
+RUN bash Miniconda3-latest-Linux-x86_64.sh -p /my-miniconda -b
 RUN rm Miniconda3-latest-Linux-x86_64.sh
-ENV PATH=/miniconda/bin:${PATH}
+ENV PATH=/my-miniconda/bin:${PATH}
 RUN conda config --add channels conda-forge
 RUN conda config --add channels bioconda
 RUN conda env create -n pybravo -f environment.yml
