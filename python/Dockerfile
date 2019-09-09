@@ -24,6 +24,7 @@ RUN conda env create -n pybravo -f environment.yml
 # Copy repository files to the image
 COPY README.md .
 COPY bravo bravo
+COPY tests tests
 COPY pyBravo.py .
 COPY BRAvo-python-API-tutorial.ipynb .
 
