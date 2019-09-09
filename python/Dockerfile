@@ -29,4 +29,5 @@ COPY pyBravo.py .
 COPY BRAvo-python-API-tutorial.ipynb .
 
 #CMD [ "bash" ]
-CMD /bin/bash -c 'source activate pybravo && jupyter notebook --ip 0.0.0.0 --no-browser --allow-root'
+#CMD /bin/bash -c 'source activate pybravo && jupyter notebook --ip 0.0.0.0 --no-browser --allow-root'
+RUN /bin/bash -c 'source activate pybravo && cd python && nosetests'
