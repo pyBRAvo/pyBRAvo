@@ -259,7 +259,8 @@ def upstream_signaling(to_be_explored, already_explored = [], sif_network = [], 
                     left = util.removeSuffixForUnification(left)
                     right = util.removeSuffixForUnification(right)
                     sif_network.append({"source": ctl, "relation": sign_type, "target": reac, "provenance": provenance})
-                    sif_network.append({"source": reac, "relation": "HAS_LEFT", "target": left, "provenance": provenance})
+                    #sif_network.append({"source": reac, "relation": "HAS_LEFT", "target": left, "provenance": provenance})
+                    sif_network.append({"source": left, "relation": "IS_LEFT_OF", "target": reac, "provenance": provenance})
                     sif_network.append({"source": reac, "relation": "HAS_RIGHT", "target": right, "provenance": provenance})
                 else:
                     ctl = util.removeSuffixForUnification(ctl)
@@ -276,7 +277,8 @@ def upstream_signaling(to_be_explored, already_explored = [], sif_network = [], 
                     left = util.removeSuffixForUnification(left)
                     right = util.removeSuffixForUnification(right)
                     sif_network.append({"source": ctl, "relation": "CATALYSIS", "target": reac, "provenance": provenance})
-                    sif_network.append({"source": reac, "relation": "HAS_LEFT", "target": left, "provenance": provenance})
+                    #sif_network.append({"source": reac, "relation": "HAS_LEFT", "target": left, "provenance": provenance})
+                    sif_network.append({"source": left, "relation": "IS_LEFT_OF", "target": reac, "provenance": provenance})
                     sif_network.append({"source": reac, "relation": "HAS_RIGHT", "target": right, "provenance": provenance})
                 else:
                     ctl = util.removeSuffixForUnification(ctl)
