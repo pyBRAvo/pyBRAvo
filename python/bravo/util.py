@@ -10,6 +10,8 @@ import json
 import io
 import time
 import csv
+from string import Template
+from SPARQLWrapper import SPARQLWrapper, JSON
 
 import bravo.config as config
 from IPython.display import display, Markdown, Latex
@@ -151,6 +153,50 @@ def get_gene_alias(gene_name):
     res.remove(gene_name)
     return res
 
+def get_gene_IDs(list_of_genes):
+    """
+    """
+
+    query_template = """
+    PREFIX bp: <http://www.biopax.org/release/biopax-level3.owl#>
+    PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+    PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+    SELECT DISTINCT ?name ?id WHERE {
+
+        $inject_values
+
+        ?controller bp:displayName ?name .
+        ?controller bp:entityReference ?id .
+    }
+    """
+
+    genes_ids = []
+    chunks = gen_chunks(list_of_genes, miniSize=50)
+
+    for i, chunk in enumerate(chunks):
+        # if i > 0:
+        #    break
+        # print(chunk)
+        values_constraint = gen_chunks_values_constraint(chunks=chunk, variable_name='?name')
+
+        query = Template(query_template)
+        q = query.substitute(inject_values=values_constraint)
+        print(q)
+
+        sparql = SPARQLWrapper(config.SPARQL_ENDPOINT)
+        sparql.setQuery(q)
+        sparql.setReturnFormat(JSON)
+        results = sparql.query().convert()
+        for result in results["results"]["bindings"]:
+            print('{} : {}'.format(result['name']['value'], result['id']['value']))
+            #genes_ids[result['name']['value']] = result['id']['value']
+            genes_ids.append(result['id']['value'])
+
+    return genes_ids
+
+
+
 def gen_chunks(list_of_genes, miniSize=None):
     """
     Splitting a list of genes based on `CHUNKS_SIZE`
@@ -200,6 +246,20 @@ def gen_chunks_values_constraint(chunks, variable_name):
             filter_clause += '"' + g.replace('"', '').replace("'", "").replace('\\\\', '\\') + '"^^xsd:string '
         k = filter_clause.rfind(" ")
         filter_clause = filter_clause[:k]
+        filter_clause += ' } .'
+    return filter_clause
+
+def gen_IDs_values_constraint(chunks, variable_name):
+    """
+    Generation of a SPARQL VALUES clause to restrict gene/protein/etc. names
+    Produces something like
+        VALUES ?controlledName {<hsa-miR-6079> <>}
+    """
+    filter_clause = ''
+    if len(chunks) > 0 :
+        filter_clause = 'VALUES ' + variable_name + ' { \n'
+        for g in chunks :
+            filter_clause += ' <' + g + '> \n'
         filter_clause += ' } .'
     return filter_clause
 

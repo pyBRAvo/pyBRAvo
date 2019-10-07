@@ -250,10 +250,13 @@ def main():
 
     if args.reg:
         start_time = time.time()
+
+        list_of_gene_IDs = util.get_gene_IDs(input_genes_parameter)
+
         # reconstructed_network = bravo.upstream_regulation(["JUN/FOS", "SCN5A"], max_depth=1)
         # reconstructed_network = bravo.upstream_regulation(["JUN/FOS", "SCN5A"], max_depth=2, data_sources = data_sources)
         # reconstructed_network = bravo.upstream_regulation(args.i, args.md, data_sources=data_sources)
-        reconstructed_network = upstream_regulation(input_genes_parameter)
+        reconstructed_network = upstream_regulation(list_of_gene_IDs)
         elapsed_time = round((time.time() - start_time), 2)
 
         print("--- Upstream regulation network in %s seconds ---" % elapsed_time)
