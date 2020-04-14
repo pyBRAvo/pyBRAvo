@@ -3,6 +3,9 @@
 /dependency-reduced-pom.xml
 /hs_err_*.log
 /python/.ipynb*
+src/bravo/__pycache__/
 *~
 /experiments-comparison/log
 /experiments-comparison/.ipynb*
+out-*
+out.sif
