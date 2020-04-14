@@ -1,87 +1,108 @@
 # BRAvo - Biological netwoRk Assembly
+## pyBRAvo 
+This tool is a Python implementation of BRAvo. It generates an upstream regulation network from the PathwayCommons knowledge base. 
+pyBRAvo can be used through either a Jupyter notebook, or a command line interface. 
 
-## Synopsis
-BRAvo is a web application and command line tool for biomedical data integration and reuse.
+## Installation  
+The first step consists in creating a software environment and **pull the required python packages**:
+```
+conda create --name pybravo rdflib requests matplotlib jupyter networkx flask -c conda-forge -c bioconda
+source activate pybravo
+pip install nxpd
+```
+Then just **clone** this repository:
+```
+git clone https://gitlab.univ-nantes.fr/gaignard-a/BRAvo.git
+cd BRAvo/python
+```
+Then **test** that everything is fine:
+```
+python pyBravo.py --regulation --fast --input_genes JUN/FOS SCN5A -md 2 -co -su -sy -excl mirtarbase
+```
+You should obtain something like:
+```
+--- Upstream regulation network in 7.88 seconds ---
+Number of nodes = 248
+Number of edges = 323
+SIF network written to out.sif
+Basic regulation reaction provenance written to out-provenance.csv
 
-## Requirements
-- git
-- maven
-- java8
-- mongodb
+| Node | Degree Centrality |
+|------|------|
+| TNF | 0.324 | 
+| FOS | 0.235 | 
+| SOD2 | 0.17 | 
+| IL2 | 0.069 | 
+| IL1A | 0.065 | 
+| FGF2 | 0.053 | 
+| JUN | 0.053 | 
+| BDNF | 0.045 | 
+| NGF | 0.045 | 
+| EP300 | 0.04 | 
+```
 
-## Installation
-1/ Clone and Install dependency 
+For signaling networks :
+```
+python pyBravo.py --signaling --input_genes JUN/FOS SCN5A -md 2 -co -su -sy -excl mirtarbase --fast
+```
+You should obtain something like:
+```
+--- Upstream regulation network in 1.78 seconds ---
+Number of nodes = 257
+Number of edges = 336
+SIF network written to out.sif
+Basic regulation reaction provenance written to out-provenance.csv
 
-    cd workspace/
-    git clone https://github.com/albangaignard/galaxy-ld.git
-    cd galaxy-ld/galaxy-PROV
-    mvn clean install -Dmaven.test.skip=true
+| Node | Degree Centrality |
+|------|------|
+| ERK1-2-active | 0.191 |
+| Jnk1 | 0.09 |
+| Fyn | 0.074 |
+| ELK1 | 0.07 |
+| Btk | 0.066 |
+| LYN | 0.062 |
+| JNK family-active | 0.062 |
+| AP1 | 0.055 |
+| p38 alpha | 0.055 |
+| JUN | 0.055 |
+```
+## Usage from a Jupyter notebook
+Inside the python directory, just run the `jupyter-notebook BRAvo-python-API-tutorial.ipynb` command. 
 
-2/ Clone the repository
+The notebook can be browsed [here](https://gitlab.univ-nantes.fr/gaignard-a/BRAvo/blob/master/python/BRAvo-python-API-tutorial.ipynb). 
 
-    cd workspace/
-    git clone https://gitlab.univ-nantes.fr/gaignard-a/BRAvo.git
+## Usage from a terminal 
+Here is the help message for the command line when running `python pyBravo.py`:
+```
+usage: pyBravo.py [-h] [-md MD] [-sy] [-su] [-co] [-i I [I ...]] [-f F]
+                  [-incl INCL [INCL ...]] [-excl EXCL [EXCL ...]] [-v]
 
-3/ Install [[see](https://docs.mongodb.com/manual/tutorial/install-mongodb-on-ubuntu/)] and Run mondogb 
-
-    sudo service mongod start
+BRAvo upstream regulation network reconstruction. 
+Here are some possible command lines :
     
-4/ Build package with maven :
-
-    cd BRAvo/
-    mvn install -Dmaven.test.skip=true
+    python pyBravo.py --input_genes JUN/FOS SCN5A -md 2 -co -su -sy
+    python pyBravo.py --input_genes JUN/FOS SCN5A -md 2 -excl mirtarbase -co -su -sy
+    python pyBravo.py --input_file myGenes.csv -md 2 -incl pid panther msigdb kegg -co -su -sy
     
-5/ Choose web app or command line :
+Please report any issue to alban.gaignard@univ-nantes.fr. 
 
-Run the **web appliation** 
+optional arguments:
+  -h, --help            show this help message and exit
+  -md MD, --max_depth MD
+                        the maximum exploration depth
+  -sy, --extend_with_synonyms
+                        if specified, explore also synonyms
+  -su, --extend_with_rna_protein_suffixes
+                        if specified, explore also names suffixed with " rna" or " protein"
+  -co, --decompose_complexes
+                        if specified, decompose protein complexes
+  -i I [I ...], --input_genes I [I ...]
+                        the input gene list
+  -f F, --input_file F  the input file, one gene per line
+  -incl INCL [INCL ...], --include_sources INCL [INCL ...]
+                        the data sources to include
+  -excl EXCL [EXCL ...], --exclude_sources EXCL [EXCL ...]
+                        the data sources to exclude
+  -v, --verbose         print debug information
 
-    java -jar target/BRAvo-1.0-SNAPSHOT-bin.jar
-
-If behind a proxy 
-
-    java -Dhttp.proxyHost=<proxy> -Dhttp.proxyPort=<port> -jar target/BRAvo-1.0-SNAPSHOT-bin.jar
-   
-See on http://localhost:8091/
-
-Use it as **command line**
-
-    java -cp target/BRAvo-1.0-SNAPSHOT-bin.jar fr.bravo.cli.Main -i <input_file> -o <output_file> -f ("rdf" | "turtle") (-n | -d) (-r | -s) -w ('Up' | 'Down')
-         
-             -d,--id                       Input data are ids
-             -ds,--data_sources <arg>      A data sources among {bind, biogrid, corum,
-                                           ctd, dip, drugbank, hprd, humancyc, inoh,
-                                           intact, kegg, mirtarbase, netpath, panther,
-                                           pid, psp, reactome, reconx, smpdb, wp,
-                                           intact_complex, msigdb}. Multiple -ds
-                                           parameters can be used.
-             -f,--format <arg>             Supported output file format: sif, turtle,
-                                           ttl, rdfxml, rdfjson, jsonld
-             -i,--input <arg>              Input csv file name
-             -md,--max_depth <arg>         Maximum exploration depth
-             -n,--name                     Input data are names
-             -o,--output <arg>             Output file name
-             -r,--regulation               Build regulatory network
-             -s,--signaling                Build signaling network (Downstreaming
-                                           reconstruction soon available)
-             -ssm,--skip_small_molecules   Skip small molecules
-             -w,--way <arg>                Way of reconstruction {'Up' | 'Down'} -
-                                           Default is set to 'Up' - Downstream signaling 
-                                           reconstruction soon available
-
-
-
-It can be used to build **upstream gene regulation network** with gene names : 
-
-    java -cp target/BRAvo-1.0-SNAPSHOT-bin.jar fr.bravo.cli.Main -i input-name.csv -o output.rdf -f "rdf" -r -n -w 'Up'
-    
-Or it can be used to build upstream gene regulation network with gene IDs : 
-
-    java -cp target/BRAvo-1.0-SNAPSHOT-bin.jar fr.bravo.cli.Main -i input-id.csv -o output.ttl -f "turtle" -r -d
-
-Or it can be used to build **downstream** gene regulation network with gene names : 
-
-    java -cp target/BRAvo-1.0-SNAPSHOT-bin.jar fr.bravo.cli.Main -i input-id.csv -o output.ttl -f "turtle" -r -n -w 'Down'
-    
-It can also be used to build **signaling network** with gene **names** (only upstream available): 
-
-    java -cp target/BRAvo-1.0-SNAPSHOT-bin.jar fr.bravo.cli.Main -i input-name.csv -o output.rdf -f "rdf" -s -n -w 'Up'
+```
