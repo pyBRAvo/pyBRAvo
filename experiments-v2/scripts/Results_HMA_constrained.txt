@@ -1,0 +1,308 @@
+Test sur ../data/HMA_constrained/HMR3674wFluxes_A498_FBS.mat
+  Nombre de gènes cibles 375
+  Le nombre total de cibles potentielles après reconstruction est 19
+  Le nombre total de cibles potentielles avant reconstruction est 10
+  Le réseau de régulation possède 350 gènes
+  Le réseau de régulation possède 4087 interactions
+  Le sous-réseau de régulation impacté possède 178 gènes
+  Le sous-réseau de régulation impacté possède 2085 interactions
+----------------
+FORFILTER; ../data/HMA_constrained/HMR3674wFluxes_A498_FBS.mat ; 375 ; 19 ; 10 ; 350 ; 4087 ; 178 ; 2085
+----------------
+Test sur ../data/HMA_constrained/HMR3674wFluxes_ACHN_FBS.mat
+  Nombre de gènes cibles 375
+  Le nombre total de cibles potentielles après reconstruction est 18
+  Le nombre total de cibles potentielles avant reconstruction est 9
+  Le réseau de régulation possède 350 gènes
+  Le réseau de régulation possède 4104 interactions
+  Le sous-réseau de régulation impacté possède 178 gènes
+  Le sous-réseau de régulation impacté possède 2092 interactions
+----------------
+FORFILTER; ../data/HMA_constrained/HMR3674wFluxes_ACHN_FBS.mat ; 375 ; 18 ; 9 ; 350 ; 4104 ; 178 ; 2092
+----------------
+Test sur ../data/HMA_constrained/HMR3674wFluxes_CAKI-1_FBS.mat
+  Nombre de gènes cibles 390
+  Le nombre total de cibles potentielles après reconstruction est 18
+  Le nombre total de cibles potentielles avant reconstruction est 9
+  Le réseau de régulation possède 360 gènes
+  Le réseau de régulation possède 4177 interactions
+  Le sous-réseau de régulation impacté possède 185 gènes
+  Le sous-réseau de régulation impacté possède 2134 interactions
+----------------
+FORFILTER; ../data/HMA_constrained/HMR3674wFluxes_CAKI-1_FBS.mat ; 390 ; 18 ; 9 ; 360 ; 4177 ; 185 ; 2134
+----------------
+Test sur ../data/HMA_constrained/HMR3674wFluxes_RXF-393_FBS.mat
+  Nombre de gènes cibles 393
+  Le nombre total de cibles potentielles après reconstruction est 19
+  Le nombre total de cibles potentielles avant reconstruction est 10
+  Le réseau de régulation possède 361 gènes
+  Le réseau de régulation possède 4168 interactions
+  Le sous-réseau de régulation impacté possède 185 gènes
+  Le sous-réseau de régulation impacté possède 2132 interactions
+----------------
+FORFILTER; ../data/HMA_constrained/HMR3674wFluxes_RXF-393_FBS.mat ; 393 ; 19 ; 10 ; 361 ; 4168 ; 185 ; 2132
+----------------
+Test sur ../data/HMA_constrained/HMR3674wFluxes_TK-10_FBS.mat
+  Nombre de gènes cibles 359
+  Le nombre total de cibles potentielles après reconstruction est 17
+  Le nombre total de cibles potentielles avant reconstruction est 8
+  Le réseau de régulation possède 341 gènes
+  Le réseau de régulation possède 4006 interactions
+  Le sous-réseau de régulation impacté possède 174 gènes
+  Le sous-réseau de régulation impacté possède 2052 interactions
+----------------
+FORFILTER; ../data/HMA_constrained/HMR3674wFluxes_TK-10_FBS.mat ; 359 ; 17 ; 8 ; 341 ; 4006 ; 174 ; 2052
+----------------
+Test sur ../data/HMA_constrained/iPC1675wFluxes_PC-3_FBS.mat
+  Nombre de gènes cibles 440
+  Le nombre total de cibles potentielles après reconstruction est 25
+  Le nombre total de cibles potentielles avant reconstruction est 16
+  Le réseau de régulation possède 396 gènes
+  Le réseau de régulation possède 4229 interactions
+  Le sous-réseau de régulation impacté possède 198 gènes
+  Le sous-réseau de régulation impacté possède 2121 interactions
+----------------
+FORFILTER; ../data/HMA_constrained/iPC1675wFluxes_PC-3_FBS.mat ; 440 ; 25 ; 16 ; 396 ; 4229 ; 198 ; 2121
+----------------
+Test sur ../data/HMA_constrained/iPC1675wFluxes_PC-3_HAM.mat
+  Nombre de gènes cibles 539
+  Le nombre total de cibles potentielles après reconstruction est 29
+  Le nombre total de cibles potentielles avant reconstruction est 20
+  Le réseau de régulation possède 476 gènes
+  Le réseau de régulation possède 4781 interactions
+  Le sous-réseau de régulation impacté possède 238 gènes
+  Le sous-réseau de régulation impacté possède 2382 interactions
+----------------
+FORFILTER; ../data/HMA_constrained/iPC1675wFluxes_PC-3_HAM.mat ; 539 ; 29 ; 20 ; 476 ; 4781 ; 238 ; 2382
+----------------
+Test sur ../data/HMA_constrained/iPC1675woFluxes_FBS.mat
+  Nombre de gènes cibles 356
+  Le nombre total de cibles potentielles après reconstruction est 13
+  Le nombre total de cibles potentielles avant reconstruction est 4
+  Le réseau de régulation possède 337 gènes
+  Le réseau de régulation possède 3952 interactions
+  Le sous-réseau de régulation impacté possède 169 gènes
+  Le sous-réseau de régulation impacté possède 1972 interactions
+----------------
+FORFILTER; ../data/HMA_constrained/iPC1675woFluxes_FBS.mat ; 356 ; 13 ; 4 ; 337 ; 3952 ; 169 ; 1972
+----------------
+Test sur ../data/HMA_constrained/iPC1675woFluxes_HAM.mat
+  Nombre de gènes cibles 364
+  Le nombre total de cibles potentielles après reconstruction est 15
+  Le nombre total de cibles potentielles avant reconstruction est 6
+  Le réseau de régulation possède 342 gènes
+  Le réseau de régulation possède 3972 interactions
+  Le sous-réseau de régulation impacté possède 174 gènes
+  Le sous-réseau de régulation impacté possède 1997 interactions
+----------------
+FORFILTER; ../data/HMA_constrained/iPC1675woFluxes_HAM.mat ; 364 ; 15 ; 6 ; 342 ; 3972 ; 174 ; 1997
+----------------
+Test sur ../data/HMA_constrained/iPC1675woFluxes__FBS.mat
+  Nombre de gènes cibles 356
+  Le nombre total de cibles potentielles après reconstruction est 13
+  Le nombre total de cibles potentielles avant reconstruction est 4
+  Le réseau de régulation possède 336 gènes
+  Le réseau de régulation possède 3945 interactions
+  Le sous-réseau de régulation impacté possède 168 gènes
+  Le sous-réseau de régulation impacté possède 1968 interactions
+----------------
+FORFILTER; ../data/HMA_constrained/iPC1675woFluxes__FBS.mat ; 356 ; 13 ; 4 ; 336 ; 3945 ; 168 ; 1968
+----------------
+Test sur ../data/HMA_constrained/iPC1675woFluxes__HAM.mat
+  Nombre de gènes cibles 364
+  Le nombre total de cibles potentielles après reconstruction est 15
+  Le nombre total de cibles potentielles avant reconstruction est 6
+  Le réseau de régulation possède 342 gènes
+  Le réseau de régulation possède 3972 interactions
+  Le sous-réseau de régulation impacté possède 174 gènes
+  Le sous-réseau de régulation impacté possède 1997 interactions
+----------------
+FORFILTER; ../data/HMA_constrained/iPC1675woFluxes__HAM.mat ; 364 ; 15 ; 6 ; 342 ; 3972 ; 174 ; 1997
+----------------
+Test sur ../data/HMA_constrained/iRC1410wFluxes_786-O_FBS.mat
+  Nombre de gènes cibles 506
+  Le nombre total de cibles potentielles après reconstruction est 26
+  Le nombre total de cibles potentielles avant reconstruction est 17
+  Le réseau de régulation possède 445 gènes
+  Le réseau de régulation possède 4550 interactions
+  Le sous-réseau de régulation impacté possède 221 gènes
+  Le sous-réseau de régulation impacté possède 2235 interactions
+----------------
+FORFILTER; ../data/HMA_constrained/iRC1410wFluxes_786-O_FBS.mat ; 506 ; 26 ; 17 ; 445 ; 4550 ; 221 ; 2235
+----------------
+Test sur ../data/HMA_constrained/iRC1410wFluxes_786-O_HAM.mat
+  Nombre de gènes cibles 527
+  Le nombre total de cibles potentielles après reconstruction est 28
+  Le nombre total de cibles potentielles avant reconstruction est 19
+  Le réseau de régulation possède 461 gènes
+  Le réseau de régulation possède 4674 interactions
+  Le sous-réseau de régulation impacté possède 228 gènes
+  Le sous-réseau de régulation impacté possède 2303 interactions
+----------------
+FORFILTER; ../data/HMA_constrained/iRC1410wFluxes_786-O_HAM.mat ; 527 ; 28 ; 19 ; 461 ; 4674 ; 228 ; 2303
+----------------
+Test sur ../data/HMA_constrained/iRC1410wFluxes_A498_FBS.mat
+  Nombre de gènes cibles 524
+  Le nombre total de cibles potentielles après reconstruction est 28
+  Le nombre total de cibles potentielles avant reconstruction est 19
+  Le réseau de régulation possède 456 gènes
+  Le réseau de régulation possède 4594 interactions
+  Le sous-réseau de régulation impacté possède 226 gènes
+  Le sous-réseau de régulation impacté possède 2261 interactions
+----------------
+FORFILTER; ../data/HMA_constrained/iRC1410wFluxes_A498_FBS.mat ; 524 ; 28 ; 19 ; 456 ; 4594 ; 226 ; 2261
+----------------
+Test sur ../data/HMA_constrained/iRC1410wFluxes_A498_HAM.mat
+  Nombre de gènes cibles 523
+  Le nombre total de cibles potentielles après reconstruction est 28
+  Le nombre total de cibles potentielles avant reconstruction est 19
+  Le réseau de régulation possède 460 gènes
+  Le réseau de régulation possède 4672 interactions
+  Le sous-réseau de régulation impacté possède 227 gènes
+  Le sous-réseau de régulation impacté possède 2302 interactions
+----------------
+FORFILTER; ../data/HMA_constrained/iRC1410wFluxes_A498_HAM.mat ; 523 ; 28 ; 19 ; 460 ; 4672 ; 227 ; 2302
+----------------
+Test sur ../data/HMA_constrained/iRC1410wFluxes_ACHN_FBS.mat
+  Nombre de gènes cibles 520
+  Le nombre total de cibles potentielles après reconstruction est 27
+  Le nombre total de cibles potentielles avant reconstruction est 18
+  Le réseau de régulation possède 454 gènes
+  Le réseau de régulation possède 4593 interactions
+  Le sous-réseau de régulation impacté possède 226 gènes
+  Le sous-réseau de régulation impacté possède 2261 interactions
+----------------
+FORFILTER; ../data/HMA_constrained/iRC1410wFluxes_ACHN_FBS.mat ; 520 ; 27 ; 18 ; 454 ; 4593 ; 226 ; 2261
+----------------
+Test sur ../data/HMA_constrained/iRC1410wFluxes_ACHN_HAM.mat
+  Nombre de gènes cibles 536
+  Le nombre total de cibles potentielles après reconstruction est 28
+  Le nombre total de cibles potentielles avant reconstruction est 19
+  Le réseau de régulation possède 468 gènes
+  Le réseau de régulation possède 4769 interactions
+  Le sous-réseau de régulation impacté possède 234 gènes
+  Le sous-réseau de régulation impacté possède 2367 interactions
+----------------
+FORFILTER; ../data/HMA_constrained/iRC1410wFluxes_ACHN_HAM.mat ; 536 ; 28 ; 19 ; 468 ; 4769 ; 234 ; 2367
+----------------
+Test sur ../data/HMA_constrained/iRC1410wFluxes_CAKI-1_FBS.mat
+  Nombre de gènes cibles 521
+  Le nombre total de cibles potentielles après reconstruction est 26
+  Le nombre total de cibles potentielles avant reconstruction est 17
+  Le réseau de régulation possède 455 gènes
+  Le réseau de régulation possède 4587 interactions
+  Le sous-réseau de régulation impacté possède 225 gènes
+  Le sous-réseau de régulation impacté possède 2258 interactions
+----------------
+FORFILTER; ../data/HMA_constrained/iRC1410wFluxes_CAKI-1_FBS.mat ; 521 ; 26 ; 17 ; 455 ; 4587 ; 225 ; 2258
+----------------
+Test sur ../data/HMA_constrained/iRC1410wFluxes_CAKI-1_HAM.mat
+  Nombre de gènes cibles 527
+  Le nombre total de cibles potentielles après reconstruction est 28
+  Le nombre total de cibles potentielles avant reconstruction est 19
+  Le réseau de régulation possède 462 gènes
+  Le réseau de régulation possède 4695 interactions
+  Le sous-réseau de régulation impacté possède 229 gènes
+  Le sous-réseau de régulation impacté possède 2320 interactions
+----------------
+FORFILTER; ../data/HMA_constrained/iRC1410wFluxes_CAKI-1_HAM.mat ; 527 ; 28 ; 19 ; 462 ; 4695 ; 229 ; 2320
+----------------
+Test sur ../data/HMA_constrained/iRC1410wFluxes_RXF-393_FBS.mat
+  Nombre de gènes cibles 542
+  Le nombre total de cibles potentielles après reconstruction est 27
+  Le nombre total de cibles potentielles avant reconstruction est 18
+  Le réseau de régulation possède 469 gènes
+  Le réseau de régulation possède 4691 interactions
+  Le sous-réseau de régulation impacté possède 232 gènes
+  Le sous-réseau de régulation impacté possède 2317 interactions
+----------------
+FORFILTER; ../data/HMA_constrained/iRC1410wFluxes_RXF-393_FBS.mat ; 542 ; 27 ; 18 ; 469 ; 4691 ; 232 ; 2317
+----------------
+Test sur ../data/HMA_constrained/iRC1410wFluxes_RXF-393_HAM.mat
+  Nombre de gènes cibles 528
+  Le nombre total de cibles potentielles après reconstruction est 28
+  Le nombre total de cibles potentielles avant reconstruction est 19
+  Le réseau de régulation possède 460 gènes
+  Le réseau de régulation possède 4651 interactions
+  Le sous-réseau de régulation impacté possède 228 gènes
+  Le sous-réseau de régulation impacté possède 2298 interactions
+----------------
+FORFILTER; ../data/HMA_constrained/iRC1410wFluxes_RXF-393_HAM.mat ; 528 ; 28 ; 19 ; 460 ; 4651 ; 228 ; 2298
+----------------
+Test sur ../data/HMA_constrained/iRC1410wFluxes_TK-10_FBS.mat
+  Nombre de gènes cibles 492
+  Le nombre total de cibles potentielles après reconstruction est 25
+  Le nombre total de cibles potentielles avant reconstruction est 16
+  Le réseau de régulation possède 431 gènes
+  Le réseau de régulation possède 4465 interactions
+  Le sous-réseau de régulation impacté possède 213 gènes
+  Le sous-réseau de régulation impacté possède 2201 interactions
+----------------
+FORFILTER; ../data/HMA_constrained/iRC1410wFluxes_TK-10_FBS.mat ; 492 ; 25 ; 16 ; 431 ; 4465 ; 213 ; 2201
+----------------
+Test sur ../data/HMA_constrained/iRC1410wFluxes_TK-10_HAM.mat
+  Nombre de gènes cibles 530
+  Le nombre total de cibles potentielles après reconstruction est 28
+  Le nombre total de cibles potentielles avant reconstruction est 19
+  Le réseau de régulation possède 462 gènes
+  Le réseau de régulation possède 4678 interactions
+  Le sous-réseau de régulation impacté possède 228 gènes
+  Le sous-réseau de régulation impacté possède 2303 interactions
+----------------
+FORFILTER; ../data/HMA_constrained/iRC1410wFluxes_TK-10_HAM.mat ; 530 ; 28 ; 19 ; 462 ; 4678 ; 228 ; 2303
+----------------
+Test sur ../data/HMA_constrained/iRC1410wFluxes_UO-31_FBS.mat
+  Nombre de gènes cibles 490
+  Le nombre total de cibles potentielles après reconstruction est 25
+  Le nombre total de cibles potentielles avant reconstruction est 16
+  Le réseau de régulation possède 429 gènes
+  Le réseau de régulation possède 4479 interactions
+  Le sous-réseau de régulation impacté possède 213 gènes
+  Le sous-réseau de régulation impacté possède 2214 interactions
+----------------
+FORFILTER; ../data/HMA_constrained/iRC1410wFluxes_UO-31_FBS.mat ; 490 ; 25 ; 16 ; 429 ; 4479 ; 213 ; 2214
+----------------
+Test sur ../data/HMA_constrained/iRC1410wFluxes_UO-31_HAM.mat
+  Nombre de gènes cibles 531
+  Le nombre total de cibles potentielles après reconstruction est 28
+  Le nombre total de cibles potentielles avant reconstruction est 19
+  Le réseau de régulation possède 463 gènes
+  Le réseau de régulation possède 4697 interactions
+  Le sous-réseau de régulation impacté possède 229 gènes
+  Le sous-réseau de régulation impacté possède 2318 interactions
+----------------
+FORFILTER; ../data/HMA_constrained/iRC1410wFluxes_UO-31_HAM.mat ; 531 ; 28 ; 19 ; 463 ; 4697 ; 229 ; 2318
+----------------
+Test sur ../data/HMA_constrained/iRC1410woFluxes_FBS.mat
+  Nombre de gènes cibles 333
+  Le nombre total de cibles potentielles après reconstruction est 10
+  Le nombre total de cibles potentielles avant reconstruction est 1
+  Le réseau de régulation possède 322 gènes
+  Le réseau de régulation possède 3836 interactions
+  Le sous-réseau de régulation impacté possède 158 gènes
+  Le sous-réseau de régulation impacté possède 1926 interactions
+----------------
+FORFILTER; ../data/HMA_constrained/iRC1410woFluxes_FBS.mat ; 333 ; 10 ; 1 ; 322 ; 3836 ; 158 ; 1926
+----------------
+Test sur ../data/HMA_constrained/iRC1410woFluxes_HAM.mat
+  Nombre de gènes cibles 329
+  Le nombre total de cibles potentielles après reconstruction est 17
+  Le nombre total de cibles potentielles avant reconstruction est 8
+  Le réseau de régulation possède 314 gènes
+  Le réseau de régulation possède 3795 interactions
+  Le sous-réseau de régulation impacté possède 161 gènes
+  Le sous-réseau de régulation impacté possède 1943 interactions
+----------------
+FORFILTER; ../data/HMA_constrained/iRC1410woFluxes_HAM.mat ; 329 ; 17 ; 8 ; 314 ; 3795 ; 161 ; 1943
+----------------
+Test sur ../data/HMA_constrained/iRC1410woFluxes__FBS.mat
+  Nombre de gènes cibles 333
+  Le nombre total de cibles potentielles après reconstruction est 10
+  Le nombre total de cibles potentielles avant reconstruction est 1
+  Le réseau de régulation possède 322 gènes
+  Le réseau de régulation possède 3836 interactions
+  Le sous-réseau de régulation impacté possède 158 gènes
+  Le sous-réseau de régulation impacté possède 1926 interactions
+----------------
+FORFILTER; ../data/HMA_constrained/iRC1410woFluxes__FBS.mat ; 333 ; 10 ; 1 ; 322 ; 3836 ; 158 ; 1926
+----------------

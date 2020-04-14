@@ -1,0 +1,44 @@
+Test sur ../data/HMA_r3/iBreastCancer1771.xml
+  Nombre de gènes cibles 673
+  Le nombre total de cibles potentielles après reconstruction est 29
+  Le nombre total de cibles potentielles avant reconstruction est 16
+  Le réseau de régulation possède 584 gènes
+  Le réseau de régulation possède 5559 interactions
+  Le sous-réseau de régulation impacté possède 278 gènes
+  Le sous-réseau de régulation impacté possède 2725 interactions
+----------------
+FORFILTER; ../data/HMA_r3/iBreastCancer1771.xml ; 673 ; 29 ; 16 ; 584 ; 5559 ; 278 ; 2725
+----------------
+Test sur ../data/HMA_r3/iLiverCancer1715.xml
+  Nombre de gènes cibles 409
+  Le nombre total de cibles potentielles après reconstruction est 14
+  Le nombre total de cibles potentielles avant reconstruction est 5
+  Le réseau de régulation possède 373 gènes
+  Le réseau de régulation possède 4180 interactions
+  Le sous-réseau de régulation impacté possède 189 gènes
+  Le sous-réseau de régulation impacté possède 2092 interactions
+----------------
+FORFILTER; ../data/HMA_r3/iLiverCancer1715.xml ; 409 ; 14 ; 5 ; 373 ; 4180 ; 189 ; 2092
+----------------
+Test sur ../data/HMA_r3/iLungCancer1472.xml
+  Nombre de gènes cibles 413
+  Le nombre total de cibles potentielles après reconstruction est 16
+  Le nombre total de cibles potentielles avant reconstruction est 7
+  Le réseau de régulation possède 370 gènes
+  Le réseau de régulation possède 4180 interactions
+  Le sous-réseau de régulation impacté possède 186 gènes
+  Le sous-réseau de régulation impacté possède 2092 interactions
+----------------
+FORFILTER; ../data/HMA_r3/iLungCancer1472.xml ; 413 ; 16 ; 7 ; 370 ; 4180 ; 186 ; 2092
+----------------
+Test sur ../data/HMA_r3/iUrothelialCancer1647.xml
+  Nombre de gènes cibles 663
+  Le nombre total de cibles potentielles après reconstruction est 25
+  Le nombre total de cibles potentielles avant reconstruction est 16
+  Le réseau de régulation possède 564 gènes
+  Le réseau de régulation possède 5398 interactions
+  Le sous-réseau de régulation impacté possède 273 gènes
+  Le sous-réseau de régulation impacté possède 2613 interactions
+----------------
+FORFILTER; ../data/HMA_r3/iUrothelialCancer1647.xml ; 663 ; 25 ; 16 ; 564 ; 5398 ; 273 ; 2613
+----------------
