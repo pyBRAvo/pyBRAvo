@@ -118,7 +118,6 @@ Edges after simplification = 4601
 | Id | 0.073 |
 | LIF | 0.063 |
 | Forkhead | 0.013 |
-
 ```
 ## Usage from a Jupyter notebook
 Inside the python directory, just run the `jupyter-notebook BRAvo-python-API-tutorial.ipynb` command. 
@@ -128,20 +127,27 @@ The notebook can be browsed [here](https://gitlab.univ-nantes.fr/gaignard-a/BRAv
 ## Usage from a terminal 
 Here is the help message for the command line when running `python pyBravo.py`:
 ```
-usage: pyBravo.py [-h] [-md MD] [-sy] [-su] [-co] [-i I [I ...]] [-f F]
-                  [-incl INCL [INCL ...]] [-excl EXCL [EXCL ...]] [-v]
+Please specify one of -reg (--regulation), -sig (--signaling), or -w (--web) option
 
-BRAvo upstream regulation network reconstruction. 
+usage: pyBravo.py [-h] [-w] [-reg] [-sig] [-sigd] [-md MD] [-sy] [-su] [-co] [-fa] [-i I [I ...]] [-f F] [-o O] [-incl INCL [INCL ...]]
+                  [-excl EXCL [EXCL ...]] [-e ENDPOINT] [-unk] [-v]
+
+BRAvo upstream regulation network reconstruction.
 Here are some possible command lines :
-    
-    python pyBravo.py --input_genes JUN/FOS SCN5A -md 2 -co -su -sy
-    python pyBravo.py --input_genes JUN/FOS SCN5A -md 2 -excl mirtarbase -co -su -sy
-    python pyBravo.py --input_file myGenes.csv -md 2 -incl pid panther msigdb kegg -co -su -sy
-    
-Please report any issue to alban.gaignard@univ-nantes.fr. 
+    python pyBravo.py --web
+    python pyBravo.py --regulation --input_genes JUN/FOS SCN5A -md 2 -co -su -sy
+    python pyBravo.py --regulation --input_genes JUN/FOS SCN5A -md 2 -excl mirtarbase -co -su -sy
+    python pyBravo.py --regulation --input_file myGenes.csv -md 2 -incl pid panther msigdb kegg -co -su -sy
+
+Please report any issue to alban.gaignard@univ-nantes.fr.
 
 optional arguments:
   -h, --help            show this help message and exit
+  -w, --web             to launch pyBravo as a web server
+  -reg, --regulation    to assemble a regulation network
+  -sig, --signaling     to assemble a signaling network
+  -sigd, --signaling-detailed
+                        to assemble a signaling network with detailed reactions
   -md MD, --max_depth MD
                         the maximum exploration depth
   -sy, --extend_with_synonyms
@@ -150,13 +156,18 @@ optional arguments:
                         if specified, explore also names suffixed with " rna" or " protein"
   -co, --decompose_complexes
                         if specified, decompose protein complexes
+  -fa, --fast           if specified, only explore biopax display names
   -i I [I ...], --input_genes I [I ...]
                         the input gene list
   -f F, --input_file F  the input file, one gene per line
+  -o O, --output_file O
+                        the output files path and prefix
   -incl INCL [INCL ...], --include_sources INCL [INCL ...]
                         the data sources to include
   -excl EXCL [EXCL ...], --exclude_sources EXCL [EXCL ...]
                         the data sources to exclude
+  -e ENDPOINT, --endpoint ENDPOINT
+                        the endpoint to query (default: http://rdf.pathwaycommons.org/sparql/)
+  -unk, --unknown       if specified, do not consider unsigned edges
   -v, --verbose         print debug information
-
 ```
