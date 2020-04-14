@@ -7,13 +7,13 @@ pyBRAvo can be used through either a Jupyter notebook, or a command line interfa
 The first step consists in creating a software environment and **pull the required python packages**:
 ```
 conda create --name pybravo rdflib requests matplotlib jupyter networkx flask -c conda-forge -c bioconda
-source activate pybravo
+conda activate pybravo
 pip install nxpd
 ```
 Then just **clone** this repository:
 ```
-git clone https://gitlab.univ-nantes.fr/gaignard-a/BRAvo.git
-cd BRAvo/python
+git clone https://github.com/albangaignard/pyBravo.git
+cd pyBRAvo/src
 ```
 Then **test** that everything is fine:
 ```
@@ -21,50 +21,104 @@ python pyBravo.py --regulation --fast --input_genes JUN/FOS SCN5A -md 2 -co -su 
 ```
 You should obtain something like:
 ```
---- Upstream regulation network in 7.88 seconds ---
-Number of nodes = 248
-Number of edges = 323
+Explored 84 regulators
+Explored 92 regulators
+...
+Explored 398 regulators
+
+--- Upstream regulation network in 72.77 seconds ---
+Number of nodes = 458
+Number of edges = 1683
 SIF network written to out.sif
 Basic regulation reaction provenance written to out-provenance.csv
 
 | Node | Degree Centrality |
 |------|------|
-| TNF | 0.324 | 
-| FOS | 0.235 | 
-| SOD2 | 0.17 | 
-| IL2 | 0.069 | 
-| IL1A | 0.065 | 
-| FGF2 | 0.053 | 
-| JUN | 0.053 | 
-| BDNF | 0.045 | 
-| NGF | 0.045 | 
-| EP300 | 0.04 | 
+| NOG | 0.162 |
+| POU2F1 | 0.144 |
+| FOS | 0.144 |
+| EGR2 | 0.133 |
+| TNF | 0.133 |
+| JUN | 0.127 |
+| SP1 | 0.125 |
+| MAZ | 0.12 |
+| LEF1 | 0.114 |
+| HNF1A | 0.109 |
+
+--- Network simplification in 0.24 seconds ---
+SIF network written to out-unified.sif
+Basic regulation reaction provenance written to out-unified-provenance.csv
+Nodes after simplification = 436
+Edges after simplification = 1657
+
+| Node | Degree Centrality |
+|------|------|
+| NOG | 0.159 |
+| TNF | 0.156 |
+| POU2F1 | 0.152 |
+| HNF1A | 0.147 |
+| FOS | 0.147 |
+| EGR2 | 0.14 |
+| JUN | 0.136 |
+| DAND5 | 0.129 |
+| GDNF | 0.129 |
+| FGF13 | 0.12 |
+
 ```
 
 For signaling networks :
 ```
-python pyBravo.py --signaling --input_genes JUN/FOS SCN5A -md 2 -co -su -sy -excl mirtarbase --fast
+python pyBravo.py --signaling --input_genes SCN5A -md 2 -co -su -sy -excl mirtarbase --fast
 ```
 You should obtain something like:
 ```
---- Upstream regulation network in 1.78 seconds ---
-Number of nodes = 257
-Number of edges = 336
+Explored 26 regulators
+Explored 3181 regulators
+Explored 3197 regulators
+Explored 3197 regulators
+Explored 3198 regulators
+Explored 3198 regulators
+Explored 3199 regulators
+Explored 3199 regulators
+Explored 3199 regulators
+--- Upstream regulation network in 95.63 seconds ---
+Number of nodes = 3341
+Number of edges = 4614
 SIF network written to out.sif
 Basic regulation reaction provenance written to out-provenance.csv
 
 | Node | Degree Centrality |
 |------|------|
-| ERK1-2-active | 0.191 |
-| Jnk1 | 0.09 |
-| Fyn | 0.074 |
-| ELK1 | 0.07 |
-| Btk | 0.066 |
-| LYN | 0.062 |
-| JNK family-active | 0.062 |
-| AP1 | 0.055 |
-| p38 alpha | 0.055 |
-| JUN | 0.055 |
+| TGF-beta1 | 0.268 |
+| HER2 | 0.258 |
+| angiotensin II | 0.136 |
+| CDK2 | 0.136 |
+| DNMT1 | 0.1 |
+| L-FoxO1 | 0.096 |
+| CLOCK | 0.096 |
+| Id | 0.072 |
+| LIF | 0.055 |
+| Forkhead | 0.013 |
+
+--- Network simplification in 5.39 seconds ---
+SIF network written to out-unified.sif
+Basic regulation reaction provenance written to out-unified-provenance.csv
+Nodes after simplification = 3311
+Edges after simplification = 4601
+
+| Node | Degree Centrality |
+|------|------|
+| TGF-beta1 | 0.269 |
+| ERBB2 | 0.26 |
+| CDK2 | 0.137 |
+| angiotensin II | 0.136 |
+| DNMT1 | 0.101 |
+| CLOCK | 0.097 |
+| L-FoxO1 | 0.096 |
+| Id | 0.073 |
+| LIF | 0.063 |
+| Forkhead | 0.013 |
+
 ```
 ## Usage from a Jupyter notebook
 Inside the python directory, just run the `jupyter-notebook BRAvo-python-API-tutorial.ipynb` command. 
