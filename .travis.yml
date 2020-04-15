@@ -23,4 +23,7 @@ install:
 
   - conda create -q -n test-environment python=$TRAVIS_PYTHON_VERSION rdflib requests matplotlib jupyter networkx nose2 -c conda-forge
   - conda activate test-environment
-  - python setup.py install
+
+ script:
+  - cd src
+  - nose2
