@@ -27,3 +27,8 @@ install:
  script:
   - cd src
   - nose2
+
+  notifications:
+    email:
+      - alban.gaignard@univ-nantes.fr
+      - marie.lefebvre@inrae.fr
