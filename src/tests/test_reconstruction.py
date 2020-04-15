@@ -53,8 +53,9 @@ class TestNetworkReconstruction(unittest.TestCase):
         print('Nodes after synonym-based unification = ' + str(len(G_unified.nodes())))
         print('Edges after synonym-based unification = ' + str(len(G_unified.edges())))
 
-        self.assertEqual(len(G_unified.nodes()), 23)
-        self.assertEqual(len(G_unified.edges()), 25)
+        self.assertEqual(10,len(G_unified.nodes()))
+        self.assertEqual(10, len(G_unified.edges()))
+        self.assertLessEqual(elapsed_time, 20)
 
         md = bravo_main.get_centrality_as_md(G_unified)
         print(md)
