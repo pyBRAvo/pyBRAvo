@@ -24,11 +24,11 @@ install:
   - conda create -q -n test-environment python=$TRAVIS_PYTHON_VERSION rdflib requests matplotlib jupyter networkx nose2 -c conda-forge
   - conda activate test-environment
 
- script:
+script:
   - cd src
   - nose2
 
-  notifications:
-    email:
-      - alban.gaignard@univ-nantes.fr
-      - marie.lefebvre@inrae.fr
+notifications:
+  email:
+    - alban.gaignard@univ-nantes.fr
+    - marie.lefebvre@inrae.fr
