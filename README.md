@@ -3,6 +3,15 @@
 This tool is a Python implementation of BRAvo. It generates an upstream regulation network from the PathwayCommons knowledge base. 
 pyBRAvo can be used through either a Jupyter notebook, or a command line interface. 
 
+## Quick Start with Docker
+A `Dockerfile` is available to build an image and install the required software environment. 
+
+Build the docker container with
+```docker build -t pybravo .```
+
+Run the docker container with
+```docker run -p 8888:8888 -i pybravo```
+
 ## Installation  
 The first step consists in creating a software environment and **pull the required python packages**:
 ```
