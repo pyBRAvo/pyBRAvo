@@ -6,13 +6,13 @@ This implementation was used to make a comparison with pyBRAvo.
 conda 4.7.5
 
 ## Installation  
-The first step consists in loading pyBRAvo environment (as explain [here](https://gitlab.univ-nantes.fr/gaignard-a/BRAvo/blob/master/python/README.md)) and **pull the required pyPath packages**:
+The first step consists in loading pyBRAvo environment (as explain [here](https://github.com/albangaignard/pyBravo/README.md)) and **pulling the required pyPath packages**:
 ```bash
 conda activate pybravo
 pip install git+https://github.com/saezlab/pypath.git
-conda install pycairo
-conda install pygraphviz pysftp
-pip install bioservices
+conda install pycairo pygraphviz
+conda install pysftp -c bioconda
+pip install bioservices python-igraph pycurl
 ```
 
 ## Usage from a Jupyter notebook
