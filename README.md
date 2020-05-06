@@ -15,7 +15,7 @@ Run the docker container with
 ## Installation  
 The first step consists in creating a software environment and **pull the required python packages**:
 ```
-conda create --name pybravo rdflib requests matplotlib jupyter networkx flask -c conda-forge -c bioconda
+conda create --name pybravo python=3.7 rdflib requests matplotlib jupyter networkx flask -c conda-forge -c bioconda
 conda activate pybravo
 pip install nxpd
 ```
