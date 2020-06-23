@@ -129,9 +129,9 @@ Edges after simplification = 4601
 | Forkhead | 0.013 |
 ```
 ## Usage from a Jupyter notebook
-Inside the python directory, just run the `jupyter-notebook BRAvo-python-API-tutorial.ipynb` command. 
+Inside the src directory, just run the `jupyter-notebook BRAvo-python-API-tutorial.ipynb` command. 
 
-The notebook can be browsed [here](https://gitlab.univ-nantes.fr/gaignard-a/BRAvo/blob/master/python/BRAvo-python-API-tutorial.ipynb). 
+The notebook can be browsed [here](https://github.com/albangaignard/pyBravo/blob/master/src/BRAvo-python-API-tutorial.ipynb). 
 
 ## Usage from a terminal 
 Here is the help message for the command line when running `python pyBravo.py`:

@@ -7,5 +7,9 @@ src/bravo/__pycache__/
 *~
 /experiments-comparison/log
 /experiments-comparison/.ipynb*
+regulation-demo/*.log
+regulation-demo/.*
+pypath-evaluation/.*
 out-*
 out.sif
+tutorial-*
