@@ -1,5 +1,0 @@
-   3048 CTD
-     19 PANTHER
-    560 PathwayCommons
-    581 pid
-      1 Reactome
