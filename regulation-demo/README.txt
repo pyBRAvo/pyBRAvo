@@ -9,9 +9,8 @@ Result folders created by the notebook:
   - iggy: results from the Iggy execution (computation predictions)
   - .: several output files (.sif, .csv, .log, ...) are also created in this folder
 
-To obtain a Cytoscape figure containing all relevant information obtained by running one of these notebooks, open Cytoscape and import the following files:
-1) iggy/out-unified-iggy.sif -> File / Import / Network from file
+To obtain a Cytoscape figure similar to Figure 2 and containing all relevant information obtained by running one of these notebooks, open Cytoscape and import the following files:
+1) out-unified.sif -> File / Import / Network from File
 2) cytoscape/edges-provenance.csv -> File / Import / Table from File; choose Edge Table Columns in the dialog window and check that the file appears correctly tabulated in the preview
-3) cytoscape/nodes-iggy.csv -> File / Import / Table from File; choose Node Table Columns in the dialog window and check that the file appears correctly tabulated in the preview; if not, click Advanced Options... and check the TAB delimiter
-4) Use the left Control Panel to apply styles to nodes and edges depending on the attached information
+3) bravo-style.xml -> File / Import / Style from File; select the BRAvo style under the Style tab of the Control Panel
 
