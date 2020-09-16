@@ -90,7 +90,7 @@ fi
 # Workflow
 sh $IGGY_TO_CYTOSCAPE $OBS_FILE $IGGY_OUTPUT |\
 bash $REMOVE_MISSING $SIF_FILE |\
-python $MAIN_NAMES ../../Homo_sapiens.gene_info |\
+python $MAIN_NAMES ../Homo_sapiens.gene_info |\
 python $COMPARE_TO_ICGC $SUFFIX $ICGC_FILE $DOWN_THRESHOLD $UP_THRESHOLD
 
 

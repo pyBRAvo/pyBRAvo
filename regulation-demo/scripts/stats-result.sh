@@ -105,11 +105,11 @@ enfr "Number of predictions:" "Nombre de prédictions :"
 grep -c "pred:" $F
 enfr "  positive (+):" "  positives (+) :"
 grep -c "pred:+" $F
-enfr "  negative (−):" "  négatives (−) :"
+enfr "  negative (-):" "  négatives (-) :"
 grep -c "pred:-" $F
 enfr "  no-change (0):" "  sans changement (0) :"
 grep -c "pred:0" $F
-enfr "  may-up (NOT−):" "  faiblement positives (NOT−) :"
+enfr "  may-up (NOT-):" "  faiblement positives (NOT-) :"
 grep -c "pred:NOT-" $F
 enfr "  may-down (NOT+):" "  faiblement négatives (NOT+) :"
 grep -c "pred:NOT+" $F
