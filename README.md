@@ -1,10 +1,10 @@
 # BRAvo - Biological netwoRk Assembly [![Build Status](https://travis-ci.org/albangaignard/pyBravo.svg?branch=master)](https://travis-ci.org/albangaignard/pyBravo)
-## pyBRAvo 
-This tool is a Python implementation of BRAvo. It generates an upstream regulation network from the PathwayCommons knowledge base. 
-pyBRAvo can be used through either a Jupyter notebook, or a command line interface. 
+## pyBRAvo
+This tool is a Python implementation of BRAvo. It generates an upstream regulation network from the PathwayCommons knowledge base.
+pyBRAvo can be used through either a Jupyter notebook, or a command line interface.
 
 ## Quick Start with Docker
-A `Dockerfile` is available to build an image and install the required software environment. 
+A `Dockerfile` is available to build an image and install the required software environment.
 
 Build the docker container with
 ```docker build -t pybravo .```
@@ -21,7 +21,7 @@ pip install nxpd
 ```
 Then just **clone** this repository:
 ```
-git clone https://github.com/albangaignard/pyBravo.git
+git clone https://github.com/pyBRAvo/pyBRAvo.git
 cd pyBRAvo/src
 ```
 Then **test** that everything is fine:
@@ -129,11 +129,11 @@ Edges after simplification = 4601
 | Forkhead | 0.013 |
 ```
 ## Usage from a Jupyter notebook
-Inside the src directory, just run the `jupyter-notebook BRAvo-python-API-tutorial.ipynb` command. 
+Inside the src directory, just run the `jupyter-notebook BRAvo-python-API-tutorial.ipynb` command.
 
-The notebook can be browsed [here](https://github.com/albangaignard/pyBravo/blob/master/src/BRAvo-python-API-tutorial.ipynb). 
+The notebook can be browsed [here](https://github.com/albangaignard/pyBravo/blob/master/src/BRAvo-python-API-tutorial.ipynb).
 
-## Usage from a terminal 
+## Usage from a terminal
 Here is the help message for the command line when running `python pyBravo.py`:
 ```
 Please specify one of -reg (--regulation), -sig (--signaling), or -w (--web) option
