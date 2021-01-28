@@ -180,3 +180,6 @@ optional arguments:
   -unk, --unknown       if specified, do not consider unsigned edges
   -v, --verbose         print debug information
 ```
+
+## Cite us
+M Lefebvre, A Gaignard, M Folschette, J Bourdon, C Guziolowski, Large-scale regulatory and signaling network assembly through linked open data, Database, Volume 2021, 2021, baaa113, https://doi.org/10.1093/database/baaa113
